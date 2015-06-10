@@ -1,3 +1,12 @@
 .bundle/
 log/*.log
 pkg/
+
+# IDE files
+.idea
+
+# Temporary files
+.DS_Store
+*.swp
+*~
+*.directory
