@@ -13,3 +13,10 @@ gemspec
 group :development do
   gem "rubocop",  "0.32.0"
 end
+
+group :development, :test do
+  gem "rspec-rails",     "3.2.3"
+  gem "rspec-instafail", "0.2.6", require: false
+  gem "fuubar",          "2.0.0"
+  gem "nyan-cat-formatter", require: false
+end
