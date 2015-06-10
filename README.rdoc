@@ -1,0 +1,3 @@
+= DiasporaFederation
+
+This project rocks and uses LICENSE.
