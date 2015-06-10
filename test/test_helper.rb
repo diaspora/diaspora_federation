@@ -8,4 +8,4 @@ require "rails/test_help"
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
 # Load support files
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f }

@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class DiasporaFederationTest < ActiveSupport::TestCase
   test "truth" do
