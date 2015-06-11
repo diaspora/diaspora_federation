@@ -10,11 +10,11 @@ Gem::Specification.new do |s|
   s.authors     = ["Benjamin Neff"]
   s.email       = ["benjamin@coding4.coffee"]
   s.homepage    = "https://github.com/SuperTux88/diaspora_federation"
-  s.summary     = "Diaspora Federation Rails Engine"
-  s.description = "A rails engine that adds the diaspora federation protocol to a rails app"
+  s.summary     = "diaspora* federation rails engine"
+  s.description = "A rails engine that adds the diaspora* federation protocol to a rails app"
   s.license     = "AGPL 3.0 - http://www.gnu.org/licenses/agpl-3.0.html"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 4.2.1"
