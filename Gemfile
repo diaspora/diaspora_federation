@@ -14,6 +14,10 @@ group :development do
   gem "rubocop",  "0.32.0"
 end
 
+group :test do
+  gem "codeclimate-test-reporter", require: false
+end
+
 group :development, :test do
   gem "rspec-rails",     "3.2.3"
   gem "rspec-instafail", "0.2.6", require: false

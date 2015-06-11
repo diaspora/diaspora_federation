@@ -3,6 +3,9 @@ require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "envi
 
 require "rspec/rails"
 
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
+
 RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
