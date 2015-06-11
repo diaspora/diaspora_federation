@@ -19,4 +19,7 @@ group :development, :test do
   gem "rspec-instafail", "0.2.6", require: false
   gem "fuubar",          "2.0.0"
   gem "nyan-cat-formatter", require: false
+
+  # test database
+  gem "sqlite3"
 end
