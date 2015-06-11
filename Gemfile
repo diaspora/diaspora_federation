@@ -12,6 +12,11 @@ gemspec
 
 group :development do
   gem "rubocop",  "0.32.0"
+
+  # Debugging
+  gem "pry"
+  gem "pry-debundle"
+  gem "pry-byebug"
 end
 
 group :test do
