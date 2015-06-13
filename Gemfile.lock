@@ -178,6 +178,7 @@ DEPENDENCIES
   rspec-instafail (= 0.2.6)
   rspec-rails (= 3.2.3)
   rubocop (= 0.32.0)
+  simplecov (= 0.10.0)
   sqlite3
 
 BUNDLED WITH

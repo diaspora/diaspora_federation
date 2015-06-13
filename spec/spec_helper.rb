@@ -3,6 +3,11 @@ require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "envi
 
 require "rspec/rails"
 
+require "simplecov"
+SimpleCov.start do
+  add_filter "spec"
+end
+
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 

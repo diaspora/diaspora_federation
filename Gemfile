@@ -29,6 +29,9 @@ group :development, :test do
   gem "fuubar",          "2.0.0"
   gem "nyan-cat-formatter", require: false
 
+  # test coverage
+  gem "simplecov", "0.10.0", require: false
+
   # test database
   gem "sqlite3"
 end
