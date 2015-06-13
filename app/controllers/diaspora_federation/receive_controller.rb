@@ -2,17 +2,17 @@ require_dependency "diaspora_federation/application_controller"
 
 module DiasporaFederation
   class ReceiveController < ApplicationController
-    before_action :check_for_xml, only: %i(public private)
+    before_action :check_for_xml
 
     def public
-      Rails.logger.info "received a public message"
-      Rails.logger.info CGI.unescape(params[:xml])
+      logger.info "received a public message"
+      logger.debug CGI.unescape(params[:xml])
       render nothing: true, status: :ok
     end
 
     def private
-      Rails.logger.info "received a private message for #{params[:guid]}"
-      Rails.logger.info CGI.unescape(params[:xml])
+      logger.info "received a private message for #{params[:guid]}"
+      logger.debug CGI.unescape(params[:xml])
       render nothing: true, status: :ok
     end
 
