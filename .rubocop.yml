@@ -2,7 +2,7 @@ AllCops:
   RunRailsCops: true
   Exclude:
     - "bin/**/*"
-    - "test/dummy/**/*"
+    - "test/dummy/bin/**/*"
 
 # Commonly used screens these days easily fit more than 80 characters.
 Metrics/LineLength:

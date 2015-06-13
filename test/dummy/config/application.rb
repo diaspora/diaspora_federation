@@ -1,6 +1,6 @@
-require File.expand_path('../boot', __FILE__)
+require_relative "boot"
 
-require 'rails/all'
+require "rails/all"
 
 Bundler.require(*Rails.groups)
 require "diaspora_federation"
@@ -19,8 +19,10 @@ module Dummy
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    # Version of your assets, change this if you want to expire all your assets
+    config.assets.version = "1.0"
+
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
   end
 end
-
