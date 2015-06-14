@@ -11,7 +11,7 @@ gemspec
 # your gem to rubygems.org.
 
 group :development do
-  gem "rubocop",  "0.32.0"
+  gem "rubocop", "0.32.0"
 
   # Debugging
   gem "pry"
@@ -20,17 +20,20 @@ group :development do
 end
 
 group :test do
-  gem "codeclimate-test-reporter", require: false
+  gem "rspec-instafail",           "0.2.6",  require: false
+  gem "fuubar",                    "2.0.0"
+  gem "nyan-cat-formatter",                  require: false
+
+  # test coverage
+  gem "simplecov",                 "0.10.0", require: false
+  gem "codeclimate-test-reporter",           require: false
+
+  # test helpers
+  gem "factory_girl_rails",        "4.5.0"
 end
 
 group :development, :test do
-  gem "rspec-rails",     "3.2.3"
-  gem "rspec-instafail", "0.2.6", require: false
-  gem "fuubar",          "2.0.0"
-  gem "nyan-cat-formatter", require: false
-
-  # test coverage
-  gem "simplecov", "0.10.0", require: false
+  gem "rspec-rails", "3.2.3"
 
   # test database
   gem "sqlite3"

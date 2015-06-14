@@ -56,6 +56,11 @@ GEM
     diff-lcs (1.2.5)
     docile (1.1.5)
     erubis (2.7.0)
+    factory_girl (4.5.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.5.0)
+      factory_girl (~> 4.5.0)
+      railties (>= 3.0.0)
     fuubar (2.0.0)
       rspec (~> 3.0)
       ruby-progressbar (~> 1.4)
@@ -170,6 +175,7 @@ PLATFORMS
 DEPENDENCIES
   codeclimate-test-reporter
   diaspora_federation!
+  factory_girl_rails (= 4.5.0)
   fuubar (= 2.0.0)
   nyan-cat-formatter
   pry
