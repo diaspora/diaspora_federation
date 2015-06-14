@@ -26,6 +26,7 @@ group :test do
 
   # test coverage
   gem "simplecov",                 "0.10.0", require: false
+  gem "simplecov-rcov",            "0.2.3",  require: false
   gem "codeclimate-test-reporter",           require: false
 
   # test helpers

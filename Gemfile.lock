@@ -156,6 +156,8 @@ GEM
       json (~> 1.8)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
+    simplecov-rcov (0.2.3)
+      simplecov (>= 0.4.1)
     slop (3.6.0)
     sprockets (3.2.0)
       rack (~> 1.0)
@@ -185,6 +187,7 @@ DEPENDENCIES
   rspec-rails (= 3.2.3)
   rubocop (= 0.32.0)
   simplecov (= 0.10.0)
+  simplecov-rcov (= 0.2.3)
   sqlite3
 
 BUNDLED WITH

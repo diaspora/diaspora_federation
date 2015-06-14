@@ -4,6 +4,11 @@ require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "envi
 require "rspec/rails"
 
 require "simplecov"
+require "simplecov-rcov"
+SimpleCov.formatters = [
+  SimpleCov::Formatter::HTMLFormatter,
+  SimpleCov::Formatter::RcovFormatter
+]
 SimpleCov.start do
   add_filter "spec"
 end
