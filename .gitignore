@@ -1,5 +1,4 @@
 .bundle/
-log/*.log
 pkg/
 
 # IDE files
@@ -7,6 +6,9 @@ pkg/
 
 # coverage reports
 coverage
+
+# documentation
+rdoc
 
 # Temporary files
 .DS_Store

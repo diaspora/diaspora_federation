@@ -14,6 +14,8 @@ CodeClimate::TestReporter.start
 RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
+  config.render_views
+
   config.expect_with :rspec do |expect_config|
     expect_config.syntax = :expect
   end

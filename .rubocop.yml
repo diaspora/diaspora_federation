@@ -3,6 +3,7 @@ AllCops:
   Exclude:
     - "bin/**/*"
     - "test/dummy/bin/**/*"
+    - "test/dummy/db/**/*"
 
 # Commonly used screens these days easily fit more than 80 characters.
 Metrics/LineLength:
