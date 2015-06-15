@@ -176,7 +176,7 @@ GEM
     thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uuid (2.3.7)
+    uuid (2.3.8)
       macaddr (~> 1.0)
 
 PLATFORMS
@@ -198,7 +198,7 @@ DEPENDENCIES
   simplecov (= 0.10.0)
   simplecov-rcov (= 0.2.3)
   sqlite3
-  uuid (= 2.3.7)
+  uuid (= 2.3.8)
 
 BUNDLED WITH
    1.10.3

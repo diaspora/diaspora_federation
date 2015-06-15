@@ -41,7 +41,7 @@ group :development, :test do
   gem "rspec-rails", "3.2.3"
 
   # GUID generation
-  gem "uuid", "2.3.7"
+  gem "uuid", "2.3.8"
 
   # test database
   gem "sqlite3"
