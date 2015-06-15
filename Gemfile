@@ -38,7 +38,7 @@ end
 
 group :development, :test do
   # rspec
-  gem "rspec-rails", "3.2.3"
+  gem "rspec-rails", "3.3.1"
 
   # GUID generation
   gem "uuid", "2.3.8"
