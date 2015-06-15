@@ -11,15 +11,17 @@ gemspec
 # your gem to rubygems.org.
 
 group :development do
+  # code style
   gem "rubocop", "0.32.0"
 
-  # Debugging
+  # debugging
   gem "pry"
   gem "pry-debundle"
   gem "pry-byebug"
 end
 
 group :test do
+  # rspec
   gem "rspec-instafail",           "0.2.6",  require: false
   gem "fuubar",                    "2.0.0"
   gem "nyan-cat-formatter",                  require: false
@@ -30,11 +32,16 @@ group :test do
   gem "codeclimate-test-reporter",           require: false
 
   # test helpers
+  gem "fixture_builder",           "0.4.1"
   gem "factory_girl_rails",        "4.5.0"
 end
 
 group :development, :test do
+  # rspec
   gem "rspec-rails", "3.2.3"
+
+  # GUID generation
+  gem "uuid", "2.3.7"
 
   # test database
   gem "sqlite3"

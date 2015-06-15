@@ -3,6 +3,9 @@ require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "envi
 
 require "rspec/rails"
 
+# load factory girl factories
+require "factories"
+
 require "simplecov"
 require "simplecov-rcov"
 SimpleCov.formatters = [
@@ -16,6 +19,16 @@ end
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
+# Force fixture rebuild
+FileUtils.rm_f(Rails.root.join("tmp", "fixture_builder.yml"))
+
+# Requires supporting files with custom matchers and macros, etc,
+# in ./support/ and its subdirectories.
+fixture_builder_file = "#{File.dirname(__FILE__)}/support/fixture_builder.rb"
+support_files = Dir["#{File.dirname(__FILE__)}/support/**/*.rb"] - [fixture_builder_file]
+support_files.each {|f| require f }
+require fixture_builder_file
+
 RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
@@ -24,6 +37,9 @@ RSpec.configure do |config|
   config.expect_with :rspec do |expect_config|
     expect_config.syntax = :expect
   end
+
+  config.include FactoryGirl::Syntax::Methods
+  config.use_transactional_fixtures = true
 
   config.mock_with :rspec do |mocks|
     # Prevents you from mocking or stubbing a method that does not exist on

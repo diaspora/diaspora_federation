@@ -1,4 +1,6 @@
 class Person < ActiveRecord::Base
+  include ::Diaspora::Guid
+
   def salmon_url
     "#{url}receive/users/#{guid}"
   end

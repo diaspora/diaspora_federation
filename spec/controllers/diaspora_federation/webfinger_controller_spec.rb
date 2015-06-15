@@ -23,14 +23,12 @@ module DiasporaFederation
 
     describe "#legacy_webfinger" do
       it "succeeds when the person exists" do
-        skip
-        post :legacy_webfinger, "q" => "bob@diaspora.pod"
+        post :legacy_webfinger, "q" => "alice@localhost:3000"
         expect(response).to be_success
       end
 
       it "succeeds with 'acct:' in the query when the person exists" do
-        skip
-        post :legacy_webfinger, "q" => "acct:bob@diaspora.pod"
+        post :legacy_webfinger, "q" => "acct:alice@localhost:3000"
         expect(response).to be_success
       end
 
