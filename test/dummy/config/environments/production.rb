@@ -48,6 +48,12 @@ Rails.application.configure do
   # when problems arise.
   config.log_level = :debug
 
+  # Set the logging destination(s)
+  config.log_to = %w(file)
+
+  # Show the logging configuration on STDOUT
+  config.show_log_configuration = false
+
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
 

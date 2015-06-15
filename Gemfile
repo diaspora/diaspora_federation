@@ -46,3 +46,8 @@ group :development, :test do
   # test database
   gem "sqlite3"
 end
+
+group :development, :production do
+  # Logging (only for dummy-app, not for the gem)
+  gem "logging-rails", "0.5.0", require: "logging/rails"
+end

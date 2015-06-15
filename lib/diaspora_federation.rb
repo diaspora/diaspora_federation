@@ -1,8 +1,11 @@
 require "diaspora_federation/engine"
+require "diaspora_federation/logging"
 
 ##
 # diaspora* federation rails engine
 module DiasporaFederation
+  extend Logging
+
   class << self
     ##
     # the pod url
@@ -31,6 +34,7 @@ module DiasporaFederation
     #   end
     def configure
       yield self
+      logger.info "successfully configured the federation engine"
     end
   end
 end
