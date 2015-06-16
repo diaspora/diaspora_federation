@@ -60,10 +60,15 @@ module DiasporaFederation
 
     def validate_class(klass, name, methods)
       raise ConfigurationError, "missing #{name}" unless klass
-      const = const_get(klass)
+      entity = const_get(klass)
+
+      return logger.warn "table for #{entity} doesn't exist, skip validation" unless entity.table_exists?
+
       methods.each {|method|
-        valid = const.respond_to?(method) || const.column_names.include?(method.to_s) || const.method_defined?(method)
-        raise ConfigurationError, "the configured class #{const} for #{name} does not respond to #{method}" unless valid
+        valid = entity.respond_to?(method) ||
+            entity.column_names.include?(method.to_s) ||
+            entity.method_defined?(method)
+        raise ConfigurationError, "the configured class #{entity} for #{name} doesn't respond to #{method}" unless valid
       }
     end
   end
