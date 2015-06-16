@@ -1,11 +1,3 @@
-ENV["RAILS_ENV"] ||= "test"
-require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "environment")
-
-require "rspec/rails"
-
-# load factory girl factories
-require "factories"
-
 require "simplecov"
 require "simplecov-rcov"
 SimpleCov.formatters = [
@@ -14,7 +6,16 @@ SimpleCov.formatters = [
 ]
 SimpleCov.start do
   add_filter "spec"
+  add_filter "test"
 end
+
+ENV["RAILS_ENV"] ||= "test"
+require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "environment")
+
+require "rspec/rails"
+
+# load factory girl factories
+require "factories"
 
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
