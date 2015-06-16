@@ -20,7 +20,7 @@ module DiasporaFederation
     # the class to use as person.
     #
     # Example:
-    #   config.person_class = Person.class.to_s
+    #   config.person_class = Person.to_s
     attr_accessor :person_class
     def person_class
       const_get(@person_class)
