@@ -1,6 +1,8 @@
 require "diaspora_federation/engine"
 require "diaspora_federation/logging"
 
+require "diaspora_federation/webfinger"
+
 ##
 # diaspora* federation rails engine
 module DiasporaFederation
@@ -73,7 +75,6 @@ module DiasporaFederation
     end
   end
 
-  ##
   # raised, if the engine is not configured correctly
   class ConfigurationError < RuntimeError
   end

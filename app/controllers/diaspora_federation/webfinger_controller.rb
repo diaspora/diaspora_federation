@@ -3,7 +3,8 @@ require_dependency "diaspora_federation/application_controller"
 module DiasporaFederation
   class WebfingerController < ApplicationController
     def host_meta
-      render "host_meta", content_type: "application/xrd+xml"
+      doc = WebFinger::HostMeta.from_base_url(DiasporaFederation.server_uri.to_s)
+      render body: doc.to_xml, content_type: "application/xrd+xml"
     end
 
     ##

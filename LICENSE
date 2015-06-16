@@ -13,3 +13,6 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Some parts are based on an older federation gem from Florian Staudacher:
+https://github.com/Raven24/diaspora-federation

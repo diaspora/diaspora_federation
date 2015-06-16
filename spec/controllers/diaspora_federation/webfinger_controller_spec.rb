@@ -3,21 +3,28 @@ module DiasporaFederation
     routes { DiasporaFederation::Engine.routes }
 
     describe "#host_meta" do
+      before do
+        DiasporaFederation.server_uri = URI("http://localhost:3000/")
+      end
+
       it "succeeds" do
         get :host_meta
         expect(response).to be_success
       end
 
       it "contains the webfinger-template" do
-        DiasporaFederation.server_uri = "http://localhost:3000/"
         get :host_meta
         expect(response.body).to include "template=\"http://localhost:3000/webfinger?q={uri}\""
       end
 
-      it "renders the host_meta template" do
+      it "returns a application/xrd+xml" do
         get :host_meta
-        expect(response).to render_template("host_meta")
         expect(response.header["Content-Type"]).to include "application/xrd+xml"
+      end
+
+      it "calls WebFinger::HostMeta.from_base_url with the base url" do
+        expect(WebFinger::HostMeta).to receive(:from_base_url).with("http://localhost:3000/").and_call_original
+        get :host_meta
       end
     end
 
