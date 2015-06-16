@@ -34,12 +34,12 @@ module DiasporaFederation
     #   end
     def configure
       yield self
-      validate_config
-      logger.info "successfully configured the federation engine"
     end
 
-    private
-
+    ##
+    # validates if the engine is configured correctly
+    #
+    # called from after_initialize
     def validate_config
       raise ConfigurationError, "missing server_uri" unless @server_uri.respond_to? :host
       validate_class(@person_class, "person_class", %i(
@@ -53,7 +53,10 @@ module DiasporaFederation
         profile_url
         hcard_url
       ))
+      logger.info "successfully configured the federation engine"
     end
+
+    private
 
     def validate_class(klass, name, methods)
       raise ConfigurationError, "missing #{name}" unless klass
