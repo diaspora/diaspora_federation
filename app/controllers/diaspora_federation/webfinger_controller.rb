@@ -22,7 +22,7 @@ module DiasporaFederation
     ##
     # this is the pre RFC 7033 webfinger
     #
-    # GET /webfinger?q={uri}
+    # GET /webfinger?q=<uri>
     def legacy_webfinger
       @person = find_person(params[:q]) if params[:q]
 

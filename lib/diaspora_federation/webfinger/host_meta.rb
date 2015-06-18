@@ -88,7 +88,7 @@ module DiasporaFederation
 
       ##
       # Gets the webfinger url from an XRD data structure
-      # @param [Hash] extracted data
+      # @param [Hash] data extracted data
       # @return [String] webfinger url
       def self.webfinger_url_from_xrd(data)
         link = data[:links].find {|l| (l[:rel] == "lrdd" && l[:type] == "application/xrd+xml") }
