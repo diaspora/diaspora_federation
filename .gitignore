@@ -9,6 +9,8 @@ coverage
 
 # documentation
 rdoc
+doc
+.yardoc/
 
 # Temporary files
 .DS_Store

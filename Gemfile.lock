@@ -186,6 +186,7 @@ GEM
       thread_safe (~> 0.1)
     uuid (2.3.8)
       macaddr (~> 1.0)
+    yard (0.8.7.6)
 
 PLATFORMS
   ruby
@@ -208,6 +209,7 @@ DEPENDENCIES
   simplecov-rcov (= 0.2.3)
   sqlite3
   uuid (= 2.3.8)
+  yard
 
 BUNDLED WITH
    1.10.3

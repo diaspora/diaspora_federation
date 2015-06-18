@@ -18,6 +18,9 @@ group :development do
   gem "pry"
   gem "pry-debundle"
   gem "pry-byebug"
+
+  # documentation
+  gem "yard", require: false
 end
 
 group :test do
