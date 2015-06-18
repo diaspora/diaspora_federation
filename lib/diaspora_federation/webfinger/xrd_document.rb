@@ -64,28 +64,13 @@ module DiasporaFederation
       def to_xml
         builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
           xml.XRD("xmlns" => XMLNS) {
-            if !@expires.nil? && @expires.instance_of?(DateTime)
-              xml.Expires(@expires.strftime(DATETIME_FORMAT))
-            end
+            xml.Expires(@expires.strftime(DATETIME_FORMAT)) if @expires.instance_of?(DateTime)
 
             xml.Subject(@subject) if !@subject.nil? && !@subject.empty?
 
-            @aliases.each do |a|
-              next if !a.instance_of?(String) || a.empty?
-              xml.Alias(a.to_s)
-            end
-
-            @properties.each do |type, val|
-              xml.Property(val.to_s, type: type)
-            end
-
-            @links.each do |l|
-              attrs = {}
-              LINK_ATTRS.each do |attr|
-                attrs[attr.to_s] = l[attr] if l.key?(attr)
-              end
-              xml.Link(attrs)
-            end
+            add_aliases_to(xml)
+            add_properties_to(xml)
+            add_links_to(xml)
           }
         end
         builder.to_xml
@@ -102,36 +87,76 @@ module DiasporaFederation
       # @return [Hash] extracted data
       # @raise [InvalidDocument] if the XRD is malformed
       def self.xml_data(xrd_doc)
+        doc = parse_xrd_document(xrd_doc)
+        data = {}
+
+        exp_elem = doc.at_xpath("xrd:XRD/xrd:Expires", NS)
+        data[:expires] = DateTime.strptime(exp_elem.content, DATETIME_FORMAT) unless exp_elem.nil?
+
+        subj_elem = doc.at_xpath("xrd:XRD/xrd:Subject", NS)
+        data[:subject] = subj_elem.content unless subj_elem.nil?
+
+        parse_aliases_from_xml_doc(doc, data)
+        parse_properties_from_xml_doc(doc, data)
+        parse_links_from_xml_doc(doc, data)
+
+        data
+      end
+
+      private
+
+      NS = {xrd: XMLNS}
+
+      def add_aliases_to(xml)
+        @aliases.each do |a|
+          next if !a.instance_of?(String) || a.empty?
+          xml.Alias(a.to_s)
+        end
+      end
+
+      def add_properties_to(xml)
+        @properties.each do |type, val|
+          xml.Property(val.to_s, type: type)
+        end
+      end
+
+      def add_links_to(xml)
+        @links.each do |l|
+          attrs = {}
+          LINK_ATTRS.each do |attr|
+            attrs[attr.to_s] = l[attr] if l.key?(attr)
+          end
+          xml.Link(attrs)
+        end
+      end
+
+      def self.parse_xrd_document(xrd_doc)
         raise ArgumentError unless xrd_doc.instance_of?(String)
 
         doc = Nokogiri::XML::Document.parse(xrd_doc)
         raise InvalidDocument, "Not an XRD document" if !doc.root || doc.root.name != "XRD"
+        doc
+      end
 
-        data = {}
-        ns = {xrd: XMLNS}
-
-        exp_elem = doc.at_xpath("xrd:XRD/xrd:Expires", ns)
-        unless exp_elem.nil?
-          data[:expires] = DateTime.strptime(exp_elem.content, DATETIME_FORMAT)
-        end
-
-        subj_elem = doc.at_xpath("xrd:XRD/xrd:Subject", ns)
-        data[:subject] = subj_elem.content unless subj_elem.nil?
-
+      def self.parse_aliases_from_xml_doc(doc, data)
         aliases = []
-        doc.xpath("xrd:XRD/xrd:Alias", ns).each do |node|
+        doc.xpath("xrd:XRD/xrd:Alias", NS).each do |node|
           aliases << node.content
         end
         data[:aliases] = aliases unless aliases.empty?
+      end
 
+      def self.parse_properties_from_xml_doc(doc, data)
         properties = {}
-        doc.xpath("xrd:XRD/xrd:Property", ns).each do |node|
+        doc.xpath("xrd:XRD/xrd:Property", NS).each do |node|
           properties[node[:type]] = node.children.empty? ? nil : node.content
         end
         data[:properties] = properties unless properties.empty?
+      end
 
+      def self.parse_links_from_xml_doc(doc, data)
         links = []
-        doc.xpath("xrd:XRD/xrd:Link", ns).each do |node|
+        doc.xpath("xrd:XRD/xrd:Link", NS).each do |node|
           link = {}
           LINK_ATTRS.each do |attr|
             link[attr] = node[attr.to_s] if node.key?(attr.to_s)
@@ -139,8 +164,6 @@ module DiasporaFederation
           links << link
         end
         data[:links] = links unless links.empty?
-
-        data
       end
 
       # Raised, if the XML structure is invalid
