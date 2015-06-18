@@ -5,6 +5,7 @@ module DiasporaFederation
     describe "#host_meta" do
       before do
         DiasporaFederation.server_uri = URI("http://localhost:3000/")
+        WebfingerController.instance_variable_set(:@host_meta_xml, nil) # clear cache
       end
 
       it "succeeds" do
@@ -24,6 +25,12 @@ module DiasporaFederation
 
       it "calls WebFinger::HostMeta.from_base_url with the base url" do
         expect(WebFinger::HostMeta).to receive(:from_base_url).with("http://localhost:3000/").and_call_original
+        get :host_meta
+      end
+
+      it "caches the xml" do
+        expect(WebFinger::HostMeta).to receive(:from_base_url).exactly(1).times.and_call_original
+        get :host_meta
         get :host_meta
       end
     end

@@ -1,7 +1,7 @@
 require "diaspora_federation/engine"
 require "diaspora_federation/logging"
 
-require "diaspora_federation/webfinger"
+require "diaspora_federation/web_finger"
 
 ##
 # diaspora* federation rails engine
