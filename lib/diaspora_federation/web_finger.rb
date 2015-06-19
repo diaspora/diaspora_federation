@@ -7,6 +7,6 @@ module DiasporaFederation
   end
 end
 
-require "diaspora_federation/webfinger/exceptions"
-require "diaspora_federation/webfinger/xrd_document"
-require "diaspora_federation/webfinger/host_meta"
+require "diaspora_federation/web_finger/exceptions"
+require "diaspora_federation/web_finger/xrd_document"
+require "diaspora_federation/web_finger/host_meta"
