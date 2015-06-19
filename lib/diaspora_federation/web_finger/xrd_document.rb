@@ -15,7 +15,7 @@ module DiasporaFederation
     # @example Creating a XrdDocument
     #   doc = XrdDocument.new
     #   doc.expires = DateTime.new(2020, 1, 15, 0, 0, 1)
-    #   doc.subject = "http://example.tld/articles/11""
+    #   doc.subject = "http://example.tld/articles/11"
     #   doc.aliases << "http://example.tld/cool_article"
     #   doc.aliases << "http://example.tld/authors/2/articles/3"
     #   doc.properties["http://x.example.tld/ns/version"] = "1.3"
@@ -137,6 +137,7 @@ module DiasporaFederation
         raise InvalidDocument, "Not an XRD document" if !doc.root || doc.root.name != "XRD"
         doc
       end
+      private_class_method :parse_xrd_document
 
       def self.parse_aliases_from_xml_doc(doc, data)
         aliases = []
@@ -145,6 +146,7 @@ module DiasporaFederation
         end
         data[:aliases] = aliases unless aliases.empty?
       end
+      private_class_method :parse_aliases_from_xml_doc
 
       def self.parse_properties_from_xml_doc(doc, data)
         properties = {}
@@ -153,6 +155,7 @@ module DiasporaFederation
         end
         data[:properties] = properties unless properties.empty?
       end
+      private_class_method :parse_properties_from_xml_doc
 
       def self.parse_links_from_xml_doc(doc, data)
         links = []
@@ -165,6 +168,7 @@ module DiasporaFederation
         end
         data[:links] = links unless links.empty?
       end
+      private_class_method :parse_links_from_xml_doc
     end
   end
 end

@@ -19,7 +19,7 @@ module DiasporaFederation
     end
 
     ##
-    # this is the pre RFC 7033 webfinger
+    # @deprecated this is the pre RFC 7033 webfinger
     #
     # GET /webfinger?q=<uri>
     def legacy_webfinger
