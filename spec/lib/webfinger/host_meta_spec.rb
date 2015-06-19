@@ -24,7 +24,7 @@ XML
       end
 
       it "fails if the base_url was omitted" do
-        expect { WebFinger::HostMeta.from_base_url("") }.to raise_error(WebFinger::HostMeta::InvalidData)
+        expect { WebFinger::HostMeta.from_base_url("") }.to raise_error(WebFinger::InvalidData)
       end
     end
 
@@ -57,7 +57,7 @@ XML
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
 </XRD>
 XML
-        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error(WebFinger::HostMeta::InvalidData)
+        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error(WebFinger::InvalidData)
       end
 
       it "fails if the document contains a malformed webfinger url" do
@@ -67,11 +67,11 @@ XML
   <Link rel="lrdd" type="application/xrd+xml" template="#{base_url}webfinger?q="/>
 </XRD>
 XML
-        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error(WebFinger::HostMeta::InvalidData)
+        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error(WebFinger::InvalidData)
       end
 
       it "fails if the document is invalid" do
-        expect { WebFinger::HostMeta.from_xml("") }.to raise_error(WebFinger::XrdDocument::InvalidDocument)
+        expect { WebFinger::HostMeta.from_xml("") }.to raise_error(WebFinger::InvalidDocument)
       end
     end
   end

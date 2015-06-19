@@ -165,10 +165,6 @@ module DiasporaFederation
         end
         data[:links] = links unless links.empty?
       end
-
-      # Raised, if the XML structure is invalid
-      class InvalidDocument < RuntimeError
-      end
     end
   end
 end

@@ -77,6 +77,8 @@ module DiasporaFederation
         hm
       end
 
+      private
+
       ##
       # Applies some basic sanity-checking to the given URL
       # @param [String] url validation subject
@@ -84,7 +86,6 @@ module DiasporaFederation
       def self.webfinger_url_valid?(url)
         !url.nil? && url.instance_of?(String) && url =~ %r{^https?:\/\/.*\{uri\}}i
       end
-      private_class_method :webfinger_url_valid?
 
       ##
       # Gets the webfinger url from an XRD data structure
@@ -93,11 +94,6 @@ module DiasporaFederation
       def self.webfinger_url_from_xrd(data)
         link = data[:links].find {|l| (l[:rel] == "lrdd" && l[:type] == "application/xrd+xml") }
         return link[:template] unless link.nil?
-      end
-      private_class_method :webfinger_url_from_xrd
-
-      # Raised, if the +webfinger_url+ is missing or malformed
-      class InvalidData < RuntimeError
       end
     end
   end
