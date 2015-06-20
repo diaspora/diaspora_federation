@@ -107,24 +107,24 @@ module DiasporaFederation
       # Create a WebFinger instance from the given XML string.
       # @param [String] webfinger_xml WebFinger XML string
       # @return [WebFinger] WebFinger instance
+      # @raise [InvalidData] if the given XML string is invalid or incomplete
       def self.from_xml(webfinger_xml)
-        data = XrdDocument.xml_data(webfinger_xml)
-        raise InvalidData unless xml_data_valid?(data)
+        data = parse_xml_and_validate(webfinger_xml)
 
-        hcard, seed, guid, profile, updates, pubkey = parse_links(data)
+        hcard_url, seed_url, guid, profile_url, updates_url, pubkey = parse_links(data)
 
         wf = allocate
         wf.instance_eval {
           @acct_uri    = data[:subject]
           @alias_url   = data[:aliases].first
-          @hcard_url   = hcard[:href]
-          @seed_url    = seed[:href]
-          @profile_url = profile[:href]
-          @updates_url = updates[:href]
+          @hcard_url   = hcard_url
+          @seed_url    = seed_url
+          @profile_url = profile_url
+          @updates_url = updates_url
 
           # TODO: change me!  ##########
-          @guid        = guid[:href]
-          @pubkey      = pubkey[:href]
+          @guid        = guid
+          @pubkey      = pubkey
           ##############################
         }
         wf
@@ -144,14 +144,17 @@ module DiasporaFederation
       end
       private_class_method :account_data_complete?
 
-      # Does some rudimentary checking on the data Hash produced from parsing the
-      # XML string
-      # @param [Hash] data XML data
-      # @return [Boolean] validation result
-      def self.xml_data_valid?(data)
-        data.key?(:subject) && data.key?(:aliases) && data.key?(:links)
+      # Parses the XML string to a Hash and does some rudimentary checking on
+      # the data Hash.
+      # @param [String] webfinger_xml WebFinger XML string
+      # @return [Hash] data XML data
+      # @raise [InvalidData] if the given XML string is invalid or incomplete
+      def self.parse_xml_and_validate(webfinger_xml)
+        data = XrdDocument.xml_data(webfinger_xml)
+        raise InvalidData unless data.key?(:subject) && data.key?(:aliases) && data.key?(:links)
+        data
       end
-      private_class_method :xml_data_valid?
+      private_class_method :parse_xml_and_validate
 
       def add_links_to(doc)
         doc.links << {rel:  REL_HCARD,
@@ -190,7 +193,7 @@ module DiasporaFederation
         updates = parse_link(links, REL_UPDATES)
         pubkey  = parse_link(links, REL_PUBKEY)
         raise InvalidData unless [hcard, seed, guid, profile, updates, pubkey].all?
-        [hcard, seed, guid, profile, updates, pubkey]
+        [hcard[:href], seed[:href], guid[:href], profile[:href], updates[:href], pubkey[:href]]
       end
       private_class_method :parse_links
 

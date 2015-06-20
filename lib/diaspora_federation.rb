@@ -66,12 +66,12 @@ module DiasporaFederation
 
       return logger.warn "table for #{entity} doesn't exist, skip validation" unless entity.table_exists?
 
-      methods.each {|method|
-        valid = entity.respond_to?(method) ||
-            entity.column_names.include?(method.to_s) ||
-            entity.method_defined?(method)
-        raise ConfigurationError, "the configured class #{entity} for #{name} doesn't respond to #{method}" unless valid
-      }
+      methods.each {|method| entity_respond_to?(entity, method) }
+    end
+
+    def entity_respond_to?(entity, method)
+      valid = entity.respond_to?(method) || entity.column_names.include?(method.to_s) || entity.method_defined?(method)
+      raise ConfigurationError, "the configured class #{entity} for #{name} doesn't respond to #{method}" unless valid
     end
   end
 

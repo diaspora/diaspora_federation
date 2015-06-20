@@ -18,9 +18,6 @@ Metrics/MethodLength:
 Metrics/ClassLength:
   Max: 1500
 
-Metrics/ModuleLength:
-  Max: 1500
-
 # No space makes the method definition shorter and differentiates
 # from a regular assignment.
 Style/SpaceAroundEqualsInParameterDefault:
@@ -142,3 +139,19 @@ Lint/Debugger:
 # Reset some HoundCI changes back to Rubocop defaults
 Style/DotPosition:
   EnforcedStyle: leading
+
+
+# diaspora_federation rules
+Rails/TimeZone:
+  Exclude:
+    - "spec/**/*"
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+Metrics/PerceivedComplexity:
+  Max: 10
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/ModuleLength:
+  Max: 1500
