@@ -16,7 +16,8 @@ module DiasporaFederation
     #     hcard_url:   "https://server.example/hcard/users/user",
     #     seed_url:    "https://server.example/",
     #     profile_url: "https://server.example/u/user",
-    #     updates_url: "https://server.example/public/user.atom",
+    #     atom_url:    "https://server.example/public/user.atom",
+    #     salmon_url:  "https://server.example/receive/users/0123456789abcdef",
     #     guid:        "0123456789abcdef",
     #     pubkey:      "ABCDEF=="
     #   })
@@ -36,7 +37,7 @@ module DiasporaFederation
     class WebFinger
       private_class_method :new
 
-      attr_reader :acct_uri, :alias_url, :hcard_url, :seed_url, :profile_url, :updates_url
+      attr_reader :acct_uri, :alias_url, :hcard_url, :seed_url, :profile_url, :atom_url, :salmon_url
 
       # @deprecated Either convert these to +Property+ elements or move to the
       #   +hCard+, which actually has fields for an +UID+ and +KEY+ defined in
@@ -60,7 +61,10 @@ module DiasporaFederation
       REL_PROFILE = "http://webfinger.net/rel/profile-page"
 
       # Atom feed link relation
-      REL_UPDATES = "http://schemas.google.com/g/2010#updates-from"
+      REL_ATOM = "http://schemas.google.com/g/2010#updates-from"
+
+      # +salmon+ endpoint link relation
+      REL_SALMON = "salmon"
 
       # @deprecated This should be a +Property+ or moved to the +hcard+, but +Link+
       #   is inappropriate according to the specification (will affect older
@@ -85,7 +89,7 @@ module DiasporaFederation
       # @return [WebFinger] WebFinger instance
       # @raise [InvalidData] if the given data Hash is invalid or incomplete
       def self.from_account(data)
-        raise InvalidData unless account_data_complete?(data)
+        raise InvalidData, "account data incomplete" unless account_data_complete?(data)
 
         wf = allocate
         wf.instance_eval {
@@ -94,7 +98,8 @@ module DiasporaFederation
           @hcard_url   = data[:hcard_url]
           @seed_url    = data[:seed_url]
           @profile_url = data[:profile_url]
-          @updates_url = data[:updates_url]
+          @atom_url    = data[:atom_url]
+          @salmon_url  = data[:salmon_url]
 
           # TODO: change me!  #########
           @guid        = data[:guid]
@@ -111,7 +116,7 @@ module DiasporaFederation
       def self.from_xml(webfinger_xml)
         data = parse_xml_and_validate(webfinger_xml)
 
-        hcard_url, seed_url, guid, profile_url, updates_url, pubkey = parse_links(data)
+        hcard_url, seed_url, guid, profile_url, atom_url, salmon_url, pubkey = parse_links(data)
 
         wf = allocate
         wf.instance_eval {
@@ -120,7 +125,8 @@ module DiasporaFederation
           @hcard_url   = hcard_url
           @seed_url    = seed_url
           @profile_url = profile_url
-          @updates_url = updates_url
+          @atom_url    = atom_url
+          @salmon_url  = salmon_url
 
           # TODO: change me!  ##########
           @guid        = guid
@@ -136,11 +142,11 @@ module DiasporaFederation
       # @param [Hash] data account data
       # @return [Boolean] validation result
       def self.account_data_complete?(data)
-        !data.nil? && data.instance_of?(Hash) &&
-        data.key?(:acct_uri) && data.key?(:alias_url) &&
-        data.key?(:hcard_url) && data.key?(:seed_url) &&
-        data.key?(:guid) && data.key?(:profile_url) &&
-        data.key?(:updates_url) && data.key?(:pubkey)
+        data.instance_of?(Hash) && data.key?(:acct_uri) &&
+          data.key?(:alias_url) && data.key?(:hcard_url) &&
+          data.key?(:seed_url) && data.key?(:guid) &&
+          data.key?(:profile_url) && data.key?(:atom_url) &&
+          data.key?(:salmon_url) && data.key?(:pubkey)
       end
       private_class_method :account_data_complete?
 
@@ -151,7 +157,8 @@ module DiasporaFederation
       # @raise [InvalidData] if the given XML string is invalid or incomplete
       def self.parse_xml_and_validate(webfinger_xml)
         data = XrdDocument.xml_data(webfinger_xml)
-        raise InvalidData unless data.key?(:subject) && data.key?(:aliases) && data.key?(:links)
+        valid = data.key?(:subject) && data.key?(:aliases) && data.key?(:links)
+        raise InvalidData, "webfinger xml is incomplete" unless valid
         data
       end
       private_class_method :parse_xml_and_validate
@@ -173,9 +180,11 @@ module DiasporaFederation
         doc.links << {rel:  REL_PROFILE,
                       type: "text/html",
                       href: @profile_url}
-        doc.links << {rel:  REL_UPDATES,
+        doc.links << {rel:  REL_ATOM,
                       type: "application/atom+xml",
-                      href: @updates_url}
+                      href: @atom_url}
+        doc.links << {rel:  REL_SALMON,
+                      href: @salmon_url}
 
         # TODO: change me!  ##############
         doc.links << {rel:  REL_PUBKEY,
@@ -190,10 +199,11 @@ module DiasporaFederation
         seed    = parse_link(links, REL_SEED)
         guid    = parse_link(links, REL_GUID)
         profile = parse_link(links, REL_PROFILE)
-        updates = parse_link(links, REL_UPDATES)
+        atom    = parse_link(links, REL_ATOM)
+        salmon  = parse_link(links, REL_SALMON)
         pubkey  = parse_link(links, REL_PUBKEY)
-        raise InvalidData unless [hcard, seed, guid, profile, updates, pubkey].all?
-        [hcard[:href], seed[:href], guid[:href], profile[:href], updates[:href], pubkey[:href]]
+        raise InvalidData, "webfinger xml is incomplete" unless [hcard, seed, guid, profile, atom, salmon, pubkey].all?
+        [hcard[:href], seed[:href], guid[:href], profile[:href], atom[:href], salmon[:href], pubkey[:href]]
       end
       private_class_method :parse_links
 

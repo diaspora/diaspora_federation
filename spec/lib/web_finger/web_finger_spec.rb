@@ -6,7 +6,8 @@ module DiasporaFederation
     seed_url = "https://pod.geraspora.de/"
     guid = "abcdef0123456789"
     profile_url = "https://pod.example.tld/u/user"
-    updates_url = "https://pod.example.tld/public/user.atom"
+    atom_url = "https://pod.example.tld/public/user.atom"
+    salmon_url = "https://pod.example.tld/receive/users/abcdef0123456789"
     pubkey = "AAAAAA=="
 
     xml = <<-XML
@@ -18,7 +19,8 @@ module DiasporaFederation
   <Link rel="http://joindiaspora.com/seed_location" type="text/html" href="#{seed_url}"/>
   <Link rel="http://joindiaspora.com/guid" type="text/html" href="#{guid}"/>
   <Link rel="http://webfinger.net/rel/profile-page" type="text/html" href="#{profile_url}"/>
-  <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="#{updates_url}"/>
+  <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="#{atom_url}"/>
+  <Link rel="salmon" href="#{salmon_url}"/>
   <Link rel="diaspora-public-key" type="RSA" href="#{pubkey}"/>
 </XRD>
 XML
@@ -35,7 +37,8 @@ XML
           hcard_url:   hcard_url,
           seed_url:    seed_url,
           profile_url: profile_url,
-          updates_url: updates_url,
+          atom_url:    atom_url,
+          salmon_url:  salmon_url,
           guid:        guid,
           pubkey:      pubkey
         )
@@ -52,8 +55,12 @@ XML
         }.to raise_error(WebFinger::InvalidData)
       end
 
-      it "fails if nothing was given" do
+      it "fails if empty was given" do
         expect { WebFinger::WebFinger.from_account({}) }.to raise_error(WebFinger::InvalidData)
+      end
+
+      it "fails if nil was given" do
+        expect { WebFinger::WebFinger.from_account(nil) }.to raise_error(WebFinger::InvalidData)
       end
     end
 
@@ -65,7 +72,8 @@ XML
         expect(wf.hcard_url).to eq(hcard_url)
         expect(wf.seed_url).to eq(seed_url)
         expect(wf.profile_url).to eq(profile_url)
-        expect(wf.updates_url).to eq(updates_url)
+        expect(wf.atom_url).to eq(atom_url)
+        expect(wf.salmon_url).to eq(salmon_url)
 
         expect(wf.guid).to eq(guid)
         expect(wf.pubkey).to eq(pubkey)
@@ -82,7 +90,8 @@ XML
   <Link rel="http://joindiaspora.com/guid" type = "text/html" href="#{guid}"/>
 
   <Link rel="http://webfinger.net/rel/profile-page" type="text/html" href="#{profile_url}"/>
-  <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="#{updates_url}"/>
+  <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="#{atom_url}"/>
+  <Link rel="salmon" href="#{salmon_url}"/>
 
   <Link rel="diaspora-public-key" type = "RSA" href="#{pubkey}"/>
 </XRD>
@@ -94,7 +103,8 @@ XML
         expect(wf.hcard_url).to eq(hcard_url)
         expect(wf.seed_url).to eq(seed_url)
         expect(wf.profile_url).to eq(profile_url)
-        expect(wf.updates_url).to eq(updates_url)
+        expect(wf.atom_url).to eq(atom_url)
+        expect(wf.salmon_url).to eq(salmon_url)
 
         expect(wf.guid).to eq(guid)
         expect(wf.pubkey).to eq(pubkey)
