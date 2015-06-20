@@ -10,7 +10,7 @@ module DiasporaFederation
     # serve as a base for all future changes of this implementation.
     #
     # @example Creating a WebFinger document from account data
-    #   wf = WebFinger.from_account({
+    #   wf = WebFinger.from_person({
     #     acct_uri:    "acct:user@server.example",
     #     alias_url:   "https://server.example/people/0123456789abcdef",
     #     hcard_url:   "https://server.example/hcard/users/user",
@@ -19,7 +19,7 @@ module DiasporaFederation
     #     atom_url:    "https://server.example/public/user.atom",
     #     salmon_url:  "https://server.example/receive/users/0123456789abcdef",
     #     guid:        "0123456789abcdef",
-    #     pubkey:      "ABCDEF=="
+    #     pubkey:      "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
     #   })
     #   xml_string = wf.to_xml
     #
@@ -88,8 +88,8 @@ module DiasporaFederation
       # @param [Hash] data account data
       # @return [WebFinger] WebFinger instance
       # @raise [InvalidData] if the given data Hash is invalid or incomplete
-      def self.from_account(data)
-        raise InvalidData, "account data incomplete" unless account_data_complete?(data)
+      def self.from_person(data)
+        raise InvalidData, "person data incomplete" unless account_data_complete?(data)
 
         wf = allocate
         wf.instance_eval {
@@ -130,7 +130,7 @@ module DiasporaFederation
 
           # TODO: change me!  ##########
           @guid        = guid
-          @pubkey      = pubkey
+          @pubkey      = Base64.strict_decode64(pubkey)
           ##############################
         }
         wf
@@ -189,7 +189,7 @@ module DiasporaFederation
         # TODO: change me!  ##############
         doc.links << {rel:  REL_PUBKEY,
                       type: "RSA",
-                      href: @pubkey}
+                      href: Base64.strict_encode64(@pubkey)}
         ##################################
       end
 

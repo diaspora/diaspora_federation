@@ -8,7 +8,8 @@ module DiasporaFederation
     profile_url = "https://pod.example.tld/u/user"
     atom_url = "https://pod.example.tld/public/user.atom"
     salmon_url = "https://pod.example.tld/receive/users/abcdef0123456789"
-    pubkey = "AAAAAA=="
+    pubkey = "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
+    pubkey_base64 = Base64.strict_encode64(pubkey)
 
     xml = <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -21,7 +22,7 @@ module DiasporaFederation
   <Link rel="http://webfinger.net/rel/profile-page" type="text/html" href="#{profile_url}"/>
   <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="#{atom_url}"/>
   <Link rel="salmon" href="#{salmon_url}"/>
-  <Link rel="diaspora-public-key" type="RSA" href="#{pubkey}"/>
+  <Link rel="diaspora-public-key" type="RSA" href="#{pubkey_base64}"/>
 </XRD>
 XML
 
@@ -31,7 +32,7 @@ XML
 
     context "generation" do
       it "creates a nice XML document" do
-        wf = WebFinger::WebFinger.from_account(
+        wf = WebFinger::WebFinger.from_person(
           acct_uri:    acct,
           alias_url:   alias_url,
           hcard_url:   hcard_url,
@@ -47,7 +48,7 @@ XML
 
       it "fails if some params are missing" do
         expect {
-          WebFinger::WebFinger.from_account(
+          WebFinger::WebFinger.from_person(
             acct_uri:  acct,
             alias_url: alias_url,
             hcard_url: hcard_url
@@ -56,11 +57,11 @@ XML
       end
 
       it "fails if empty was given" do
-        expect { WebFinger::WebFinger.from_account({}) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::WebFinger.from_person({}) }.to raise_error(WebFinger::InvalidData)
       end
 
       it "fails if nil was given" do
-        expect { WebFinger::WebFinger.from_account(nil) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::WebFinger.from_person(nil) }.to raise_error(WebFinger::InvalidData)
       end
     end
 
@@ -93,7 +94,7 @@ XML
   <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="#{atom_url}"/>
   <Link rel="salmon" href="#{salmon_url}"/>
 
-  <Link rel="diaspora-public-key" type = "RSA" href="#{pubkey}"/>
+  <Link rel="diaspora-public-key" type = "RSA" href="#{pubkey_base64}"/>
 </XRD>
 XML
 

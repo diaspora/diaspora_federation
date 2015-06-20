@@ -23,12 +23,12 @@ module DiasporaFederation
     #
     # GET /webfinger?q=<uri>
     def legacy_webfinger
-      @person = find_person(params[:q]) if params[:q]
+      person = find_person(params[:q]) if params[:q]
 
-      return render nothing: true, status: 404 if @person.nil?
+      return render nothing: true, status: 404 if person.nil?
 
-      logger.info "webfinger profile request for: #{@person.diaspora_handle}"
-      render "webfinger", content_type: "application/xrd+xml"
+      logger.info "webfinger profile request for: #{person.diaspora_handle}"
+      render body: WebFinger::WebFinger.from_person(person.webfinger_hash).to_xml, content_type: "application/xrd+xml"
     end
 
     private

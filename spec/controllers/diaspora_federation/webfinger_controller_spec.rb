@@ -37,18 +37,28 @@ module DiasporaFederation
 
     describe "#legacy_webfinger" do
       it "succeeds when the person exists" do
-        post :legacy_webfinger, "q" => "alice@localhost:3000"
+        get :legacy_webfinger, "q" => "alice@localhost:3000"
         expect(response).to be_success
       end
 
       it "succeeds with 'acct:' in the query when the person exists" do
-        post :legacy_webfinger, "q" => "acct:alice@localhost:3000"
+        get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
         expect(response).to be_success
       end
 
+      it "contains the diaspora handle" do
+        get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
+        expect(response.body).to include "<Subject>acct:alice@localhost:3000</Subject>"
+      end
+
       it "404s when the person does not exist" do
-        post :legacy_webfinger, "q" => "me@mydiaspora.pod.com"
+        get :legacy_webfinger, "q" => "me@mydiaspora.pod.com"
         expect(response).to be_not_found
+      end
+
+      it "calls WebFinger::WebFinger.from_person" do
+        expect(WebFinger::WebFinger).to receive(:from_person).and_call_original
+        get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
       end
     end
   end
