@@ -13,7 +13,7 @@ module DiasporaFederation
     #   wf = WebFinger.from_person({
     #     acct_uri:    "acct:user@server.example",
     #     alias_url:   "https://server.example/people/0123456789abcdef",
-    #     hcard_url:   "https://server.example/hcard/users/user",
+    #     hcard_url:   "https://server.example/hcard/users/0123456789abcdef",
     #     seed_url:    "https://server.example/",
     #     profile_url: "https://server.example/u/user",
     #     atom_url:    "https://server.example/public/user.atom",
@@ -37,17 +37,56 @@ module DiasporaFederation
     class WebFinger
       private_class_method :new
 
-      attr_reader :acct_uri, :alias_url, :hcard_url, :seed_url, :profile_url, :atom_url, :salmon_url
+      # The Subject element should contain the webfinger address that was asked
+      # for. If it does not, then this webfinger profile MUST be ignored.
+      attr_reader :acct_uri
+
+      # Link to the users profile
+      attr_reader :alias_url, :profile_url
+
+      # Link to the +hCard+
+      attr_reader :hcard_url
+
+      # Link to the pod
+      attr_reader :seed_url
+
+      # This atom feed is an Activity Stream of the user's public posts. Diaspora
+      # pods SHOULD publish an Activity Stream of public posts, but there is
+      # currently no requirement to be able to read Activity Streams.
+      # @see http://activitystrea.ms/ Activity Streams specification
+      #
+      # Note that this feed MAY also be made available through the PubSubHubbub
+      # mechanism by supplying a <link rel="hub"> in the atom feed itself.
+      attr_reader :atom_url
+
+      # The salmon endpoint URL
+      # @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-salmon-00.html#SMLR
+      #   Panzer draft for Salmon, paragraph 3.3
+      attr_reader :salmon_url
 
       # @deprecated Either convert these to +Property+ elements or move to the
-      #   +hCard+, which actually has fields for an +UID+ and +KEY+ defined in
-      #   the +vCard+ specification (will affect older Diaspora* installations).
-      attr_reader :guid, :pubkey
+      #   +hCard+, which actually has fields for an +UID+ defined in the +vCard+
+      #   specification (will affect older Diaspora* installations).
+      #
+      # This is just the guid. When a user creates an account on a pod, the pod
+      # MUST assign them a guid - a random hexadecimal string of at least 8
+      # hexadecimal digits.
+      attr_reader :guid
 
-      # +hcard+ link relation
+      # @deprecated Either convert these to +Property+ elements or move to the
+      #   +hCard+, which actually has fields for an +KEY+ defined in the +vCard+
+      #   specification (will affect older Diaspora* installations).
+      #
+      # When a user is created on the pod, the pod MUST generate a pgp keypair
+      # for them. This key is used for signing messages. The format is a
+      # DER-encoded PKCS#1 key beginning with the text
+      # "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
+      attr_reader :pubkey
+
+      # +hcard_url+ link relation
       REL_HCARD = "http://microformats.org/profile/hcard"
 
-      # +seed_location+ link relation
+      # +seed_url+ link relation
       REL_SEED = "http://joindiaspora.com/seed_location"
 
       # @deprecated This should be a +Property+ or moved to the +hCard+, but +Link+
@@ -56,20 +95,20 @@ module DiasporaFederation
       # +guid+ link relation
       REL_GUID = "http://joindiaspora.com/guid"
 
-      # +profile-page+ link relation.
+      # +profile_url+ link relation.
       # @note This might just as well be an +Alias+ instead of a +Link+.
       REL_PROFILE = "http://webfinger.net/rel/profile-page"
 
-      # Atom feed link relation
+      # +atom_url+ link relation
       REL_ATOM = "http://schemas.google.com/g/2010#updates-from"
 
-      # +salmon+ endpoint link relation
+      # +salmon_url+ link relation
       REL_SALMON = "salmon"
 
       # @deprecated This should be a +Property+ or moved to the +hcard+, but +Link+
       #   is inappropriate according to the specification (will affect older
       #   Diaspora* installations).
-      # +diaspora-public-key+ link relation
+      # +pubkey+ link relation
       REL_PUBKEY = "diaspora-public-key"
 
       # Create the XML string from the current WebFinger instance

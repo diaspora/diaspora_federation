@@ -7,6 +7,7 @@
 [![Test Coverage](https://codeclimate.com/github/SuperTux88/diaspora_federation/badges/coverage.svg)](https://codeclimate.com/github/SuperTux88/diaspora_federation/coverage)
 [![Dependency Status](https://gemnasium.com/SuperTux88/diaspora_federation.svg)](https://gemnasium.com/SuperTux88/diaspora_federation)
 
+[Documentation](http://www.rubydoc.info/github/SuperTux88/diaspora_federation/master) |
 [Project site](https://diasporafoundation.org) |
 [Wiki](https://wiki.diasporafoundation.org) |
 [Bugtracker](http://github.com/SuperTux88/diaspora_federation/issues)

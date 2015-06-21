@@ -19,10 +19,29 @@ module DiasporaFederation
     attr_accessor :server_uri
 
     ##
-    # the class to use as person.
+    # the class to use as +Person+
     #
     # Example:
     #   config.person_class = Person.to_s
+    #
+    # This class must have the following methods:
+    #
+    # *find_local_by_diaspora_handle*
+    # This should return a +Person+, which is on this pod.
+    #
+    # *webfinger_hash*
+    # This should return a +Hash+ with the followong informations:
+    #   {
+    #     acct_uri:    "acct:user@server.example",
+    #     alias_url:   "https://server.example/people/0123456789abcdef",
+    #     hcard_url:   "https://server.example/hcard/users/0123456789abcdef",
+    #     seed_url:    "https://server.example/",
+    #     profile_url: "https://server.example/u/user",
+    #     atom_url:    "https://server.example/public/user.atom",
+    #     salmon_url:  "https://server.example/receive/users/0123456789abcdef",
+    #     guid:        "0123456789abcdef",
+    #     pubkey:      "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
+    #   }
     attr_accessor :person_class
     def person_class
       const_get(@person_class)
@@ -42,6 +61,7 @@ module DiasporaFederation
     # validates if the engine is configured correctly
     #
     # called from after_initialize
+    # @raise [ConfigurationError] if the configuration is incomplete or invalid
     def validate_config
       raise ConfigurationError, "missing server_uri" unless @server_uri.respond_to? :host
       validate_class(@person_class, "person_class", %i(
