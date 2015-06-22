@@ -27,7 +27,7 @@ module DiasporaFederation
 XML
 
     it "must not create blank instances" do
-      expect { WebFinger::WebFinger.new }.to raise_error
+      expect { WebFinger::WebFinger.new }.to raise_error(NameError)
     end
 
     context "generation" do

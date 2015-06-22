@@ -123,7 +123,7 @@ module DiasporaFederation
         doc.to_xml
       end
 
-      # Create a WebFinger instance from the given account data Hash.
+      # Create a WebFinger instance from the given person data Hash.
       # @param [Hash] data account data
       # @return [WebFinger] WebFinger instance
       # @raise [InvalidData] if the given data Hash is invalid or incomplete
