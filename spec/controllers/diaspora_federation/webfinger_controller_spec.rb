@@ -8,9 +8,10 @@ module DiasporaFederation
         WebfingerController.instance_variable_set(:@host_meta_xml, nil) # clear cache
       end
 
-      it "succeeds" do
+      it "succeeds", fixture: true do
         get :host_meta
         expect(response).to be_success
+        save_fixture(response.body, "host-meta")
       end
 
       it "contains the webfinger-template" do
@@ -36,9 +37,10 @@ module DiasporaFederation
     end
 
     describe "GET #legacy_webfinger" do
-      it "succeeds when the person exists" do
+      it "succeeds when the person exists", fixture: true do
         get :legacy_webfinger, "q" => "alice@localhost:3000"
         expect(response).to be_success
+        save_fixture(response.body, "legacy-webfinger")
       end
 
       it "succeeds with 'acct:' in the query when the person exists" do
@@ -57,7 +59,8 @@ module DiasporaFederation
       end
 
       it "calls WebFinger::WebFinger.from_person" do
-        expect(WebFinger::WebFinger).to receive(:from_person).and_call_original
+        alice = Person.find_local_by_diaspora_handle("alice@localhost:3000")
+        expect(WebFinger::WebFinger).to receive(:from_person).with(alice.webfinger_hash).and_call_original
         get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
       end
     end

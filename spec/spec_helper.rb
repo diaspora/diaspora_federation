@@ -1,12 +1,17 @@
-require "simplecov"
-require "simplecov-rcov"
-SimpleCov.formatters = [
-  SimpleCov::Formatter::HTMLFormatter,
-  SimpleCov::Formatter::RcovFormatter
-]
-SimpleCov.start do
-  add_filter "spec"
-  add_filter "test"
+unless ENV["NO_COVERAGE"] == "true"
+  require "simplecov"
+  require "simplecov-rcov"
+  SimpleCov.formatters = [
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::RcovFormatter
+  ]
+  SimpleCov.start do
+    add_filter "spec"
+    add_filter "test"
+  end
+
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
 end
 
 ENV["RAILS_ENV"] ||= "test"
@@ -16,9 +21,6 @@ require "rspec/rails"
 
 # load factory girl factories
 require "factories"
-
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
 
 # Force fixture rebuild
 FileUtils.rm_f(Rails.root.join("tmp", "fixture_builder.yml"))
