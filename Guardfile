@@ -18,13 +18,13 @@ guard :rspec, cmd: "NO_COVERAGE=true bin/rspec" do
 
   watch(rails.controllers) do |m|
     [
-      # rspec.spec.call("routing/#{m[1]}_routing"),
+      rspec.spec.call("routing/#{m[1]}_routing"),
       rspec.spec.call("controllers/#{m[1]}_controller")
     ]
   end
 
   # Rails config changes
   watch(rails.spec_helper)     { rspec.spec_dir }
-  # watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
+  watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
   watch(rails.app_controller)  { "#{rspec.spec_dir}/controllers" }
 end
