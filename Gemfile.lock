@@ -204,6 +204,9 @@ GEM
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
     slop (3.6.0)
+    spring (1.3.6)
+    spring-commands-rspec (1.0.4)
+      spring (>= 0.9.1)
     sprockets (3.2.0)
       rack (~> 1.0)
     sprockets-rails (2.3.1)
@@ -242,6 +245,8 @@ DEPENDENCIES
   rubocop (= 0.32.0)
   simplecov (= 0.10.0)
   simplecov-rcov (= 0.2.3)
+  spring
+  spring-commands-rspec
   sqlite3
   uuid (= 2.3.8)
   yard

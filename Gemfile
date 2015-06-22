@@ -24,7 +24,7 @@ group :development do
 end
 
 group :test do
-  # rspec
+  # unit tests
   gem "rspec-instafail",           "0.2.6",  require: false
   gem "fuubar",                    "2.0.0"
   gem "nyan-cat-formatter",                  require: false
@@ -40,11 +40,15 @@ group :test do
 end
 
 group :development, :test do
-  # rspec
+  # unit tests
   gem "rspec-rails", "3.3.1"
 
-  # guard
+  # automatic test runs
   gem "guard-rspec", require: false
+
+  # preloading environment
+  gem "spring"
+  gem "spring-commands-rspec"
 
   # GUID generation
   gem "uuid", "2.3.8"

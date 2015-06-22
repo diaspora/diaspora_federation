@@ -6,6 +6,11 @@
 # this file is here to facilitate running it.
 #
 
+begin
+  load File.expand_path("../spring", __FILE__)
+rescue LoadError
+end
+
 require 'pathname'
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
   Pathname.new(__FILE__).realpath)
