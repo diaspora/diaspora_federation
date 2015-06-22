@@ -43,6 +43,9 @@ group :development, :test do
   # rspec
   gem "rspec-rails", "3.3.1"
 
+  # guard
+  gem "guard-rspec", require: false
+
   # GUID generation
   gem "uuid", "2.3.8"
 
