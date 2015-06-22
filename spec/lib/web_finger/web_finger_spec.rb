@@ -1,17 +1,18 @@
 module DiasporaFederation
   describe WebFinger::WebFinger do
-    acct = "acct:user@pod.example.tld"
-    alias_url = "http://pod.example.tld/"
-    hcard_url = "https://pod.example.tld/hcard/users/abcdef0123456789"
-    seed_url = "https://pod.geraspora.de/"
-    guid = "abcdef0123456789"
-    profile_url = "https://pod.example.tld/u/user"
-    atom_url = "https://pod.example.tld/public/user.atom"
-    salmon_url = "https://pod.example.tld/receive/users/abcdef0123456789"
-    pubkey = "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
-    pubkey_base64 = Base64.strict_encode64(pubkey)
+    let(:acct) { "acct:user@pod.example.tld" }
+    let(:alias_url) { "http://pod.example.tld/" }
+    let(:hcard_url) { "https://pod.example.tld/hcard/users/abcdef0123456789" }
+    let(:seed_url) { "https://pod.geraspora.de/" }
+    let(:guid) { "abcdef0123456789" }
+    let(:profile_url) { "https://pod.example.tld/u/user" }
+    let(:atom_url) { "https://pod.example.tld/public/user.atom" }
+    let(:salmon_url) { "https://pod.example.tld/receive/users/abcdef0123456789" }
+    let(:pubkey) { "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----" }
+    let(:pubkey_base64) { Base64.strict_encode64(pubkey) }
 
-    xml = <<-XML
+    let(:xml) {
+      <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
   <Subject>#{acct}</Subject>
@@ -25,9 +26,10 @@ module DiasporaFederation
   <Link rel="diaspora-public-key" type="RSA" href="#{pubkey_base64}"/>
 </XRD>
 XML
+    }
 
     it "must not create blank instances" do
-      expect { WebFinger::WebFinger.new }.to raise_error(NameError)
+      expect { WebFinger::WebFinger.new }.to raise_error NameError
     end
 
     context "generation" do
@@ -57,11 +59,11 @@ XML
       end
 
       it "fails if empty was given" do
-        expect { WebFinger::WebFinger.from_person({}) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::WebFinger.from_person({}) }.to raise_error WebFinger::InvalidData
       end
 
       it "fails if nil was given" do
-        expect { WebFinger::WebFinger.from_person(nil) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::WebFinger.from_person(nil) }.to raise_error WebFinger::InvalidData
       end
     end
 
@@ -117,11 +119,11 @@ XML
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
 </XRD>
 XML
-        expect { WebFinger::WebFinger.from_xml(invalid_xml) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::WebFinger.from_xml(invalid_xml) }.to raise_error WebFinger::InvalidData
       end
 
       it "fails if the document is not XML" do
-        expect { WebFinger::WebFinger.from_xml("") }.to raise_error(WebFinger::InvalidDocument)
+        expect { WebFinger::WebFinger.from_xml("") }.to raise_error WebFinger::InvalidDocument
       end
     end
   end

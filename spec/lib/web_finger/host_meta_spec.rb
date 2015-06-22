@@ -1,18 +1,20 @@
 module DiasporaFederation
   describe WebFinger::HostMeta do
-    base_url = "https://pod.example.tld/"
-    xml = <<-XML
+    let(:base_url) { "https://pod.example.tld/" }
+    let(:xml) {
+      <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
   <Link rel="lrdd" type="application/xrd+xml" template="#{base_url}webfinger?q={uri}"/>
 </XRD>
 XML
+    }
 
     it "must not create blank instances" do
-      expect { WebFinger::HostMeta.new }.to raise_error(NoMethodError)
+      expect { WebFinger::HostMeta.new }.to raise_error NoMethodError
     end
 
-    context "#to_xml" do
+    context "generation" do
       it "creates a nice XML document" do
         hm = WebFinger::HostMeta.from_base_url(base_url)
         expect(hm.to_xml).to eq(xml)
@@ -24,11 +26,11 @@ XML
       end
 
       it "fails if the base_url was omitted" do
-        expect { WebFinger::HostMeta.from_base_url("") }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::HostMeta.from_base_url("") }.to raise_error WebFinger::InvalidData
       end
     end
 
-    context "#webfinger_template_url" do
+    context "parsing" do
       it "parses its own output" do
         hm = WebFinger::HostMeta.from_xml(xml)
         expect(hm.webfinger_template_url).to eq("#{base_url}webfinger?q={uri}")
@@ -57,7 +59,7 @@ XML
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
 </XRD>
 XML
-        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error WebFinger::InvalidData
       end
 
       it "fails if the document contains a malformed webfinger url" do
@@ -67,11 +69,11 @@ XML
   <Link rel="lrdd" type="application/xrd+xml" template="#{base_url}webfinger?q="/>
 </XRD>
 XML
-        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error WebFinger::InvalidData
       end
 
       it "fails if the document is invalid" do
-        expect { WebFinger::HostMeta.from_xml("") }.to raise_error(WebFinger::InvalidDocument)
+        expect { WebFinger::HostMeta.from_xml("") }.to raise_error WebFinger::InvalidDocument
       end
     end
   end

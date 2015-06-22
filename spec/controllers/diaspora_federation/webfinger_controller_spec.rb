@@ -2,7 +2,7 @@ module DiasporaFederation
   describe WebfingerController, type: :controller do
     routes { DiasporaFederation::Engine.routes }
 
-    describe "#host_meta" do
+    describe "GET #host_meta" do
       before do
         DiasporaFederation.server_uri = URI("http://localhost:3000/")
         WebfingerController.instance_variable_set(:@host_meta_xml, nil) # clear cache
@@ -35,7 +35,7 @@ module DiasporaFederation
       end
     end
 
-    describe "#legacy_webfinger" do
+    describe "GET #legacy_webfinger" do
       it "succeeds when the person exists" do
         get :legacy_webfinger, "q" => "alice@localhost:3000"
         expect(response).to be_success

@@ -100,7 +100,7 @@ HTML
     }
 
     it "must not create blank instances" do
-      expect { WebFinger::HCard.new }.to raise_error(NameError)
+      expect { WebFinger::HCard.new }.to raise_error NameError
     end
 
     context "generation" do
@@ -127,15 +127,15 @@ HTML
             guid:            guid,
             diaspora_handle: handle
           )
-        }.to raise_error(WebFinger::InvalidData)
+        }.to raise_error WebFinger::InvalidData
       end
 
       it "fails if nothing was given" do
-        expect { WebFinger::HCard.from_profile({}) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::HCard.from_profile({}) }.to raise_error WebFinger::InvalidData
       end
 
       it "fails if nil was given" do
-        expect { WebFinger::HCard.from_profile(nil) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::HCard.from_profile(nil) }.to raise_error WebFinger::InvalidData
       end
     end
 
@@ -239,11 +239,11 @@ HTML
   <span class="fn">#{name}</span>
 </div>
 HTML
-        expect { WebFinger::HCard.from_html(invalid_html) }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::HCard.from_html(invalid_html) }.to raise_error WebFinger::InvalidData
       end
 
       it "fails if the document is not HTML" do
-        expect { WebFinger::HCard.from_html("") }.to raise_error(WebFinger::InvalidData)
+        expect { WebFinger::HCard.from_html("") }.to raise_error WebFinger::InvalidData
       end
     end
   end

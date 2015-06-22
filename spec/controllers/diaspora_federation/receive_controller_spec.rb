@@ -2,7 +2,7 @@ module DiasporaFederation
   describe ReceiveController, type: :controller do
     routes { DiasporaFederation::Engine.routes }
 
-    describe "#public" do
+    describe "POST #public" do
       it "succeeds" do
         post :public, xml: "<diaspora/>"
         expect(response).to be_success
@@ -14,7 +14,7 @@ module DiasporaFederation
       end
     end
 
-    describe "#private" do
+    describe "POST #private" do
       it "succeeds" do
         post :private, guid: "any-guid", xml: "<diaspora/>"
         expect(response).to be_success
