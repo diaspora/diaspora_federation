@@ -76,11 +76,11 @@ XML
       end
 
       it "raises InvalidDocument if the xml is empty" do
-        expect{ WebFinger::XrdDocument.xml_data("") }.to raise_error WebFinger::InvalidDocument
+        expect { WebFinger::XrdDocument.xml_data("") }.to raise_error WebFinger::InvalidDocument
       end
 
       it "raises InvalidDocument if the xml is no XRD document" do
-        expect{ WebFinger::XrdDocument.xml_data("<html></html>") }.to raise_error WebFinger::InvalidDocument
+        expect { WebFinger::XrdDocument.xml_data("<html></html>") }.to raise_error WebFinger::InvalidDocument
       end
     end
   end

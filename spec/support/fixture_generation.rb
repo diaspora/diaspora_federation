@@ -1,6 +1,6 @@
 module FixtureGeneration
   # Saves the markup to a fixture file using the given name
-  def save_fixture(markup, name, fixture_path=nil )
+  def save_fixture(markup, name, fixture_path=nil)
     fixture_path = Rails.root.join("tmp", "fixtures") unless fixture_path
     Dir.mkdir(fixture_path) unless File.exist?(fixture_path)
 
