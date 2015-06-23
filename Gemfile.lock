@@ -133,7 +133,7 @@ GEM
       pry (~> 0.10)
     pry-debundle (0.8)
       pry
-    rack (1.6.2)
+    rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.2)
@@ -169,17 +169,17 @@ GEM
       rspec-core (~> 3.3.0)
       rspec-expectations (~> 3.3.0)
       rspec-mocks (~> 3.3.0)
-    rspec-core (3.3.0)
+    rspec-core (3.3.1)
       rspec-support (~> 3.3.0)
     rspec-expectations (3.3.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.3.0)
     rspec-instafail (0.2.6)
       rspec
-    rspec-mocks (3.3.0)
+    rspec-mocks (3.3.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.3.0)
-    rspec-rails (3.3.1)
+    rspec-rails (3.3.2)
       actionpack (>= 3.0, < 4.3)
       activesupport (>= 3.0, < 4.3)
       railties (>= 3.0, < 4.3)
@@ -241,7 +241,7 @@ DEPENDENCIES
   pry-byebug
   pry-debundle
   rspec-instafail (= 0.2.6)
-  rspec-rails (= 3.3.1)
+  rspec-rails (= 3.3.2)
   rubocop (= 0.32.0)
   simplecov (= 0.10.0)
   simplecov-rcov (= 0.2.3)
