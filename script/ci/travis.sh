@@ -1,4 +1,4 @@
 #!/bin/sh
 
-command="bundle exec rake --trace ci:travis:run"
+command="bundle exec rake --trace"
 exec $command

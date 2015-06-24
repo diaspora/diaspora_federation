@@ -14,9 +14,25 @@ Gem::Specification.new do |s|
   s.description = "A rails engine that adds the diaspora* federation protocol to a rails app"
   s.license     = "AGPL 3.0 - http://www.gnu.org/licenses/agpl-3.0.html"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
-  s.test_files = Dir["test/**/*"]
+  s.files      = Dir["{app,lib}/**/*", "config/routes.rb", "LICENSE", "Rakefile", "README.md"]
+  s.test_files = `git ls-files -- {test,spec}/*`.split("\n")
 
-  s.add_dependency "rails", "~> 4.2.2"
+  s.add_dependency "rails",    "~> 4.2.2"
   s.add_dependency "nokogiri", "~> 1.6.6.2"
+
+  ############################
+  # development dependencies #
+  ############################
+
+  # unit tests
+  s.add_development_dependency "rspec-rails",        "~> 3.3.2"
+  # test helpers
+  s.add_development_dependency "fixture_builder",    "~> 0.4.1"
+  s.add_development_dependency "factory_girl_rails", "~> 4.5.0"
+
+  # GUID generation
+  s.add_development_dependency "uuid",               "~> 2.3.8"
+
+  # test database
+  s.add_development_dependency "sqlite3",            "~> 1.3.10"
 end

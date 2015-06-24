@@ -25,24 +25,16 @@ end
 
 group :test do
   # unit tests
-  gem "rspec-instafail",           "0.2.6",  require: false
-  gem "fuubar",                    "2.0.0"
+  gem "fuubar",                    "2.0.0",  require: false
   gem "nyan-cat-formatter",                  require: false
 
   # test coverage
   gem "simplecov",                 "0.10.0", require: false
   gem "simplecov-rcov",            "0.2.3",  require: false
   gem "codeclimate-test-reporter",           require: false
-
-  # test helpers
-  gem "fixture_builder",           "0.4.1"
-  gem "factory_girl_rails",        "4.5.0"
 end
 
 group :development, :test do
-  # unit tests
-  gem "rspec-rails", "3.3.2"
-
   # automatic test runs
   gem "guard-rspec", require: false
 
@@ -50,11 +42,9 @@ group :development, :test do
   gem "spring"
   gem "spring-commands-rspec"
 
-  # GUID generation
-  gem "uuid", "2.3.8"
-
-  # test database
-  gem "sqlite3"
+  # TODO: development dependencies from gemspec
+  gem "rspec-rails", "~> 3.3.2"
+  gem "uuid",        "~> 2.3.8"
 end
 
 group :development, :production do

@@ -22,4 +22,5 @@ Bundler::GemHelper.install_tasks
 
 Rails.application.load_tasks
 
-task default: :spec
+task test: %w(spec:prepare spec)
+task default: :test
