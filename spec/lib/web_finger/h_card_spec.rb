@@ -1,7 +1,7 @@
 module DiasporaFederation
   describe WebFinger::HCard do
     let(:guid) { "abcdef0123456789" }
-    let(:handle) { "user@pod.example.tld" }
+    let(:nickname) { "user" }
     let(:first_name) { "Test" }
     let(:last_name)  { "Testington" }
     let(:name) { "#{first_name} #{last_name}" }
@@ -35,7 +35,7 @@ module DiasporaFederation
         <dl class="entity_nickname">
           <dt>Nickname</dt>
           <dd>
-            <span class="nickname">#{handle.split('@').first}</span>
+            <span class="nickname">#{nickname}</span>
           </dd>
         </dl>
         <dl class="entity_full_name">
@@ -107,7 +107,7 @@ HTML
       it "creates an instance from a data hash" do
         hc = WebFinger::HCard.from_profile(
           guid:             guid,
-          diaspora_handle:  handle,
+          nickname:         nickname,
           full_name:        name,
           url:              url,
           photo_full_url:   photo_url,
@@ -124,8 +124,8 @@ HTML
       it "fails if some params are missing" do
         expect {
           WebFinger::HCard.from_profile(
-            guid:            guid,
-            diaspora_handle: handle
+            guid:     guid,
+            nickname: nickname
           )
         }.to raise_error WebFinger::InvalidData
       end
@@ -143,7 +143,7 @@ HTML
       it "reads its own output" do
         hc = WebFinger::HCard.from_html(html)
         expect(hc.guid).to eq(guid)
-        expect(hc.nickname).to eq(handle.split("@").first)
+        expect(hc.nickname).to eq(nickname)
         expect(hc.full_name).to eq(name)
         expect(hc.url).to eq(url)
         expect(hc.photo_full_url).to eq(photo_url)

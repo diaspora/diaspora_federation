@@ -181,11 +181,11 @@ module DiasporaFederation
       # @param [Hash] data account data
       # @return [Boolean] validation result
       def self.account_data_complete?(data)
-        data.instance_of?(Hash) && data.key?(:acct_uri) &&
-          data.key?(:alias_url) && data.key?(:hcard_url) &&
-          data.key?(:seed_url) && data.key?(:guid) &&
-          data.key?(:profile_url) && data.key?(:atom_url) &&
-          data.key?(:salmon_url) && data.key?(:pubkey)
+        data.instance_of?(Hash) &&
+          %i(
+            acct_uri alias_url hcard_url seed_url
+            guid profile_url atom_url salmon_url pubkey
+          ).all? {|k| data.key? k }
       end
       private_class_method :account_data_complete?
 

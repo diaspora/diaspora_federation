@@ -17,7 +17,7 @@ module DiasporaFederation
     # @example Creating a hCard document from account data
     #   hc = HCard.from_profile({
     #     guid:             "0123456789abcdef",
-    #     diaspora_handle:  "user@server.example",
+    #     nickname:         "user",
     #     full_name:        "User Name",
     #     url:              "https://server.example/",
     #     photo_full_url:   "https://server.example/uploads/f.jpg",
@@ -108,7 +108,7 @@ module DiasporaFederation
         hc = allocate
         hc.instance_eval {
           @guid             = data[:guid]
-          @nickname         = data[:diaspora_handle].split("@").first
+          @nickname         = data[:nickname]
           @full_name        = data[:full_name]
           @url              = data[:url]
           @photo_full_url   = data[:photo_full_url]
@@ -228,12 +228,12 @@ module DiasporaFederation
       # @param [Hash] data account data
       # @return [Boolean] validation result
       def self.account_data_complete?(data)
-        data.instance_of?(Hash) && data.key?(:guid) &&
-          data.key?(:diaspora_handle) && data.key?(:full_name) &&
-          data.key?(:url) && data.key?(:photo_full_url) &&
-          data.key?(:photo_medium_url) && data.key?(:photo_small_url) &&
-          data.key?(:pubkey) && data.key?(:searchable) &&
-          data.key?(:first_name) && data.key?(:last_name)
+        data.instance_of?(Hash) &&
+          %i(
+            guid nickname full_name url
+            photo_full_url photo_medium_url photo_small_url
+            pubkey searchable first_name last_name
+          ).all? {|k| data.key? k }
       end
       private_class_method :account_data_complete?
 
