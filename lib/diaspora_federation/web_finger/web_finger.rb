@@ -39,15 +39,16 @@ module DiasporaFederation
 
       # The Subject element should contain the webfinger address that was asked
       # for. If it does not, then this webfinger profile MUST be ignored.
+      # @return [String]
       attr_reader :acct_uri
 
-      # Link to the users profile
+      # @return [String] link to the users profile
       attr_reader :alias_url, :profile_url
 
-      # Link to the +hCard+
+      # @return [String] link to the +hCard+
       attr_reader :hcard_url
 
-      # Link to the pod
+      # @return [String] link to the pod
       attr_reader :seed_url
 
       # This atom feed is an Activity Stream of the user's public posts. Diaspora
@@ -57,9 +58,10 @@ module DiasporaFederation
       #
       # Note that this feed MAY also be made available through the PubSubHubbub
       # mechanism by supplying a <link rel="hub"> in the atom feed itself.
+      # @return [String] atom feed url
       attr_reader :atom_url
 
-      # The salmon endpoint URL
+      # @return [String] salmon endpoint url
       # @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-salmon-00.html#SMLR
       #   Panzer draft for Salmon, paragraph 3.3
       attr_reader :salmon_url
@@ -68,19 +70,25 @@ module DiasporaFederation
       #   +hCard+, which actually has fields for an +UID+ defined in the +vCard+
       #   specification (will affect older Diaspora* installations).
       #
+      # @see HCard#guid
+      #
       # This is just the guid. When a user creates an account on a pod, the pod
       # MUST assign them a guid - a random hexadecimal string of at least 8
       # hexadecimal digits.
+      # @return [String] guid
       attr_reader :guid
 
       # @deprecated Either convert these to +Property+ elements or move to the
       #   +hCard+, which actually has fields for an +KEY+ defined in the +vCard+
       #   specification (will affect older Diaspora* installations).
       #
+      # @see HCard#pubkey
+      #
       # When a user is created on the pod, the pod MUST generate a pgp keypair
       # for them. This key is used for signing messages. The format is a
       # DER-encoded PKCS#1 key beginning with the text
       # "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
+      # @return [String] public key
       attr_reader :pubkey
 
       # +hcard_url+ link relation
@@ -140,7 +148,7 @@ module DiasporaFederation
           @atom_url    = data[:atom_url]
           @salmon_url  = data[:salmon_url]
 
-          # TODO: change me!  #########
+          # TODO: remove me!  #########
           @guid        = data[:guid]
           @pubkey      = data[:pubkey]
           #############################
@@ -167,7 +175,7 @@ module DiasporaFederation
           @atom_url    = atom_url
           @salmon_url  = salmon_url
 
-          # TODO: change me!  ##########
+          # TODO: remove me!  ##########
           @guid        = guid
           @pubkey      = Base64.strict_decode64(pubkey)
           ##############################
@@ -210,7 +218,7 @@ module DiasporaFederation
                       type: "text/html",
                       href: @seed_url}
 
-        # TODO: change me!  ##############
+        # TODO: remove me!  ##############
         doc.links << {rel:  REL_GUID,
                       type: "text/html",
                       href: @guid}
@@ -225,7 +233,7 @@ module DiasporaFederation
         doc.links << {rel:  REL_SALMON,
                       href: @salmon_url}
 
-        # TODO: change me!  ##############
+        # TODO: remove me!  ##############
         doc.links << {rel:  REL_PUBKEY,
                       type: "RSA",
                       href: Base64.strict_encode64(@pubkey)}

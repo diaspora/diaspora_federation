@@ -43,17 +43,61 @@ module DiasporaFederation
     class HCard
       private_class_method :new
 
-      attr_reader :guid, :nickname, :full_name, :url, :pubkey,
-                  :photo_full_url, :photo_medium_url, :photo_small_url
+      # This is just the guid. When a user creates an account on a pod, the pod
+      # MUST assign them a guid - a random hexadecimal string of at least 8
+      # hexadecimal digits.
+      # @return [String] guid
+      attr_reader :guid
+
+      # the first part of the diaspora handle
+      # @return [String] nickname
+      attr_reader :nickname
+
+      # @return [String] display name of the user
+      attr_reader :full_name
+
+      # @deprecated should be changed to the profile url. The pod url is in
+      #   the WebFinger (see {WebFinger#seed_url}, will affect older Diaspora*
+      #   installations).
+      #
+      # @return [String] link to the pod
+      attr_reader :url
+
+      # When a user is created on the pod, the pod MUST generate a pgp keypair
+      # for them. This key is used for signing messages. The format is a
+      # DER-encoded PKCS#1 key beginning with the text
+      # "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
+      # @return [String] public key
+      attr_reader :pubkey
+
+      # @return [String] url to the big avatar (300x300)
+      attr_reader :photo_full_url
+      # @return [String] url to the medium avatar (100x100)
+      attr_reader :photo_medium_url
+      # @return [String] url to the small avatar (50x50)
+      attr_reader :photo_small_url
 
       # @deprecated We decided to only use one name field, these should be removed
       #   in later iterations (will affect older Diaspora* installations).
-      attr_reader :first_name, :last_name
+      #
+      # @see #full_name
+      # @return [String] first name
+      attr_reader :first_name
+
+      # @deprecated We decided to only use one name field, these should be removed
+      #   in later iterations (will affect older Diaspora* installations).
+      #
+      # @see #full_name
+      # @return [String] last name
+      attr_reader :last_name
 
       # @deprecated As this is a simple property, consider move to WebFinger instead
       #   of HCard. vCard has no comparable field for this information, but
       #   Webfinger may declare arbitrary properties (will affect older Diaspora*
       #   installations).
+      #
+      # flag if a user is searchable by name
+      # @return [String] searchable flag
       attr_reader :searchable
 
       # CSS selectors for finding all the hCard fields
@@ -84,7 +128,7 @@ module DiasporaFederation
         add_simple_property(content, :searchable, "searchable", @searchable)
         add_simple_property(content, :key, "key", @pubkey)
 
-        # TODO: change me!  ###################
+        # TODO: remove me!  ###################
         add_simple_property(content, :first_name, "given_name", @first_name)
         add_simple_property(content, :family_name, "family_name", @last_name)
         #######################################
@@ -117,7 +161,7 @@ module DiasporaFederation
           @pubkey           = data[:pubkey]
           @searchable       = data[:searchable]
 
-          # TODO: change me!  ###################
+          # TODO: remove me!  ###################
           @first_name       = data[:first_name]
           @last_name        = data[:last_name]
           #######################################

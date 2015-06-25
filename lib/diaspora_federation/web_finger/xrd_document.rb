@@ -38,7 +38,14 @@ module DiasporaFederation
       # format string for datetime (+Expires+ element)
       DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
-      attr_writer :expires, :subject
+      # The <Expires> element contains a time value which specifies the instant at
+      # and after which the document has expired and SHOULD NOT be used.
+      # @param [DateTime] value
+      attr_writer :expires
+      # The <Subject> element contains a URI value which identifies the resource
+      # described by this XRD.
+      # @param [String] value
+      attr_writer :subject
 
       # @return [Array<String>] list of alias URIs
       attr_reader :aliases
