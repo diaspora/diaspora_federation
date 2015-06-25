@@ -16,15 +16,8 @@ guard :rspec, cmd: "NO_COVERAGE=true bin/rspec" do
   rails = dsl.rails
   dsl.watch_spec_files_for(rails.app_files)
 
-  watch(rails.controllers) do |m|
-    [
-      rspec.spec.call("routing/#{m[1]}_routing"),
-      rspec.spec.call("controllers/#{m[1]}_controller")
-    ]
-  end
-
   # Rails config changes
-  watch(rails.spec_helper)     { rspec.spec_dir }
-  watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
+  rails.app_controller = "app/controllers/diaspora_federation/application_controller.rb"
   watch(rails.app_controller)  { "#{rspec.spec_dir}/controllers" }
+  watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
 end
