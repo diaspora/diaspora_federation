@@ -63,7 +63,7 @@ module DiasporaFederation
     # called from after_initialize
     # @raise [ConfigurationError] if the configuration is incomplete or invalid
     def validate_config
-      raise ConfigurationError, "missing server_uri" unless @server_uri.respond_to? :host
+      configuration_error "missing server_uri" unless @server_uri.respond_to? :host
       validate_class(@person_class, "person_class", %i(
         find_local_by_diaspora_handle
         webfinger_hash
@@ -74,17 +74,22 @@ module DiasporaFederation
     private
 
     def validate_class(klass, name, methods)
-      raise ConfigurationError, "missing #{name}" unless klass
+      configuration_error "missing #{name}" unless klass
       entity = const_get(klass)
 
       return logger.warn "table for #{entity} doesn't exist, skip validation" unless entity.table_exists?
 
-      methods.each {|method| entity_respond_to?(entity, method) }
+      methods.each {|method| entity_respond_to?(entity, name, method) }
     end
 
-    def entity_respond_to?(entity, method)
+    def entity_respond_to?(entity, name, method)
       valid = entity.respond_to?(method) || entity.column_names.include?(method.to_s) || entity.method_defined?(method)
-      raise ConfigurationError, "the configured class #{entity} for #{name} doesn't respond to #{method}" unless valid
+      configuration_error "the configured class #{entity} for #{name} doesn't respond to #{method}" unless valid
+    end
+
+    def configuration_error(message)
+      logger.fatal("diaspora federation configuration error: #{message}")
+      raise ConfigurationError, message
     end
   end
 
