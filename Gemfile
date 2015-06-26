@@ -12,7 +12,7 @@ gemspec
 
 group :development do
   # code style
-  gem "rubocop", "0.32.0"
+  gem "rubocop", "0.32.1"
 
   # debugging
   gem "pry"
