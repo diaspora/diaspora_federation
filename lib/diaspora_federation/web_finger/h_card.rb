@@ -97,7 +97,7 @@ module DiasporaFederation
       #   installations).
       #
       # flag if a user is searchable by name
-      # @return [String] searchable flag
+      # @return [Boolean] searchable flag
       attr_reader :searchable
 
       # CSS selectors for finding all the hCard fields
@@ -189,7 +189,7 @@ module DiasporaFederation
           @photo_medium_url = photo_from_doc(doc, :photo_medium)
           @photo_small_url  = photo_from_doc(doc, :photo_small)
           @pubkey           = content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?
-          @searchable       = content_from_doc(doc, :searchable)
+          @searchable       = content_from_doc(doc, :searchable) == "true"
 
           # TODO: change me!  ###################
           @first_name       = content_from_doc(doc, :given_name)

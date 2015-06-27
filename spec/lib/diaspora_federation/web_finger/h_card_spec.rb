@@ -105,7 +105,7 @@ HTML
 
     context "generation" do
       it "creates an instance from a data hash" do
-        hc = WebFinger::HCard.from_profile(
+        hcard = WebFinger::HCard.from_profile(
           guid:             guid,
           nickname:         nickname,
           full_name:        name,
@@ -118,7 +118,7 @@ HTML
           first_name:       first_name,
           last_name:        last_name
         )
-        expect(hc.to_html).to eq(html)
+        expect(hcard.to_html).to eq(html)
       end
 
       it "fails if some params are missing" do
@@ -141,19 +141,30 @@ HTML
 
     context "parsing" do
       it "reads its own output" do
-        hc = WebFinger::HCard.from_html(html)
-        expect(hc.guid).to eq(guid)
-        expect(hc.nickname).to eq(nickname)
-        expect(hc.full_name).to eq(name)
-        expect(hc.url).to eq(url)
-        expect(hc.photo_full_url).to eq(photo_url)
-        expect(hc.photo_medium_url).to eq(photo_url_m)
-        expect(hc.photo_small_url).to eq(photo_url_s)
-        expect(hc.pubkey).to eq(key)
-        expect(hc.searchable).to eq(searchable.to_s)
+        hcard = WebFinger::HCard.from_html(html)
+        expect(hcard.guid).to eq(guid)
+        expect(hcard.nickname).to eq(nickname)
+        expect(hcard.full_name).to eq(name)
+        expect(hcard.url).to eq(url)
+        expect(hcard.photo_full_url).to eq(photo_url)
+        expect(hcard.photo_medium_url).to eq(photo_url_m)
+        expect(hcard.photo_small_url).to eq(photo_url_s)
+        expect(hcard.pubkey).to eq(key)
+        expect(hcard.searchable).to eq(searchable)
 
-        expect(hc.first_name).to eq(first_name)
-        expect(hc.last_name).to eq(last_name)
+        expect(hcard.first_name).to eq(first_name)
+        expect(hcard.last_name).to eq(last_name)
+      end
+
+      it "searchable is false, if it is empty in html" do
+        changed_html = html.sub(
+          "class=\"searchable\">#{searchable}<",
+          "class=\"searchable\"><"
+        )
+
+        hcard = WebFinger::HCard.from_html(changed_html)
+
+        expect(hcard.searchable).to eq(false)
       end
 
       it "reads old-style HTML" do
@@ -222,15 +233,15 @@ HTML
 </div>
 HTML
 
-        hc = WebFinger::HCard.from_html(historic_html)
-        expect(hc.url).to eq(url)
-        expect(hc.photo_full_url).to eq(photo_url)
-        expect(hc.photo_medium_url).to eq(photo_url_m)
-        expect(hc.photo_small_url).to eq(photo_url_s)
-        expect(hc.searchable).to eq(searchable.to_s)
+        hcard = WebFinger::HCard.from_html(historic_html)
+        expect(hcard.url).to eq(url)
+        expect(hcard.photo_full_url).to eq(photo_url)
+        expect(hcard.photo_medium_url).to eq(photo_url_m)
+        expect(hcard.photo_small_url).to eq(photo_url_s)
+        expect(hcard.searchable).to eq(searchable)
 
-        expect(hc.first_name).to eq(first_name)
-        expect(hc.last_name).to eq(last_name)
+        expect(hcard.first_name).to eq(first_name)
+        expect(hcard.last_name).to eq(last_name)
       end
 
       it "fails if the document is incomplete" do
