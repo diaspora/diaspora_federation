@@ -53,7 +53,7 @@ module DiasporaFederation
         <dl class="entity_key">
           <dt>Key</dt>
           <dd>
-            <span class="key">#{key}</span>
+            <pre class="key">#{key}</pre>
           </dd>
         </dl>
         <dl class="entity_first_name">

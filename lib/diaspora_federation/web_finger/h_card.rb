@@ -126,7 +126,10 @@ module DiasporaFederation
         add_simple_property(content, :nickname, "nickname", @nickname)
         add_simple_property(content, :full_name, "fn", @full_name)
         add_simple_property(content, :searchable, "searchable", @searchable)
-        add_simple_property(content, :key, "key", @pubkey)
+
+        add_property(content, :key) do |html|
+          html.pre(@pubkey.to_s, class: "key")
+        end
 
         # TODO: remove me!  ###################
         add_simple_property(content, :first_name, "given_name", @first_name)
