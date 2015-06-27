@@ -22,6 +22,12 @@ require "rspec/rails"
 # load factory girl factories
 require "factories"
 
+# some helper methods
+
+def alice
+  @alice ||= Person.find_local_by_diaspora_handle("alice@localhost:3000")
+end
+
 # Force fixture rebuild
 FileUtils.rm_f(Rails.root.join("tmp", "fixture_builder.yml"))
 

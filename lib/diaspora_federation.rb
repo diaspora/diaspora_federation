@@ -27,10 +27,13 @@ module DiasporaFederation
     # This class must have the following methods:
     #
     # *find_local_by_diaspora_handle*
-    # This should return a +Person+, which is on this pod.
+    # This should return a +Person+, which is on this pod and the account is not closed.
+    #
+    # *find_local_by_guid*
+    # This should return a +Person+, which is on this pod and the account is not closed.
     #
     # *webfinger_hash*
-    # This should return a +Hash+ with the followong informations:
+    # This should return a +Hash+ with the following information:
     #   {
     #     acct_uri:    "acct:user@server.example",
     #     alias_url:   "https://server.example/people/0123456789abcdef",
@@ -41,6 +44,22 @@ module DiasporaFederation
     #     salmon_url:  "https://server.example/receive/users/0123456789abcdef",
     #     guid:        "0123456789abcdef",
     #     pubkey:      "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
+    #   }
+    #
+    # *hcard_profile_hash*
+    # This should return a +Hash+ with the following information:
+    #   {
+    #     guid:             "0123456789abcdef",
+    #     nickname:         "user",
+    #     full_name:        "User Name",
+    #     url:              "https://server.example/",
+    #     photo_full_url:   "https://server.example/uploads/f.jpg",
+    #     photo_medium_url: "https://server.example/uploads/m.jpg",
+    #     photo_small_url:  "https://server.example/uploads/s.jpg",
+    #     pubkey:           "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
+    #     searchable:       true,
+    #     first_name:       "User",
+    #     last_name:        "Name"
     #   }
     attr_accessor :person_class
     def person_class
@@ -66,7 +85,9 @@ module DiasporaFederation
       configuration_error "missing server_uri" unless @server_uri.respond_to? :host
       validate_class(@person_class, "person_class", %i(
         find_local_by_diaspora_handle
+        find_local_by_guid
         webfinger_hash
+        hcard_profile_hash
       ))
       logger.info "successfully configured the federation engine"
     end
