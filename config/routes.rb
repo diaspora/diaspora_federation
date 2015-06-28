@@ -10,6 +10,6 @@ DiasporaFederation::Engine.routes.draw do
   end
 
   controller :h_card do
-    get "hcard/users/:guid" => :hcard
+    get "hcard/users/:guid" => :hcard, :as => "hcard"
   end
 end
