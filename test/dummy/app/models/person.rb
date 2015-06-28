@@ -21,7 +21,7 @@ class Person < ActiveRecord::Base
       nickname:         diaspora_handle.split("@")[0],
       full_name:        "Dummy User",
       url:              url,
-      photo_full_url:   "#{url}assets/user/default.png",
+      photo_large_url:  "#{url}assets/user/default.png",
       photo_medium_url: "#{url}assets/user/default.png",
       photo_small_url:  "#{url}assets/user/default.png",
       pubkey:           serialized_public_key,

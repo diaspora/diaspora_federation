@@ -53,7 +53,7 @@ module DiasporaFederation
     #     nickname:         "user",
     #     full_name:        "User Name",
     #     url:              "https://server.example/",
-    #     photo_full_url:   "https://server.example/uploads/f.jpg",
+    #     photo_large_url:  "https://server.example/uploads/f.jpg",
     #     photo_medium_url: "https://server.example/uploads/m.jpg",
     #     photo_small_url:  "https://server.example/uploads/s.jpg",
     #     pubkey:           "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",

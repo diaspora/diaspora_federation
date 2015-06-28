@@ -20,7 +20,7 @@ module DiasporaFederation
     #     nickname:         "user",
     #     full_name:        "User Name",
     #     url:              "https://server.example/",
-    #     photo_full_url:   "https://server.example/uploads/f.jpg",
+    #     photo_large_url:  "https://server.example/uploads/l.jpg",
     #     photo_medium_url: "https://server.example/uploads/m.jpg",
     #     photo_small_url:  "https://server.example/uploads/s.jpg",
     #     pubkey:           "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
@@ -71,7 +71,7 @@ module DiasporaFederation
       attr_reader :pubkey
 
       # @return [String] url to the big avatar (300x300)
-      attr_reader :photo_full_url
+      attr_reader :photo_large_url
       # @return [String] url to the medium avatar (100x100)
       attr_reader :photo_medium_url
       # @return [String] url to the small avatar (50x50)
@@ -158,7 +158,7 @@ module DiasporaFederation
           @nickname         = data[:nickname]
           @full_name        = data[:full_name]
           @url              = data[:url]
-          @photo_full_url   = data[:photo_full_url]
+          @photo_large_url   = data[:photo_large_url]
           @photo_medium_url = data[:photo_medium_url]
           @photo_small_url  = data[:photo_small_url]
           @pubkey           = data[:pubkey]
@@ -185,7 +185,7 @@ module DiasporaFederation
           @nickname         = content_from_doc(doc, :nickname)
           @full_name        = content_from_doc(doc, :fn)
           @url              = element_from_doc(doc, :url)["href"]
-          @photo_full_url   = photo_from_doc(doc, :photo)
+          @photo_large_url  = photo_from_doc(doc, :photo)
           @photo_medium_url = photo_from_doc(doc, :photo_medium)
           @photo_small_url  = photo_from_doc(doc, :photo_small)
           @pubkey           = content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?
@@ -259,7 +259,7 @@ module DiasporaFederation
       # @see HCard#add_property
       def add_photos(container)
         add_property(container, :photo) do |html|
-          html.img(class: "photo avatar", width: "300", height: "300", src: @photo_full_url.to_s)
+          html.img(class: "photo avatar", width: "300", height: "300", src: @photo_large_url.to_s)
         end
 
         add_property(container, :photo_medium) do |html|
@@ -278,7 +278,7 @@ module DiasporaFederation
         data.instance_of?(Hash) &&
           %i(
             guid nickname full_name url
-            photo_full_url photo_medium_url photo_small_url
+            photo_large_url photo_medium_url photo_small_url
             pubkey searchable first_name last_name
           ).all? {|k| data.key? k }
       end

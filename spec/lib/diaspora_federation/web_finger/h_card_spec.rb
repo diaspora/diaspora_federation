@@ -110,7 +110,7 @@ HTML
           nickname:         nickname,
           full_name:        name,
           url:              url,
-          photo_full_url:   photo_url,
+          photo_large_url:  photo_url,
           photo_medium_url: photo_url_m,
           photo_small_url:  photo_url_s,
           pubkey:           key,
@@ -146,7 +146,7 @@ HTML
         expect(hcard.nickname).to eq(nickname)
         expect(hcard.full_name).to eq(name)
         expect(hcard.url).to eq(url)
-        expect(hcard.photo_full_url).to eq(photo_url)
+        expect(hcard.photo_large_url).to eq(photo_url)
         expect(hcard.photo_medium_url).to eq(photo_url_m)
         expect(hcard.photo_small_url).to eq(photo_url_s)
         expect(hcard.pubkey).to eq(key)
@@ -235,7 +235,7 @@ HTML
 
         hcard = WebFinger::HCard.from_html(historic_html)
         expect(hcard.url).to eq(url)
-        expect(hcard.photo_full_url).to eq(photo_url)
+        expect(hcard.photo_large_url).to eq(photo_url)
         expect(hcard.photo_medium_url).to eq(photo_url_m)
         expect(hcard.photo_small_url).to eq(photo_url_s)
         expect(hcard.searchable).to eq(searchable)
