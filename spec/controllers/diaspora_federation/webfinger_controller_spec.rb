@@ -59,7 +59,7 @@ module DiasporaFederation
       end
 
       it "calls WebFinger::WebFinger.from_person" do
-        expect(WebFinger::WebFinger).to receive(:from_person).with(alice.webfinger_hash).and_call_original
+        expect(WebFinger::WebFinger).to receive(:from_person).with(alice).and_call_original
         get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
       end
     end

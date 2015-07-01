@@ -1,19 +1,14 @@
 class Person < ActiveRecord::Base
   include ::Diaspora::Guid
 
-  def webfinger_hash
-    {
-      acct_uri:    "acct:#{diaspora_handle}",
-      alias_url:   "#{url}people/#{guid}",
-      hcard_url:   "#{url}hcard/users/#{guid}",
-      seed_url:    url,
-      profile_url: "#{url}u/#{diaspora_handle.split('@')[0]}",
-      atom_url:    "#{url}public/#{diaspora_handle.split('@')[0]}.atom",
-      salmon_url:  "#{url}receive/users/#{guid}",
-      guid:        guid,
-      pubkey:      serialized_public_key
-    }
-  end
+  def alias_url;   "#{url}people/#{guid}" end
+  def hcard_url;   "#{url}hcard/users/#{guid}" end
+  def profile_url; "#{url}u/#{diaspora_handle.split('@')[0]}" end
+  def atom_url;    "#{url}public/#{diaspora_handle.split('@')[0]}.atom" end
+  def salmon_url;  "#{url}receive/users/#{guid}" end
+
+  alias_attribute :seed_url, :url
+  alias_attribute :public_key, :serialized_public_key
 
   def hcard_profile_hash
     {

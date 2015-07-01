@@ -155,3 +155,10 @@ Metrics/AbcSize:
 
 Metrics/ModuleLength:
   Max: 1500
+
+Style/SingleLineMethods:
+  Exclude:
+    - "test/dummy/app/models/*"
+Style/EmptyLineBetweenDefs:
+  Exclude:
+    - "test/dummy/app/models/*"

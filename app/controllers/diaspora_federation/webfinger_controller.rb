@@ -41,7 +41,7 @@ module DiasporaFederation
       return render nothing: true, status: 404 if person.nil?
 
       logger.info "webfinger profile request for: #{person.diaspora_handle}"
-      render body: WebFinger::WebFinger.from_person(person.webfinger_hash).to_xml, content_type: "application/xrd+xml"
+      render body: WebFinger::WebFinger.from_person(person).to_xml, content_type: "application/xrd+xml"
     end
 
     private

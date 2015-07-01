@@ -9,19 +9,19 @@ module DiasporaFederation
     # In the meantime an actual RFC draft has been in development, which should
     # serve as a base for all future changes of this implementation.
     #
-    # @example Creating a WebFinger document from account data
-    #   wf = WebFinger.from_person({
-    #     acct_uri:    "acct:user@server.example",
-    #     alias_url:   "https://server.example/people/0123456789abcdef",
-    #     hcard_url:   "https://server.example/hcard/users/0123456789abcdef",
-    #     seed_url:    "https://server.example/",
-    #     profile_url: "https://server.example/u/user",
-    #     atom_url:    "https://server.example/public/user.atom",
-    #     salmon_url:  "https://server.example/receive/users/0123456789abcdef",
-    #     guid:        "0123456789abcdef",
-    #     pubkey:      "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
-    #   })
-    #   xml_string = wf.to_xml
+    # @example Creating a WebFinger document from a person object
+    #   xml_string = WebFinger.from_person(person).to_xml
+    #
+    # The person object should have the following attributes (with examples)
+    #   diaspora_handle: "user@server.example"
+    #   alias_url:       "https://server.example/people/0123456789abcdef"
+    #   hcard_url:       "https://server.example/hcard/users/0123456789abcdef"
+    #   seed_url:        "https://server.example/"
+    #   profile_url:     "https://server.example/u/user"
+    #   atom_url:        "https://server.example/public/user.atom"
+    #   salmon_url:      "https://server.example/receive/users/0123456789abcdef"
+    #   guid:            "0123456789abcdef"
+    #   public_key:      "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
     #
     # @example Creating a WebFinger instance from an xml document
     #   wf = WebFinger.from_xml(xml_string)
@@ -89,7 +89,7 @@ module DiasporaFederation
       # DER-encoded PKCS#1 key beginning with the text
       # "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
       # @return [String] public key
-      attr_reader :pubkey
+      attr_reader :public_key
 
       # +hcard_url+ link relation
       REL_HCARD = "http://microformats.org/profile/hcard"
@@ -131,26 +131,26 @@ module DiasporaFederation
         doc.to_xml
       end
 
-      # Create a WebFinger instance from the given person data Hash.
-      # @param [Hash] data account data
+      # Create a WebFinger instance from the given person.
+      # @param [Person] person the person object
       # @return [WebFinger] WebFinger instance
-      # @raise [InvalidData] if the given data Hash is invalid or incomplete
-      def self.from_person(data)
-        raise InvalidData, "person data incomplete" unless account_data_complete?(data)
+      # @raise [ArgumentError] if the given person is nil
+      def self.from_person(person)
+        raise ArgumentError, "person is nil" if person.nil?
 
         wf = allocate
         wf.instance_eval {
-          @acct_uri    = data[:acct_uri]
-          @alias_url   = data[:alias_url]
-          @hcard_url   = data[:hcard_url]
-          @seed_url    = data[:seed_url]
-          @profile_url = data[:profile_url]
-          @atom_url    = data[:atom_url]
-          @salmon_url  = data[:salmon_url]
+          @acct_uri    = "acct:#{person.diaspora_handle}"
+          @alias_url   = person.alias_url
+          @hcard_url   = person.hcard_url
+          @seed_url    = person.seed_url
+          @profile_url = person.profile_url
+          @atom_url    = person.atom_url
+          @salmon_url  = person.salmon_url
 
           # TODO: remove me!  #########
-          @guid        = data[:guid]
-          @pubkey      = data[:pubkey]
+          @guid        = person.guid
+          @public_key  = person.public_key
           #############################
         }
         wf
@@ -163,7 +163,7 @@ module DiasporaFederation
       def self.from_xml(webfinger_xml)
         data = parse_xml_and_validate(webfinger_xml)
 
-        hcard_url, seed_url, guid, profile_url, atom_url, salmon_url, pubkey = parse_links(data)
+        hcard_url, seed_url, guid, profile_url, atom_url, salmon_url, public_key = parse_links(data)
 
         wf = allocate
         wf.instance_eval {
@@ -177,25 +177,13 @@ module DiasporaFederation
 
           # TODO: remove me!  ##########
           @guid        = guid
-          @pubkey      = Base64.strict_decode64(pubkey)
+          @public_key  = Base64.strict_decode64(public_key)
           ##############################
         }
         wf
       end
 
       private
-
-      # Checks the given account data Hash for correct type and completeness.
-      # @param [Hash] data account data
-      # @return [Boolean] validation result
-      def self.account_data_complete?(data)
-        data.instance_of?(Hash) &&
-          %i(
-            acct_uri alias_url hcard_url seed_url
-            guid profile_url atom_url salmon_url pubkey
-          ).all? {|k| data.key? k }
-      end
-      private_class_method :account_data_complete?
 
       # Parses the XML string to a Hash and does some rudimentary checking on
       # the data Hash.
@@ -236,7 +224,7 @@ module DiasporaFederation
         # TODO: remove me!  ##############
         doc.links << {rel:  REL_PUBKEY,
                       type: "RSA",
-                      href: Base64.strict_encode64(@pubkey)}
+                      href: Base64.strict_encode64(@public_key)}
         ##################################
       end
 

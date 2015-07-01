@@ -86,7 +86,15 @@ module DiasporaFederation
       validate_class(@person_class, "person_class", %i(
         find_local_by_diaspora_handle
         find_local_by_guid
-        webfinger_hash
+        diaspora_handle
+        alias_url
+        hcard_url
+        seed_url
+        profile_url
+        atom_url
+        salmon_url
+        guid
+        public_key
         hcard_profile_hash
       ))
       logger.info "successfully configured the federation engine"
