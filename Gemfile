@@ -48,6 +48,7 @@ group :development, :test do
   # preloading environment
   gem "spring"
   gem "spring-commands-rspec"
+  gem "spring-watcher-listen"
 
   # GUID generation
   gem "uuid", "~> 2.3.8"
