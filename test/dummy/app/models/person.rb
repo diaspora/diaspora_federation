@@ -10,21 +10,15 @@ class Person < ActiveRecord::Base
   alias_attribute :seed_url, :url
   alias_attribute :public_key, :serialized_public_key
 
-  def hcard_profile_hash
-    {
-      guid:             guid,
-      nickname:         diaspora_handle.split("@")[0],
-      full_name:        "Dummy User",
-      url:              url,
-      photo_large_url:  "#{url}assets/user/default.png",
-      photo_medium_url: "#{url}assets/user/default.png",
-      photo_small_url:  "#{url}assets/user/default.png",
-      pubkey:           serialized_public_key,
-      searchable:       true,
-      first_name:       "Dummy",
-      last_name:        "User"
-    }
-  end
+  def nickname;         diaspora_handle.split("@")[0] end
+  def photo_large_url;  "#{url}assets/user/default.png" end
+  def photo_medium_url; "#{url}assets/user/default.png" end
+  def photo_small_url;  "#{url}assets/user/default.png" end
+
+  def searchable; true end
+  def full_name;  "Dummy User" end
+  def first_name; "Dummy" end
+  def last_name;  "User" end
 
   def self.find_local_by_diaspora_handle(identifier)
     # no remote? and closed_account? check ... this class is only for testing

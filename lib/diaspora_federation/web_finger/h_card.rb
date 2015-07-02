@@ -14,21 +14,21 @@ module DiasporaFederation
     #   correctly nested according to the hCard standard and class names are
     #   partially wrong. Also, apart from that, it's just ugly.
     #
-    # @example Creating a hCard document from account data
-    #   hc = HCard.from_profile({
-    #     guid:             "0123456789abcdef",
-    #     nickname:         "user",
-    #     full_name:        "User Name",
-    #     url:              "https://server.example/",
-    #     photo_large_url:  "https://server.example/uploads/l.jpg",
-    #     photo_medium_url: "https://server.example/uploads/m.jpg",
-    #     photo_small_url:  "https://server.example/uploads/s.jpg",
-    #     pubkey:           "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
-    #     searchable:       true,
-    #     first_name:       "User",
-    #     last_name:        "Name"
-    #   })
-    #   html_string = hc.to_html
+    # @example Creating a hCard document from a person object
+    #   html_string = HCard.from_person(person).to_html
+    #
+    # The person object should have the following attributes (with examples)
+    #   guid:             "0123456789abcdef",
+    #   nickname:         "user",
+    #   full_name:        "User Name",
+    #   seed_url:         "https://server.example/",
+    #   photo_large_url:  "https://server.example/uploads/l.jpg",
+    #   photo_medium_url: "https://server.example/uploads/m.jpg",
+    #   photo_small_url:  "https://server.example/uploads/s.jpg",
+    #   public_key:       "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
+    #   searchable:       true,
+    #   first_name:       "User",
+    #   last_name:        "Name"
     #
     # @example Create a HCard instance from an hCard document
     #   hc = HCard.from_html(html_string)
@@ -68,7 +68,7 @@ module DiasporaFederation
       # DER-encoded PKCS#1 key beginning with the text
       # "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
       # @return [String] public key
-      attr_reader :pubkey
+      attr_reader :public_key
 
       # @return [String] url to the big avatar (300x300)
       attr_reader :photo_large_url
@@ -128,7 +128,7 @@ module DiasporaFederation
         add_simple_property(content, :searchable, "searchable", @searchable)
 
         add_property(content, :key) do |html|
-          html.pre(@pubkey.to_s, class: "key")
+          html.pre(@public_key.to_s, class: "key")
         end
 
         # TODO: remove me!  ###################
@@ -145,28 +145,28 @@ module DiasporaFederation
         builder.doc.to_xhtml(indent: 2, indent_text: " ")
       end
 
-      # Creates a new HCard instance from the given Hash containing profile data
-      # @param [Hash] data account data
+      # Creates a new HCard instance from the given person
+      # @param [Person] person the person object
       # @return [HCard] HCard instance
       # @raise [InvalidData] if the account data Hash is invalid or incomplete
-      def self.from_profile(data)
-        raise InvalidData unless account_data_complete?(data)
+      def self.from_person(person)
+        raise ArgumentError, "person is nil" if person.nil?
 
         hc = allocate
         hc.instance_eval {
-          @guid             = data[:guid]
-          @nickname         = data[:nickname]
-          @full_name        = data[:full_name]
-          @url              = data[:url]
-          @photo_large_url   = data[:photo_large_url]
-          @photo_medium_url = data[:photo_medium_url]
-          @photo_small_url  = data[:photo_small_url]
-          @pubkey           = data[:pubkey]
-          @searchable       = data[:searchable]
+          @guid             = person.guid
+          @nickname         = person.nickname
+          @full_name        = person.full_name
+          @url              = person.seed_url
+          @photo_large_url  = person.photo_large_url
+          @photo_medium_url = person.photo_medium_url
+          @photo_small_url  = person.photo_small_url
+          @public_key       = person.public_key
+          @searchable       = person.searchable
 
           # TODO: remove me!  ###################
-          @first_name       = data[:first_name]
-          @last_name        = data[:last_name]
+          @first_name       = person.first_name
+          @last_name        = person.last_name
           #######################################
         }
         hc
@@ -188,7 +188,7 @@ module DiasporaFederation
           @photo_large_url  = photo_from_doc(doc, :photo)
           @photo_medium_url = photo_from_doc(doc, :photo_medium)
           @photo_small_url  = photo_from_doc(doc, :photo_small)
-          @pubkey           = content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?
+          @public_key       = content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?
           @searchable       = content_from_doc(doc, :searchable) == "true"
 
           # TODO: change me!  ###################
@@ -270,19 +270,6 @@ module DiasporaFederation
           html.img(class: "photo avatar", width: "50", height: "50", src: @photo_small_url.to_s)
         end
       end
-
-      # Checks the given account data Hash for correct type and completeness.
-      # @param [Hash] data account data
-      # @return [Boolean] validation result
-      def self.account_data_complete?(data)
-        data.instance_of?(Hash) &&
-          %i(
-            guid nickname full_name url
-            photo_large_url photo_medium_url photo_small_url
-            pubkey searchable first_name last_name
-          ).all? {|k| data.key? k }
-      end
-      private_class_method :account_data_complete?
 
       # Make sure some of the most important elements are present in the parsed
       # HTML document.

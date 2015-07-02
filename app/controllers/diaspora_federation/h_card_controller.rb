@@ -14,7 +14,7 @@ module DiasporaFederation
       return render nothing: true, status: 404 if person.nil?
 
       logger.info "hcard profile request for: #{person.diaspora_handle}"
-      render html: WebFinger::HCard.from_profile(person.hcard_profile_hash).to_html.html_safe
+      render html: WebFinger::HCard.from_person(person).to_html.html_safe
     end
   end
 end

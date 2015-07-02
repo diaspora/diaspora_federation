@@ -84,18 +84,11 @@ module DiasporaFederation
     def validate_config
       configuration_error "missing server_uri" unless @server_uri.respond_to? :host
       validate_class(@person_class, "person_class", %i(
-        find_local_by_diaspora_handle
-        find_local_by_guid
-        diaspora_handle
-        alias_url
-        hcard_url
-        seed_url
-        profile_url
-        atom_url
-        salmon_url
-        guid
-        public_key
-        hcard_profile_hash
+        find_local_by_diaspora_handle find_local_by_guid
+        diaspora_handle nickname guid public_key searchable
+        alias_url hcard_url seed_url profile_url atom_url salmon_url
+        photo_large_url photo_medium_url photo_small_url
+        full_name first_name last_name
       ))
       logger.info "successfully configured the federation engine"
     end

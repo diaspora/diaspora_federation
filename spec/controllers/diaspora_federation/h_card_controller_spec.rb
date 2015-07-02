@@ -25,7 +25,7 @@ module DiasporaFederation
       end
 
       it "calls WebFinger::HCard.from_profile" do
-        expect(WebFinger::HCard).to receive(:from_profile).with(alice.hcard_profile_hash).and_call_original
+        expect(WebFinger::HCard).to receive(:from_person).with(alice).and_call_original
         get :hcard, "guid" => alice.guid
       end
     end
