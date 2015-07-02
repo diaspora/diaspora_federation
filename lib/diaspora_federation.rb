@@ -89,7 +89,7 @@ module DiasporaFederation
     attr_accessor :person_class
 
     def person_class=(klass)
-      @person_class = klass.to_s
+      @person_class = klass.nil? ? nil : klass.to_s
     end
 
     def person_class

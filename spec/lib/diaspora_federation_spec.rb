@@ -17,7 +17,7 @@ module DiasporaFederation
         temp = DiasporaFederation.person_class
         DiasporaFederation.person_class = nil
         expect { DiasporaFederation.validate_config }.to raise_error ConfigurationError
-        DiasporaFederation.person_class = temp.to_s
+        DiasporaFederation.person_class = temp
       end
     end
   end
