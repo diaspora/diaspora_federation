@@ -4,5 +4,5 @@ DiasporaFederation.configure do |config|
   config.server_uri = URI("http://localhost:3000/")
 
   # the class to be used for a person
-  config.person_class = Person.to_s
+  config.person_class = Person
 end

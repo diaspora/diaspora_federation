@@ -22,7 +22,7 @@ module DiasporaFederation
     # the class to use as +Person+
     #
     # @example
-    #   config.person_class = Person.to_s
+    #   config.person_class = Person
     #
     # This class must have the following class methods:::
     #
@@ -87,6 +87,11 @@ module DiasporaFederation
     #   +last_name+: last name
     #     "Name"
     attr_accessor :person_class
+
+    def person_class=(klass)
+      @person_class = klass.to_s
+    end
+
     def person_class
       const_get(@person_class)
     end
