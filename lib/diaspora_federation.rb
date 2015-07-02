@@ -12,55 +12,80 @@ module DiasporaFederation
     ##
     # the pod url
     #
-    # Example:
+    # @example with uri
     #   config.server_uri = URI("http://localhost:3000/")
-    # or
+    # @example with configured pod_uri
     #   config.server_uri = AppConfig.pod_uri
     attr_accessor :server_uri
 
     ##
     # the class to use as +Person+
     #
-    # Example:
+    # @example
     #   config.person_class = Person.to_s
     #
-    # This class must have the following methods:
+    # This class must have the following class methods:::
     #
-    # *find_local_by_diaspora_handle*
-    # This should return a +Person+, which is on this pod and the account is not closed.
+    #   +find_local_by_diaspora_handle+:
+    #   This should return a +Person+, which is on this pod and the account is not closed.
     #
-    # *find_local_by_guid*
-    # This should return a +Person+, which is on this pod and the account is not closed.
+    #   +find_local_by_guid+:
+    #   This should return a +Person+, which is on this pod and the account is not closed.
     #
-    # *webfinger_hash*
-    # This should return a +Hash+ with the following information:
-    #   {
-    #     acct_uri:    "acct:user@server.example",
-    #     alias_url:   "https://server.example/people/0123456789abcdef",
-    #     hcard_url:   "https://server.example/hcard/users/0123456789abcdef",
-    #     seed_url:    "https://server.example/",
-    #     profile_url: "https://server.example/u/user",
-    #     atom_url:    "https://server.example/public/user.atom",
-    #     salmon_url:  "https://server.example/receive/users/0123456789abcdef",
-    #     guid:        "0123456789abcdef",
-    #     pubkey:      "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
-    #   }
+    # This class must have the following instance methods or attributes:::
     #
-    # *hcard_profile_hash*
-    # This should return a +Hash+ with the following information:
-    #   {
-    #     guid:             "0123456789abcdef",
-    #     nickname:         "user",
-    #     full_name:        "User Name",
-    #     url:              "https://server.example/",
-    #     photo_large_url:  "https://server.example/uploads/f.jpg",
-    #     photo_medium_url: "https://server.example/uploads/m.jpg",
-    #     photo_small_url:  "https://server.example/uploads/s.jpg",
-    #     pubkey:           "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
-    #     searchable:       true,
-    #     first_name:       "User",
-    #     last_name:        "Name"
-    #   }
+    #   +diaspora_handle+: the diaspora handle
+    #     "user@server.example"
+    #
+    #   +nickname+: the username on the pod
+    #     "user"
+    #
+    #   +guid+: the guid
+    #     "0123456789abcdef"
+    #
+    #   +public_key+: the public key of the person (DER-encoded PKCS#1 key)
+    #     "-----BEGIN PUBLIC KEY-----
+    #     ABCDEF==
+    #     -----END PUBLIC KEY-----"
+    #
+    #   +searchable+: if the person is searchable by name
+    #     true
+    #
+    #   +alias_url+: alias url to the profile
+    #     "https://server.example/people/0123456789abcdef"
+    #
+    #   +hcard_url+: url to the hcard
+    #     "https://server.example/hcard/users/0123456789abcdef"
+    #
+    #   +seed_url+: pod url
+    #     "https://server.example/"
+    #
+    #   +profile_url+: url to the profile
+    #     "https://server.example/u/user"
+    #
+    #   +atom_url+: url to the atom rss feed
+    #     "https://server.example/public/user.atom"
+    #
+    #   +salmon_url+: private receive url for salmon
+    #     "https://server.example/receive/users/0123456789abcdef"
+    #
+    #   +photo_large_url+: large photo
+    #     "https://server.example/uploads/l.jpg"
+    #
+    #   +photo_medium_url+: medium photo
+    #     "https://server.example/uploads/m.jpg"
+    #
+    #   +photo_small_url+: small photo
+    #     "https://server.example/uploads/s.jpg"
+    #
+    #   +full_name+: full name
+    #     "User Name"
+    #
+    #   +first_name+: first name
+    #     "User"
+    #
+    #   +last_name+: last name
+    #     "Name"
     attr_accessor :person_class
     def person_class
       const_get(@person_class)
