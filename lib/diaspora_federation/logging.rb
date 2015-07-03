@@ -17,7 +17,8 @@ module DiasporaFederation
 
                     # fallback logger
                     @logger = Logger.new(STDOUT)
-                    @logger.level = Logger.const_get(Rails.configuration.log_level.to_s.upcase)
+                    loglevel = defined?(::Rails) ? ::Rails.configuration.log_level.to_s.upcase : "INFO"
+                    @logger.level = Logger.const_get(loglevel)
                     @logger
                   end
     end

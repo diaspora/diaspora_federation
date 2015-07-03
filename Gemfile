@@ -3,7 +3,12 @@ source "https://rubygems.org"
 # Declare your gem's dependencies in diaspora_federation.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
 # development dependencies will be added by default to the :development group.
-gemspec
+gemspec name: "diaspora_federation"
+
+Dir["diaspora_federation-*.gemspec"].each do |gemspec|
+  plugin = gemspec.scan(/diaspora_federation-(.*)\.gemspec/).flatten.first
+  gemspec(name: "diaspora_federation-#{plugin}", development_group: plugin)
+end
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or
@@ -59,5 +64,5 @@ end
 
 group :development, :production do
   # Logging (only for dummy-app, not for the gem)
-  gem "logging-rails", "0.5.0", require: "logging/rails"
+  gem "logging-rails", "0.5.0"
 end

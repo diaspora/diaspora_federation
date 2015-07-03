@@ -18,7 +18,7 @@ load "rails/tasks/engine.rake"
 
 load "rails/tasks/statistics.rake"
 
-Bundler::GemHelper.install_tasks
+Bundler::GemHelper.install_tasks name: "diaspora_federation"
 
 Rails.application.load_tasks
 

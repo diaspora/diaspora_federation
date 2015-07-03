@@ -1,10 +1,9 @@
-require "diaspora_federation/engine"
 require "diaspora_federation/logging"
 
 require "diaspora_federation/web_finger"
 
 ##
-# diaspora* federation rails engine
+# diaspora* federation library
 module DiasporaFederation
   extend Logging
 

@@ -2,8 +2,10 @@ PATH
   remote: .
   specs:
     diaspora_federation (0.0.2)
-      nokogiri (~> 1.6.6.2)
-      rails (~> 4.2.2)
+      nokogiri (~> 1.6, >= 1.6.6)
+    diaspora_federation-rails (0.0.2)
+      diaspora_federation (= 0.0.2)
+      rails (~> 4.2)
 
 GEM
   remote: https://rubygems.org/
@@ -226,6 +228,7 @@ PLATFORMS
 DEPENDENCIES
   codeclimate-test-reporter
   diaspora_federation!
+  diaspora_federation-rails!
   factory_girl_rails (~> 4.5.0)
   fixture_builder (~> 0.4.1)
   fuubar (= 2.0.0)

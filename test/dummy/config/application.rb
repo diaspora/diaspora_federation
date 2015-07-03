@@ -3,7 +3,7 @@ require_relative "boot"
 require "rails/all"
 
 Bundler.require(*Rails.groups)
-require "diaspora_federation"
+require "diaspora_federation/rails"
 
 module Dummy
   class Application < Rails::Application
