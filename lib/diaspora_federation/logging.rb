@@ -1,6 +1,6 @@
 module DiasporaFederation
   ##
-  # logging module for the diaspora federation engine
+  # logging module for the diaspora federation
   #
   # it uses the logging-gem if available
   module Logging

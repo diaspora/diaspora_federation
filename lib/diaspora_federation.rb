@@ -96,7 +96,7 @@ module DiasporaFederation
     end
 
     ##
-    # configure the federation engine
+    # configure the federation library
     #
     #   DiasporaFederation.configure do |config|
     #     config.server_uri = "http://localhost:3000/"
@@ -119,7 +119,7 @@ module DiasporaFederation
         photo_large_url photo_medium_url photo_small_url
         full_name first_name last_name
       ))
-      logger.info "successfully configured the federation engine"
+      logger.info "successfully configured the federation library"
     end
 
     private

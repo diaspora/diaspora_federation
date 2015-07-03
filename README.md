@@ -1,6 +1,6 @@
-# diaspora* federation rails engine
+# diaspora* federation library
 
-**A rails engine that adds the diaspora* federation protocol to a rails app**
+**a library that provides functionalities needed for the diaspora* federation protocol**
 
 [![Build Status](https://travis-ci.org/SuperTux88/diaspora_federation.svg?branch=master)](https://travis-ci.org/SuperTux88/diaspora_federation)
 [![Code Climate](https://codeclimate.com/github/SuperTux88/diaspora_federation/badges/gpa.svg)](https://codeclimate.com/github/SuperTux88/diaspora_federation)
@@ -11,6 +11,41 @@
 
 [Documentation](http://www.rubydoc.info/gems/diaspora_federation/) |
 [Bugtracker](https://github.com/SuperTux88/diaspora_federation/issues)
+
+## Library
+
+The ```diaspora_federation``` gem provides the functionality for de-/serialization and de-/encryption of Entities
+in the protocols used for communication among the various installations of Diaspora*
+
+## Rails Engine
+
+The ```diaspora_federation-rails``` gem is a rails engine that adds the diaspora* federation protocol to a rails app.
+
+### Usage
+
+Add the gem to your ```Gemfile```:
+
+```ruby
+gem "diaspora_federation-rails"
+```
+
+Mount the routes in your ```config/routes.rb```:
+
+```ruby
+mount DiasporaFederation::Engine => "/"
+```
+
+Configure the engine in ```config/initializers/diaspora_federation.rb```:
+
+```ruby
+DiasporaFederation.configure do |config|
+  # the pod url
+  config.server_uri = AppConfig.pod_uri
+
+  # the class to be used for a person
+  config.person_class = Person
+end
+```
 
 ## Development
 
