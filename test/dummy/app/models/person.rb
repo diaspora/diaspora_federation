@@ -8,7 +8,6 @@ class Person < ActiveRecord::Base
   def salmon_url;  "#{url}receive/users/#{guid}" end
 
   alias_attribute :seed_url, :url
-  alias_attribute :public_key, :serialized_public_key
 
   def nickname;         diaspora_handle.split("@")[0] end
   def photo_large_url;  "#{url}assets/user/default.png" end

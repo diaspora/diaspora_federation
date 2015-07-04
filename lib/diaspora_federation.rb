@@ -43,7 +43,7 @@ module DiasporaFederation
     #   +guid+: the guid
     #     "0123456789abcdef"
     #
-    #   +public_key+: the public key of the person (DER-encoded PKCS#1 key)
+    #   +serialized_public_key+: the public key of the person (DER-encoded PKCS#1 key)
     #     "-----BEGIN PUBLIC KEY-----
     #     ABCDEF==
     #     -----END PUBLIC KEY-----"
@@ -115,7 +115,7 @@ module DiasporaFederation
       configuration_error "missing server_uri" unless @server_uri.respond_to? :host
       validate_class(@person_class, "person_class", %i(
         find_local_by_diaspora_handle find_local_by_guid
-        diaspora_handle nickname guid public_key searchable
+        diaspora_handle nickname guid serialized_public_key searchable
         alias_url hcard_url seed_url profile_url atom_url salmon_url
         photo_large_url photo_medium_url photo_small_url
         full_name first_name last_name

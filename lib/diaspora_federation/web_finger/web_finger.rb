@@ -13,15 +13,15 @@ module DiasporaFederation
     #   xml_string = WebFinger.from_person(person).to_xml
     #
     # The person object should have the following attributes (with examples)
-    #   diaspora_handle: "user@server.example"
-    #   alias_url:       "https://server.example/people/0123456789abcdef"
-    #   hcard_url:       "https://server.example/hcard/users/0123456789abcdef"
-    #   seed_url:        "https://server.example/"
-    #   profile_url:     "https://server.example/u/user"
-    #   atom_url:        "https://server.example/public/user.atom"
-    #   salmon_url:      "https://server.example/receive/users/0123456789abcdef"
-    #   guid:            "0123456789abcdef"
-    #   public_key:      "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
+    #   diaspora_handle:       "user@server.example"
+    #   alias_url:             "https://server.example/people/0123456789abcdef"
+    #   hcard_url:             "https://server.example/hcard/users/0123456789abcdef"
+    #   seed_url:              "https://server.example/"
+    #   profile_url:           "https://server.example/u/user"
+    #   atom_url:              "https://server.example/public/user.atom"
+    #   salmon_url:            "https://server.example/receive/users/0123456789abcdef"
+    #   guid:                  "0123456789abcdef"
+    #   serialized_public_key: "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
     #
     # @example Creating a WebFinger instance from an xml document
     #   wf = WebFinger.from_xml(xml_string)
@@ -150,7 +150,7 @@ module DiasporaFederation
 
           # TODO: remove me!  #########
           @guid        = person.guid
-          @public_key  = person.public_key
+          @public_key  = person.serialized_public_key
           #############################
         }
         wf

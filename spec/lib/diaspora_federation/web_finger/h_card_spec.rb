@@ -43,7 +43,7 @@ module DiasporaFederation
         <dl class="entity_key">
           <dt>Key</dt>
           <dd>
-            <pre class="key">#{person.public_key}</pre>
+            <pre class="key">#{person.serialized_public_key}</pre>
           </dd>
         </dl>
         <dl class="entity_first_name">
@@ -114,7 +114,7 @@ HTML
         expect(hcard.photo_large_url).to eq(person.photo_large_url)
         expect(hcard.photo_medium_url).to eq(person.photo_medium_url)
         expect(hcard.photo_small_url).to eq(person.photo_small_url)
-        expect(hcard.public_key).to eq(person.public_key)
+        expect(hcard.public_key).to eq(person.serialized_public_key)
         expect(hcard.searchable).to eq(person.searchable)
 
         expect(hcard.first_name).to eq(person.first_name)

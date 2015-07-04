@@ -2,7 +2,7 @@ module DiasporaFederation
   describe WebFinger::WebFinger do
     let(:person) { FactoryGirl.create(:person) }
     let(:acct) { "acct:#{person.diaspora_handle}" }
-    let(:public_key_base64) { Base64.strict_encode64(person.public_key) }
+    let(:public_key_base64) { Base64.strict_encode64(person.serialized_public_key) }
 
     let(:xml) {
       <<-XML
@@ -48,7 +48,7 @@ XML
         expect(wf.salmon_url).to eq(person.salmon_url)
 
         expect(wf.guid).to eq(person.guid)
-        expect(wf.public_key).to eq(person.public_key)
+        expect(wf.public_key).to eq(person.serialized_public_key)
       end
 
       it "reads old-style XML" do
@@ -79,7 +79,7 @@ XML
         expect(wf.salmon_url).to eq(person.salmon_url)
 
         expect(wf.guid).to eq(person.guid)
-        expect(wf.public_key).to eq(person.public_key)
+        expect(wf.public_key).to eq(person.serialized_public_key)
       end
 
       it "fails if the document is empty" do

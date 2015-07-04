@@ -18,17 +18,17 @@ module DiasporaFederation
     #   html_string = HCard.from_person(person).to_html
     #
     # The person object should have the following attributes (with examples)
-    #   guid:             "0123456789abcdef",
-    #   nickname:         "user",
-    #   full_name:        "User Name",
-    #   seed_url:         "https://server.example/",
-    #   photo_large_url:  "https://server.example/uploads/l.jpg",
-    #   photo_medium_url: "https://server.example/uploads/m.jpg",
-    #   photo_small_url:  "https://server.example/uploads/s.jpg",
-    #   public_key:       "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
-    #   searchable:       true,
-    #   first_name:       "User",
-    #   last_name:        "Name"
+    #   guid:                  "0123456789abcdef",
+    #   nickname:              "user",
+    #   full_name:             "User Name",
+    #   seed_url:              "https://server.example/",
+    #   photo_large_url:       "https://server.example/uploads/l.jpg",
+    #   photo_medium_url:      "https://server.example/uploads/m.jpg",
+    #   photo_small_url:       "https://server.example/uploads/s.jpg",
+    #   serialized_public_key: "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
+    #   searchable:            true,
+    #   first_name:            "User",
+    #   last_name:             "Name"
     #
     # @example Create a HCard instance from an hCard document
     #   hc = HCard.from_html(html_string)
@@ -161,7 +161,7 @@ module DiasporaFederation
           @photo_large_url  = person.photo_large_url
           @photo_medium_url = person.photo_medium_url
           @photo_small_url  = person.photo_small_url
-          @public_key       = person.public_key
+          @public_key       = person.serialized_public_key
           @searchable       = person.searchable
 
           # TODO: remove me!  ###################
