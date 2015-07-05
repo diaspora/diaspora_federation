@@ -3,6 +3,11 @@ DiasporaFederation.configure do |config|
   # the pod url
   config.server_uri = URI("http://localhost:3000/")
 
-  # the class to be used for a person
-  config.person_class = Person
+  config.define_callbacks do
+    on :person_webfinger_fetch do |handle|
+    end
+
+    on :person_hcard_fetch do |guid|
+    end
+  end
 end
