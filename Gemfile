@@ -39,8 +39,9 @@ group :test do
   gem "codeclimate-test-reporter",           require: false
 
   # test helpers
-  gem "fixture_builder",    "~> 0.4.1"
-  gem "factory_girl_rails", "~> 4.5.0"
+  gem "fixture_builder",           "~> 0.4.1"
+  gem "factory_girl_rails",        "~> 4.5.0"
+  gem "rspec-collection_matchers", "~> 1.1.2"
 end
 
 group :development, :test do

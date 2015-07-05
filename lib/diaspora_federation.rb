@@ -1,6 +1,9 @@
 require "diaspora_federation/logging"
 
 require "diaspora_federation/callbacks"
+require "diaspora_federation/properties_dsl"
+require "diaspora_federation/entity"
+
 require "diaspora_federation/web_finger"
 
 # diaspora* federation library

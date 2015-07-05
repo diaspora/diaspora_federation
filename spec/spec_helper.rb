@@ -22,6 +22,9 @@ require "rspec/rails"
 # load factory girl factories
 require "factories"
 
+# load test entities
+require "entities"
+
 # some helper methods
 
 def alice
