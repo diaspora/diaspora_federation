@@ -24,8 +24,10 @@ module DiasporaFederation
         expect(response).to be_not_found
       end
 
-      it "calls WebFinger::HCard.from_profile" do
-        expect(WebFinger::HCard).to receive(:from_person).with(alice).and_call_original
+      it "calls the person_hcard_fetch callback" do
+        expect(DiasporaFederation.callbacks).to receive(:trigger)
+                                                  .with(:person_hcard_fetch, alice.guid)
+                                                  .and_call_original
         get :hcard, "guid" => alice.guid
       end
     end

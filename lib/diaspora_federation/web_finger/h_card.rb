@@ -13,21 +13,21 @@ module DiasporaFederation
     #   correctly nested according to the hCard standard and class names are
     #   partially wrong. Also, apart from that, it's just ugly.
     #
-    # @example Creating a hCard document from a person object
-    #   html_string = HCard.from_person(person).to_html
-    #
-    # The person object should have the following attributes (with examples)
-    #   guid:                  "0123456789abcdef",
-    #   nickname:              "user",
-    #   full_name:             "User Name",
-    #   seed_url:              "https://server.example/",
-    #   photo_large_url:       "https://server.example/uploads/l.jpg",
-    #   photo_medium_url:      "https://server.example/uploads/m.jpg",
-    #   photo_small_url:       "https://server.example/uploads/s.jpg",
-    #   serialized_public_key: "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
-    #   searchable:            true,
-    #   first_name:            "User",
-    #   last_name:             "Name"
+    # @example Creating a hCard document from a person hash
+    #   hc = HCard.new(
+    #     guid:                  "0123456789abcdef",
+    #     nickname:              "user",
+    #     full_name:             "User Name",
+    #     seed_url:              "https://server.example/",
+    #     photo_large_url:       "https://server.example/uploads/l.jpg",
+    #     photo_medium_url:      "https://server.example/uploads/m.jpg",
+    #     photo_small_url:       "https://server.example/uploads/s.jpg",
+    #     serialized_public_key: "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
+    #     searchable:            true,
+    #     first_name:            "User",
+    #     last_name:             "Name"
+    #   )
+    #   html_string = hc.to_html
     #
     # @example Create a HCard instance from an hCard document
     #   hc = HCard.from_html(html_string)
@@ -39,65 +39,74 @@ module DiasporaFederation
     # @see http://microformats.org/wiki/h-card "h-card" (draft)
     # @see http://www.ietf.org/rfc/rfc2426.txt "vCard MIME Directory Profile" (obsolete)
     # @see http://www.ietf.org/rfc/rfc6350.txt "vCard Format Specification"
-    class HCard
-      private_class_method :new
+    class HCard < Entity
+      # @!attribute [r] guid
+      #   This is just the guid. When a user creates an account on a pod, the pod
+      #   MUST assign them a guid - a random hexadecimal string of at least 8
+      #   hexadecimal digits.
+      #   @return [String] guid
+      property :guid
 
-      # This is just the guid. When a user creates an account on a pod, the pod
-      # MUST assign them a guid - a random hexadecimal string of at least 8
-      # hexadecimal digits.
-      # @return [String] guid
-      attr_reader :guid
+      # @!attribute [r] nickname
+      #   the first part of the diaspora handle
+      #   @return [String] nickname
+      property :nickname
 
-      # the first part of the diaspora handle
-      # @return [String] nickname
-      attr_reader :nickname
+      # @!attribute [r] full_name
+      #  @return [String] display name of the user
+      property :full_name
 
-      # @return [String] display name of the user
-      attr_reader :full_name
-
-      # @deprecated should be changed to the profile url. The pod url is in
-      #   the WebFinger (see {WebFinger#seed_url}, will affect older Diaspora*
-      #   installations).
+      # @!attribute [r] url
+      #   @deprecated should be changed to the profile url. The pod url is in
+      #     the WebFinger (see {WebFinger#seed_url}, will affect older Diaspora*
+      #     installations).
       #
-      # @return [String] link to the pod
-      attr_reader :url
+      #   @return [String] link to the pod
+      property :url
 
-      # When a user is created on the pod, the pod MUST generate a pgp keypair
-      # for them. This key is used for signing messages. The format is a
-      # DER-encoded PKCS#1 key beginning with the text
-      # "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
-      # @return [String] public key
-      attr_reader :public_key
+      # @!attribute [r] public_key
+      #   When a user is created on the pod, the pod MUST generate a pgp keypair
+      #   for them. This key is used for signing messages. The format is a
+      #   DER-encoded PKCS#1 key beginning with the text
+      #   "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
+      #   @return [String] public key
+      property :public_key
 
-      # @return [String] url to the big avatar (300x300)
-      attr_reader :photo_large_url
-      # @return [String] url to the medium avatar (100x100)
-      attr_reader :photo_medium_url
-      # @return [String] url to the small avatar (50x50)
-      attr_reader :photo_small_url
+      # @!attribute [r] photo_large_url
+      #   @return [String] url to the big avatar (300x300)
+      property :photo_large_url
+      # @!attribute [r] photo_medium_url
+      #   @return [String] url to the medium avatar (100x100)
+      property :photo_medium_url
+      # @!attribute [r] photo_small_url
+      #   @return [String] url to the small avatar (50x50)
+      property :photo_small_url
 
-      # @deprecated We decided to only use one name field, these should be removed
-      #   in later iterations (will affect older Diaspora* installations).
+      # @!attribute [r] first_name
+      #   @deprecated We decided to only use one name field, these should be removed
+      #     in later iterations (will affect older Diaspora* installations).
       #
-      # @see #full_name
-      # @return [String] first name
-      attr_reader :first_name
+      #   @see #full_name
+      #   @return [String] first name
+      property :first_name
 
-      # @deprecated We decided to only use one name field, these should be removed
-      #   in later iterations (will affect older Diaspora* installations).
+      # @!attribute [r] last_name
+      #   @deprecated We decided to only use one name field, these should be removed
+      #     in later iterations (will affect older Diaspora* installations).
       #
-      # @see #full_name
-      # @return [String] last name
-      attr_reader :last_name
+      #   @see #full_name
+      #   @return [String] last name
+      property :last_name
 
-      # @deprecated As this is a simple property, consider move to WebFinger instead
-      #   of HCard. vCard has no comparable field for this information, but
-      #   Webfinger may declare arbitrary properties (will affect older Diaspora*
-      #   installations).
+      # @!attribute [r] searchable
+      #   @deprecated As this is a simple property, consider move to WebFinger instead
+      #     of HCard. vCard has no comparable field for this information, but
+      #     Webfinger may declare arbitrary properties (will affect older Diaspora*
+      #     installations).
       #
-      # flag if a user is searchable by name
-      # @return [Boolean] searchable flag
-      attr_reader :searchable
+      #   flag if a user is searchable by name
+      #   @return [Boolean] searchable flag
+      property :searchable
 
       # CSS selectors for finding all the hCard fields
       SELECTORS = {
@@ -142,33 +151,6 @@ module DiasporaFederation
         add_photos(content)
 
         builder.doc.to_xhtml(indent: 2, indent_text: " ")
-      end
-
-      # Creates a new HCard instance from the given person
-      # @param [Person] person the person object
-      # @return [HCard] HCard instance
-      # @raise [InvalidData] if the account data Hash is invalid or incomplete
-      def self.from_person(person)
-        raise ArgumentError, "person is nil" if person.nil?
-
-        hc = allocate
-        hc.instance_eval {
-          @guid             = person.guid
-          @nickname         = person.nickname
-          @full_name        = person.full_name
-          @url              = person.seed_url
-          @photo_large_url  = person.photo_large_url
-          @photo_medium_url = person.photo_medium_url
-          @photo_small_url  = person.photo_small_url
-          @public_key       = person.serialized_public_key
-          @searchable       = person.searchable
-
-          # TODO: remove me!  ###################
-          @first_name       = person.first_name
-          @last_name        = person.last_name
-          #######################################
-        }
-        hc
       end
 
       # Creates a new HCard instance from the given HTML string.

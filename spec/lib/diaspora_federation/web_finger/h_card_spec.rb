@@ -1,6 +1,9 @@
 module DiasporaFederation
   describe WebFinger::HCard do
     let(:person) { FactoryGirl.create(:person) }
+    let(:photo_large_url) { "#{person.url}/upload/large.png" }
+    let(:photo_medium_url) { "#{person.url}/upload/medium.png" }
+    let(:photo_small_url) { "#{person.url}/upload/small.png" }
 
     let(:html) {
       <<-HTML
@@ -61,25 +64,25 @@ module DiasporaFederation
         <dl class="entity_url">
           <dt>Url</dt>
           <dd>
-            <a id="pod_location" class="url" rel="me" href="#{person.seed_url}">#{person.seed_url}</a>
+            <a id="pod_location" class="url" rel="me" href="#{person.url}">#{person.url}</a>
           </dd>
         </dl>
         <dl class="entity_photo">
           <dt>Photo</dt>
           <dd>
-            <img class="photo avatar" width="300" height="300" src="#{person.photo_large_url}" />
+            <img class="photo avatar" width="300" height="300" src="#{photo_large_url}" />
           </dd>
         </dl>
         <dl class="entity_photo_medium">
           <dt>Photo_medium</dt>
           <dd>
-            <img class="photo avatar" width="100" height="100" src="#{person.photo_medium_url}" />
+            <img class="photo avatar" width="100" height="100" src="#{photo_medium_url}" />
           </dd>
         </dl>
         <dl class="entity_photo_small">
           <dt>Photo_small</dt>
           <dd>
-            <img class="photo avatar" width="50" height="50" src="#{person.photo_small_url}" />
+            <img class="photo avatar" width="50" height="50" src="#{photo_small_url}" />
           </dd>
         </dl>
       </div>
@@ -90,17 +93,29 @@ HTML
     }
 
     it "must not create blank instances" do
-      expect { WebFinger::HCard.new }.to raise_error NameError
+      expect { WebFinger::HCard.new({}) }.to raise_error ArgumentError
     end
 
     context "generation" do
       it "creates an instance from a data hash" do
-        hcard = WebFinger::HCard.from_person(person)
+        hcard = WebFinger::HCard.new(
+          guid:             person.guid,
+          nickname:         person.nickname,
+          full_name:        person.full_name,
+          url:              person.url,
+          photo_large_url:  photo_large_url,
+          photo_medium_url: photo_medium_url,
+          photo_small_url:  photo_small_url,
+          public_key:       person.serialized_public_key,
+          searchable:       person.searchable,
+          first_name:       person.first_name,
+          last_name:        person.last_name
+        )
         expect(hcard.to_html).to eq(html)
       end
 
       it "fails if nil was given" do
-        expect { WebFinger::HCard.from_person(nil) }.to raise_error ArgumentError
+        expect { WebFinger::HCard.new(nil) }.to raise_error ArgumentError, "expected a Hash"
       end
     end
 
@@ -110,10 +125,10 @@ HTML
         expect(hcard.guid).to eq(person.guid)
         expect(hcard.nickname).to eq(person.nickname)
         expect(hcard.full_name).to eq(person.full_name)
-        expect(hcard.url).to eq(person.seed_url)
-        expect(hcard.photo_large_url).to eq(person.photo_large_url)
-        expect(hcard.photo_medium_url).to eq(person.photo_medium_url)
-        expect(hcard.photo_small_url).to eq(person.photo_small_url)
+        expect(hcard.url).to eq(person.url)
+        expect(hcard.photo_large_url).to eq(photo_large_url)
+        expect(hcard.photo_medium_url).to eq(photo_medium_url)
+        expect(hcard.photo_small_url).to eq(photo_small_url)
         expect(hcard.public_key).to eq(person.serialized_public_key)
         expect(hcard.searchable).to eq(person.searchable)
 
@@ -142,7 +157,7 @@ HTML
 <dl class="entity_nickname">
 <dt>Nickname</dt>
 <dd>
-<a class="nickname url uid" href="#{person.seed_url}" rel="me">#{person.full_name}</a>
+<a class="nickname url uid" href="#{person.url}" rel="me">#{person.full_name}</a>
 </dd>
 </dl>
 <dl class="entity_given_name">
@@ -166,25 +181,25 @@ HTML
 <dl class="entity_url">
 <dt>URL</dt>
 <dd>
-<a class="url" href="#{person.seed_url}" id="pod_location" rel="me">#{person.seed_url}</a>
+<a class="url" href="#{person.url}" id="pod_location" rel="me">#{person.url}</a>
 </dd>
 </dl>
 <dl class="entity_photo">
 <dt>Photo</dt>
 <dd>
-<img class="photo avatar" height="300px" src="#{person.photo_large_url}" width="300px">
+<img class="photo avatar" height="300px" src="#{photo_large_url}" width="300px">
 </dd>
 </dl>
 <dl class="entity_photo_medium">
 <dt>Photo</dt>
 <dd>
-<img class="photo avatar" height="100px" src="#{person.photo_medium_url}" width="100px">
+<img class="photo avatar" height="100px" src="#{photo_medium_url}" width="100px">
 </dd>
 </dl>
 <dl class="entity_photo_small">
 <dt>Photo</dt>
 <dd>
-<img class="photo avatar" height="50px" src="#{person.photo_small_url}" width="50px">
+<img class="photo avatar" height="50px" src="#{photo_small_url}" width="50px">
 </dd>
 </dl>
 <dl class="entity_searchable">
@@ -199,10 +214,10 @@ HTML
 HTML
 
         hcard = WebFinger::HCard.from_html(historic_html)
-        expect(hcard.url).to eq(person.seed_url)
-        expect(hcard.photo_large_url).to eq(person.photo_large_url)
-        expect(hcard.photo_medium_url).to eq(person.photo_medium_url)
-        expect(hcard.photo_small_url).to eq(person.photo_small_url)
+        expect(hcard.url).to eq(person.url)
+        expect(hcard.photo_large_url).to eq(photo_large_url)
+        expect(hcard.photo_medium_url).to eq(photo_medium_url)
+        expect(hcard.photo_small_url).to eq(photo_small_url)
         expect(hcard.searchable).to eq(person.searchable)
 
         expect(hcard.first_name).to eq(person.first_name)

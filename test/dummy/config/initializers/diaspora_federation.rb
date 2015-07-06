@@ -24,6 +24,22 @@ DiasporaFederation.configure do |config|
     end
 
     on :person_hcard_fetch do |guid|
+      person = Person.find_by(guid: guid)
+      if person
+        DiasporaFederation::WebFinger::HCard.new(
+          guid:             person.guid,
+          nickname:         person.nickname,
+          full_name:        person.full_name,
+          url:              person.url,
+          photo_large_url:  person.photo_default_url,
+          photo_medium_url: person.photo_default_url,
+          photo_small_url:  person.photo_default_url,
+          public_key:       person.serialized_public_key,
+          searchable:       person.searchable,
+          first_name:       person.first_name,
+          last_name:        person.last_name
+        )
+      end
     end
   end
 end

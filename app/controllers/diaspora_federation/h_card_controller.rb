@@ -7,12 +7,12 @@ module DiasporaFederation
     #
     # GET /hcard/users/:guid
     def hcard
-      person = DiasporaFederation.person_class.find_local_by_guid(params[:guid])
+      person_hcard = DiasporaFederation.callbacks.trigger(:person_hcard_fetch, params[:guid])
 
-      return render nothing: true, status: 404 if person.nil?
+      return render nothing: true, status: 404 if person_hcard.nil?
 
-      logger.info "hcard profile request for: #{person.diaspora_handle}"
-      render html: WebFinger::HCard.from_person(person).to_html.html_safe
+      logger.info "hcard profile request for: #{person_hcard.nickname}:#{person_hcard.guid}"
+      render html: person_hcard.to_html.html_safe
     end
   end
 end
