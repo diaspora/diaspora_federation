@@ -33,12 +33,12 @@ module DiasporaFederation
     #   </XRD>
     # GET /webfinger?q=<uri>
     def legacy_webfinger
-      person = find_person(params[:q]) if params[:q]
+      person_wf = find_person_webfinger(params[:q]) if params[:q]
 
-      return render nothing: true, status: 404 if person.nil?
+      return render nothing: true, status: 404 if person_wf.nil?
 
-      logger.info "webfinger profile request for: #{person.diaspora_handle}"
-      render body: WebFinger::WebFinger.from_person(person).to_xml, content_type: "application/xrd+xml"
+      logger.info "webfinger profile request for: #{person_wf.acct_uri}"
+      render body: person_wf.to_xml, content_type: "application/xrd+xml"
     end
 
     private
@@ -49,8 +49,8 @@ module DiasporaFederation
       @host_meta_xml ||= WebFinger::HostMeta.from_base_url(DiasporaFederation.server_uri.to_s).to_xml
     end
 
-    def find_person(query)
-      DiasporaFederation.person_class.find_local_by_diaspora_handle(query.strip.downcase.gsub("acct:", ""))
+    def find_person_webfinger(query)
+      DiasporaFederation.callbacks.trigger(:person_webfinger_fetch, query.strip.downcase.gsub("acct:", ""))
     end
   end
 end

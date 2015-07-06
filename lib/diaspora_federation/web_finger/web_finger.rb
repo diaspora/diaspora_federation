@@ -8,19 +8,19 @@ module DiasporaFederation
     # In the meantime an actual RFC draft has been in development, which should
     # serve as a base for all future changes of this implementation.
     #
-    # @example Creating a WebFinger document from a person object
-    #   xml_string = WebFinger.from_person(person).to_xml
-    #
-    # The person object should have the following attributes (with examples)
-    #   diaspora_handle:       "user@server.example"
-    #   alias_url:             "https://server.example/people/0123456789abcdef"
-    #   hcard_url:             "https://server.example/hcard/users/0123456789abcdef"
-    #   seed_url:              "https://server.example/"
-    #   profile_url:           "https://server.example/u/user"
-    #   atom_url:              "https://server.example/public/user.atom"
-    #   salmon_url:            "https://server.example/receive/users/0123456789abcdef"
-    #   guid:                  "0123456789abcdef"
-    #   serialized_public_key: "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
+    # @example Creating a WebFinger document from a person hash
+    #   wf = WebFinger.new(
+    #     acct_uri:    "acct:user@server.example",
+    #     alias_url:   "https://server.example/people/0123456789abcdef",
+    #     hcard_url:   "https://server.example/hcard/users/user",
+    #     seed_url:    "https://server.example/",
+    #     profile_url: "https://server.example/u/user",
+    #     atom_url:    "https://server.example/public/user.atom",
+    #     salmon_url:  "https://server.example/receive/users/0123456789abcdef",
+    #     guid:        "0123456789abcdef",
+    #     public_key:  "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
+    #   )
+    #   xml_string = wf.to_xml
     #
     # @example Creating a WebFinger instance from an xml document
     #   wf = WebFinger.from_xml(xml_string)
@@ -33,62 +33,72 @@ module DiasporaFederation
     # @see http://code.google.com/p/webfinger/wiki/CommonLinkRelations
     # @see http://www.iana.org/assignments/link-relations/link-relations.xhtml
     #   official list of IANA link relations
-    class WebFinger
-      private_class_method :new
+    class WebFinger < Entity
+      # @!attribute [r] acct_uri
+      #   The Subject element should contain the webfinger address that was asked
+      #   for. If it does not, then this webfinger profile MUST be ignored.
+      #   @return [String]
+      property :acct_uri
 
-      # The Subject element should contain the webfinger address that was asked
-      # for. If it does not, then this webfinger profile MUST be ignored.
-      # @return [String]
-      attr_reader :acct_uri
+      # @!attribute [r] alias_url
+      #   @return [String] link to the users profile
+      property :alias_url
 
-      # @return [String] link to the users profile
-      attr_reader :alias_url, :profile_url
+      # @!attribute [r] hcard_url
+      #   @return [String] link to the +hCard+
+      property :hcard_url
 
-      # @return [String] link to the +hCard+
-      attr_reader :hcard_url
+      # @!attribute [r] seed_url
+      #   @return [String] link to the pod
+      property :seed_url
 
-      # @return [String] link to the pod
-      attr_reader :seed_url
+      # @!attribute [r] profile_url
+      #   @return [String] link to the users profile
+      property :profile_url
 
-      # This atom feed is an Activity Stream of the user's public posts. Diaspora
-      # pods SHOULD publish an Activity Stream of public posts, but there is
-      # currently no requirement to be able to read Activity Streams.
-      # @see http://activitystrea.ms/ Activity Streams specification
+      # @!attribute [r] atom_url
+      #   This atom feed is an Activity Stream of the user's public posts. Diaspora
+      #   pods SHOULD publish an Activity Stream of public posts, but there is
+      #   currently no requirement to be able to read Activity Streams.
+      #   @see http://activitystrea.ms/ Activity Streams specification
       #
-      # Note that this feed MAY also be made available through the PubSubHubbub
-      # mechanism by supplying a <link rel="hub"> in the atom feed itself.
-      # @return [String] atom feed url
-      attr_reader :atom_url
+      #   Note that this feed MAY also be made available through the PubSubHubbub
+      #   mechanism by supplying a <link rel="hub"> in the atom feed itself.
+      #   @return [String] atom feed url
+      property :atom_url
 
-      # @return [String] salmon endpoint url
-      # @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-salmon-00.html#SMLR
-      #   Panzer draft for Salmon, paragraph 3.3
-      attr_reader :salmon_url
+      # @!attribute [r] salmon_url
+      #   @return [String] salmon endpoint url
+      #   @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-salmon-00.html#SMLR
+      #     Panzer draft for Salmon, paragraph 3.3
+      property :salmon_url
 
-      # @deprecated Either convert these to +Property+ elements or move to the
-      #   +hCard+, which actually has fields for an +UID+ defined in the +vCard+
-      #   specification (will affect older Diaspora* installations).
+      # @!attribute [r] guid
+      #   @deprecated Either convert these to +Property+ elements or move to the
+      #     +hCard+, which actually has fields for an +UID+ defined in the +vCard+
+      #     specification (will affect older Diaspora* installations).
       #
-      # @see HCard#guid
+      #   @see HCard#guid
       #
-      # This is just the guid. When a user creates an account on a pod, the pod
-      # MUST assign them a guid - a random hexadecimal string of at least 8
-      # hexadecimal digits.
-      # @return [String] guid
-      attr_reader :guid
+      #   This is just the guid. When a user creates an account on a pod, the pod
+      #   MUST assign them a guid - a random hexadecimal string of at least 8
+      #   hexadecimal digits.
+      #   @return [String] guid
+      property :guid
 
-      # @deprecated Either convert these to +Property+ elements or move to the
-      #   +hCard+, which actually has fields for an +KEY+ defined in the +vCard+
-      #   specification (will affect older Diaspora* installations).
+      # @!attribute [r] public_key
+      #   @deprecated Either convert these to +Property+ elements or move to the
+      #     +hCard+, which actually has fields for an +KEY+ defined in the +vCard+
+      #     specification (will affect older Diaspora* installations).
       #
-      # @see HCard#pubkey
+      #   @see HCard#pubkey
       #
-      # When a user is created on the pod, the pod MUST generate a pgp keypair
-      # for them. This key is used for signing messages. The format is a
-      # DER-encoded PKCS#1 key beginning with the text
-      # "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
-      # @return [String] public key
-      attr_reader :public_key
+      #   When a user is created on the pod, the pod MUST generate a pgp keypair
+      #   for them. This key is used for signing messages. The format is a
+      #   DER-encoded PKCS#1 key beginning with the text
+      #   "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
+      #   @return [String] public key
+      property :public_key
 
       # +hcard_url+ link relation
       REL_HCARD = "http://microformats.org/profile/hcard"
@@ -128,31 +138,6 @@ module DiasporaFederation
         add_links_to(doc)
 
         doc.to_xml
-      end
-
-      # Create a WebFinger instance from the given person.
-      # @param [Person] person the person object
-      # @return [WebFinger] WebFinger instance
-      # @raise [ArgumentError] if the given person is nil
-      def self.from_person(person)
-        raise ArgumentError, "person is nil" if person.nil?
-
-        wf = allocate
-        wf.instance_eval {
-          @acct_uri    = "acct:#{person.diaspora_handle}"
-          @alias_url   = person.alias_url
-          @hcard_url   = person.hcard_url
-          @seed_url    = person.seed_url
-          @profile_url = person.profile_url
-          @atom_url    = person.atom_url
-          @salmon_url  = person.salmon_url
-
-          # TODO: remove me!  #########
-          @guid        = person.guid
-          @public_key  = person.serialized_public_key
-          #############################
-        }
-        wf
       end
 
       # Create a WebFinger instance from the given XML string.

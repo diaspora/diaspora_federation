@@ -28,7 +28,7 @@ require "entities"
 # some helper methods
 
 def alice
-  @alice ||= Person.find_local_by_diaspora_handle("alice@localhost:3000")
+  @alice ||= Person.find_by(diaspora_handle: "alice@localhost:3000")
 end
 
 # Force fixture rebuild
