@@ -1,7 +1,6 @@
 
 module DiasporaFederation
   module WebFinger
-    ##
     # Generates and parses Host Meta documents.
     #
     # This is a minimal implementation of the standard, only to the degree of what
@@ -23,7 +22,6 @@ module DiasporaFederation
       # URL fragment to append to the base URL
       WEBFINGER_SUFFIX = "webfinger?q={uri}"
 
-      ##
       # Returns the WebFinger URL that was used to build this instance (either from
       # xml or by giving a base URL).
       # @return [String] WebFinger template URL
@@ -31,7 +29,6 @@ module DiasporaFederation
         @webfinger_url
       end
 
-      ##
       # Produces the XML string for the Host Meta instance with a +Link+ element
       # containing the +webfinger_url+.
       # @return [String] XML string
@@ -43,7 +40,6 @@ module DiasporaFederation
         doc.to_xml
       end
 
-      ##
       # Builds a new HostMeta instance and constructs the WebFinger URL from the
       # given base URL by appending HostMeta::WEBFINGER_SUFFIX.
       # @return [HostMeta]
@@ -60,7 +56,6 @@ module DiasporaFederation
         hm
       end
 
-      ##
       # Reads the given Host Meta XML document string and populates the
       # +webfinger_url+.
       # @param [String] hostmeta_xml Host Meta XML string
@@ -77,7 +72,6 @@ module DiasporaFederation
         hm
       end
 
-      ##
       # Applies some basic sanity-checking to the given URL
       # @param [String] url validation subject
       # @return [Boolean] validation result
@@ -86,7 +80,6 @@ module DiasporaFederation
       end
       private_class_method :webfinger_url_valid?
 
-      ##
       # Gets the webfinger url from an XRD data structure
       # @param [Hash] data extracted data
       # @return [String] webfinger url

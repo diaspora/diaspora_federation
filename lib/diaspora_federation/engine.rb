@@ -1,5 +1,4 @@
 module DiasporaFederation
-  ##
   # diaspora* federation rails engine
   class Engine < ::Rails::Engine
     isolate_namespace DiasporaFederation

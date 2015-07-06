@@ -1,12 +1,10 @@
 module DiasporaFederation
-  ##
   # logging module for the diaspora federation
   #
   # it uses the logging-gem if available
   module Logging
     private
 
-    ##
     # get the logger for this class
     #
     # use the logging-gem if available, else use a default logger

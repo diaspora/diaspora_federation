@@ -1,12 +1,10 @@
 require_dependency "diaspora_federation/application_controller"
 
 module DiasporaFederation
-  ##
   # this controller processes receiving messages
   class ReceiveController < ApplicationController
     before_action :check_for_xml
 
-    ##
     # receives public messages
     #
     # POST /receive/public
@@ -16,7 +14,6 @@ module DiasporaFederation
       render nothing: true, status: :ok
     end
 
-    ##
     # receives private messages for a user
     #
     # POST /receive/users/:guid

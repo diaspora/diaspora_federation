@@ -1,5 +1,4 @@
 module DiasporaFederation
-  ##
   # This module provides the namespace for the various classes implementing
   # WebFinger and other protocols used for metadata discovery on remote servers
   # in the Diaspora* network.

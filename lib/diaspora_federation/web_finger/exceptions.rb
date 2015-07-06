@@ -1,11 +1,9 @@
 module DiasporaFederation
   module WebFinger
-    ##
     # Raised, if the XML structure is invalid
     class InvalidDocument < RuntimeError
     end
 
-    ##
     # Raised, if something is wrong with the webfinger data
     #
     # * if the +webfinger_url+ is missing or malformed in {HostMeta.from_base_url} or {HostMeta.from_xml}

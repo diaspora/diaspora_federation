@@ -1,10 +1,8 @@
 require_dependency "diaspora_federation/application_controller"
 
 module DiasporaFederation
-  ##
   # this controller handles all webfinger-specific requests
   class WebfingerController < ApplicationController
-    ##
     # returns the host-meta xml
     #
     # example:
@@ -18,7 +16,6 @@ module DiasporaFederation
       render body: WebfingerController.host_meta_xml, content_type: "application/xrd+xml"
     end
 
-    ##
     # @deprecated this is the pre RFC 7033 webfinger
     #
     # example:
@@ -46,7 +43,6 @@ module DiasporaFederation
 
     private
 
-    ##
     # creates the host-meta xml with the configured server_uri and caches it
     # @return [String] XML string
     def self.host_meta_xml

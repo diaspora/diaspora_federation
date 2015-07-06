@@ -1,6 +1,5 @@
 module DiasporaFederation
   module WebFinger
-    ##
     # This class provides the means of generating an parsing account data to and
     # from the hCard format.
     # hCard is based on +RFC 2426+ (vCard) which got superseded by +RFC 6350+.

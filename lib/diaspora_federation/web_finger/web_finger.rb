@@ -1,6 +1,5 @@
 module DiasporaFederation
   module WebFinger
-    ##
     # The WebFinger document used for Diaspora* user discovery is based on an older
     # draft of the specification you can find in the wiki of the "webfinger" project
     # on {http://code.google.com/p/webfinger/wiki/WebFingerProtocol Google Code}

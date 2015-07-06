@@ -1,6 +1,5 @@
 module DiasporaFederation
   module WebFinger
-    ##
     # This class implements basic handling of XRD documents as far as it is
     # necessary in the context of the protocols used with Diaspora* federation.
     #
@@ -65,7 +64,6 @@ module DiasporaFederation
         @properties = {}
       end
 
-      ##
       # Generates an XML document from the current instance and returns it as string
       # @return [String] XML document
       def to_xml
@@ -83,7 +81,6 @@ module DiasporaFederation
         builder.to_xml
       end
 
-      ##
       # Parse the XRD document from the given string and create a hash containing
       # the extracted data.
       #

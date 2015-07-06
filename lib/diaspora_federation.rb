@@ -2,13 +2,11 @@ require "diaspora_federation/logging"
 
 require "diaspora_federation/web_finger"
 
-##
 # diaspora* federation library
 module DiasporaFederation
   extend Logging
 
   class << self
-    ##
     # the pod url
     #
     # @example with uri
@@ -17,7 +15,6 @@ module DiasporaFederation
     #   config.server_uri = AppConfig.pod_uri
     attr_accessor :server_uri
 
-    ##
     # the class to use as +Person+
     #
     # @example
@@ -95,7 +92,6 @@ module DiasporaFederation
       const_get(@person_class)
     end
 
-    ##
     # configure the federation library
     #
     #   DiasporaFederation.configure do |config|
@@ -105,7 +101,6 @@ module DiasporaFederation
       yield self
     end
 
-    ##
     # validates if the engine is configured correctly
     #
     # called from after_initialize
