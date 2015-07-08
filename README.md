@@ -1,6 +1,6 @@
 # diaspora* federation library
 
-**a library that provides functionalities needed for the diaspora* federation protocol**
+**A library that provides functionalities needed for the diaspora* federation protocol**
 
 [![Build Status](https://travis-ci.org/SuperTux88/diaspora_federation.svg?branch=master)](https://travis-ci.org/SuperTux88/diaspora_federation)
 [![Code Climate](https://codeclimate.com/github/SuperTux88/diaspora_federation/badges/gpa.svg)](https://codeclimate.com/github/SuperTux88/diaspora_federation)
@@ -57,7 +57,7 @@ After the first stable release, this repo will be moved to the [diaspora organiz
 
 ## Diaspora
 
-a privacy-aware, distributed, open source social network
+A privacy-aware, distributed, open source social network
 
 Links:
 [Project site](https://diasporafoundation.org) |

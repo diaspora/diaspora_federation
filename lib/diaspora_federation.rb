@@ -52,6 +52,8 @@ module DiasporaFederation
     #       # do something
     #     end
     #   end
+    #
+    # @param [Proc] block the callbacks to define
     def define_callbacks(&block)
       @callbacks.instance_eval(&block)
     end

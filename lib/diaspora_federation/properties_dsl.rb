@@ -76,12 +76,14 @@ module DiasporaFederation
     end
 
     # checks if the name is a +Symbol+ or a +String+
+    # @param [String, Symbol] name the name to check
     # @return [Boolean]
     def name_valid?(name)
       name.instance_of?(Symbol) || name.instance_of?(String)
     end
 
     # checks if the type extends {Entity}
+    # @param [Class] type the type to check
     # @return [Boolean]
     def type_valid?(type)
       [type].flatten.all? { |type|

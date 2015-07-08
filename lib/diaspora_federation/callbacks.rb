@@ -22,6 +22,10 @@ module DiasporaFederation
     #   callbacks.on :some_event do |arg1|
     #     # do something
     #   end
+    #
+    # @param [Symbol] event the event key
+    # @param [Proc] callback the callback block
+    # @raise [ArgumentError] if the event key is undefined or has already a handler
     def on(event, &callback)
       raise ArgumentError, "Undefined event #{event}" unless @events.include? event
       raise ArgumentError, "Already defined event #{event}" if @handlers.has_key? event
@@ -34,7 +38,9 @@ module DiasporaFederation
     # @example
     #   callbacks.trigger :some_event, "foo"
     #
+    # @param [Symbol] event the event key
     # @return [Object] the return-value of the callback
+    # @raise [ArgumentError] if the event key is undefined
     def trigger(event, *args)
       raise ArgumentError, "Undefined event #{event}" unless @events.include? event
 
