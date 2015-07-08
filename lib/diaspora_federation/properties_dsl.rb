@@ -1,8 +1,15 @@
 module DiasporaFederation
   # Provides a simple DSL for specifying {Entity} properties during class
   # definition.
+  #
+  # @example
+  #   property :prop
+  #   property :optional, default: false
+  #   property :dynamic_default, default: -> { Time.now }
+  #   entity :nested, NestedEntity
+  #   entity :multiple, [OtherEntity]
   module PropertiesDSL
-    # @return [Hash] hash of declared entity properties
+    # @return [Array<Hash>] hash of declared entity properties
     def class_props
       @class_props ||= []
     end
@@ -31,22 +38,28 @@ module DiasporaFederation
     end
 
     # Return array of missing required property names
+    # @return [Array<Symbol>] missing required property names
     def missing_props(args)
       class_prop_names - default_props.keys - args.keys
     end
 
     # Return a new hash of default values, with dynamic values
     # resolved on each call
+    # @return [Hash] default values
     def default_values
       default_props.each_with_object({}) { |(name, prop), hash|
         hash[name] = prop.respond_to?(:call) ? prop.call : prop
       }
     end
 
+    # Returns all nested Entities
+    # @return [Array<Hash>] nested properties
     def nested_class_props
       @nested_class_props ||= class_props.select {|p| p[:type] != String }
     end
 
+    # Returns all property names
+    # @return [Array] property names
     def class_prop_names
       @class_prop_names ||= class_props.map {|p| p[:name] }
     end
@@ -62,10 +75,14 @@ module DiasporaFederation
       instance_eval { attr_reader name }
     end
 
+    # checks if the name is a +Symbol+ or a +String+
+    # @return [Boolean]
     def name_valid?(name)
       name.instance_of?(Symbol) || name.instance_of?(String)
     end
 
+    # checks if the type extends {Entity}
+    # @return [Boolean]
     def type_valid?(type)
       [type].flatten.all? { |type|
         type.respond_to?(:ancestors) && type.ancestors.include?(Entity)

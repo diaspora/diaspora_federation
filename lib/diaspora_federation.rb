@@ -16,6 +16,10 @@ module DiasporaFederation
   )
 
   class << self
+    # {Callbacks} instance with defined callbacks
+    # @see Callbacks#on
+    # @see Callbacks#trigger
+    #
     attr_reader :callbacks
 
     # the pod url
@@ -40,6 +44,14 @@ module DiasporaFederation
       yield self
     end
 
+    # define the callbacks
+    #
+    # @example
+    #   config.define_callbacks do
+    #     on :some_event do |arg1|
+    #       # do something
+    #     end
+    #   end
     def define_callbacks(&block)
       @callbacks.instance_eval(&block)
     end
