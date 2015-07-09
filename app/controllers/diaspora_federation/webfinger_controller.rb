@@ -23,11 +23,13 @@ module DiasporaFederation
     #   <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
     #     <Subject>acct:alice@localhost:3000</Subject>
     #     <Alias>http://localhost:3000/people/c8e87290f6a20132963908fbffceb188</Alias>
-    #     <Link rel="http://microformats.org/profile/hcard" type="text/html" href="http://localhost:3000/hcard/users/c8e87290f6a20132963908fbffceb188"/>
+    #     <Link rel="http://microformats.org/profile/hcard" type="text/html"
+    #           href="http://localhost:3000/hcard/users/c8e87290f6a20132963908fbffceb188"/>
     #     <Link rel="http://joindiaspora.com/seed_location" type="text/html" href="http://localhost:3000/"/>
     #     <Link rel="http://joindiaspora.com/guid" type="text/html" href="c8e87290f6a20132963908fbffceb188"/>
     #     <Link rel="http://webfinger.net/rel/profile-page" type="text/html" href="http://localhost:3000/u/alice"/>
-    #     <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="http://localhost:3000/public/alice.atom"/>
+    #     <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml"
+    #           href="http://localhost:3000/public/alice.atom"/>
     #     <Link rel="salmon" href="http://localhost:3000/receive/users/c8e87290f6a20132963908fbffceb188"/>
     #     <Link rel="diaspora-public-key" type="RSA" href="LS0tLS1CRU......"/>
     #   </XRD>
