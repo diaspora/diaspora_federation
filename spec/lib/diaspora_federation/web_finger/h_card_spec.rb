@@ -136,6 +136,11 @@ HTML
         expect(hcard.last_name).to eq(person.last_name)
       end
 
+      it "is frozen after parsing" do
+        hcard = WebFinger::HCard.from_html(html)
+        expect(hcard).to be_frozen
+      end
+
       it "searchable is false, if it is empty in html" do
         changed_html = html.sub(
           "class=\"searchable\">#{person.searchable}<",

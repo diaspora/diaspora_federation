@@ -61,6 +61,11 @@ XML
         expect(wf.public_key).to eq(person.serialized_public_key)
       end
 
+      it "is frozen after parsing" do
+        wf = WebFinger::WebFinger.from_xml(xml)
+        expect(wf).to be_frozen
+      end
+
       it "reads old-style XML" do
         historic_xml = <<-XML
 <?xml version="1.0" encoding="UTF-8"?>

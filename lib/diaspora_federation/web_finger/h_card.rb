@@ -69,8 +69,11 @@ module DiasporaFederation
       #   for them. This key is used for signing messages. The format is a
       #   DER-encoded PKCS#1 key beginning with the text
       #   "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
+      #
+      #   @note the public key is new in the hcard and is optional now.
+      #
       #   @return [String] public key
-      property :public_key
+      property :public_key, default: nil
 
       # @!attribute [r] photo_large_url
       #   @return [String] url to the big avatar (300x300)
@@ -160,24 +163,24 @@ module DiasporaFederation
       def self.from_html(html_string)
         doc = parse_html_and_validate(html_string)
 
-        hc = allocate
-        hc.instance_eval {
-          @guid             = content_from_doc(doc, :uid)
-          @nickname         = content_from_doc(doc, :nickname)
-          @full_name        = content_from_doc(doc, :fn)
-          @url              = element_from_doc(doc, :url)["href"]
-          @photo_large_url  = photo_from_doc(doc, :photo)
-          @photo_medium_url = photo_from_doc(doc, :photo_medium)
-          @photo_small_url  = photo_from_doc(doc, :photo_small)
-          @public_key       = content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?
-          @searchable       = content_from_doc(doc, :searchable) == "true"
+        data = {
+          guid:             content_from_doc(doc, :uid),
+          nickname:         content_from_doc(doc, :nickname),
+          full_name:        content_from_doc(doc, :fn),
+          url:              element_from_doc(doc, :url)["href"],
+          photo_large_url:  photo_from_doc(doc, :photo),
+          photo_medium_url: photo_from_doc(doc, :photo_medium),
+          photo_small_url:  photo_from_doc(doc, :photo_small),
+          searchable:       (content_from_doc(doc, :searchable) == "true"),
 
           # TODO: change me!  ###################
-          @first_name       = content_from_doc(doc, :given_name)
-          @last_name        = content_from_doc(doc, :family_name)
+          first_name:       content_from_doc(doc, :given_name),
+          last_name:        content_from_doc(doc, :family_name)
           #######################################
         }
-        hc
+        # TODO: public key is new and can be missing
+        data[:public_key] = content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?
+        new(data)
       end
 
       private
@@ -271,17 +274,20 @@ module DiasporaFederation
       end
       private_class_method :parse_html_and_validate
 
-      def element_from_doc(doc, selector)
+      def self.element_from_doc(doc, selector)
         doc.at_css(SELECTORS[selector])
       end
+      private_class_method :element_from_doc
 
-      def content_from_doc(doc, content_selector)
+      def self.content_from_doc(doc, content_selector)
         element_from_doc(doc, content_selector).content
       end
+      private_class_method :content_from_doc
 
-      def photo_from_doc(doc, photo_selector)
+      def self.photo_from_doc(doc, photo_selector)
         element_from_doc(doc, photo_selector)["src"]
       end
+      private_class_method :photo_from_doc
     end
   end
 end

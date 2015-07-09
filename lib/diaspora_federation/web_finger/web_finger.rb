@@ -149,22 +149,19 @@ module DiasporaFederation
 
         hcard_url, seed_url, guid, profile_url, atom_url, salmon_url, public_key = parse_links(data)
 
-        wf = allocate
-        wf.instance_eval {
-          @acct_uri    = data[:subject]
-          @alias_url   = data[:aliases].first
-          @hcard_url   = hcard_url
-          @seed_url    = seed_url
-          @profile_url = profile_url
-          @atom_url    = atom_url
-          @salmon_url  = salmon_url
+        new(
+          acct_uri:    data[:subject],
+          alias_url:   data[:aliases].first,
+          hcard_url:   hcard_url,
+          seed_url:    seed_url,
+          profile_url: profile_url,
+          atom_url:    atom_url,
+          salmon_url:  salmon_url,
 
           # TODO: remove me!  ##########
-          @guid        = guid
-          @public_key  = Base64.strict_decode64(public_key)
-          ##############################
-        }
-        wf
+          guid:        guid,
+          public_key:  Base64.strict_decode64(public_key)
+        )
       end
 
       private
