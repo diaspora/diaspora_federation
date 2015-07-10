@@ -42,8 +42,20 @@ DiasporaFederation.configure do |config|
   # the pod url
   config.server_uri = AppConfig.pod_uri
 
-  # the class to be used for a person
-  config.person_class = Person
+  config.define_callbacks do
+    on :person_webfinger_fetch do |handle|
+      person = Person.find_local_by_diaspora_handle(handle)
+      if person
+        DiasporaFederation::WebFinger::WebFinger.new(
+          # ...
+        )
+      end
+    end
+
+    on :person_hcard_fetch do |guid|
+      # ...
+    end
+  end
 end
 ```
 
