@@ -1,5 +1,5 @@
 module DiasporaFederation
-  describe WebFinger::HostMeta do
+  describe Discovery::HostMeta do
     let(:base_url) { "https://pod.example.tld/" }
     let(:xml) {
       <<-XML
@@ -11,28 +11,28 @@ XML
     }
 
     it "must not create blank instances" do
-      expect { WebFinger::HostMeta.new }.to raise_error NoMethodError
+      expect { Discovery::HostMeta.new }.to raise_error NoMethodError
     end
 
     context "generation" do
       it "creates a nice XML document" do
-        hm = WebFinger::HostMeta.from_base_url(base_url)
+        hm = Discovery::HostMeta.from_base_url(base_url)
         expect(hm.to_xml).to eq(xml)
       end
 
       it "appends a '/' if necessary" do
-        hm = WebFinger::HostMeta.from_base_url("https://pod.example.tld")
+        hm = Discovery::HostMeta.from_base_url("https://pod.example.tld")
         expect(hm.to_xml).to eq(xml)
       end
 
       it "fails if the base_url was omitted" do
-        expect { WebFinger::HostMeta.from_base_url("") }.to raise_error WebFinger::InvalidData
+        expect { Discovery::HostMeta.from_base_url("") }.to raise_error Discovery::InvalidData
       end
     end
 
     context "parsing" do
       it "parses its own output" do
-        hm = WebFinger::HostMeta.from_xml(xml)
+        hm = Discovery::HostMeta.from_xml(xml)
         expect(hm.webfinger_template_url).to eq("#{base_url}webfinger?q={uri}")
       end
 
@@ -49,7 +49,7 @@ XML
 
 </XRD>
 XML
-        hm = WebFinger::HostMeta.from_xml(historic_xml)
+        hm = Discovery::HostMeta.from_xml(historic_xml)
         expect(hm.webfinger_template_url).to eq("#{base_url}webfinger?q={uri}")
       end
 
@@ -59,7 +59,7 @@ XML
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
 </XRD>
 XML
-        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error WebFinger::InvalidData
+        expect { Discovery::HostMeta.from_xml(invalid_xml) }.to raise_error Discovery::InvalidData
       end
 
       it "fails if the document contains a malformed webfinger url" do
@@ -69,11 +69,11 @@ XML
   <Link rel="lrdd" type="application/xrd+xml" template="#{base_url}webfinger?q="/>
 </XRD>
 XML
-        expect { WebFinger::HostMeta.from_xml(invalid_xml) }.to raise_error WebFinger::InvalidData
+        expect { Discovery::HostMeta.from_xml(invalid_xml) }.to raise_error Discovery::InvalidData
       end
 
       it "fails if the document is invalid" do
-        expect { WebFinger::HostMeta.from_xml("") }.to raise_error WebFinger::InvalidDocument
+        expect { Discovery::HostMeta.from_xml("") }.to raise_error Discovery::InvalidDocument
       end
     end
   end

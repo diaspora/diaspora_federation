@@ -1,5 +1,5 @@
 module DiasporaFederation
-  describe WebFinger::HCard do
+  describe Discovery::HCard do
     let(:person) { FactoryGirl.create(:person) }
     let(:photo_large_url) { "#{person.url}/upload/large.png" }
     let(:photo_medium_url) { "#{person.url}/upload/medium.png" }
@@ -93,12 +93,12 @@ HTML
     }
 
     it "must not create blank instances" do
-      expect { WebFinger::HCard.new({}) }.to raise_error ArgumentError
+      expect { Discovery::HCard.new({}) }.to raise_error ArgumentError
     end
 
     context "generation" do
       it "creates an instance from a data hash" do
-        hcard = WebFinger::HCard.new(
+        hcard = Discovery::HCard.new(
           guid:             person.guid,
           nickname:         person.nickname,
           full_name:        person.full_name,
@@ -115,13 +115,13 @@ HTML
       end
 
       it "fails if nil was given" do
-        expect { WebFinger::HCard.new(nil) }.to raise_error ArgumentError, "expected a Hash"
+        expect { Discovery::HCard.new(nil) }.to raise_error ArgumentError, "expected a Hash"
       end
     end
 
     context "parsing" do
       it "reads its own output" do
-        hcard = WebFinger::HCard.from_html(html)
+        hcard = Discovery::HCard.from_html(html)
         expect(hcard.guid).to eq(person.guid)
         expect(hcard.nickname).to eq(person.nickname)
         expect(hcard.full_name).to eq(person.full_name)
@@ -137,7 +137,7 @@ HTML
       end
 
       it "is frozen after parsing" do
-        hcard = WebFinger::HCard.from_html(html)
+        hcard = Discovery::HCard.from_html(html)
         expect(hcard).to be_frozen
       end
 
@@ -147,7 +147,7 @@ HTML
           "class=\"searchable\"><"
         )
 
-        hcard = WebFinger::HCard.from_html(changed_html)
+        hcard = Discovery::HCard.from_html(changed_html)
 
         expect(hcard.searchable).to eq(false)
       end
@@ -218,7 +218,7 @@ HTML
 </div>
 HTML
 
-        hcard = WebFinger::HCard.from_html(historic_html)
+        hcard = Discovery::HCard.from_html(historic_html)
         expect(hcard.url).to eq(person.url)
         expect(hcard.photo_large_url).to eq(photo_large_url)
         expect(hcard.photo_medium_url).to eq(photo_medium_url)
@@ -235,11 +235,11 @@ HTML
   <span class="fn">#{person.full_name}</span>
 </div>
 HTML
-        expect { WebFinger::HCard.from_html(invalid_html) }.to raise_error WebFinger::InvalidData
+        expect { Discovery::HCard.from_html(invalid_html) }.to raise_error Discovery::InvalidData
       end
 
       it "fails if the document is not HTML" do
-        expect { WebFinger::HCard.from_html("") }.to raise_error WebFinger::InvalidData
+        expect { Discovery::HCard.from_html("") }.to raise_error Discovery::InvalidData
       end
     end
   end

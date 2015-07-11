@@ -1,5 +1,5 @@
 module DiasporaFederation
-  module WebFinger
+  module Discovery
     # Raised, if the XML structure is invalid
     class InvalidDocument < RuntimeError
     end

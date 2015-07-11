@@ -46,7 +46,7 @@ DiasporaFederation.configure do |config|
     on :person_webfinger_fetch do |handle|
       person = Person.find_local_by_diaspora_handle(handle)
       if person
-        DiasporaFederation::WebFinger::WebFinger.new(
+        DiasporaFederation::Discovery::WebFinger.new(
           # ...
         )
       end

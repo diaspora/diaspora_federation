@@ -1,4 +1,4 @@
-require "diaspora_federation/web_finger"
+require "diaspora_federation/discovery"
 
 # configure the federation engine
 DiasporaFederation.configure do |config|
@@ -9,7 +9,7 @@ DiasporaFederation.configure do |config|
     on :person_webfinger_fetch do |handle|
       person = Person.find_by(diaspora_handle: handle)
       if person
-        DiasporaFederation::WebFinger::WebFinger.new(
+        DiasporaFederation::Discovery::WebFinger.new(
           acct_uri:    "acct:#{person.diaspora_handle}",
           alias_url:   person.alias_url,
           hcard_url:   person.hcard_url,
@@ -26,7 +26,7 @@ DiasporaFederation.configure do |config|
     on :person_hcard_fetch do |guid|
       person = Person.find_by(guid: guid)
       if person
-        DiasporaFederation::WebFinger::HCard.new(
+        DiasporaFederation::Discovery::HCard.new(
           guid:             person.guid,
           nickname:         person.nickname,
           full_name:        person.full_name,

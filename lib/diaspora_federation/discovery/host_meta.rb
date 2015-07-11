@@ -1,6 +1,6 @@
 
 module DiasporaFederation
-  module WebFinger
+  module Discovery
     # Generates and parses Host Meta documents.
     #
     # This is a minimal implementation of the standard, only to the degree of what

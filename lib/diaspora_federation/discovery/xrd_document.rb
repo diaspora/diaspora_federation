@@ -1,5 +1,5 @@
 module DiasporaFederation
-  module WebFinger
+  module Discovery
     # This class implements basic handling of XRD documents as far as it is
     # necessary in the context of the protocols used with Diaspora* federation.
     #

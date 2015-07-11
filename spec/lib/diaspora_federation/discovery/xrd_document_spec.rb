@@ -1,5 +1,5 @@
 module DiasporaFederation
-  describe WebFinger::XrdDocument do
+  describe Discovery::XrdDocument do
     let(:xml) {
       <<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -49,7 +49,7 @@ XML
 
     context "generation" do
       it "creates the xml document" do
-        doc = WebFinger::XrdDocument.new
+        doc = Discovery::XrdDocument.new
         doc.expires = data[:expires]
         doc.subject = data[:subject]
 
@@ -71,16 +71,16 @@ XML
 
     context "parsing" do
       it "reads the xml document" do
-        doc = WebFinger::XrdDocument.xml_data(xml)
+        doc = Discovery::XrdDocument.xml_data(xml)
         expect(doc).to eq(data)
       end
 
       it "raises InvalidDocument if the xml is empty" do
-        expect { WebFinger::XrdDocument.xml_data("") }.to raise_error WebFinger::InvalidDocument
+        expect { Discovery::XrdDocument.xml_data("") }.to raise_error Discovery::InvalidDocument
       end
 
       it "raises InvalidDocument if the xml is no XRD document" do
-        expect { WebFinger::XrdDocument.xml_data("<html></html>") }.to raise_error WebFinger::InvalidDocument
+        expect { Discovery::XrdDocument.xml_data("<html></html>") }.to raise_error Discovery::InvalidDocument
       end
     end
   end
