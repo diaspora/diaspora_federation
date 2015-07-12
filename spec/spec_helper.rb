@@ -18,6 +18,7 @@ ENV["RAILS_ENV"] ||= "test"
 require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "environment")
 
 require "rspec/rails"
+require "webmock/rspec"
 
 # load factory girl factories
 require "factories"
