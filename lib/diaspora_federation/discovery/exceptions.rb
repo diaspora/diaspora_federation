@@ -11,5 +11,9 @@ module DiasporaFederation
     # * if the html passed to {HCard.from_html} in some way is malformed, invalid or incomplete.
     class InvalidData < RuntimeError
     end
+
+    # Raised, if there is an error while discover a new person
+    class DiscoveryError < RuntimeError
+    end
   end
 end
