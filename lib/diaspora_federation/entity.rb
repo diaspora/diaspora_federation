@@ -50,7 +50,7 @@ module DiasporaFederation
       end
 
       self.class.default_values.merge(data).each do |k, v|
-        instance_variable_set("@#{k}", v) if setable?(k, v)
+        instance_variable_set("@#{k}", nilify(v)) if setable?(k, v)
       end
       freeze
     end
@@ -111,6 +111,11 @@ module DiasporaFederation
       (t.instance_of?(Array) &&
         val.instance_of?(Array) &&
         val.all? {|v| v.instance_of?(t.first) })
+    end
+
+    def nilify(value)
+      return nil if value.respond_to?(:empty?) && value.empty?
+      value
     end
 
     # Serialize the Entity into XML elements

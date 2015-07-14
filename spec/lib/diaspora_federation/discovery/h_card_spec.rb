@@ -152,6 +152,25 @@ HTML
         expect(hcard.searchable).to eq(false)
       end
 
+      it "name is nil if empty" do
+        changed_html = html.sub(
+          "class=\"fn\">#{person.full_name}<",
+          "class=\"fn\"><"
+        ).sub(
+          "class=\"given_name\">#{person.first_name}<",
+          "class=\"given_name\"><"
+        ).sub(
+          "class=\"family_name\">#{person.last_name}<",
+          "class=\"family_name\"><"
+        )
+
+        hcard = Discovery::HCard.from_html(changed_html)
+
+        expect(hcard.full_name).to be_nil
+        expect(hcard.first_name).to be_nil
+        expect(hcard.last_name).to be_nil
+      end
+
       it "reads old-style HTML" do
         historic_html = <<-HTML
 <div id="content">

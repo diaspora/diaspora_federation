@@ -20,17 +20,24 @@ module DiasporaFederation
 
       it "sets the defaults" do
         entity = Entities::TestDefaultEntity.new(test1: 1, test2: 2)
-        expect(entity.to_h[:test3]).to be_truthy
+        expect(entity.test3).to be_truthy
       end
 
       it "handles callable defaults" do
         entity = Entities::TestDefaultEntity.new(test1: 1, test2: 2)
-        expect(entity.to_h[:test4]).to be_truthy
+        expect(entity.test4).to be_truthy
       end
 
       it "uses provided values over defaults" do
         entity = Entities::TestDefaultEntity.new(data)
-        expect(entity.to_h[:test3]).to be_falsey
+        expect(entity.test3).to be_falsey
+        expect(entity.test4).to be_falsey
+      end
+
+      it "sets nil if string is empty" do
+        data[:test1] = ""
+        entity = Entities::TestDefaultEntity.new(data)
+        expect(entity.test1).to be_nil
       end
     end
 
