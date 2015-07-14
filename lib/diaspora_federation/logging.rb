@@ -11,7 +11,7 @@ module DiasporaFederation
     def logger
       @logger ||= begin
                     # use logging-gem if available
-                    return ::Logging::Logger[self] if Object.const_defined?("::Logging::Logger")
+                    return ::Logging::Logger[self] if defined?(::Logging::Logger)
 
                     # fallback logger
                     @logger = Logger.new(STDOUT)
