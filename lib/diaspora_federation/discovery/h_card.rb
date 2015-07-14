@@ -164,7 +164,7 @@ module DiasporaFederation
         doc = parse_html_and_validate(html_string)
 
         data = {
-          guid:             content_from_doc(doc, :uid),
+          guid:             guid_from_doc(doc),
           nickname:         content_from_doc(doc, :nickname),
           full_name:        content_from_doc(doc, :fn),
           url:              element_from_doc(doc, :url)["href"],
@@ -173,7 +173,7 @@ module DiasporaFederation
           photo_small_url:  photo_from_doc(doc, :photo_small),
           searchable:       (content_from_doc(doc, :searchable) == "true"),
 
-          # TODO: change me!  ###################
+          # TODO: remove me!  ###################
           first_name:       content_from_doc(doc, :given_name),
           last_name:        content_from_doc(doc, :family_name)
           #######################################
@@ -288,6 +288,14 @@ module DiasporaFederation
         element_from_doc(doc, photo_selector)["src"]
       end
       private_class_method :photo_from_doc
+
+      # @deprecated hack for old hcard
+      # @todo remove this when all pods have the new generator
+      def self.guid_from_doc(doc)
+        uid_element = element_from_doc(doc, :uid)
+        uid_element.content unless uid_element[:class].include? "nickname"
+      end
+      private_class_method :guid_from_doc
     end
   end
 end

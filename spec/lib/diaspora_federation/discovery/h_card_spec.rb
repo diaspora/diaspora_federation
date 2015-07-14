@@ -227,6 +227,9 @@ HTML
 
         expect(hcard.first_name).to eq(person.first_name)
         expect(hcard.last_name).to eq(person.last_name)
+
+        expect(hcard.guid).to be_nil
+        expect(hcard.public_key).to be_nil
       end
 
       it "fails if the document is incomplete" do
