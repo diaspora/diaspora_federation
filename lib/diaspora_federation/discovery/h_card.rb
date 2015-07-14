@@ -15,17 +15,17 @@ module DiasporaFederation
     #
     # @example Creating a hCard document from a person hash
     #   hc = HCard.new(
-    #     guid:                  "0123456789abcdef",
-    #     nickname:              "user",
-    #     full_name:             "User Name",
-    #     seed_url:              "https://server.example/",
-    #     photo_large_url:       "https://server.example/uploads/l.jpg",
-    #     photo_medium_url:      "https://server.example/uploads/m.jpg",
-    #     photo_small_url:       "https://server.example/uploads/s.jpg",
-    #     serialized_public_key: "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
-    #     searchable:            true,
-    #     first_name:            "User",
-    #     last_name:             "Name"
+    #     guid:             "0123456789abcdef",
+    #     nickname:         "user",
+    #     full_name:        "User Name",
+    #     seed_url:         "https://server.example/",
+    #     photo_large_url:  "https://server.example/uploads/l.jpg",
+    #     photo_medium_url: "https://server.example/uploads/m.jpg",
+    #     photo_small_url:  "https://server.example/uploads/s.jpg",
+    #     public_key:       "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
+    #     searchable:       true,
+    #     first_name:       "User",
+    #     last_name:        "Name"
     #   )
     #   html_string = hc.to_html
     #
