@@ -70,10 +70,8 @@ module DiasporaFederation
       #   DER-encoded PKCS#1 key beginning with the text
       #   "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
       #
-      #   @note the public key is new in the hcard and is optional now.
-      #
       #   @return [String] public key
-      property :public_key, default: nil
+      property :public_key
 
       # @!attribute [r] photo_large_url
       #   @return [String] url to the big avatar (300x300)
@@ -172,14 +170,14 @@ module DiasporaFederation
           photo_medium_url: photo_from_doc(doc, :photo_medium),
           photo_small_url:  photo_from_doc(doc, :photo_small),
           searchable:       (content_from_doc(doc, :searchable) == "true"),
+          # TODO: public key is new and can be missing
+          public_key:       (content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?),
 
           # TODO: remove me!  ###################
           first_name:       content_from_doc(doc, :given_name),
           last_name:        content_from_doc(doc, :family_name)
           #######################################
         }
-        # TODO: public key is new and can be missing
-        data[:public_key] = content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?
         new(data)
       end
 

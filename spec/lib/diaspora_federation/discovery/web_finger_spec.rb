@@ -97,8 +97,35 @@ XML
         expect(wf.public_key).to eq(person.serialized_public_key)
       end
 
+      it "reads future XML without guid and public key" do
+        future_xml = <<-XML
+<?xml version="1.0" encoding="UTF-8"?>
+<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
+  <Subject>#{acct}</Subject>
+  <Alias>#{person.alias_url}</Alias>
+  <Link rel="http://microformats.org/profile/hcard" type="text/html" href="#{person.hcard_url}"/>
+  <Link rel="http://joindiaspora.com/seed_location" type="text/html" href="#{person.url}"/>
+  <Link rel="http://webfinger.net/rel/profile-page" type="text/html" href="#{person.profile_url}"/>
+  <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="#{person.atom_url}"/>
+  <Link rel="salmon" href="#{person.salmon_url}"/>
+</XRD>
+XML
+
+        wf = Discovery::WebFinger.from_xml(future_xml)
+        expect(wf.acct_uri).to eq(acct)
+        expect(wf.alias_url).to eq(person.alias_url)
+        expect(wf.hcard_url).to eq(person.hcard_url)
+        expect(wf.seed_url).to eq(person.url)
+        expect(wf.profile_url).to eq(person.profile_url)
+        expect(wf.atom_url).to eq(person.atom_url)
+        expect(wf.salmon_url).to eq(person.salmon_url)
+
+        expect(wf.guid).to be_nil
+        expect(wf.public_key).to be_nil
+      end
+
       it "fails if the document is empty" do
-        invalid_xml = <<XML
+        invalid_xml = <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
 </XRD>
