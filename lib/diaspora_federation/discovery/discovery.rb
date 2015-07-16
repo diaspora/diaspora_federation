@@ -13,6 +13,7 @@ module DiasporaFederation
       end
 
       # fetch all metadata for the account
+      # @return [Person]
       def fetch
         logger.info "Fetch data for #{handle}"
 
@@ -20,7 +21,7 @@ module DiasporaFederation
           raise DiscoveryError, "Handle does not match: Wanted #{handle} but got #{clean_handle(webfinger.acct_uri)}"
         end
 
-        discovery_data_hash
+        Entities::Person.new(person_hash)
       end
 
       private
@@ -63,14 +64,26 @@ module DiasporaFederation
         @hcard ||= HCard.from_html get(webfinger.hcard_url)
       end
 
-      def discovery_data_hash
-        hcard_hash = hcard.to_h.expect(:guid, :serialized_public_key)
-        hcard_hash.merge(
+      def person_hash
+        {
           guid:            hcard.guid || webfinger.guid,
-          public_key:      hcard.public_key || webfinger.public_key,
           diaspora_handle: handle,
-          seed_url:        webfinger.seed_url
-        )
+          url:             webfinger.seed_url,
+          exported_key:    hcard.public_key || webfinger.public_key,
+          profile:         Entities::Profile.new(profile_hash)
+        }
+      end
+
+      def profile_hash
+        {
+          diaspora_handle:  handle,
+          first_name:       hcard.first_name,
+          last_name:        hcard.last_name,
+          image_url:        hcard.photo_large_url,
+          image_url_medium: hcard.photo_medium_url,
+          image_url_small:  hcard.photo_small_url,
+          searchable:       hcard.searchable
+        }
       end
     end
   end

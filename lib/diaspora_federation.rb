@@ -6,6 +6,8 @@ require "diaspora_federation/entity"
 
 require "diaspora_federation/fetcher"
 
+require "diaspora_federation/entities"
+
 require "diaspora_federation/discovery"
 
 # diaspora* federation library

@@ -53,7 +53,7 @@ module DiasporaFederation
       property :nickname
 
       # @!attribute [r] full_name
-      #  @return [String] display name of the user
+      #   @return [String] display name of the user
       property :full_name
 
       # @!attribute [r] url
