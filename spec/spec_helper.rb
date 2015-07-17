@@ -32,9 +32,6 @@ def alice
   @alice ||= Person.find_by(diaspora_handle: "alice@localhost:3000")
 end
 
-# Force fixture rebuild
-FileUtils.rm_f(Rails.root.join("tmp", "fixture_builder.yml"))
-
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 fixture_builder_file = "#{File.dirname(__FILE__)}/support/fixture_builder.rb"
