@@ -3,6 +3,7 @@ require "diaspora_federation/logging"
 require "diaspora_federation/callbacks"
 require "diaspora_federation/properties_dsl"
 require "diaspora_federation/entity"
+require "diaspora_federation/validators"
 
 require "diaspora_federation/fetcher"
 
