@@ -51,6 +51,10 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.use_transactional_fixtures = true
 
+  # load fixtures
+  config.fixture_path = "#{::Rails.root}/test/fixtures"
+  config.global_fixtures = :all
+
   config.mock_with :rspec do |mocks|
     # Prevents you from mocking or stubbing a method that does not exist on
     # a real object. This is generally recommended, and will default to
