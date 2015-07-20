@@ -6,6 +6,7 @@ unless ENV["NO_COVERAGE"] == "true"
     SimpleCov::Formatter::RcovFormatter
   ]
   SimpleCov.start do
+    add_filter "lib/diaspora_federation/logging.rb"
     add_filter "spec"
     add_filter "test"
   end
