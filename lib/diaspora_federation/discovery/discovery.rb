@@ -21,7 +21,7 @@ module DiasporaFederation
           raise DiscoveryError, "Handle does not match: Wanted #{handle} but got #{clean_handle(webfinger.acct_uri)}"
         end
 
-        Entities::Person.new(person_hash)
+        person
       end
 
       private
@@ -64,18 +64,18 @@ module DiasporaFederation
         @hcard ||= HCard.from_html get(webfinger.hcard_url)
       end
 
-      def person_hash
-        {
+      def person
+        Entities::Person.new(
           guid:            hcard.guid || webfinger.guid,
           diaspora_handle: handle,
           url:             webfinger.seed_url,
           exported_key:    hcard.public_key || webfinger.public_key,
-          profile:         Entities::Profile.new(profile_hash)
-        }
+          profile:         profile
+        )
       end
 
-      def profile_hash
-        {
+      def profile
+        Entities::Profile.new(
           diaspora_handle:  handle,
           first_name:       hcard.first_name,
           last_name:        hcard.last_name,
@@ -83,7 +83,7 @@ module DiasporaFederation
           image_url_medium: hcard.photo_medium_url,
           image_url_small:  hcard.photo_small_url,
           searchable:       hcard.searchable
-        }
+        )
       end
     end
   end
