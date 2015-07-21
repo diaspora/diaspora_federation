@@ -12,7 +12,7 @@ module Validation
           true if value =~ /\A(true|false|t|f|yes|no|y|n|1|0)\z/i
         elsif value.is_a?(Fixnum)
           true if value == 1 || value == 0
-        elsif value.is_a?(TrueClass) || value.is_a?(FalseClass)
+        elsif [true, false].include? value
           true
         else
           false
