@@ -37,10 +37,12 @@ module DiasporaFederation
     def legacy_webfinger
       person_wf = find_person_webfinger(params[:q]) if params[:q]
 
-      return render nothing: true, status: 404 if person_wf.nil?
-
-      logger.info "webfinger profile request for: #{person_wf.acct_uri}"
-      render body: person_wf.to_xml, content_type: "application/xrd+xml"
+      if person_wf.nil?
+        render nothing: true, status: 404
+      else
+        logger.info "webfinger profile request for: #{person_wf.acct_uri}"
+        render body: person_wf.to_xml, content_type: "application/xrd+xml"
+      end
     end
 
     private

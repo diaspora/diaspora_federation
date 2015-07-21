@@ -9,10 +9,12 @@ module DiasporaFederation
     def hcard
       person_hcard = DiasporaFederation.callbacks.trigger(:person_hcard_fetch, params[:guid])
 
-      return render nothing: true, status: 404 if person_hcard.nil?
-
-      logger.info "hcard profile request for: #{person_hcard.nickname}:#{person_hcard.guid}"
-      render html: person_hcard.to_html.html_safe
+      if person_hcard.nil?
+        render nothing: true, status: 404 if person_hcard.nil?
+      else
+        logger.info "hcard profile request for: #{person_hcard.nickname}:#{person_hcard.guid}"
+        render html: person_hcard.to_html.html_safe
+      end
     end
   end
 end
