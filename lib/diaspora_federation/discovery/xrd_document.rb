@@ -92,19 +92,18 @@ module DiasporaFederation
       # @raise [InvalidDocument] if the XRD is malformed
       def self.xml_data(xrd_doc)
         doc = parse_xrd_document(xrd_doc)
-        data = {}
 
-        exp_elem = doc.at_xpath("xrd:XRD/xrd:Expires", NS)
-        data[:expires] = DateTime.strptime(exp_elem.content, DATETIME_FORMAT) unless exp_elem.nil?
+        {}.tap do |data|
+          exp_elem = doc.at_xpath("xrd:XRD/xrd:Expires", NS)
+          data[:expires] = DateTime.strptime(exp_elem.content, DATETIME_FORMAT) unless exp_elem.nil?
 
-        subj_elem = doc.at_xpath("xrd:XRD/xrd:Subject", NS)
-        data[:subject] = subj_elem.content unless subj_elem.nil?
+          subj_elem = doc.at_xpath("xrd:XRD/xrd:Subject", NS)
+          data[:subject] = subj_elem.content unless subj_elem.nil?
 
-        parse_aliases_from_xml_doc(doc, data)
-        parse_properties_from_xml_doc(doc, data)
-        parse_links_from_xml_doc(doc, data)
-
-        data
+          parse_aliases_from_xml_doc(doc, data)
+          parse_properties_from_xml_doc(doc, data)
+          parse_links_from_xml_doc(doc, data)
+        end
       end
 
       private

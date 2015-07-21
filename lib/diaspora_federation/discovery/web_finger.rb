@@ -175,10 +175,10 @@ module DiasporaFederation
       # @return [Hash] data XML data
       # @raise [InvalidData] if the given XML string is invalid or incomplete
       def self.parse_xml_and_validate(webfinger_xml)
-        data = XrdDocument.xml_data(webfinger_xml)
-        valid = data.key?(:subject) && data.key?(:aliases) && data.key?(:links)
-        raise InvalidData, "webfinger xml is incomplete" unless valid
-        data
+        XrdDocument.xml_data(webfinger_xml).tap do |data|
+          valid = data.key?(:subject) && data.key?(:aliases) && data.key?(:links)
+          raise InvalidData, "webfinger xml is incomplete" unless valid
+        end
       end
       private_class_method :parse_xml_and_validate
 

@@ -161,7 +161,7 @@ module DiasporaFederation
       def self.from_html(html_string)
         doc = parse_html_and_validate(html_string)
 
-        data = {
+        new(
           guid:             guid_from_doc(doc),
           nickname:         content_from_doc(doc, :nickname),
           full_name:        content_from_doc(doc, :fn),
@@ -173,12 +173,10 @@ module DiasporaFederation
           # TODO: public key is new and can be missing
           public_key:       (content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?),
 
-          # TODO: remove me!  ###################
+          # TODO: remove first_name and last_name!
           first_name:       content_from_doc(doc, :given_name),
           last_name:        content_from_doc(doc, :family_name)
-          #######################################
-        }
-        new(data)
+        )
       end
 
       private

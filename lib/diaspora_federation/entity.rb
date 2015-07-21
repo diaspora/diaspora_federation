@@ -76,16 +76,12 @@ module DiasporaFederation
 
     # some of this is from Rails "Inflector.demodulize" and "Inflector.undersore"
     def self.entity_name
-      word = name.dup
-      i = word.rindex("::")
-      word = word[(i + 2)..-1] if i
-
-      word.gsub!("::", "/")
-      word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
-      word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
-      word.tr!("-", "_")
-      word.downcase!
-      word
+      name.rpartition("::").last.tap do |word|
+        word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
+        word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+        word.tr!("-", "_")
+        word.downcase!
+      end
     end
 
     private
@@ -122,30 +118,28 @@ module DiasporaFederation
     # @return [Nokogiri::XML::Element] root node
     def entity_xml
       doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
-      root_element = Nokogiri::XML::Element.new(self.class.entity_name, doc)
-
-      self.class.class_props.each do |prop_def|
-        name = prop_def[:name]
-        type = prop_def[:type]
-        if type == String
-          root_element << simple_node(doc, name)
-        else
-          # call #to_xml for each item and append to root
-          [*send(name)].compact.each do |item|
-            root_element << item.to_xml
+      Nokogiri::XML::Element.new(self.class.entity_name, doc).tap do |root_element|
+        self.class.class_props.each do |prop_def|
+          name = prop_def[:name]
+          type = prop_def[:type]
+          if type == String
+            root_element << simple_node(doc, name)
+          else
+            # call #to_xml for each item and append to root
+            [*send(name)].compact.each do |item|
+              root_element << item.to_xml
+            end
           end
         end
       end
-
-      root_element
     end
 
     # create simple node, fill it with text and append to root
     def simple_node(doc, name)
-      node = Nokogiri::XML::Element.new(name.to_s, doc)
-      data = send(name).to_s
-      node.content = data unless data.empty?
-      node
+      Nokogiri::XML::Element.new(name.to_s, doc).tap do |node|
+        data = send(name).to_s
+        node.content = data unless data.empty?
+      end
     end
   end
 end
