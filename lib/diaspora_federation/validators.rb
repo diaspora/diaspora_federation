@@ -1,6 +1,4 @@
 require "validation"
-require "validation/rule/not_empty"
-require "validation/rule/email"
 require "validation/rule/regular_expression"
 require "validation/rule/uri"
 
@@ -17,6 +15,7 @@ end
 
 require "diaspora_federation/validators/rules/birthday"
 require "diaspora_federation/validators/rules/boolean"
+require "diaspora_federation/validators/rules/diaspora_id"
 require "diaspora_federation/validators/rules/guid"
 require "diaspora_federation/validators/rules/not_nil"
 require "diaspora_federation/validators/rules/public_key"

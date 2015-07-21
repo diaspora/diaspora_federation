@@ -19,7 +19,7 @@ FactoryGirl.define do
 
   factory :person_entity, class: DiasporaFederation::Entities::Person do
     guid UUID.generate :compact
-    diaspora_handle "testing@example.com"
+    diaspora_handle
     url "http://localhost:3000/"
     exported_key { generate(:public_key) }
     profile {
@@ -29,7 +29,7 @@ FactoryGirl.define do
   end
 
   factory :profile_entity, class: DiasporaFederation::Entities::Profile do
-    diaspora_handle "testing@example.com"
+    diaspora_handle
     first_name "my_name"
     last_name nil
     tag_string "#i #love #tags"

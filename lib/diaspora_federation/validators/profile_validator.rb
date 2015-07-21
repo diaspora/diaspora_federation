@@ -3,7 +3,7 @@ module DiasporaFederation
     class ProfileValidator < Validation::Validator
       include Validation
 
-      rule :diaspora_handle, %i(not_empty email)
+      rule :diaspora_handle, :diaspora_id
 
       # the name must not contain a semicolon because of mentions
       # @{<name> ; <handle>}

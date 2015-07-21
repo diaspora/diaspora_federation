@@ -5,7 +5,7 @@ module DiasporaFederation
 
       rule :guid, :guid
 
-      rule :diaspora_handle, %i(not_empty email)
+      rule :diaspora_handle, :diaspora_id
 
       rule :url, :u_r_i # WTF? :uri -> Uri -> "uninitialized constant Uri", :u_r_i -> URI -> \o/
 
