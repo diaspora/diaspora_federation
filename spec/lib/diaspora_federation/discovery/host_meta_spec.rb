@@ -20,6 +20,11 @@ XML
         expect(hm.to_xml).to eq(xml)
       end
 
+      it "converts object to string" do
+        hm = Discovery::HostMeta.from_base_url(URI(base_url))
+        expect(hm.to_xml).to eq(xml)
+      end
+
       it "appends a '/' if necessary" do
         hm = Discovery::HostMeta.from_base_url("https://pod.example.tld")
         expect(hm.to_xml).to eq(xml)
