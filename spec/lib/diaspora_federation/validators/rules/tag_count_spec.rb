@@ -6,6 +6,15 @@ describe Validation::Rule::TagCount do
     }.to raise_error ArgumentError
   end
 
+  it "requires a integer as parameter" do
+    validator = Validation::Validator.new({})
+    [nil, "", 5.5].each do |val|
+      expect {
+        validator.rule(:tags, tag_count: {maximum: val})
+      }.to raise_error ArgumentError, "A number has to be specified for :maximum"
+    end
+  end
+
   context "validation" do
     let(:tag_str) { "#i #love #tags" }
 

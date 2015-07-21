@@ -3,13 +3,6 @@ require "date"
 module Validation
   module Rule
     class Birthday
-      attr_reader :params
-
-      # no parameters
-      def initialize
-        @params = {}
-      end
-
       def error_key
         :birthday
       end
@@ -24,6 +17,11 @@ module Validation
         end
 
         false
+      end
+
+      # This rule has no params
+      def params
+        {}
       end
     end
   end

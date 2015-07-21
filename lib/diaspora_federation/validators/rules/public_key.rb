@@ -1,13 +1,6 @@
 module Validation
   module Rule
     class PublicKey
-      attr_reader :params
-
-      # no parameters
-      def initialize
-        @params = {}
-      end
-
       def error_key
         :public_key
       end
@@ -18,6 +11,11 @@ module Validation
          value.strip.end_with?("-----END PUBLIC KEY-----")) ||
         (value.strip.start_with?("-----BEGIN RSA PUBLIC KEY-----") &&
           value.strip.end_with?("-----END RSA PUBLIC KEY-----"))
+      end
+
+      # This rule has no params
+      def params
+        {}
       end
     end
   end

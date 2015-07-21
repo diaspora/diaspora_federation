@@ -1,13 +1,6 @@
 module Validation
   module Rule
     class Boolean
-      attr_reader :params
-
-      # no parameters
-      def initialize
-        @params = {}
-      end
-
       def error_key
         :numeric
       end
@@ -24,6 +17,11 @@ module Validation
         else
           false
         end
+      end
+
+      # This rule has no params
+      def params
+        {}
       end
     end
   end

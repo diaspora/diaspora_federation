@@ -20,6 +20,34 @@ module DiasporaFederation
       let(:property) { :guid }
     end
 
+    context "#url" do
+      it "fails for url with special chars" do
+        instance = OpenStruct.new(FactoryGirl.attributes_for(:person_entity, url: "https://asdf$%.com"))
+        validator = Validators::PersonValidator.new(instance)
+
+        expect(validator).not_to be_valid
+        expect(validator.errors).to include(:url)
+      end
+
+      it "fails for url without scheme" do
+        instance = OpenStruct.new(FactoryGirl.attributes_for(:person_entity, url: "example.com"))
+        validator = Validators::PersonValidator.new(instance)
+
+        expect(validator).not_to be_valid
+        expect(validator.errors).to include(:url)
+      end
+    end
+
+    context "#profile" do
+      it "fails if profile is nil" do
+        instance = OpenStruct.new(FactoryGirl.attributes_for(:person_entity, profile: nil))
+        validator = Validators::PersonValidator.new(instance)
+
+        expect(validator).not_to be_valid
+        expect(validator.errors).to include(:profile)
+      end
+    end
+
     context "#exported_key" do
       it "fails for malformed rsa key" do
         instance = OpenStruct.new(FactoryGirl.attributes_for(:person_entity, exported_key: "ASDF"))

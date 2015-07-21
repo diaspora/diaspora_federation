@@ -19,6 +19,13 @@ module DiasporaFederation
 
     %i(first_name last_name).each do |prop|
       describe "##{prop}" do
+        it "allowed to be nil" do
+          validator = Validators::ProfileValidator.new(profile_stub(prop => nil))
+
+          expect(validator).to be_valid
+          expect(validator.errors).to be_empty
+        end
+
         it "allowed to contain special chars" do
           validator = Validators::ProfileValidator.new(profile_stub(prop => "cool name ©"))
 
