@@ -7,7 +7,7 @@ module DiasporaFederation
 
       rule :diaspora_handle, :diaspora_id
 
-      rule :url, :u_r_i # WTF? :uri -> Uri -> "uninitialized constant Uri", :u_r_i -> URI -> \o/
+      rule :url, :URI
 
       rule :profile, :not_nil
 
