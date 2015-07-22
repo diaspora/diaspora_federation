@@ -48,7 +48,7 @@ module DiasporaFederation
       property :guid
 
       # @!attribute [r] nickname
-      #   the first part of the diaspora handle
+      #   the first part of the diaspora ID
       #   @return [String] nickname
       property :nickname
 

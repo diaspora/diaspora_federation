@@ -8,10 +8,10 @@ module DiasporaFederation
       expect(validator.errors).to be_empty
     end
 
-    it_behaves_like "a diaspora_handle validator" do
+    it_behaves_like "a diaspora_id validator" do
       let(:entity) { :person_entity }
       let(:validator_class) { Validators::PersonValidator }
-      let(:property) { :diaspora_handle }
+      let(:property) { :diaspora_id }
     end
 
     it_behaves_like "a guid validator" do

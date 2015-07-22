@@ -11,10 +11,10 @@ module DiasporaFederation
       expect(validator.errors).to be_empty
     end
 
-    it_behaves_like "a diaspora_handle validator" do
+    it_behaves_like "a diaspora_id validator" do
       let(:entity) { :profile_entity }
       let(:validator_class) { Validators::ProfileValidator }
-      let(:property) { :diaspora_handle }
+      let(:property) { :diaspora_id }
     end
 
     %i(first_name last_name).each do |prop|

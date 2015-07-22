@@ -1,7 +1,7 @@
 module DiasporaFederation
   describe Discovery::WebFinger do
     let(:person) { FactoryGirl.create(:person) }
-    let(:acct) { "acct:#{person.diaspora_handle}" }
+    let(:acct) { "acct:#{person.diaspora_id}" }
     let(:public_key_base64) { Base64.strict_encode64(person.serialized_public_key) }
 
     let(:xml) {
@@ -28,7 +28,7 @@ XML
     context "generation" do
       it "creates a nice XML document" do
         wf = Discovery::WebFinger.new(
-          acct_uri:    "acct:#{person.diaspora_handle}",
+          acct_uri:    "acct:#{person.diaspora_id}",
           alias_url:   person.alias_url,
           hcard_url:   person.hcard_url,
           seed_url:    person.url,

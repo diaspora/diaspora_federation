@@ -5,7 +5,7 @@ module Validation
     # This rule is based on https://github.com/zombor/Validator/blob/master/lib/validation/rule/email.rb
     # which was adapted from https://github.com/emmanuel/aequitas/blob/master/lib/aequitas/rule/format/email_address.rb
     class DiasporaId
-      DIASPORA_HANDLE = begin
+      DIASPORA_ID = begin
         letter         = "a-zA-Z"
         digit          = "0-9"
         username       = "[#{letter}#{digit}\-\_\.]+"
@@ -31,7 +31,7 @@ module Validation
 
       # Determines if value is a valid email
       def valid_value?(value)
-        !DIASPORA_HANDLE.match(value).nil?
+        !DIASPORA_ID.match(value).nil?
       end
 
       # This rule has no params

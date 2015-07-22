@@ -16,11 +16,11 @@ DiasporaFederation.configure do |config|
   config.certificate_authorities = ca_file
 
   config.define_callbacks do
-    on :person_webfinger_fetch do |handle|
-      person = Person.find_by(diaspora_handle: handle)
+    on :person_webfinger_fetch do |diaspora_id|
+      person = Person.find_by(diaspora_id: diaspora_id)
       if person
         DiasporaFederation::Discovery::WebFinger.new(
-          acct_uri:    "acct:#{person.diaspora_handle}",
+          acct_uri:    "acct:#{person.diaspora_id}",
           alias_url:   person.alias_url,
           hcard_url:   person.hcard_url,
           seed_url:    person.url,

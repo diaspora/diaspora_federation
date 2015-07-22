@@ -5,7 +5,7 @@ module DiasporaFederation
 
       rule :guid, :guid
 
-      rule :diaspora_handle, :diaspora_id
+      rule :diaspora_id, :diaspora_id
 
       rule :url, :URI
 

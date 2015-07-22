@@ -30,7 +30,7 @@ require "entities"
 # some helper methods
 
 def alice
-  @alice ||= Person.find_by(diaspora_handle: "alice@localhost:3000")
+  @alice ||= Person.find_by(diaspora_id: "alice@localhost:3000")
 end
 
 # Requires supporting files with custom matchers and macros, etc,

@@ -43,8 +43,8 @@ DiasporaFederation.configure do |config|
   config.server_uri = AppConfig.pod_uri
 
   config.define_callbacks do
-    on :person_webfinger_fetch do |handle|
-      person = Person.find_local_by_diaspora_handle(handle)
+    on :person_webfinger_fetch do |diaspora_id|
+      person = Person.find_local_by_diaspora_id(diaspora_id)
       if person
         DiasporaFederation::Discovery::WebFinger.new(
           # ...

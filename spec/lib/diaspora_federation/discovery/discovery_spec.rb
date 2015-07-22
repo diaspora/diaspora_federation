@@ -3,18 +3,18 @@ module DiasporaFederation
     let(:host_meta_xrd) { FixtureGeneration.load_fixture("host-meta") }
     let(:webfinger_xrd) { FixtureGeneration.load_fixture("legacy-webfinger") }
     let(:hcard_html) { FixtureGeneration.load_fixture("hcard") }
-    let(:account) { alice.diaspora_handle }
+    let(:account) { alice.diaspora_id }
     let(:default_image) { "http://localhost:3000/assets/user/default.png" }
 
     describe "#intialize" do
-      it "sets handle" do
+      it "sets diaspora id" do
         discovery = Discovery::Discovery.new("some_user@example.com")
-        expect(discovery.handle).to eq("some_user@example.com")
+        expect(discovery.diaspora_id).to eq("some_user@example.com")
       end
 
       it "downcases account and strips whitespace, and sub 'acct:'" do
         discovery = Discovery::Discovery.new("acct:BIGBOY@Example.Com ")
-        expect(discovery.handle).to eq("bigboy@example.com")
+        expect(discovery.diaspora_id).to eq("bigboy@example.com")
       end
     end
 
@@ -30,13 +30,13 @@ module DiasporaFederation
         person = Discovery::Discovery.new(account).fetch
 
         expect(person.guid).to eq(alice.guid)
-        expect(person.diaspora_handle).to eq(account)
+        expect(person.diaspora_id).to eq(account)
         expect(person.url).to eq(alice.url)
         expect(person.exported_key).to eq(alice.serialized_public_key)
 
         profile = person.profile
 
-        expect(profile.diaspora_handle).to eq(alice.diaspora_handle)
+        expect(profile.diaspora_id).to eq(alice.diaspora_id)
         expect(profile.first_name).to eq("Dummy")
         expect(profile.last_name).to eq("User")
 
@@ -58,7 +58,7 @@ module DiasporaFederation
         person = Discovery::Discovery.new(account).fetch
 
         expect(person.guid).to eq(alice.guid)
-        expect(person.diaspora_handle).to eq(account)
+        expect(person.diaspora_id).to eq(account)
       end
 
       it "falls back to http if https fails with ssl error" do
@@ -74,10 +74,10 @@ module DiasporaFederation
         person = Discovery::Discovery.new(account).fetch
 
         expect(person.guid).to eq(alice.guid)
-        expect(person.diaspora_handle).to eq(account)
+        expect(person.diaspora_id).to eq(account)
       end
 
-      it "fails if the handle does not match" do
+      it "fails if the diaspora id does not match" do
         modified_webfinger = webfinger_xrd.gsub(account, "anonther_user@example.com")
 
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
@@ -88,7 +88,7 @@ module DiasporaFederation
         expect { Discovery::Discovery.new(account).fetch }.to raise_error Discovery::DiscoveryError
       end
 
-      it "fails if the handle was not found" do
+      it "fails if the diaspora id was not found" do
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
         stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
@@ -173,13 +173,13 @@ module DiasporaFederation
         person = Discovery::Discovery.new(account).fetch
 
         expect(person.guid).to eq(alice.guid)
-        expect(person.diaspora_handle).to eq(account)
+        expect(person.diaspora_id).to eq(account)
         expect(person.url).to eq(alice.url)
         expect(person.exported_key).to eq(alice.serialized_public_key)
 
         profile = person.profile
 
-        expect(profile.diaspora_handle).to eq(alice.diaspora_handle)
+        expect(profile.diaspora_id).to eq(alice.diaspora_id)
         expect(profile.first_name).to be_nil
         expect(profile.last_name).to be_nil
 

@@ -4,8 +4,8 @@ def entity_stub(entity, property, val=nil)
   instance
 end
 
-shared_examples "a diaspora_handle validator" do
-  it "validates a well-formed diaspora_handle" do
+shared_examples "a diaspora_id validator" do
+  it "validates a well-formed diaspora_id" do
     validator = validator_class.new(entity_stub(entity, property))
 
     expect(validator).to be_valid
@@ -19,8 +19,8 @@ shared_examples "a diaspora_handle validator" do
     expect(validator.errors).to include(property)
   end
 
-  it "must resemble an email address" do
-    validator = validator_class.new(entity_stub(entity, property, "i am a weird handle @@@ ### 12345"))
+  it "must be a valid diaspora id" do
+    validator = validator_class.new(entity_stub(entity, property, "i am a weird diaspora id @@@ ### 12345"))
 
     expect(validator).not_to be_valid
     expect(validator.errors).to include(property)
