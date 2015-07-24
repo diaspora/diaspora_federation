@@ -2,7 +2,7 @@ module Validation
   module Rule
     class Boolean
       def error_key
-        :numeric
+        :boolean
       end
 
       def valid_value?(value)

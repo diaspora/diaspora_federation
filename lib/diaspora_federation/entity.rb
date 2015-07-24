@@ -53,7 +53,9 @@ module DiasporaFederation
       self.class.default_values.merge(data).each do |k, v|
         instance_variable_set("@#{k}", nilify(v)) if setable?(k, v)
       end
+
       freeze
+      validate
     end
 
     # Returns a Hash representing this Entity (attributes => values)
@@ -115,6 +117,22 @@ module DiasporaFederation
       value
     end
 
+    def validate
+      validator_name = "DiasporaFederation::Validators::#{self.class.name.split('::').last}Validator"
+      return unless Validators.const_defined? validator_name
+
+      validator_class = Validators.const_get validator_name
+      validator = validator_class.new self
+      raise ValidationError, error_message(validator) unless validator.valid?
+    end
+
+    def error_message(validator)
+      errors = validator.errors.map do |prop, rule|
+        "property: #{prop}, value: #{public_send(prop).inspect}, rule: #{rule[:rule]}, with params: #{rule[:params]}"
+      end
+      "Failed validation for properties: #{errors.join(' | ')}"
+    end
+
     # Serialize the Entity into XML elements
     # @return [Nokogiri::XML::Element] root node
     def entity_xml
@@ -145,6 +163,10 @@ module DiasporaFederation
         data = public_send(property).to_s
         node.content = data unless data.empty?
       end
+    end
+
+    # Raised, if entity is not valid
+    class ValidationError < RuntimeError
     end
   end
 end

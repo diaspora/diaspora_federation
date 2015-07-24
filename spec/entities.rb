@@ -26,4 +26,14 @@ module DiasporaFederation
       property :qwer, xml_name: :asdf
     end
   end
+
+  module Validators
+    class TestDefaultEntityValidator < Validation::Validator
+      include Validation
+
+      rule :test1, regular_expression: {regex: /\A[^;]{,32}\z/}
+      rule :test2, :not_nil
+      rule :test3, :boolean
+    end
+  end
 end
