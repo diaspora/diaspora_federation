@@ -61,7 +61,9 @@ module DiasporaFederation
 
       it "contains nodes for each of the properties" do
         entity = Entities::TestDefaultEntity.new(data)
-        entity.to_xml.children.each do |node|
+        xml_children = entity.to_xml.children
+        expect(xml_children).to have_exactly(4).items
+        xml_children.each do |node|
           expect(%w(test1 test2 test3 test4)).to include(node.name)
         end
       end
@@ -92,11 +94,30 @@ module DiasporaFederation
       it "gets xml-ified by #to_xml" do
         entity = Entities::TestNestedEntity.new(nested_data)
         xml = entity.to_xml
+        expect(xml.children).to have_exactly(4).items
         xml.children.each do |node|
           expect(%w(asdf test_entity other_entity)).to include(node.name)
         end
         expect(xml.xpath("test_entity")).to have_exactly(1).items
         expect(xml.xpath("other_entity")).to have_exactly(2).items
+      end
+    end
+
+    context "xml_name" do
+      let(:hash) { {test: "test", qwer: "qwer"} }
+
+      it "uses xml_name for the #to_xml" do
+        entity = Entities::TestEntityWithXmlName.new(hash)
+        xml_children = entity.to_xml.children
+        expect(xml_children).to have_exactly(2).items
+        xml_children.each do |node|
+          expect(%w(test asdf)).to include(node.name)
+        end
+      end
+
+      it "should not use the xml_name for the #to_h" do
+        entity = Entities::TestEntityWithXmlName.new(hash)
+        expect(entity.to_h).to eq(hash)
       end
     end
   end

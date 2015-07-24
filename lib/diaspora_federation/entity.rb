@@ -15,6 +15,7 @@ module DiasporaFederation
   #     property :prop
   #     property :optional, default: false
   #     property :dynamic_default, default: -> { Time.now }
+  #     property :another_prop, xml_name: :another_name
   #     entity :nested, NestedEntity
   #     entity :multiple, [OtherEntity]
   #   end
@@ -59,7 +60,7 @@ module DiasporaFederation
     # @return [Hash] entity data (mostly equal to the hash used for initialization).
     def to_h
       self.class.class_prop_names.each_with_object({}) do |prop, hash|
-        hash[prop] = send(prop)
+        hash[prop] = public_send(prop)
       end
     end
 
@@ -120,24 +121,28 @@ module DiasporaFederation
       doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
       Nokogiri::XML::Element.new(self.class.entity_name, doc).tap do |root_element|
         self.class.class_props.each do |prop_def|
-          name = prop_def[:name]
-          type = prop_def[:type]
-          if type == String
-            root_element << simple_node(doc, name)
-          else
-            # call #to_xml for each item and append to root
-            [*send(name)].compact.each do |item|
-              root_element << item.to_xml
-            end
-          end
+          add_property_to_xml(doc, prop_def, root_element)
+        end
+      end
+    end
+
+    def add_property_to_xml(doc, prop_def, root_element)
+      property = prop_def[:name]
+      type = prop_def[:type]
+      if type == String
+        root_element << simple_node(doc, prop_def[:xml_name], property)
+      else
+        # call #to_xml for each item and append to root
+        [*public_send(property)].compact.each do |item|
+          root_element << item.to_xml
         end
       end
     end
 
     # create simple node, fill it with text and append to root
-    def simple_node(doc, name)
+    def simple_node(doc, name, property)
       Nokogiri::XML::Element.new(name.to_s, doc).tap do |node|
-        data = send(name).to_s
+        data = public_send(property).to_s
         node.content = data unless data.empty?
       end
     end

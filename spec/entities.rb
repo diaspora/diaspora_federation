@@ -20,5 +20,10 @@ module DiasporaFederation
       entity :test, TestEntity
       entity :multi, [OtherEntity]
     end
+
+    class TestEntityWithXmlName < DiasporaFederation::Entity
+      property :test
+      property :qwer, xml_name: :asdf
+    end
   end
 end

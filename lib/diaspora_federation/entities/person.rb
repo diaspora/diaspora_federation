@@ -8,10 +8,9 @@ module DiasporaFederation
       property :guid
 
       # @!attribute [r] diaspora_id
-      #   @todo refactoring with properties_dsl, xml name should be diaspora_handle
       #   The diaspora ID of the person
       #   @return [String] diaspora ID
-      property :diaspora_id
+      property :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] url
       #   @see WebFinger#seed_url

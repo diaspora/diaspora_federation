@@ -6,6 +6,7 @@ module DiasporaFederation
   #   property :prop
   #   property :optional, default: false
   #   property :dynamic_default, default: -> { Time.now }
+  #   property :another_prop, xml_name: :another_name
   #   entity :nested, NestedEntity
   #   entity :multiple, [OtherEntity]
   module PropertiesDSL
@@ -19,6 +20,7 @@ module DiasporaFederation
     # @param [Hash] opts further options
     # @option opts [Object, #call] :default a default value, making the
     #   property optional
+    # @option opts [Symbol] :xml_name another name used for xml generation
     def property(name, opts={})
       define_property name, String, opts
     end
@@ -69,7 +71,14 @@ module DiasporaFederation
     def define_property(name, type, opts={})
       raise InvalidName unless name_valid?(name)
 
-      class_props << {name: name, type: type}
+      xml_name = name
+      if opts.has_key? :xml_name
+        raise ArgumentError, "xml_name is not supported for nested entities" unless type == String
+        xml_name = opts[:xml_name]
+        raise InvalidName, "invalid xml_name" unless name_valid?(xml_name)
+      end
+
+      class_props << {name: name, xml_name: xml_name, type: type}
       default_props[name] = opts[:default] if opts.has_key? :default
 
       instance_eval { attr_reader name }
@@ -79,7 +88,7 @@ module DiasporaFederation
     # @param [String, Symbol] name the name to check
     # @return [Boolean]
     def name_valid?(name)
-      name.instance_of?(Symbol) || name.instance_of?(String)
+      name.instance_of?(Symbol)
     end
 
     # checks if the type extends {Entity}

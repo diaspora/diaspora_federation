@@ -3,11 +3,10 @@ module DiasporaFederation
     # this entity contains all the profile data of a person
     class Profile < Entity
       # @!attribute [r] diaspora_id
-      #   @todo refactoring with properties_dsl, xml name should be diaspora_handle
       #   The diaspora ID of the person
       #   @see Person#diaspora_id
       #   @return [String] diaspora ID
-      property :diaspora_id
+      property :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] first_name
       #   @deprecated
