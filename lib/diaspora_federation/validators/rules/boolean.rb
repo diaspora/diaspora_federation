@@ -1,10 +1,19 @@
 module Validation
   module Rule
+    # Boolean validation rule
+    #
+    # Valid is:
+    # * a +String+: "true", "false", "t", "f", "yes", "no", "y", "n", "1", "0"
+    # * a +Fixnum+: 1 or 0
+    # * a +Boolean+: true or false
     class Boolean
+      # The error key for this rule
+      # @return [Symbol] error key
       def error_key
         :boolean
       end
 
+      # Determines if value is a valid +boolean+
       def valid_value?(value)
         return false if value.nil?
 
@@ -20,6 +29,7 @@ module Validation
       end
 
       # This rule has no params
+      # @return [Hash] params
       def params
         {}
       end

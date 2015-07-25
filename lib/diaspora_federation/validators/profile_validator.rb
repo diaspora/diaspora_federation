@@ -1,5 +1,6 @@
 module DiasporaFederation
   module Validators
+    # This validates a {Entities::Profile}
     class ProfileValidator < Validation::Validator
       include Validation
 

@@ -1,6 +1,8 @@
 module DiasporaFederation
   module Entities
     # this entity contains all the profile data of a person
+    #
+    # @see Validators::ProfileValidator
     class Profile < Entity
       # @!attribute [r] diaspora_id
       #   The diaspora ID of the person

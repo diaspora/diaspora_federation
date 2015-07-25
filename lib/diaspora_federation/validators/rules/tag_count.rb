@@ -2,7 +2,10 @@ module Validation
   module Rule
     # Rule for validating the number of tags in a string.
     # Only the "#" characters will be counted.
+    # The string can be nil.
     class TagCount
+      # This rule must have a +maximum+ param
+      # @return [Hash] params
       attr_reader :params
 
       # @param [Hash] params
@@ -15,10 +18,13 @@ module Validation
         @params = params
       end
 
+      # The error key for this rule
+      # @return [Symbol] error key
       def error_key
         :tag_count
       end
 
+      # Determines if value doesn't have more than +maximum+ tags
       def valid_value?(value)
         value.nil? || value.count("#") <= params[:maximum]
       end

@@ -38,6 +38,12 @@ module DiasporaFederation
     # Initializes the Entity with the given attribute hash and freezes the created
     # instance it returns.
     #
+    # After creation, the entity is validated against a Validator, if one is defined.
+    # The Validator needs to be in the {DiasporaFederation::Validators} namespace and
+    # named like "<EntityName>Validator". Only valid entities can be created.
+    #
+    # @see DiasporaFederation::Validators
+    #
     # @note Attributes not defined as part of the class definition ({PropertiesDSL#property},
     #       {PropertiesDSL#entity}) get discarded silently.
     #

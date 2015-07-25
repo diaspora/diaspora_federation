@@ -1,6 +1,8 @@
 module DiasporaFederation
   module Entities
     # this entity contains the base data of a person
+    #
+    # @see Validators::PersonValidator
     class Person < Entity
       # @!attribute [r] guid
       #   @see HCard#guid

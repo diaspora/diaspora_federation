@@ -23,6 +23,9 @@ require "diaspora_federation/validators/rules/tag_count"
 
 module DiasporaFederation
   # Validators to perform basic sanity-checks on {DiasporaFederation::Entities federation entities}.
+  #
+  # The Validators are mapped with the entities by name. The naming schema
+  # is "<EntityName>Validator".
   module Validators
   end
 end

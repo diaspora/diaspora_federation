@@ -5,6 +5,7 @@ module Validation
     # This rule is based on https://github.com/zombor/Validator/blob/master/lib/validation/rule/email.rb
     # which was adapted from https://github.com/emmanuel/aequitas/blob/master/lib/aequitas/rule/format/email_address.rb
     class DiasporaId
+      # The Regex for a valid diaspora ID
       DIASPORA_ID = begin
         letter         = "a-zA-Z"
         digit          = "0-9"
@@ -25,16 +26,18 @@ module Validation
       end
 
       # The error key for this rule
+      # @return [Symbol] error key
       def error_key
         :diaspora_id
       end
 
-      # Determines if value is a valid email
+      # Determines if value is a valid diaspora ID
       def valid_value?(value)
         !DIASPORA_ID.match(value).nil?
       end
 
       # This rule has no params
+      # @return [Hash] params
       def params
         {}
       end
