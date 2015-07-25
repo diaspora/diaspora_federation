@@ -20,7 +20,7 @@ module Validation
       end
 
       def valid_value?(value)
-        value.count("#") <= params[:maximum]
+        value.nil? || value.count("#") <= params[:maximum]
       end
     end
   end
