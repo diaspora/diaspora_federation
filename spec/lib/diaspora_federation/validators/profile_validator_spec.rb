@@ -1,5 +1,7 @@
 module DiasporaFederation
   describe Validators::ProfileValidator do
+    let(:entity) { :profile_entity }
+
     def profile_stub(data={})
       OpenStruct.new(FactoryGirl.attributes_for(:profile_entity).merge(data))
     end
@@ -11,40 +13,14 @@ module DiasporaFederation
       expect(validator.errors).to be_empty
     end
 
-    it_behaves_like "a diaspora_id validator" do
-      let(:entity) { :profile_entity }
-      let(:validator_class) { Validators::ProfileValidator }
+    it_behaves_like "a diaspora id validator" do
       let(:property) { :diaspora_id }
     end
 
     %i(first_name last_name).each do |prop|
       describe "##{prop}" do
-        it "allowed to be nil" do
-          validator = Validators::ProfileValidator.new(profile_stub(prop => nil))
-
-          expect(validator).to be_valid
-          expect(validator.errors).to be_empty
-        end
-
-        it "allowed to contain special chars" do
-          validator = Validators::ProfileValidator.new(profile_stub(prop => "cool name ©"))
-
-          expect(validator).to be_valid
-          expect(validator.errors).to be_empty
-        end
-
-        it "must not exceed 32 chars" do
-          validator = Validators::ProfileValidator.new(profile_stub(prop => "abcdefghijklmnopqrstuvwxyz_aaaaaaaaaa"))
-
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(prop)
-        end
-
-        it "must not contain semicolons" do
-          validator = Validators::ProfileValidator.new(profile_stub(prop => "asdf;qwer;yxcv"))
-
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(prop)
+        it_behaves_like "a name validator" do
+          let(:property) { prop }
         end
       end
     end
@@ -91,8 +67,6 @@ module DiasporaFederation
     %i(searchable nsfw).each do |prop|
       describe "##{prop}" do
         it_behaves_like "a boolean validator" do
-          let(:entity) { :profile_entity }
-          let(:validator_class) { Validators::ProfileValidator }
           let(:property) { prop }
         end
       end

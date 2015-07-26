@@ -45,6 +45,22 @@ describe Validation::Rule::Guid do
           expect(validator).not_to be_valid
           expect(validator.errors).to include(:key)
         end
+
+        it "fails if the key is empty" do
+          validator = Validation::Validator.new(OpenStruct.new(key: ""))
+          validator.rule(:key, :public_key)
+
+          expect(validator).not_to be_valid
+          expect(validator.errors).to include(:key)
+        end
+
+        it "fails if the key is nil" do
+          validator = Validation::Validator.new(OpenStruct.new(key: nil))
+          validator.rule(:key, :public_key)
+
+          expect(validator).not_to be_valid
+          expect(validator.errors).to include(:key)
+        end
       end
     end
   end
