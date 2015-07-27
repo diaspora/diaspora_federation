@@ -21,17 +21,44 @@ module DiasporaFederation
       describe "##{prop}" do
         it_behaves_like "a name validator" do
           let(:property) { prop }
+          let(:length) { 32 }
         end
       end
     end
 
-    describe "#tag_string" do
-      it "must not contain more than 5 tags" do
-        validator = Validators::ProfileValidator.new(
-          profile_stub(tag_string: "#i #have #too #many #tags #in #my #profile"))
+    %i(image_url image_url_medium image_url_small).each do |prop|
+      describe "##{prop}" do
+        it "is allowed to be nil" do
+          validator = Validators::ProfileValidator.new(profile_stub(prop => nil))
 
-        expect(validator).not_to be_valid
-        expect(validator.errors).to include(:tag_string)
+          expect(validator).to be_valid
+          expect(validator.errors).to be_empty
+        end
+
+        it_behaves_like "a url path validator" do
+          let(:property) { prop }
+        end
+      end
+    end
+
+    describe "#gender" do
+      it_behaves_like "a length validator" do
+        let(:property) { :gender }
+        let(:length) { 255 }
+      end
+    end
+
+    describe "#bio" do
+      it_behaves_like "a length validator" do
+        let(:property) { :bio }
+        let(:length) { 65_535 }
+      end
+    end
+
+    describe "#location" do
+      it_behaves_like "a length validator" do
+        let(:property) { :location }
+        let(:length) { 255 }
       end
     end
 
@@ -69,6 +96,16 @@ module DiasporaFederation
         it_behaves_like "a boolean validator" do
           let(:property) { prop }
         end
+      end
+    end
+
+    describe "#tag_string" do
+      it "must not contain more than 5 tags" do
+        validator = Validators::ProfileValidator.new(
+          profile_stub(tag_string: "#i #have #too #many #tags #in #my #profile"))
+
+        expect(validator).not_to be_valid
+        expect(validator.errors).to include(:tag_string)
       end
     end
   end

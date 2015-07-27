@@ -23,6 +23,7 @@ module DiasporaFederation
       #   @see HCard#last_name
       #   @return [String] last name
       property :last_name, default: nil
+
       # @!attribute [r] image_url
       #   @see HCard#photo_large_url
       #   @return [String] url to the big avatar (300x300)

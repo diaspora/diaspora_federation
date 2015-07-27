@@ -4,6 +4,12 @@ def entity_stub(entity, property, val)
   instance
 end
 
+ALPHANUMERIC_RANGE = [*"0".."9", *"A".."Z", *"a".."z"]
+
+def alphanumeric_string(length)
+  Array.new(length) { ALPHANUMERIC_RANGE.sample }.join
+end
+
 shared_examples "a diaspora id validator" do
   it "must not be nil or empty" do
     [nil, ""].each do |val|
@@ -109,8 +115,15 @@ shared_examples "a name validator" do
     expect(validator.errors).to be_empty
   end
 
-  it "must not exceed 32 chars" do
-    validator = described_class.new(entity_stub(entity, property, "abcdefghijklmnopqrstuvwxyz_aaaaaaaaaa"))
+  it "validates the maximum number of chars" do
+    validator = described_class.new(entity_stub(entity, property, alphanumeric_string(length)))
+
+    expect(validator).to be_valid
+    expect(validator.errors).to be_empty
+  end
+
+  it "must not exceed the maximum number of chars" do
+    validator = described_class.new(entity_stub(entity, property, alphanumeric_string(length + 1)))
 
     expect(validator).not_to be_valid
     expect(validator.errors).to include(property)
@@ -118,6 +131,38 @@ shared_examples "a name validator" do
 
   it "must not contain semicolons" do
     validator = described_class.new(entity_stub(entity, property, "asdf;qwer;yxcv"))
+
+    expect(validator).not_to be_valid
+    expect(validator.errors).to include(property)
+  end
+end
+
+shared_examples "a length validator" do
+  it "is allowed to be nil or empty" do
+    [nil, ""].each do |val|
+      validator = described_class.new(entity_stub(entity, property, val))
+
+      expect(validator).to be_valid
+      expect(validator.errors).to be_empty
+    end
+  end
+
+  it "is allowed to contain special chars" do
+    validator = described_class.new(entity_stub(entity, property, "cool name ©;:#%"))
+
+    expect(validator).to be_valid
+    expect(validator.errors).to be_empty
+  end
+
+  it "validates the maximum number of chars" do
+    validator = described_class.new(entity_stub(entity, property, alphanumeric_string(length)))
+
+    expect(validator).to be_valid
+    expect(validator.errors).to be_empty
+  end
+
+  it "must not exceed the maximum number of chars" do
+    validator = described_class.new(entity_stub(entity, property, alphanumeric_string(length + 1)))
 
     expect(validator).not_to be_valid
     expect(validator.errors).to include(property)
@@ -143,6 +188,22 @@ shared_examples "a url validator without path" do
 
   it "fails for url without scheme" do
     validator = described_class.new(entity_stub(entity, property, "example.com"))
+
+    expect(validator).not_to be_valid
+    expect(validator.errors).to include(property)
+  end
+end
+
+shared_examples "a url path validator" do
+  it "fails for url with special chars" do
+    validator = described_class.new(entity_stub(entity, property, "https://asdf$%.com/some/path"))
+
+    expect(validator).not_to be_valid
+    expect(validator.errors).to include(property)
+  end
+
+  it "fails for url without path" do
+    validator = described_class.new(entity_stub(entity, property, "https://example.com"))
 
     expect(validator).not_to be_valid
     expect(validator.errors).to include(property)

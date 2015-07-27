@@ -32,9 +32,15 @@ FactoryGirl.define do
     diaspora_id
     first_name "my_name"
     last_name nil
-    tag_string "#i #love #tags"
+    image_url "/assets/user/default.png"
+    image_url_medium "/assets/user/default.png"
+    image_url_small "/assets/user/default.png"
     birthday "1988-07-15"
+    gender "Male"
+    bio "some text about me"
+    location "github"
     searchable true
     nsfw false
+    tag_string "#i #love #tags"
   end
 end
