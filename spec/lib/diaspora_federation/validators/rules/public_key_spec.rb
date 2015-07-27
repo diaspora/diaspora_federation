@@ -1,9 +1,13 @@
-describe Validation::Rule::Guid do
+describe Validation::Rule::PublicKey do
   it "will not accept parameters" do
     validator = Validation::Validator.new({})
     expect {
       validator.rule(:key, public_key: {param: true})
     }.to raise_error ArgumentError
+  end
+
+  it "has an error key" do
+    expect(described_class.new.error_key).to eq(:public_key)
   end
 
   context "validation" do

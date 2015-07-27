@@ -6,6 +6,10 @@ describe Validation::Rule::NotNil do
     }.to raise_error ArgumentError
   end
 
+  it "has an error key" do
+    expect(described_class.new.error_key).to eq(:not_nil)
+  end
+
   context "validation" do
     it "validates a string " do
       validator = Validation::Validator.new(OpenStruct.new(not_nil: "abcd"))

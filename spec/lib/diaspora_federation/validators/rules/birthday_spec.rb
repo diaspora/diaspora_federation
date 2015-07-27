@@ -6,6 +6,10 @@ describe Validation::Rule::Birthday do
     }.to raise_error ArgumentError
   end
 
+  it "has an error key" do
+    expect(described_class.new.error_key).to eq(:birthday)
+  end
+
   context "validation" do
     it "validates a date object" do
       validator = Validation::Validator.new(OpenStruct.new(birthday: Date.new))

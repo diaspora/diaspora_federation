@@ -6,6 +6,10 @@ describe Validation::Rule::Guid do
     }.to raise_error ArgumentError
   end
 
+  it "has an error key" do
+    expect(described_class.new.error_key).to eq(:guid)
+  end
+
   context "validation" do
     it "validates a string at least 16 chars long, consisting of [0-9a-f] (diaspora)" do
       validator = Validation::Validator.new(OpenStruct.new(guid: "abcdef0123456789"))

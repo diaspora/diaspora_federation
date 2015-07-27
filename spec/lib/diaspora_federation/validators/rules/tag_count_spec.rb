@@ -15,6 +15,10 @@ describe Validation::Rule::TagCount do
     end
   end
 
+  it "has an error key" do
+    expect(described_class.new(maximum: 5).error_key).to eq(:tag_count)
+  end
+
   context "validation" do
     let(:tag_str) { "#i #love #tags" }
 

@@ -6,6 +6,10 @@ describe Validation::Rule::DiasporaId do
     }.to raise_error ArgumentError
   end
 
+  it "has an error key" do
+    expect(described_class.new.error_key).to eq(:diaspora_id)
+  end
+
   context "validation" do
     it "validates a normal diaspora id" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@example.com"))

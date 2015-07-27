@@ -125,6 +125,15 @@ shared_examples "a name validator" do
 end
 
 shared_examples "a url validator without path" do
+  it "must not be nil or empty" do
+    [nil, ""].each do |val|
+      validator = described_class.new(entity_stub(entity, property, val))
+
+      expect(validator).not_to be_valid
+      expect(validator.errors).to include(property)
+    end
+  end
+
   it "fails for url with special chars" do
     validator = described_class.new(entity_stub(entity, property, "https://asdf$%.com"))
 

@@ -6,6 +6,10 @@ describe Validation::Rule::Boolean do
     }.to raise_error ArgumentError
   end
 
+  it "has an error key" do
+    expect(described_class.new.error_key).to eq(:boolean)
+  end
+
   context "validation" do
     context "strings" do
       it "validates boolean-esque strings" do

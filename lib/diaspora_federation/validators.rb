@@ -1,6 +1,5 @@
 require "validation"
 require "validation/rule/regular_expression"
-require "validation/rule/uri"
 
 # +valid+ gem namespace
 module Validation
@@ -20,6 +19,7 @@ require "diaspora_federation/validators/rules/guid"
 require "diaspora_federation/validators/rules/not_nil"
 require "diaspora_federation/validators/rules/public_key"
 require "diaspora_federation/validators/rules/tag_count"
+require "diaspora_federation/validators/rules/uri"
 
 module DiasporaFederation
   # Validators to perform basic sanity-checks on {DiasporaFederation::Entities federation entities}.
