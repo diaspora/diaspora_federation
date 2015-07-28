@@ -4,6 +4,21 @@ module DiasporaFederation
     let(:acct) { "acct:#{person.diaspora_id}" }
     let(:public_key_base64) { Base64.strict_encode64(person.serialized_public_key) }
 
+    let(:data) {
+      {
+        acct_uri:    "acct:#{person.diaspora_id}",
+        alias_url:   person.alias_url,
+        hcard_url:   person.hcard_url,
+        seed_url:    person.url,
+        profile_url: person.profile_url,
+        atom_url:    person.atom_url,
+        salmon_url:  person.salmon_url,
+        guid:        person.guid,
+        public_key:  person.serialized_public_key
+      }
+    }
+    let(:klass) { Discovery::WebFinger }
+
     let(:xml) {
       <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -21,28 +36,12 @@ module DiasporaFederation
 XML
     }
 
-    it "must not create blank instances" do
-      expect { Discovery::WebFinger.new({}) }.to raise_error ArgumentError
-    end
+    it_behaves_like "an Entity subclass"
 
     context "generation" do
       it "creates a nice XML document" do
-        wf = Discovery::WebFinger.new(
-          acct_uri:    "acct:#{person.diaspora_id}",
-          alias_url:   person.alias_url,
-          hcard_url:   person.hcard_url,
-          seed_url:    person.url,
-          profile_url: person.profile_url,
-          atom_url:    person.atom_url,
-          salmon_url:  person.salmon_url,
-          guid:        person.guid,
-          public_key:  person.serialized_public_key
-        )
+        wf = Discovery::WebFinger.new(data)
         expect(wf.to_xml).to eq(xml)
-      end
-
-      it "fails if nil was given" do
-        expect { Discovery::WebFinger.new(nil) }.to raise_error ArgumentError, "expected a Hash"
       end
     end
 

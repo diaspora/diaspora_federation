@@ -5,6 +5,23 @@ module DiasporaFederation
     let(:photo_medium_url) { "#{person.url}/upload/medium.png" }
     let(:photo_small_url) { "#{person.url}/upload/small.png" }
 
+    let(:data) {
+      {
+        guid:             person.guid,
+        nickname:         person.nickname,
+        full_name:        person.full_name,
+        url:              person.url,
+        photo_large_url:  photo_large_url,
+        photo_medium_url: photo_medium_url,
+        photo_small_url:  photo_small_url,
+        public_key:       person.serialized_public_key,
+        searchable:       person.searchable,
+        first_name:       person.first_name,
+        last_name:        person.last_name
+      }
+    }
+    let(:klass) { Discovery::HCard }
+
     let(:html) {
       <<-HTML
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
@@ -92,30 +109,12 @@ module DiasporaFederation
 HTML
     }
 
-    it "must not create blank instances" do
-      expect { Discovery::HCard.new({}) }.to raise_error ArgumentError
-    end
+    it_behaves_like "an Entity subclass"
 
     context "generation" do
       it "creates an instance from a data hash" do
-        hcard = Discovery::HCard.new(
-          guid:             person.guid,
-          nickname:         person.nickname,
-          full_name:        person.full_name,
-          url:              person.url,
-          photo_large_url:  photo_large_url,
-          photo_medium_url: photo_medium_url,
-          photo_small_url:  photo_small_url,
-          public_key:       person.serialized_public_key,
-          searchable:       person.searchable,
-          first_name:       person.first_name,
-          last_name:        person.last_name
-        )
+        hcard = Discovery::HCard.new(data)
         expect(hcard.to_html).to eq(html)
-      end
-
-      it "fails if nil was given" do
-        expect { Discovery::HCard.new(nil) }.to raise_error ArgumentError, "expected a Hash"
       end
     end
 
