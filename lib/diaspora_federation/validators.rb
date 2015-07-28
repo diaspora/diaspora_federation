@@ -1,5 +1,6 @@
 require "validation"
 require "validation/rule/regular_expression"
+require "validation/rule/not_empty"
 require "validation/rule/uri"
 
 # +valid+ gem namespace
@@ -31,5 +32,7 @@ module DiasporaFederation
   end
 end
 
+require "diaspora_federation/validators/h_card_validator"
 require "diaspora_federation/validators/person_validator"
 require "diaspora_federation/validators/profile_validator"
+require "diaspora_federation/validators/web_finger_validator"
