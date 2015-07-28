@@ -1,5 +1,5 @@
 module DiasporaFederation
-  module WebFinger
+  module Discovery
     # This class provides the means of generating an parsing account data to and
     # from the hCard format.
     # hCard is based on +RFC 2426+ (vCard) which got superseded by +RFC 6350+.
@@ -15,17 +15,17 @@ module DiasporaFederation
     #
     # @example Creating a hCard document from a person hash
     #   hc = HCard.new(
-    #     guid:                  "0123456789abcdef",
-    #     nickname:              "user",
-    #     full_name:             "User Name",
-    #     seed_url:              "https://server.example/",
-    #     photo_large_url:       "https://server.example/uploads/l.jpg",
-    #     photo_medium_url:      "https://server.example/uploads/m.jpg",
-    #     photo_small_url:       "https://server.example/uploads/s.jpg",
-    #     serialized_public_key: "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
-    #     searchable:            true,
-    #     first_name:            "User",
-    #     last_name:             "Name"
+    #     guid:             "0123456789abcdef",
+    #     nickname:         "user",
+    #     full_name:        "User Name",
+    #     seed_url:         "https://server.example/",
+    #     photo_large_url:  "https://server.example/uploads/l.jpg",
+    #     photo_medium_url: "https://server.example/uploads/m.jpg",
+    #     photo_small_url:  "https://server.example/uploads/s.jpg",
+    #     public_key:       "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----",
+    #     searchable:       true,
+    #     first_name:       "User",
+    #     last_name:        "Name"
     #   )
     #   html_string = hc.to_html
     #
@@ -48,12 +48,12 @@ module DiasporaFederation
       property :guid
 
       # @!attribute [r] nickname
-      #   the first part of the diaspora handle
+      #   the first part of the diaspora ID
       #   @return [String] nickname
       property :nickname
 
       # @!attribute [r] full_name
-      #  @return [String] display name of the user
+      #   @return [String] display name of the user
       property :full_name
 
       # @!attribute [r] url
@@ -70,10 +70,8 @@ module DiasporaFederation
       #   DER-encoded PKCS#1 key beginning with the text
       #   "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
       #
-      #   @note the public key is new in the hcard and is optional now.
-      #
       #   @return [String] public key
-      property :public_key, default: nil
+      property :public_key
 
       # @!attribute [r] photo_large_url
       #   @return [String] url to the big avatar (300x300)
@@ -163,8 +161,8 @@ module DiasporaFederation
       def self.from_html(html_string)
         doc = parse_html_and_validate(html_string)
 
-        data = {
-          guid:             content_from_doc(doc, :uid),
+        new(
+          guid:             guid_from_doc(doc),
           nickname:         content_from_doc(doc, :nickname),
           full_name:        content_from_doc(doc, :fn),
           url:              element_from_doc(doc, :url)["href"],
@@ -172,15 +170,13 @@ module DiasporaFederation
           photo_medium_url: photo_from_doc(doc, :photo_medium),
           photo_small_url:  photo_from_doc(doc, :photo_small),
           searchable:       (content_from_doc(doc, :searchable) == "true"),
+          # TODO: public key is new and can be missing
+          public_key:       (content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?),
 
-          # TODO: change me!  ###################
+          # TODO: remove first_name and last_name!
           first_name:       content_from_doc(doc, :given_name),
           last_name:        content_from_doc(doc, :family_name)
-          #######################################
-        }
-        # TODO: public key is new and can be missing
-        data[:public_key] = content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?
-        new(data)
+        )
       end
 
       private
@@ -288,6 +284,14 @@ module DiasporaFederation
         element_from_doc(doc, photo_selector)["src"]
       end
       private_class_method :photo_from_doc
+
+      # @deprecated hack for old hcard
+      # @todo remove this when all pods have the new generator
+      def self.guid_from_doc(doc)
+        uid_element = element_from_doc(doc, :uid)
+        uid_element.content unless uid_element[:class].include? "nickname"
+      end
+      private_class_method :guid_from_doc
     end
   end
 end

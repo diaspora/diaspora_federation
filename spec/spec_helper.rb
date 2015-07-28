@@ -6,6 +6,7 @@ unless ENV["NO_COVERAGE"] == "true"
     SimpleCov::Formatter::RcovFormatter
   ]
   SimpleCov.start do
+    add_filter "lib/diaspora_federation/logging.rb"
     add_filter "spec"
     add_filter "test"
   end
@@ -18,6 +19,7 @@ ENV["RAILS_ENV"] ||= "test"
 require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "environment")
 
 require "rspec/rails"
+require "webmock/rspec"
 
 # load factory girl factories
 require "factories"
@@ -28,11 +30,8 @@ require "entities"
 # some helper methods
 
 def alice
-  @alice ||= Person.find_by(diaspora_handle: "alice@localhost:3000")
+  @alice ||= Person.find_by(diaspora_id: "alice@localhost:3000")
 end
-
-# Force fixture rebuild
-FileUtils.rm_f(Rails.root.join("tmp", "fixture_builder.yml"))
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
@@ -52,6 +51,10 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
   config.use_transactional_fixtures = true
+
+  # load fixtures
+  config.fixture_path = "#{::Rails.root}/test/fixtures"
+  config.global_fixtures = :all
 
   config.mock_with :rspec do |mocks|
     # Prevents you from mocking or stubbing a method that does not exist on

@@ -15,6 +15,7 @@ module DiasporaFederation
   #     property :prop
   #     property :optional, default: false
   #     property :dynamic_default, default: -> { Time.now }
+  #     property :another_prop, xml_name: :another_name
   #     entity :nested, NestedEntity
   #     entity :multiple, [OtherEntity]
   #   end
@@ -37,6 +38,12 @@ module DiasporaFederation
     # Initializes the Entity with the given attribute hash and freezes the created
     # instance it returns.
     #
+    # After creation, the entity is validated against a Validator, if one is defined.
+    # The Validator needs to be in the {DiasporaFederation::Validators} namespace and
+    # named like "<EntityName>Validator". Only valid entities can be created.
+    #
+    # @see DiasporaFederation::Validators
+    #
     # @note Attributes not defined as part of the class definition ({PropertiesDSL#property},
     #       {PropertiesDSL#entity}) get discarded silently.
     #
@@ -50,16 +57,18 @@ module DiasporaFederation
       end
 
       self.class.default_values.merge(data).each do |k, v|
-        instance_variable_set("@#{k}", v) if setable?(k, v)
+        instance_variable_set("@#{k}", nilify(v)) if setable?(k, v)
       end
+
       freeze
+      validate
     end
 
     # Returns a Hash representing this Entity (attributes => values)
     # @return [Hash] entity data (mostly equal to the hash used for initialization).
     def to_h
       self.class.class_prop_names.each_with_object({}) do |prop, hash|
-        hash[prop] = send(prop)
+        hash[prop] = public_send(prop)
       end
     end
 
@@ -76,16 +85,12 @@ module DiasporaFederation
 
     # some of this is from Rails "Inflector.demodulize" and "Inflector.undersore"
     def self.entity_name
-      word = name.dup
-      i = word.rindex("::")
-      word = word[(i + 2)..-1] if i
-
-      word.gsub!("::", "/")
-      word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
-      word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
-      word.tr!("-", "_")
-      word.downcase!
-      word
+      name.rpartition("::").last.tap do |word|
+        word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
+        word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+        word.tr!("-", "_")
+        word.downcase!
+      end
     end
 
     private
@@ -113,34 +118,61 @@ module DiasporaFederation
         val.all? {|v| v.instance_of?(t.first) })
     end
 
+    def nilify(value)
+      return nil if value.respond_to?(:empty?) && value.empty?
+      value
+    end
+
+    def validate
+      validator_name = "DiasporaFederation::Validators::#{self.class.name.split('::').last}Validator"
+      return unless Validators.const_defined? validator_name
+
+      validator_class = Validators.const_get validator_name
+      validator = validator_class.new self
+      raise ValidationError, error_message(validator) unless validator.valid?
+    end
+
+    def error_message(validator)
+      errors = validator.errors.map do |prop, rule|
+        "property: #{prop}, value: #{public_send(prop).inspect}, rule: #{rule[:rule]}, with params: #{rule[:params]}"
+      end
+      "Failed validation for properties: #{errors.join(' | ')}"
+    end
+
     # Serialize the Entity into XML elements
     # @return [Nokogiri::XML::Element] root node
     def entity_xml
       doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
-      root_element = Nokogiri::XML::Element.new(self.class.entity_name, doc)
-
-      self.class.class_props.each do |prop_def|
-        name = prop_def[:name]
-        type = prop_def[:type]
-        if type == String
-          root_element << simple_node(doc, name)
-        else
-          # call #to_xml for each item and append to root
-          [*send(name)].compact.each do |item|
-            root_element << item.to_xml
-          end
+      Nokogiri::XML::Element.new(self.class.entity_name, doc).tap do |root_element|
+        self.class.class_props.each do |prop_def|
+          add_property_to_xml(doc, prop_def, root_element)
         end
       end
+    end
 
-      root_element
+    def add_property_to_xml(doc, prop_def, root_element)
+      property = prop_def[:name]
+      type = prop_def[:type]
+      if type == String
+        root_element << simple_node(doc, prop_def[:xml_name], property)
+      else
+        # call #to_xml for each item and append to root
+        [*public_send(property)].compact.each do |item|
+          root_element << item.to_xml
+        end
+      end
     end
 
     # create simple node, fill it with text and append to root
-    def simple_node(doc, name)
-      node = Nokogiri::XML::Element.new(name.to_s, doc)
-      data = send(name).to_s
-      node.content = data unless data.empty?
-      node
+    def simple_node(doc, name, property)
+      Nokogiri::XML::Element.new(name.to_s, doc).tap do |node|
+        data = public_send(property).to_s
+        node.content = data unless data.empty?
+      end
+    end
+
+    # Raised, if entity is not valid
+    class ValidationError < RuntimeError
     end
   end
 end

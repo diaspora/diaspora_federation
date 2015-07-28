@@ -37,10 +37,12 @@ module DiasporaFederation
     def legacy_webfinger
       person_wf = find_person_webfinger(params[:q]) if params[:q]
 
-      return render nothing: true, status: 404 if person_wf.nil?
-
-      logger.info "webfinger profile request for: #{person_wf.acct_uri}"
-      render body: person_wf.to_xml, content_type: "application/xrd+xml"
+      if person_wf.nil?
+        render nothing: true, status: 404
+      else
+        logger.info "webfinger profile request for: #{person_wf.acct_uri}"
+        render body: person_wf.to_xml, content_type: "application/xrd+xml"
+      end
     end
 
     private
@@ -48,11 +50,11 @@ module DiasporaFederation
     # creates the host-meta xml with the configured server_uri and caches it
     # @return [String] XML string
     def self.host_meta_xml
-      @host_meta_xml ||= WebFinger::HostMeta.from_base_url(DiasporaFederation.server_uri.to_s).to_xml
+      @host_meta_xml ||= Discovery::HostMeta.from_base_url(DiasporaFederation.server_uri.to_s).to_xml
     end
 
     def find_person_webfinger(query)
-      DiasporaFederation.callbacks.trigger(:person_webfinger_fetch, query.strip.downcase.gsub("acct:", ""))
+      DiasporaFederation.callbacks.trigger(:person_webfinger_fetch, query.strip.downcase.sub("acct:", ""))
     end
   end
 end

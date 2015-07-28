@@ -11,6 +11,6 @@ FixtureBuilder.configure do |fbuilder|
 
   # now declare objects
   fbuilder.factory do
-    FactoryGirl.create(:person, diaspora_handle: "alice@localhost:3000")
+    FactoryGirl.create(:person, diaspora_id: "alice@localhost:3000")
   end
 end

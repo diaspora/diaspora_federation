@@ -24,13 +24,13 @@ module DiasporaFederation
         expect(response.header["Content-Type"]).to include "application/xrd+xml"
       end
 
-      it "calls WebFinger::HostMeta.from_base_url with the base url" do
-        expect(WebFinger::HostMeta).to receive(:from_base_url).with("http://localhost:3000/").and_call_original
+      it "calls Discovery::HostMeta.from_base_url with the base url" do
+        expect(Discovery::HostMeta).to receive(:from_base_url).with("http://localhost:3000/").and_call_original
         get :host_meta
       end
 
       it "caches the xml" do
-        expect(WebFinger::HostMeta).to receive(:from_base_url).exactly(1).times.and_call_original
+        expect(Discovery::HostMeta).to receive(:from_base_url).exactly(1).times.and_call_original
         get :host_meta
         get :host_meta
       end
@@ -48,7 +48,7 @@ module DiasporaFederation
         expect(response).to be_success
       end
 
-      it "contains the diaspora handle" do
+      it "contains the diaspora id" do
         get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
         expect(response.body).to include "<Subject>acct:alice@localhost:3000</Subject>"
       end

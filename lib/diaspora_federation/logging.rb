@@ -13,10 +13,12 @@ module DiasporaFederation
                     # use logging-gem if available
                     return ::Logging::Logger[self] if defined?(::Logging::Logger)
 
+                    # use rails logger if running in rails and no logging-gem is available
+                    return ::Rails.logger if defined?(::Rails)
+
                     # fallback logger
                     @logger = Logger.new(STDOUT)
-                    loglevel = defined?(::Rails) ? ::Rails.configuration.log_level.to_s.upcase : "INFO"
-                    @logger.level = Logger.const_get(loglevel)
+                    @logger.level = Logger::INFO
                     @logger
                   end
     end

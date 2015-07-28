@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150614014411) do
+ActiveRecord::Schema.define(version: 20150722224751) do
 
   create_table "people", force: :cascade do |t|
     t.string   "guid",                  null: false
     t.text     "url",                   null: false
-    t.string   "diaspora_handle",       null: false
+    t.string   "diaspora_id",           null: false
     t.text     "serialized_public_key", null: false
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false

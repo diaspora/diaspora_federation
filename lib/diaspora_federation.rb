@@ -3,8 +3,13 @@ require "diaspora_federation/logging"
 require "diaspora_federation/callbacks"
 require "diaspora_federation/properties_dsl"
 require "diaspora_federation/entity"
+require "diaspora_federation/validators"
 
-require "diaspora_federation/web_finger"
+require "diaspora_federation/fetcher"
+
+require "diaspora_federation/entities"
+
+require "diaspora_federation/discovery"
 
 # diaspora* federation library
 module DiasporaFederation
@@ -29,6 +34,12 @@ module DiasporaFederation
     # @example with configured pod_uri
     #   config.server_uri = AppConfig.pod_uri
     attr_accessor :server_uri
+
+    # Set the bundle of certificate authorities (CA) certificates
+    #
+    # @example
+    #   config.certificate_authorities = AppConfig.environment.certificate_authorities.get
+    attr_accessor :certificate_authorities
 
     # configure the federation library
     #
@@ -63,10 +74,17 @@ module DiasporaFederation
     # called from after_initialize
     # @raise [ConfigurationError] if the configuration is incomplete or invalid
     def validate_config
-      configuration_error "Missing server_uri" unless @server_uri.respond_to? :host
+      configuration_error "server_uri: Missing or invalid" unless @server_uri.respond_to? :host
+
+      configuration_error "certificate_authorities: Not configured" if @certificate_authorities.nil?
+      unless File.file? @certificate_authorities
+        configuration_error "certificate_authorities: File not found: #{@certificate_authorities}"
+      end
+
       unless @callbacks.definition_complete?
         configuration_error "Missing handlers for #{@callbacks.missing_handlers.join(', ')}"
       end
+
       logger.info "successfully configured the federation library"
     end
 

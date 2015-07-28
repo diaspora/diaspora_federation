@@ -1,5 +1,5 @@
 module DiasporaFederation
-  module WebFinger
+  module Discovery
     # The WebFinger document used for Diaspora* user discovery is based on an older
     # draft of the specification you can find in the wiki of the "webfinger" project
     # on {http://code.google.com/p/webfinger/wiki/WebFingerProtocol Google Code}
@@ -147,20 +147,23 @@ module DiasporaFederation
       def self.from_xml(webfinger_xml)
         data = parse_xml_and_validate(webfinger_xml)
 
-        hcard_url, seed_url, guid, profile_url, atom_url, salmon_url, public_key = parse_links(data)
+        links = data[:links]
+
+        # TODO: remove! public key is deprecated in webfinger
+        public_key  = parse_link(links, REL_PUBKEY)
 
         new(
           acct_uri:    data[:subject],
           alias_url:   data[:aliases].first,
-          hcard_url:   hcard_url,
-          seed_url:    seed_url,
-          profile_url: profile_url,
-          atom_url:    atom_url,
-          salmon_url:  salmon_url,
+          hcard_url:   parse_link(links, REL_HCARD),
+          seed_url:    parse_link(links, REL_SEED),
+          profile_url: parse_link(links, REL_PROFILE),
+          atom_url:    parse_link(links, REL_ATOM),
+          salmon_url:  parse_link(links, REL_SALMON),
 
           # TODO: remove me!  ##########
-          guid:        guid,
-          public_key:  Base64.strict_decode64(public_key)
+          guid:        parse_link(links, REL_GUID),
+          public_key:  (Base64.strict_decode64(public_key) if public_key)
         )
       end
 
@@ -172,10 +175,10 @@ module DiasporaFederation
       # @return [Hash] data XML data
       # @raise [InvalidData] if the given XML string is invalid or incomplete
       def self.parse_xml_and_validate(webfinger_xml)
-        data = XrdDocument.xml_data(webfinger_xml)
-        valid = data.key?(:subject) && data.key?(:aliases) && data.key?(:links)
-        raise InvalidData, "webfinger xml is incomplete" unless valid
-        data
+        XrdDocument.xml_data(webfinger_xml).tap do |data|
+          valid = data.key?(:subject) && data.key?(:aliases) && data.key?(:links)
+          raise InvalidData, "webfinger xml is incomplete" unless valid
+        end
       end
       private_class_method :parse_xml_and_validate
 
@@ -209,22 +212,9 @@ module DiasporaFederation
         ##################################
       end
 
-      def self.parse_links(data)
-        links = data[:links]
-        hcard   = parse_link(links, REL_HCARD)
-        seed    = parse_link(links, REL_SEED)
-        guid    = parse_link(links, REL_GUID)
-        profile = parse_link(links, REL_PROFILE)
-        atom    = parse_link(links, REL_ATOM)
-        salmon  = parse_link(links, REL_SALMON)
-        pubkey  = parse_link(links, REL_PUBKEY)
-        raise InvalidData, "webfinger xml is incomplete" unless [hcard, seed, guid, profile, atom, salmon, pubkey].all?
-        [hcard[:href], seed[:href], guid[:href], profile[:href], atom[:href], salmon[:href], pubkey[:href]]
-      end
-      private_class_method :parse_links
-
       def self.parse_link(links, rel)
-        links.find {|l| l[:rel] == rel }
+        element = links.find {|l| l[:rel] == rel }
+        element ? element[:href] : nil
       end
       private_class_method :parse_link
     end

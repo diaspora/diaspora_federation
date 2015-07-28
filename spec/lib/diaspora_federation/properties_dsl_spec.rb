@@ -8,19 +8,12 @@ module DiasporaFederation
         properties = dsl.class_props
         expect(properties).to have(1).item
         expect(properties.first[:name]).to eq(:test)
-        expect(properties.first[:type]).to eq(String)
-      end
-
-      it "can name simple properties by string" do
-        dsl.property "test"
-        properties = dsl.class_props
-        expect(properties).to have(1).item
-        expect(properties.first[:name]).to eq("test")
+        expect(properties.first[:xml_name]).to eq(:test)
         expect(properties.first[:type]).to eq(String)
       end
 
       it "will not accept other types for names" do
-        [1234, true, {}].each do |val|
+        ["test", 1234, true, {}].each do |val|
           expect {
             dsl.property val
           }.to raise_error PropertiesDSL::InvalidName
@@ -34,7 +27,25 @@ module DiasporaFederation
         properties = dsl.class_props
         expect(properties).to have(3).items
         expect(properties.map {|e| e[:name] }).to include(:test, :asdf, :zzzz)
+        expect(properties.map {|e| e[:xml_name] }).to include(:test, :asdf, :zzzz)
         properties.each {|e| expect(e[:type]).to eq(String) }
+      end
+
+      it "can add an xml name to simple properties with a symbol" do
+        dsl.property :test, xml_name: :xml_test
+        properties = dsl.class_props
+        expect(properties).to have(1).item
+        expect(properties.first[:name]).to eq(:test)
+        expect(properties.first[:xml_name]).to eq(:xml_test)
+        expect(properties.first[:type]).to eq(String)
+      end
+
+      it "will not accept other types for xml names" do
+        ["test", 1234, true, {}].each do |val|
+          expect {
+            dsl.property :test, xml_name: val
+          }.to raise_error PropertiesDSL::InvalidName, "invalid xml_name"
+        end
       end
     end
 
@@ -74,6 +85,12 @@ module DiasporaFederation
             dsl.entity :fail, [val]
           }.to raise_error PropertiesDSL::InvalidType
         end
+      end
+
+      it "can not add an xml name to a nested entity" do
+        expect {
+          dsl.entity :other, Entities::TestEntity, xml_name: :other_name
+        }.to raise_error ArgumentError, "xml_name is not supported for nested entities"
       end
     end
 

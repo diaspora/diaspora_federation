@@ -1,6 +1,6 @@
 
 module DiasporaFederation
-  module WebFinger
+  module Discovery
     # Generates and parses Host Meta documents.
     #
     # This is a minimal implementation of the standard, only to the degree of what
@@ -19,8 +19,13 @@ module DiasporaFederation
     class HostMeta
       private_class_method :new
 
+      # @param [String] webfinger_url the webfinger-url
+      def initialize(webfinger_url)
+        @webfinger_url = webfinger_url
+      end
+
       # URL fragment to append to the base URL
-      WEBFINGER_SUFFIX = "webfinger?q={uri}"
+      WEBFINGER_SUFFIX = "/webfinger?q={uri}"
 
       # Returns the WebFinger URL that was used to build this instance (either from
       # xml or by giving a base URL).
@@ -42,18 +47,14 @@ module DiasporaFederation
 
       # Builds a new HostMeta instance and constructs the WebFinger URL from the
       # given base URL by appending HostMeta::WEBFINGER_SUFFIX.
+      # @param [String, URL] base_url the base-url for the webfinger-url
       # @return [HostMeta]
       # @raise [InvalidData] if the webfinger url is malformed
       def self.from_base_url(base_url)
-        raise ArgumentError, "base_url is not a String" unless base_url.instance_of?(String)
-
-        base_url += "/" unless base_url.end_with?("/")
-        webfinger_url = base_url + WEBFINGER_SUFFIX
+        webfinger_url = "#{base_url.to_s.chomp('/')}#{WEBFINGER_SUFFIX}"
         raise InvalidData, "invalid webfinger url: #{webfinger_url}" unless webfinger_url_valid?(webfinger_url)
 
-        hm = allocate
-        hm.instance_variable_set(:@webfinger_url, webfinger_url)
-        hm
+        new(webfinger_url)
       end
 
       # Reads the given Host Meta XML document string and populates the
@@ -67,16 +68,14 @@ module DiasporaFederation
         webfinger_url = webfinger_url_from_xrd(data)
         raise InvalidData, "invalid webfinger url: #{webfinger_url}" unless webfinger_url_valid?(webfinger_url)
 
-        hm = allocate
-        hm.instance_variable_set(:@webfinger_url, webfinger_url)
-        hm
+        new(webfinger_url)
       end
 
       # Applies some basic sanity-checking to the given URL
       # @param [String] url validation subject
       # @return [Boolean] validation result
       def self.webfinger_url_valid?(url)
-        !url.nil? && url.instance_of?(String) && url =~ %r{^https?:\/\/.*\{uri\}}i
+        !url.nil? && url.instance_of?(String) && url =~ %r{^https?:\/\/.*\/.*\{uri\}.*}i
       end
       private_class_method :webfinger_url_valid?
 

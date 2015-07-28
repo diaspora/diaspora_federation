@@ -16,4 +16,4 @@ branches:
 before_install: gem install bundler
 bundler_args: "--deployment --without development --jobs=3 --retry=3"
 
-script: "./script/ci/travis.sh"
+script: bundle exec rake --trace
