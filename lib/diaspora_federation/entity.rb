@@ -124,7 +124,7 @@ module DiasporaFederation
     end
 
     def validate
-      validator_name = "DiasporaFederation::Validators::#{self.class.name.split('::').last}Validator"
+      validator_name = "#{self.class.name.split('::').last}Validator"
       return unless Validators.const_defined? validator_name
 
       validator_class = Validators.const_get validator_name
