@@ -56,6 +56,11 @@ RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/test/fixtures"
   config.global_fixtures = :all
 
+  # whitelist codeclimate.com so test coverage can be reported
+  config.after(:suite) do
+    WebMock.disable_net_connect!(allow: "codeclimate.com")
+  end
+
   config.mock_with :rspec do |mocks|
     # Prevents you from mocking or stubbing a method that does not exist on
     # a real object. This is generally recommended, and will default to
