@@ -8,6 +8,7 @@ module Validation
       # @return [Hash] params
       attr_reader :params
 
+      # create a new rule for a maximum tag count validation
       # @param [Hash] params
       # @option params [Fixnum] :maximum maximum allowed tag count
       def initialize(params)

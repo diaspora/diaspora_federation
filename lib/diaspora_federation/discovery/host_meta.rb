@@ -19,6 +19,7 @@ module DiasporaFederation
     class HostMeta
       private_class_method :new
 
+      # create a new host-meta instance
       # @param [String] webfinger_url the webfinger-url
       def initialize(webfinger_url)
         @webfinger_url = webfinger_url

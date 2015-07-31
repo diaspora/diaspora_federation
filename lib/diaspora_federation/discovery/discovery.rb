@@ -7,6 +7,7 @@ module DiasporaFederation
       # @return [String] the diaspora ID of the account
       attr_reader :diaspora_id
 
+      # create a discovery class for the diaspora-id
       # @param [String] diaspora_id the diaspora id to discover
       def initialize(diaspora_id)
         @diaspora_id = clean_diaspora_id(diaspora_id)
