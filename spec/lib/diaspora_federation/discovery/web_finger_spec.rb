@@ -70,7 +70,7 @@ XML
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
   <Subject>#{acct}</Subject>
-  <Alias>#{person.alias_url}</Alias>
+  <Alias>"#{person.alias_url}"</Alias>
   <Link rel="http://microformats.org/profile/hcard" type="text/html" href="#{person.hcard_url}"/>
   <Link rel="http://joindiaspora.com/seed_location" type = "text/html" href="#{person.url}"/>
   <Link rel="http://joindiaspora.com/guid" type = "text/html" href="#{person.guid}"/>

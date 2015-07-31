@@ -154,7 +154,7 @@ module DiasporaFederation
 
         new(
           acct_uri:    data[:subject],
-          alias_url:   data[:aliases].first,
+          alias_url:   clean_alias(data[:aliases].first),
           hcard_url:   parse_link(links, REL_HCARD),
           seed_url:    parse_link(links, REL_SEED),
           profile_url: parse_link(links, REL_PROFILE),
@@ -215,6 +215,12 @@ module DiasporaFederation
       def self.parse_link(links, rel)
         element = links.find {|l| l[:rel] == rel }
         element ? element[:href] : nil
+      end
+      private_class_method :parse_link
+
+      # @deprecated remove this, when all pods use this gem for generation
+      def self.clean_alias(alias_string)
+        alias_string.gsub(/\A"|"\Z/, "")
       end
       private_class_method :parse_link
     end
