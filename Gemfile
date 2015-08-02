@@ -17,9 +17,9 @@ end
 
 group :development do
   # code style
-  gem "rubocop", "0.32.1"
+  gem "rubocop",        "0.32.1"
   gem "pronto",         "0.4.2"
-  gem "pronto-rubocop", "0.4.4"
+  gem "pronto-rubocop", "0.4.4", require: false
 
   # debugging
   gem "pry"
