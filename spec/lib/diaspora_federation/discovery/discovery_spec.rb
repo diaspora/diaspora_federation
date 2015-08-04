@@ -18,7 +18,7 @@ module DiasporaFederation
       end
     end
 
-    describe ".fetch" do
+    describe ".fetch_and_save" do
       it "fetches the userdata and returns a person object" do
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
@@ -27,7 +27,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
 
-        person = Discovery::Discovery.new(account).fetch
+        person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
         expect(person.diaspora_id).to eq(account)
@@ -45,6 +45,24 @@ module DiasporaFederation
         expect(profile.image_url_small).to eq(default_image)
       end
 
+      it "fetches the userdata and saves the person object via callback" do
+        stub_request(:get, "https://localhost:3000/.well-known/host-meta")
+          .to_return(status: 200, body: host_meta_xrd)
+        stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
+          .to_return(status: 200, body: webfinger_xrd)
+        stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
+          .to_return(status: 200, body: hcard_html)
+
+        callback_person = nil
+        expect(DiasporaFederation.callbacks).to receive(:trigger) do |callback, person|
+          expect(callback).to eq(:save_person_after_webfinger)
+          expect(person).to be_instance_of(Entities::Person)
+          callback_person = person
+        end
+
+        expect(Discovery::Discovery.new(account).fetch_and_save).to be(callback_person)
+      end
+
       it "falls back to http if https fails with 404" do
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
           .to_return(status: 404)
@@ -55,7 +73,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
 
-        person = Discovery::Discovery.new(account).fetch
+        person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
         expect(person.diaspora_id).to eq(account)
@@ -71,7 +89,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
 
-        person = Discovery::Discovery.new(account).fetch
+        person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
         expect(person.diaspora_id).to eq(account)
@@ -85,7 +103,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
           .to_return(status: 200, body: modified_webfinger)
 
-        expect { Discovery::Discovery.new(account).fetch }.to raise_error Discovery::DiscoveryError
+        expect { Discovery::Discovery.new(account).fetch_and_save }.to raise_error Discovery::DiscoveryError
       end
 
       it "fails if the diaspora id was not found" do
@@ -94,7 +112,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
           .to_return(status: 404)
 
-        expect { Discovery::Discovery.new(account).fetch }.to raise_error Discovery::DiscoveryError
+        expect { Discovery::Discovery.new(account).fetch_and_save }.to raise_error Discovery::DiscoveryError
       end
 
       it "reads old hcard without guid and public key" do
@@ -170,7 +188,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: historic_hcard_html)
 
-        person = Discovery::Discovery.new(account).fetch
+        person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
         expect(person.diaspora_id).to eq(account)

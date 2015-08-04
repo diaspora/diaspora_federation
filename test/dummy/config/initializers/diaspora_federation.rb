@@ -51,5 +51,12 @@ DiasporaFederation.configure do |config|
         )
       end
     end
+
+    on :save_person_after_webfinger do |person|
+      unless Person.exists?(diaspora_id: person.diaspora_id)
+        Person.new(diaspora_id: person.diaspora_id, guid: person.guid,
+                   serialized_public_key: person.exported_key, url: person.url).save!
+      end
+    end
   end
 end

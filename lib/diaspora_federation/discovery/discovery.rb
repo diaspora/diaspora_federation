@@ -13,9 +13,9 @@ module DiasporaFederation
         @diaspora_id = clean_diaspora_id(diaspora_id)
       end
 
-      # fetch all metadata for the account
+      # fetch all metadata for the account and saves it via callback
       # @return [Person]
-      def fetch
+      def fetch_and_save
         logger.info "Fetch data for #{diaspora_id}"
 
         unless diaspora_id == clean_diaspora_id(webfinger.acct_uri)
@@ -23,6 +23,7 @@ module DiasporaFederation
                                 " #{clean_diaspora_id(webfinger.acct_uri)}"
         end
 
+        DiasporaFederation.callbacks.trigger(:save_person_after_webfinger, person)
         person
       end
 
@@ -67,7 +68,7 @@ module DiasporaFederation
       end
 
       def person
-        Entities::Person.new(
+        @person ||= Entities::Person.new(
           guid:         hcard.guid || webfinger.guid,
           diaspora_id:  diaspora_id,
           url:          webfinger.seed_url,

@@ -18,6 +18,7 @@ module DiasporaFederation
   @callbacks = Callbacks.new %i(
     fetch_person_for_webfinger
     fetch_person_for_hcard
+    save_person_after_webfinger
   )
 
   class << self
