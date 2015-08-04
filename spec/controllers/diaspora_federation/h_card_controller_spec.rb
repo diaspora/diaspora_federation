@@ -24,9 +24,9 @@ module DiasporaFederation
         expect(response).to be_not_found
       end
 
-      it "calls the person_hcard_fetch callback" do
+      it "calls the fetch_person_for_hcard callback" do
         expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:person_hcard_fetch, alice.guid)
+                                                  .with(:fetch_person_for_hcard, alice.guid)
                                                   .and_call_original
         get :hcard, "guid" => alice.guid
       end

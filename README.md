@@ -43,7 +43,7 @@ DiasporaFederation.configure do |config|
   config.server_uri = AppConfig.pod_uri
 
   config.define_callbacks do
-    on :person_webfinger_fetch do |diaspora_id|
+    on :fetch_person_for_webfinger do |diaspora_id|
       person = Person.find_local_by_diaspora_id(diaspora_id)
       if person
         DiasporaFederation::Discovery::WebFinger.new(
@@ -52,7 +52,7 @@ DiasporaFederation.configure do |config|
       end
     end
 
-    on :person_hcard_fetch do |guid|
+    on :fetch_person_for_hcard do |guid|
       # ...
     end
   end

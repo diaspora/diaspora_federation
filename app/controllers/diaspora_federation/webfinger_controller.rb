@@ -54,7 +54,7 @@ module DiasporaFederation
     end
 
     def find_person_webfinger(query)
-      DiasporaFederation.callbacks.trigger(:person_webfinger_fetch, query.strip.downcase.sub("acct:", ""))
+      DiasporaFederation.callbacks.trigger(:fetch_person_for_webfinger, query.strip.downcase.sub("acct:", ""))
     end
   end
 end

@@ -7,7 +7,7 @@ module DiasporaFederation
     #
     # GET /hcard/users/:guid
     def hcard
-      person_hcard = DiasporaFederation.callbacks.trigger(:person_hcard_fetch, params[:guid])
+      person_hcard = DiasporaFederation.callbacks.trigger(:fetch_person_for_hcard, params[:guid])
 
       if person_hcard.nil?
         render nothing: true, status: 404

@@ -16,7 +16,7 @@ DiasporaFederation.configure do |config|
   config.certificate_authorities = ca_file
 
   config.define_callbacks do
-    on :person_webfinger_fetch do |diaspora_id|
+    on :fetch_person_for_webfinger do |diaspora_id|
       person = Person.find_by(diaspora_id: diaspora_id)
       if person
         DiasporaFederation::Discovery::WebFinger.new(
@@ -33,7 +33,7 @@ DiasporaFederation.configure do |config|
       end
     end
 
-    on :person_hcard_fetch do |guid|
+    on :fetch_person_for_hcard do |guid|
       person = Person.find_by(guid: guid)
       if person
         DiasporaFederation::Discovery::HCard.new(

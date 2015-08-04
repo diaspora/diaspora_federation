@@ -58,9 +58,9 @@ module DiasporaFederation
         expect(response).to be_not_found
       end
 
-      it "calls the person_webfinger_fetch callback" do
+      it "calls the fetch_person_for_webfinger callback" do
         expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:person_webfinger_fetch, "alice@localhost:3000")
+                                                  .with(:fetch_person_for_webfinger, "alice@localhost:3000")
                                                   .and_call_original
         get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
       end

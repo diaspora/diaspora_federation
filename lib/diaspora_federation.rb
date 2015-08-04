@@ -16,8 +16,8 @@ module DiasporaFederation
   extend Logging
 
   @callbacks = Callbacks.new %i(
-    person_webfinger_fetch
-    person_hcard_fetch
+    fetch_person_for_webfinger
+    fetch_person_for_hcard
   )
 
   class << self
