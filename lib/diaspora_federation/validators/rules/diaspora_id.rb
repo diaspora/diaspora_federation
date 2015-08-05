@@ -9,8 +9,8 @@ module Validation
       DIASPORA_ID = begin
         letter         = "a-zA-Z"
         digit          = "0-9"
-        username       = "[#{letter}#{digit}\-\_\.]+"
-        atext          = "[#{letter}#{digit}+\=\-\_]"
+        username       = "[#{letter}#{digit}\\-\\_\\.]+"
+        atext          = "[#{letter}#{digit}+\\=\\-\\_]"
         dot_atom       = "#{atext}+([.]#{atext}*)*"
         no_ws_ctl      = '\x01-\x08\x11\x12\x14-\x1f\x7f'
         text           = '[\x01-\x09\x11\x12\x14-\x7f]'
@@ -20,7 +20,7 @@ module Validation
         domain_literal = "\\[#{dcontent}+\\]"
         domain         = "(?:#{dot_atom}|#{domain_literal})"
         port           = "(:[#{digit}]+)?"
-        addr_spec      = "#{username}\@#{domain}#{port}"
+        addr_spec      = "#{username}\\@#{domain}#{port}"
 
         /\A#{addr_spec}\z/u
       end
