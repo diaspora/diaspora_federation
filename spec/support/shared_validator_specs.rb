@@ -11,12 +11,17 @@ def alphanumeric_string(length)
 end
 
 shared_examples "a diaspora id validator" do
-  it "must not be nil or empty" do
+  it "must not be nil or empty if mandatory" do
     [nil, ""].each do |val|
       validator = described_class.new(entity_stub(entity, property, val))
 
-      expect(validator).not_to be_valid
-      expect(validator.errors).to include(property)
+      if mandatory
+        expect(validator).not_to be_valid
+        expect(validator.errors).to include(property)
+      else
+        expect(validator).to be_valid
+        expect(validator.errors).to be_empty
+      end
     end
   end
 

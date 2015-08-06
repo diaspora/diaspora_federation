@@ -46,12 +46,14 @@ describe Validation::Rule::TagCount do
       expect(validator.errors).to include(:tags)
     end
 
-    it "validates if tags are nil" do
-      validator = Validation::Validator.new(OpenStruct.new(tags: nil))
-      validator.rule(:tags, tag_count: {maximum: 5})
+    it "allows nil and empty" do
+      [nil, ""].each do |val|
+        validator = Validation::Validator.new(OpenStruct.new(tags: val))
+        validator.rule(:tags, tag_count: {maximum: 5})
 
-      expect(validator).to be_valid
-      expect(validator.errors).to be_empty
+        expect(validator).to be_valid
+        expect(validator.errors).to be_empty
+      end
     end
   end
 end

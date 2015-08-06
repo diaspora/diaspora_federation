@@ -20,7 +20,7 @@ module Validation
         domain_literal = "\\[#{dcontent}+\\]"
         domain         = "(?:#{dot_atom}|#{domain_literal})"
         port           = "(:[#{digit}]+)?"
-        addr_spec      = "#{username}\\@#{domain}#{port}"
+        addr_spec      = "(#{username}\\@#{domain}#{port})?"
 
         /\A#{addr_spec}\z/u
       end
@@ -33,7 +33,7 @@ module Validation
 
       # Determines if value is a valid diaspora ID
       def valid_value?(value)
-        !DIASPORA_ID.match(value).nil?
+        value.nil? || !DIASPORA_ID.match(value).nil?
       end
 
       # This rule has no params

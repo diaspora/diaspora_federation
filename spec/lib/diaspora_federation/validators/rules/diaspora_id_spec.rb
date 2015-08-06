@@ -74,5 +74,15 @@ describe Validation::Rule::DiasporaId do
       expect(validator).not_to be_valid
       expect(validator.errors).to include(:diaspora_id)
     end
+
+    it "allows nil and empty" do
+      [nil, ""].each do |val|
+        validator = Validation::Validator.new(OpenStruct.new(diaspora_id: val))
+        validator.rule(:diaspora_id, :diaspora_id)
+
+        expect(validator).to be_valid
+        expect(validator.errors).to be_empty
+      end
+    end
   end
 end

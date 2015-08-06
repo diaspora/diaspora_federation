@@ -63,12 +63,14 @@ describe Validation::Rule::Boolean do
       end
     end
 
-    it "fails for nil" do
-      validator = Validation::Validator.new(OpenStruct.new(boolean: nil))
-      validator.rule(:boolean, :boolean)
+    it "fails if nil or empty" do
+      [nil, ""].each do |val|
+        validator = Validation::Validator.new(OpenStruct.new(boolean: val))
+        validator.rule(:boolean, :boolean)
 
-      expect(validator).not_to be_valid
-      expect(validator.errors).to include(:boolean)
+        expect(validator).not_to be_valid
+        expect(validator.errors).to include(:boolean)
+      end
     end
   end
 end

@@ -15,6 +15,7 @@ module DiasporaFederation
 
     it_behaves_like "a diaspora id validator" do
       let(:property) { :diaspora_id }
+      let(:mandatory) { false }
     end
 
     %i(first_name last_name).each do |prop|

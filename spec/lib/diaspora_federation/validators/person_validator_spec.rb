@@ -12,19 +12,20 @@ module DiasporaFederation
 
     it_behaves_like "a diaspora id validator" do
       let(:property) { :diaspora_id }
+      let(:mandatory) { true }
     end
 
     it_behaves_like "a guid validator" do
       let(:property) { :guid }
     end
 
-    context "#url" do
+    describe "#url" do
       it_behaves_like "a url validator without path" do
         let(:property) { :url }
       end
     end
 
-    context "#profile" do
+    describe "#profile" do
       it "fails if profile is nil" do
         instance = OpenStruct.new(FactoryGirl.attributes_for(:person_entity, profile: nil))
         validator = Validators::PersonValidator.new(instance)

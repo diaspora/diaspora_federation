@@ -27,20 +27,14 @@ describe Validation::Rule::Birthday do
       expect(validator.errors).to be_empty
     end
 
-    it "validates an empty string" do
-      validator = Validation::Validator.new(OpenStruct.new(birthday: ""))
-      validator.rule(:birthday, :birthday)
+    it "allows nil and empty" do
+      [nil, ""].each do |val|
+        validator = Validation::Validator.new(OpenStruct.new(birthday: val))
+        validator.rule(:birthday, :birthday)
 
-      expect(validator).to be_valid
-      expect(validator.errors).to be_empty
-    end
-
-    it "validates nil" do
-      validator = Validation::Validator.new(OpenStruct.new(birthday: nil))
-      validator.rule(:birthday, :birthday)
-
-      expect(validator).to be_valid
-      expect(validator.errors).to be_empty
+        expect(validator).to be_valid
+        expect(validator.errors).to be_empty
+      end
     end
 
     it "fails for invalid date string" do

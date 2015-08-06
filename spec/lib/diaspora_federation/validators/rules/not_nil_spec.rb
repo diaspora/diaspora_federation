@@ -34,5 +34,13 @@ describe Validation::Rule::NotNil do
       expect(validator).not_to be_valid
       expect(validator.errors).to include(:not_nil)
     end
+
+    it "allows an empty string" do
+      validator = Validation::Validator.new(OpenStruct.new(not_nil: ""))
+      validator.rule(:not_nil, :not_nil)
+
+      expect(validator).to be_valid
+      expect(validator.errors).to be_empty
+    end
   end
 end

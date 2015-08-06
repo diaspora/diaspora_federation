@@ -45,19 +45,13 @@ describe Validation::Rule::Guid do
     end
 
     it "fails if the string is empty" do
-      validator = Validation::Validator.new(OpenStruct.new(guid: ""))
-      validator.rule(:guid, :guid)
+      [nil, ""].each do |val|
+        validator = Validation::Validator.new(OpenStruct.new(guid: val))
+        validator.rule(:guid, :guid)
 
-      expect(validator).not_to be_valid
-      expect(validator.errors).to include(:guid)
-    end
-
-    it "fails if the string is nil" do
-      validator = Validation::Validator.new(OpenStruct.new(guid: nil))
-      validator.rule(:guid, :guid)
-
-      expect(validator).not_to be_valid
-      expect(validator.errors).to include(:guid)
+        expect(validator).not_to be_valid
+        expect(validator.errors).to include(:guid)
+      end
     end
   end
 end
