@@ -24,6 +24,7 @@ module DiasporaFederation
         end
 
         DiasporaFederation.callbacks.trigger(:save_person_after_webfinger, person)
+        logger.info "successfully webfingered #{diaspora_id}"
         person
       end
 
