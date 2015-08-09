@@ -77,9 +77,11 @@ module DiasporaFederation
     def validate_config
       configuration_error "server_uri: Missing or invalid" unless @server_uri.respond_to? :host
 
-      configuration_error "certificate_authorities: Not configured" if @certificate_authorities.nil?
-      unless File.file? @certificate_authorities
-        configuration_error "certificate_authorities: File not found: #{@certificate_authorities}"
+      unless defined?(::Rails) && !::Rails.env.production?
+        configuration_error "certificate_authorities: Not configured" if @certificate_authorities.nil?
+        unless File.file? @certificate_authorities
+          configuration_error "certificate_authorities: File not found: #{@certificate_authorities}"
+        end
       end
 
       unless @callbacks.definition_complete?
