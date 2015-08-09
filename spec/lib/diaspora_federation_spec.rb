@@ -35,8 +35,8 @@ module DiasporaFederation
         it "should fail in production if the certificate_authorities file is missing" do
           ::Rails.env = "production"
           DiasporaFederation.certificate_authorities = "/unknown"
-          expect { DiasporaFederation.validate_config }.to raise_error ConfigurationError,
-                                                                       "certificate_authorities: File not found: /unknown"
+          expect { DiasporaFederation.validate_config }
+            .to raise_error ConfigurationError, "certificate_authorities: File not found: /unknown"
         end
 
         after do

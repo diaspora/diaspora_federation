@@ -18,10 +18,7 @@ module DiasporaFederation
       def fetch_and_save
         logger.info "Fetch data for #{diaspora_id}"
 
-        unless diaspora_id == clean_diaspora_id(webfinger.acct_uri)
-          raise DiscoveryError, "Diaspora ID does not match: Wanted #{diaspora_id} but got" \
-                                " #{clean_diaspora_id(webfinger.acct_uri)}"
-        end
+        validate_diaspora_id
 
         DiasporaFederation.callbacks.trigger(:save_person_after_webfinger, person)
         logger.info "successfully webfingered #{diaspora_id}"
@@ -29,6 +26,13 @@ module DiasporaFederation
       end
 
       private
+
+      def validate_diaspora_id
+        # validates if the diaspora ID matches the diaspora ID in the webfinger response
+        return if diaspora_id == clean_diaspora_id(webfinger.acct_uri)
+        raise DiscoveryError, "Diaspora ID does not match: Wanted #{diaspora_id} but got" \
+                              " #{clean_diaspora_id(webfinger.acct_uri)}"
+      end
 
       def clean_diaspora_id(diaspora_id)
         diaspora_id.strip.sub("acct:", "").to_s.downcase
