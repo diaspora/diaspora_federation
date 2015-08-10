@@ -12,16 +12,15 @@ module DiasporaFederation
       rule :last_name, regular_expression: {regex: /\A[^;]{,32}\z/}
 
       # this urls can be relative
-      rule :image_url, nilableURI: [:path]
-      rule :image_url_medium, nilableURI: [:path]
-      rule :image_url_small, nilableURI: [:path]
+      rule :image_url, URI: [:path]
+      rule :image_url_medium, URI: [:path]
+      rule :image_url_small, URI: [:path]
 
       rule :birthday, :birthday
 
-      # TODO: replace regex with "length: {maximum: xxx}" but this rule doesn't allow nil now.
-      rule :gender, regular_expression: {regex: /\A.{,255}\z/}
-      rule :bio, regular_expression: {regex: /\A.{,65535}\z/}
-      rule :location, regular_expression: {regex: /\A.{,255}\z/}
+      rule :gender, length: {maximum: 255}
+      rule :bio, length: {maximum: 65_535}
+      rule :location, length: {maximum: 255}
 
       rule :searchable, :boolean
 

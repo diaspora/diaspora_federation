@@ -18,9 +18,9 @@ module DiasporaFederation
       rule :last_name, regular_expression: {regex: /\A[^;]{,32}\z/}
 
       # this urls can be relative
-      rule :photo_large_url, [:not_nil, nilableURI: [:path]]
-      rule :photo_medium_url, [:not_nil, nilableURI: [:path]]
-      rule :photo_small_url, [:not_nil, nilableURI: [:path]]
+      rule :photo_large_url, [:not_nil, URI: [:path]]
+      rule :photo_medium_url, [:not_nil, URI: [:path]]
+      rule :photo_small_url, [:not_nil, URI: [:path]]
 
       # rule :exported_key, :public_key
 

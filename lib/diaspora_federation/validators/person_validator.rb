@@ -8,7 +8,7 @@ module DiasporaFederation
 
       rule :diaspora_id, %i(not_empty diaspora_id)
 
-      rule :url, %i(not_nil nilableURI)
+      rule :url, %i(not_nil URI)
 
       rule :profile, :not_nil
 
