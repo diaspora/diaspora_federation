@@ -84,7 +84,7 @@ module DiasporaFederation
       # @param [Hash] data extracted data
       # @return [String] webfinger url
       def self.webfinger_url_from_xrd(data)
-        link = data[:links].find {|l| (l[:rel] == "lrdd" && l[:type] == "application/xrd+xml") }
+        link = data[:links].find {|l| l[:rel] == "lrdd" }
         return link[:template] unless link.nil?
       end
       private_class_method :webfinger_url_from_xrd

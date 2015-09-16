@@ -58,6 +58,24 @@ XML
         expect(hm.webfinger_template_url).to eq("#{base_url}webfinger?q={uri}")
       end
 
+      it "also reads friendica/redmatrix XML" do
+        friendica_redmatrix_xml = <<-XML
+<?xml version='1.0' encoding='UTF-8'?>
+<XRD xmlns='http://docs.oasis-open.org/ns/xri/xrd-1.0'
+     xmlns:hm='http://host-meta.net/xrd/1.0'>
+
+    <hm:Host>pod.example.tld</hm:Host>
+
+    <Link rel='lrdd' template='#{base_url}xrd/?uri={uri}' />
+    <Link rel="http://oexchange.org/spec/0.8/rel/resident-target" type="application/xrd+xml"
+        href="https://pod.example.tld/oexchange/xrd" />
+
+</XRD>
+        XML
+        hm = Discovery::HostMeta.from_xml(friendica_redmatrix_xml)
+        expect(hm.webfinger_template_url).to eq("#{base_url}xrd/?uri={uri}")
+      end
+
       it "fails if the document does not contain a webfinger url" do
         invalid_xml = <<XML
 <?xml version="1.0" encoding="UTF-8"?>
