@@ -66,6 +66,10 @@ module DiasporaFederation
           expect(validator).not_to be_valid
           expect(validator.errors).to include(prop)
         end
+
+        it_behaves_like "a url path validator" do
+          let(:property) { prop }
+        end
       end
     end
 
