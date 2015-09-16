@@ -24,7 +24,7 @@ module DiasporaFederation
       end
     end
 
-    %i(alias_url hcard_url profile_url atom_url salmon_url).each do |prop|
+    %i(hcard_url profile_url atom_url).each do |prop|
       describe "##{prop}" do
         it_behaves_like "a url validator without path"  do
           let(:property) { prop }
@@ -32,6 +32,39 @@ module DiasporaFederation
 
         it_behaves_like "a url path validator" do
           let(:property) { prop }
+        end
+      end
+    end
+
+    # optional urls
+    %i(alias_url salmon_url).each do |prop|
+      describe "##{prop}" do
+        it "is allowed to be nil" do
+          validator = described_class.new(webfinger_stub(prop => nil))
+
+          expect(validator).to be_valid
+          expect(validator.errors).to be_empty
+        end
+
+        it "must not be empty" do
+          validator = described_class.new(webfinger_stub(prop => ""))
+
+          expect(validator).not_to be_valid
+          expect(validator.errors).to include(prop)
+        end
+
+        it "fails for url with special chars" do
+          validator = described_class.new(webfinger_stub(prop => "https://asdf$%.com"))
+
+          expect(validator).not_to be_valid
+          expect(validator.errors).to include(prop)
+        end
+
+        it "fails for url without scheme" do
+          validator = described_class.new(webfinger_stub(prop => "example.com"))
+
+          expect(validator).not_to be_valid
+          expect(validator.errors).to include(prop)
         end
       end
     end

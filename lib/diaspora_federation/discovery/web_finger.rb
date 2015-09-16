@@ -41,6 +41,7 @@ module DiasporaFederation
       property :acct_uri
 
       # @!attribute [r] alias_url
+      #   @note could be nil
       #   @return [String] link to the users profile
       property :alias_url
 
@@ -68,6 +69,7 @@ module DiasporaFederation
       property :atom_url
 
       # @!attribute [r] salmon_url
+      #   @note could be nil
       #   @return [String] salmon endpoint url
       #   @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-salmon-00.html#SMLR
       #     Panzer draft for Salmon, paragraph 3.3
@@ -154,7 +156,7 @@ module DiasporaFederation
 
         new(
           acct_uri:    data[:subject],
-          alias_url:   clean_alias(data[:aliases].first),
+          alias_url:   parse_alias(data[:aliases]),
           hcard_url:   parse_link(links, REL_HCARD),
           seed_url:    parse_link(links, REL_SEED),
           profile_url: parse_link(links, REL_PROFILE),
@@ -176,7 +178,7 @@ module DiasporaFederation
       # @raise [InvalidData] if the given XML string is invalid or incomplete
       def self.parse_xml_and_validate(webfinger_xml)
         XrdDocument.xml_data(webfinger_xml).tap do |data|
-          valid = data.key?(:subject) && data.key?(:aliases) && data.key?(:links)
+          valid = data.key?(:subject) && data.key?(:links)
           raise InvalidData, "webfinger xml is incomplete" unless valid
         end
       end
@@ -218,11 +220,13 @@ module DiasporaFederation
       end
       private_class_method :parse_link
 
-      # @deprecated remove this, when all pods use this gem for generation
-      def self.clean_alias(alias_string)
+      def self.parse_alias(aliases)
+        return nil unless aliases
+        alias_string = aliases.first
+        # Old pods had quotes around alias. Remove this, when all pods use this gem for generation
         alias_string.gsub(/\A"|"\Z/, "")
       end
-      private_class_method :parse_link
+      private_class_method :parse_alias
     end
   end
 end

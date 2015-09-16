@@ -96,6 +96,51 @@ XML
         expect(wf.public_key).to eq(person.serialized_public_key)
       end
 
+      it "reads redmatrix XML" do
+        redmatrix_xml = <<-XML
+<?xml version="1.0" encoding="UTF-8"?>
+<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
+
+    <Subject>#{person.diaspora_id}</Subject>
+
+    <Link rel="http://schemas.google.com/g/2010#updates-from"
+          type="application/atom+xml"
+          href="#{person.atom_url}" />
+    <Link rel="http://webfinger.net/rel/profile-page"
+          type="text/html"
+          href="#{person.profile_url}" />
+    <Link rel="http://portablecontacts.net/spec/1.0"
+          href="https://pod.example.tld/poco/trouble" />
+    <Link rel="http://webfinger.net/rel/avatar"
+          type="image/jpeg"
+          href="http://localhost:3000/assets/user/default.png" />
+    <Link rel="http://microformats.org/profile/hcard"
+          type="text/html"
+          href="#{person.hcard_url}" />
+
+    <Link rel="magic-public-key"
+          href="data:application/magic-public-key,RSA.abcdef1234567890" />
+
+    <Link rel="http://joindiaspora.com/seed_location" type="text/html" href="#{person.url}" />
+    <Link rel="http://joindiaspora.com/guid" type="text/html" href="#{person.guid}" />
+    <Link rel="diaspora-public-key" type="RSA" href="#{public_key_base64}" />
+
+</XRD>
+        XML
+
+        wf = Discovery::WebFinger.from_xml(redmatrix_xml)
+        expect(wf.acct_uri).to eq(person.diaspora_id)
+        expect(wf.alias_url).to be_nil
+        expect(wf.hcard_url).to eq(person.hcard_url)
+        expect(wf.seed_url).to eq(person.url)
+        expect(wf.profile_url).to eq(person.profile_url)
+        expect(wf.atom_url).to eq(person.atom_url)
+        expect(wf.salmon_url).to be_nil
+
+        expect(wf.guid).to eq(person.guid)
+        expect(wf.public_key).to eq(person.serialized_public_key)
+      end
+
       it "reads future XML without guid and public key" do
         future_xml = <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
