@@ -220,11 +220,14 @@ module DiasporaFederation
       end
       private_class_method :parse_link
 
+      # this method is used to parse the alias_url from the XML.
+      # * redmatrix has sometimes no alias, return nil
+      # * old pods had quotes around the alias url, this can be removed later
+      # * friendica has two aliases and the first is with "acct:": return only an URL starting with http (or https)
       def self.parse_alias(aliases)
         return nil unless aliases
-        alias_string = aliases.first
-        # Old pods had quotes around alias. Remove this, when all pods use this gem for generation
-        alias_string.gsub(/\A"|"\Z/, "")
+        # TODO: Old pods had quotes around alias. Remove the +map+ in next line, when all pods use this gem
+        aliases.map {|a| a.gsub(/\A"|"\Z/, "") }.find {|a| a.start_with?("http") }
       end
       private_class_method :parse_alias
     end
