@@ -23,6 +23,6 @@ Gem::Specification.new do |s|
   s.add_dependency "nokogiri", "~> 1.6", ">= 1.6.6"
   s.add_dependency "faraday", "~> 0.9.0"
   s.add_dependency "faraday_middleware", "~> 0.10.0"
-  s.add_dependency "typhoeus", "~> 0.7.0"
+  s.add_dependency "typhoeus", "~> 0.7"
   s.add_dependency "valid", "~> 1.0"
 end
