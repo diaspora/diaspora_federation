@@ -13,9 +13,7 @@ FactoryGirl.define do
     diaspora_id
     url "http://localhost:3000/"
     serialized_public_key { generate(:public_key) }
-    after(:create) do |u|
-      u.save
-    end
+    after(:create, &:save)
   end
 
   factory :webfinger, class: DiasporaFederation::Discovery::WebFinger do

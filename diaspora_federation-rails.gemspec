@@ -14,8 +14,8 @@ Gem::Specification.new do |s|
   s.description = "A rails engine that adds the diaspora* federation protocol to a rails app"
   s.license     = "AGPL 3.0 - http://www.gnu.org/licenses/agpl-3.0.html"
 
-  s.files      = Dir["app/**/*", "config/routes.rb", "lib/diaspora_federation/{engine,rails}.rb",
-                     "LICENSE", "README.md"]
+  s.files       = Dir["app/**/*", "config/routes.rb", "lib/diaspora_federation/{engine,rails}.rb",
+                      "LICENSE", "README.md"]
 
   s.required_ruby_version = "~> 2.0"
 

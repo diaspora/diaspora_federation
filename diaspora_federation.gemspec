@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
                   "among the various installations of Diaspora*"
   s.license     = "AGPL 3.0 - http://www.gnu.org/licenses/agpl-3.0.html"
 
-  s.files      = Dir["lib/**/*", "LICENSE", "README.md"] - Dir["lib/diaspora_federation/{engine,rails}.rb"]
+  s.files       = Dir["lib/**/*", "LICENSE", "README.md"] - Dir["lib/diaspora_federation/{engine,rails}.rb"]
 
   s.required_ruby_version = "~> 2.0"
 

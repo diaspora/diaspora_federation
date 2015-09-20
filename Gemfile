@@ -32,8 +32,8 @@ end
 
 group :test do
   # rspec formatter
-  gem "fuubar",                    "2.0.0",  require: false
-  gem "nyan-cat-formatter",                  require: false
+  gem "fuubar", "2.0.0",    require: false
+  gem "nyan-cat-formatter", require: false
 
   # test coverage
   gem "simplecov",                 "0.10.0", require: false

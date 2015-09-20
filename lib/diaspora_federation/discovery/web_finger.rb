@@ -152,7 +152,7 @@ module DiasporaFederation
         links = data[:links]
 
         # TODO: remove! public key is deprecated in webfinger
-        public_key  = parse_link(links, REL_PUBKEY)
+        public_key = parse_link(links, REL_PUBKEY)
 
         new(
           acct_uri:    data[:subject],

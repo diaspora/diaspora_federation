@@ -26,7 +26,7 @@ module DiasporaFederation
 
     %i(hcard_url profile_url atom_url).each do |prop|
       describe "##{prop}" do
-        it_behaves_like "a url validator without path"  do
+        it_behaves_like "a url validator without path" do
           let(:property) { prop }
         end
 
