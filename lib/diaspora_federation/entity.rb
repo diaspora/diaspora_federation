@@ -6,7 +6,7 @@ module DiasporaFederation
   #
   # Any entity also provides the means to serialize itself and all nested
   # entities to XML (for deserialization from XML to +Entity+ instances, see
-  # {XmlPayload}).
+  # {Salmon::XmlPayload}).
   #
   # @abstract Subclass and specify properties to implement various entities.
   #
@@ -76,7 +76,7 @@ module DiasporaFederation
     # {http://www.rubydoc.info/gems/nokogiri/Nokogiri/XML/Element Nokogiri::XML::Element}s
     #
     # @see Nokogiri::XML::Node.to_xml
-    # @see XmlPayload.pack
+    # @see Salmon::XmlPayload.pack
     #
     # @return [Nokogiri::XML::Element] root element containing properties as child elements
     def to_xml

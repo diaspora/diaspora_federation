@@ -10,6 +10,7 @@ require "diaspora_federation/fetcher"
 require "diaspora_federation/entities"
 
 require "diaspora_federation/discovery"
+require "diaspora_federation/salmon"
 
 # diaspora* federation library
 module DiasporaFederation
