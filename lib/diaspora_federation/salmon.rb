@@ -5,4 +5,5 @@ module DiasporaFederation
   end
 end
 
+require "diaspora_federation/salmon/exceptions"
 require "diaspora_federation/salmon/xml_payload"

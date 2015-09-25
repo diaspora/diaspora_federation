@@ -77,7 +77,7 @@ XML
 XML
           expect {
             Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
-          }.to raise_error Salmon::XmlPayload::UnknownEntity, "'UnknownEntity' not found"
+          }.to raise_error Salmon::UnknownEntity, "'UnknownEntity' not found"
         end
 
         it "raises an error when the entity is not found" do
@@ -88,7 +88,7 @@ XML
 XML
           expect {
             Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
-          }.to raise_error Salmon::XmlPayload::InvalidStructure
+          }.to raise_error Salmon::InvalidStructure
         end
       end
 
@@ -136,19 +136,19 @@ XML
         it "raises an error when the entity name contains special characters" do
           expect {
             Salmon::XmlPayload.send(:entity_class_name, "te.st-enti/ty")
-          }.to raise_error Salmon::XmlPayload::InvalidEntityName, "'te.st-enti/ty' is invalid"
+          }.to raise_error Salmon::InvalidEntityName, "'te.st-enti/ty' is invalid"
         end
 
         it "raises an error when the entity name contains upper case letters" do
           expect {
             Salmon::XmlPayload.send(:entity_class_name, "TestEntity")
-          }.to raise_error Salmon::XmlPayload::InvalidEntityName, "'TestEntity' is invalid"
+          }.to raise_error Salmon::InvalidEntityName, "'TestEntity' is invalid"
         end
 
         it "raises an error when the entity name contains numbers" do
           expect {
             Salmon::XmlPayload.send(:entity_class_name, "te5t_ent1ty_w1th_number5")
-          }.to raise_error Salmon::XmlPayload::InvalidEntityName, "'te5t_ent1ty_w1th_number5' is invalid"
+          }.to raise_error Salmon::InvalidEntityName, "'te5t_ent1ty_w1th_number5' is invalid"
         end
       end
     end

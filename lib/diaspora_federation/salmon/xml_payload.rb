@@ -44,11 +44,11 @@ module DiasporaFederation
       #   XML can't be found
       def self.unpack(xml)
         raise ArgumentError, "only Nokogiri::XML::Element allowed" unless xml.instance_of?(Nokogiri::XML::Element)
-        raise InvalidStructure unless wrap_valid?(xml)
+        raise Salmon::InvalidStructure unless wrap_valid?(xml)
 
         data = xml.at_xpath("post/*[1]")
         klass_name = entity_class_name(data.name)
-        raise UnknownEntity, "'#{klass_name}' not found" unless Entities.const_defined?(klass_name)
+        raise Salmon::UnknownEntity, "'#{klass_name}' not found" unless Entities.const_defined?(klass_name)
 
         klass = Entities.const_get(klass_name)
         populate_entity(klass, data)
@@ -70,7 +70,7 @@ module DiasporaFederation
       # @return [String] "CamelCase" class name
       def self.entity_class_name(term)
         term.to_s.tap do |string|
-          raise InvalidEntityName, "'#{string}' is invalid" unless string =~ /^[a-z]*(_[a-z]*)*$/
+          raise Salmon::InvalidEntityName, "'#{string}' is invalid" unless string =~ /^[a-z]*(_[a-z]*)*$/
           string.sub!(/^[a-z]/, &:upcase)
           string.gsub!(/_([a-z])/) { Regexp.last_match[1].upcase }
         end
@@ -126,20 +126,6 @@ module DiasporaFederation
         n.map {|child| populate_entity(type.first, child) }
       end
       private_class_method :parse_array_from_node
-
-      # Raised, if the XML structure of the parsed document doesn't resemble the
-      # expected structure.
-      class InvalidStructure < RuntimeError
-      end
-
-      # Raised, if the entity name in the XML is invalid
-      class InvalidEntityName < RuntimeError
-      end
-
-      # Raised, if the entity contained within the XML cannot be mapped to a
-      # defined {Entity} subclass.
-      class UnknownEntity < RuntimeError
-      end
     end
   end
 end
