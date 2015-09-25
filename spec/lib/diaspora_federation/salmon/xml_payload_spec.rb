@@ -67,6 +67,21 @@ XML
 
         it "raises an error when the xml is wrong" do
           xml = <<-XML
+<XML>
+  <post>
+    <unknown_entity>
+      <test>asdf</test>
+    </test_entity>
+  </post>
+</XML>
+XML
+          expect {
+            Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
+          }.to raise_error Salmon::XmlPayload::UnknownEntity, "'UnknownEntity' not found"
+        end
+
+        it "raises an error when the entity is not found" do
+          xml = <<-XML
 <root>
   <weird/>
 </root>
@@ -106,6 +121,34 @@ XML
           expect(entity.multi).to have(2).items
           expect(entity.multi.first.to_h).to eq(child_entity2.to_h)
           expect(entity.asdf).to eq("QWERT")
+        end
+      end
+
+      context ".entity_class_name" do
+        it "should parse a single word" do
+          expect(Salmon::XmlPayload.send(:entity_class_name, "entity")).to eq("Entity")
+        end
+
+        it "should parse with underscore" do
+          expect(Salmon::XmlPayload.send(:entity_class_name, "test_entity")).to eq("TestEntity")
+        end
+
+        it "raises an error when the entity name contains special characters" do
+          expect {
+            Salmon::XmlPayload.send(:entity_class_name, "te.st-enti/ty")
+          }.to raise_error Salmon::XmlPayload::InvalidEntityName, "'te.st-enti/ty' is invalid"
+        end
+
+        it "raises an error when the entity name contains upper case letters" do
+          expect {
+            Salmon::XmlPayload.send(:entity_class_name, "TestEntity")
+          }.to raise_error Salmon::XmlPayload::InvalidEntityName, "'TestEntity' is invalid"
+        end
+
+        it "raises an error when the entity name contains numbers" do
+          expect {
+            Salmon::XmlPayload.send(:entity_class_name, "te5t_ent1ty_w1th_number5")
+          }.to raise_error Salmon::XmlPayload::InvalidEntityName, "'te5t_ent1ty_w1th_number5' is invalid"
         end
       end
     end

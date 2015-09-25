@@ -99,6 +99,10 @@ module DiasporaFederation
         expect(Entities::TestNestedEntity.entity_name).to eq("test_nested_entity")
         expect(Entities::OtherEntity.entity_name).to eq("other_entity")
       end
+
+      it "works with a single word" do
+        expect(Entities::Entity.entity_name).to eq("entity")
+      end
     end
 
     context "nested entities" do

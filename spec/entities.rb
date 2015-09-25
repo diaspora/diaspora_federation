@@ -25,6 +25,10 @@ module DiasporaFederation
       property :test
       property :qwer, xml_name: :asdf
     end
+
+    class Entity < DiasporaFederation::Entity
+      property :test
+    end
   end
 
   module Validators

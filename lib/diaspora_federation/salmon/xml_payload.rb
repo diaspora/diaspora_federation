@@ -47,8 +47,8 @@ module DiasporaFederation
         raise InvalidStructure unless wrap_valid?(xml)
 
         data = xml.at_xpath("post/*[1]")
-        klass_name = entity_class(data.name)
-        raise UnknownEntity unless Entities.const_defined?(klass_name)
+        klass_name = entity_class_name(data.name)
+        raise UnknownEntity, "'#{klass_name}' not found" unless Entities.const_defined?(klass_name)
 
         klass = Entities.const_get(klass_name)
         populate_entity(klass, data)
@@ -66,16 +66,16 @@ module DiasporaFederation
       # Transform the given String from the lowercase underscored version to a
       # camelized variant, used later for getting the Class constant.
       #
-      # @note some of this is from Rails "Inflector.camelize"
-      #
       # @param [String] term "snake_case" class name
       # @return [String] "CamelCase" class name
-      def self.entity_class(term)
-        string = term.to_s
-        string = string.sub(/^[a-z\d]*/) { $&.capitalize }
-        string.gsub(%r{(?:_|(\/))([a-z\d]*)}i) { Regexp.last_match[2].capitalize }.gsub("/", "::")
+      def self.entity_class_name(term)
+        term.to_s.tap do |string|
+          raise InvalidEntityName, "'#{string}' is invalid" unless string =~ /^[a-z]*(_[a-z]*)*$/
+          string.sub!(/^[a-z]/, &:upcase)
+          string.gsub!(/_([a-z])/) { Regexp.last_match[1].upcase }
+        end
       end
-      private_class_method :entity_class
+      private_class_method :entity_class_name
 
       # Construct a new instance of the given Entity and populate the properties
       # with the attributes found in the XML.
@@ -112,6 +112,10 @@ module DiasporaFederation
       # Raised, if the XML structure of the parsed document doesn't resemble the
       # expected structure.
       class InvalidStructure < RuntimeError
+      end
+
+      # Raised, if the entity name in the XML is invalid
+      class InvalidEntityName < RuntimeError
       end
 
       # Raised, if the entity contained within the XML cannot be mapped to a

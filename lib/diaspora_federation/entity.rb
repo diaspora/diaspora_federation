@@ -83,12 +83,11 @@ module DiasporaFederation
       entity_xml
     end
 
-    # some of this is from Rails "Inflector.demodulize" and "Inflector.undersore"
+    # Makes an underscored, lowercase form of the class name
+    # @return [String] entity name
     def self.entity_name
       name.rpartition("::").last.tap do |word|
-        word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
-        word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
-        word.tr!("-", "_")
+        word.gsub!(/(.)([A-Z])/, '\1_\2')
         word.downcase!
       end
     end
