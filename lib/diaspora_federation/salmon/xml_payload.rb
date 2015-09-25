@@ -91,23 +91,41 @@ module DiasporaFederation
           type = prop_def[:type]
 
           if type == String
-            # create simple entry in data hash
-            n = node.xpath(name.to_s)
-            data[name] = n.first.text if n.any?
+            data[name] = parse_string_from_node(name, node)
           elsif type.instance_of?(Array)
-            # collect all nested children of that type and create an array in the data hash
-            n = node.xpath(type.first.entity_name)
-            data[name] = n.map {|child| populate_entity(type.first, child) }
+            data[name] = parse_array_from_node(type, node)
           elsif type.ancestors.include?(Entity)
-            # create an entry in the data hash for the nested entity
-            n = node.xpath(type.entity_name)
-            data[name] = populate_entity(type, n.first) if n.any?
+            data[name] = parse_entity_from_node(type, node)
           end
         end
 
         klass.new(data)
       end
       private_class_method :populate_entity
+
+      # create simple entry in data hash
+      # @return [String] data
+      def self.parse_string_from_node(name, node)
+        n = node.xpath(name.to_s)
+        n.first.text if n.any?
+      end
+      private_class_method :parse_string_from_node
+
+      # create an entry in the data hash for the nested entity
+      # @return [Entity] parsed child entity
+      def self.parse_entity_from_node(type, node)
+        n = node.xpath(type.entity_name)
+        populate_entity(type, n.first) if n.any?
+      end
+      private_class_method :parse_entity_from_node
+
+      # collect all nested children of that type and create an array in the data hash
+      # @return [Array<Entity>] array with parsed child entities
+      def self.parse_array_from_node(type, node)
+        n = node.xpath(type.first.entity_name)
+        n.map {|child| populate_entity(type.first, child) }
+      end
+      private_class_method :parse_array_from_node
 
       # Raised, if the XML structure of the parsed document doesn't resemble the
       # expected structure.
