@@ -72,5 +72,11 @@ XML
         end
       end
     end
+
+    context "generated instance" do
+      it_behaves_like "a Slap instance" do
+        subject { Salmon::Slap.from_xml(slap) }
+      end
+    end
   end
 end

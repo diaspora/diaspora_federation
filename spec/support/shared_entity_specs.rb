@@ -29,5 +29,11 @@ shared_examples "an Entity subclass" do
         expect(instance.to_h).to eq(data)
       end
     end
+
+    describe "#to_xml" do
+      it "produces correct XML" do
+        expect(instance.to_xml.to_s.strip).to eq(xml.strip) unless xml.nil?
+      end
+    end
   end
 end
