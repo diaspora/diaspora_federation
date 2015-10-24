@@ -19,7 +19,7 @@ group :development do
   # code style
   gem "rubocop",        "0.34.2"
   gem "pronto",         "0.4.3"
-  gem "pronto-rubocop", "0.4.6", require: false
+  gem "pronto-rubocop", "0.4.7", require: false
 
   # debugging
   gem "pry"
