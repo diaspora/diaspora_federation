@@ -63,7 +63,7 @@ group :development, :test do
   gem "uuid", "~> 2.3.8"
 
   # test database
-  gem "sqlite3", "~> 1.3.10"
+  gem "sqlite3", "~> 1.3.11"
 end
 
 group :development, :production do
