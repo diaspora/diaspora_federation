@@ -1,3 +1,5 @@
+require "base64"
+
 require "diaspora_federation/logging"
 
 require "diaspora_federation/callbacks"

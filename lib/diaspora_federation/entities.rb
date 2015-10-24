@@ -10,3 +10,7 @@ end
 
 require "diaspora_federation/entities/profile"
 require "diaspora_federation/entities/person"
+require "diaspora_federation/entities/location"
+require "diaspora_federation/entities/photo"
+require "diaspora_federation/entities/status_message"
+require "diaspora_federation/entities/request"

@@ -68,4 +68,23 @@ FactoryGirl.define do
     nsfw false
     tag_string "#i #love #tags"
   end
+
+  factory :location_entity, class: DiasporaFederation::Entities::Location do
+    address "Vienna, Austria"
+    lat 48.208174.to_s
+    lng 16.373819.to_s
+  end
+
+  factory :photo_entity, class: DiasporaFederation::Entities::Photo do
+    guid
+    diaspora_id
+    public(true)
+    created_at { Time.zone.now }
+    remote_photo_path "https://diaspora.example.tld/uploads/images/"
+    remote_photo_name "f2a41e9d2db4d9a199c8.jpg"
+    text "what you see here..."
+    status_message_guid { guid }
+    height 480
+    width 800
+  end
 end
