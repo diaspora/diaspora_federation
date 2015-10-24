@@ -19,7 +19,7 @@ group :development do
   # code style
   gem "rubocop",        "0.34.2"
   gem "pronto",         "0.4.3"
-  gem "pronto-rubocop", "0.4.6", require: false
+  gem "pronto-rubocop", "0.4.7", require: false
 
   # debugging
   gem "pry"
@@ -44,7 +44,7 @@ group :test do
   gem "fixture_builder",           "~> 0.4.1"
   gem "factory_girl_rails",        "~> 4.5.0"
   gem "rspec-collection_matchers", "~> 1.1.2"
-  gem "webmock",                   "~> 1.21.0"
+  gem "webmock",                   "~> 1.22.1"
 end
 
 group :development, :test do
@@ -63,7 +63,7 @@ group :development, :test do
   gem "uuid", "~> 2.3.8"
 
   # test database
-  gem "sqlite3", "~> 1.3.10"
+  gem "sqlite3", "~> 1.3.11"
 end
 
 group :development, :production do
