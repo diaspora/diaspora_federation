@@ -154,9 +154,9 @@ module DiasporaFederation
       # @return [Nokogiri::XML::Element] header xml document
       def self.decrypt_header(data, pkey)
         cipher_header = JSON.parse(Base64.decode64(data))
-        header_key = JSON.parse(pkey.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
+        key = JSON.parse(pkey.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
 
-        xml = AES.decrypt(cipher_header["ciphertext"], header_key["key"], header_key["iv"])
+        xml = AES.decrypt(cipher_header["ciphertext"], Base64.decode64(key["key"]), Base64.decode64(key["iv"]))
         Nokogiri::XML::Document.parse(xml).root
       end
       private_class_method :decrypt_header
@@ -169,12 +169,13 @@ module DiasporaFederation
       # @param parent_node [Nokogiri::XML::Element] parent element for insering in XML document
       def self.encrypted_header(author_id, envelope_key, pubkey, parent_node)
         data = header_xml(author_id, envelope_key)
-        encryption_data = AES.encrypt(data)
+        key = AES.generate_key_and_iv
+        ciphertext = AES.encrypt(data, key[:key], key[:iv])
 
-        json_key = JSON.generate(key: encryption_data[:key], iv: encryption_data[:iv])
+        json_key = JSON.generate(key: Base64.strict_encode64(key[:key]), iv: Base64.strict_encode64(key[:iv]))
         encrypted_key = Base64.strict_encode64(pubkey.public_encrypt(json_key))
 
-        json_header = JSON.generate(aes_key: encrypted_key, ciphertext: encryption_data[:ciphertext])
+        json_header = JSON.generate(aes_key: encrypted_key, ciphertext: ciphertext)
 
         header = Nokogiri::XML::Element.new("encrypted_header", parent_node.document)
         header.content = Base64.strict_encode64(json_header)

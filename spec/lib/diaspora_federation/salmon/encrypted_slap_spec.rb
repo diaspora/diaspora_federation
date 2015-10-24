@@ -49,7 +49,7 @@ module DiasporaFederation
           expect(json_header).to include("aes_key", "ciphertext")
         end
 
-        it "encrypted the public_key encrypted header correctly" do
+        it "encrypts the public_key encrypted header correctly" do
           key = {}
           expect {
             key = JSON.parse(okey.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
@@ -57,12 +57,12 @@ module DiasporaFederation
           expect(key).to include("key", "iv")
         end
 
-        it "encrypted the aes encrypted header correctly" do
+        it "encrypts the aes encrypted header correctly" do
           header = ""
           expect {
             header = Salmon::AES.decrypt(cipher_header["ciphertext"],
-                                         header_key["key"],
-                                         header_key["iv"])
+                                         Base64.decode64(header_key["key"]),
+                                         Base64.decode64(header_key["iv"]))
           }.not_to raise_error
           header_doc = Nokogiri::XML::Document.parse(header)
           expect(header_doc.root.name).to eq("decrypted_header")

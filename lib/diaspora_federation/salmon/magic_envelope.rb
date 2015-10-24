@@ -88,10 +88,9 @@ module DiasporaFederation
       #
       # @return [Hash] AES key and iv. E.g.: { key: "...", iv: "..." }
       def encrypt!
-        encryption_data = AES.encrypt(@payload)
-        @payload = encryption_data[:ciphertext]
-
-        {key: encryption_data[:key], iv: encryption_data[:iv]}
+        key = AES.generate_key_and_iv
+        @payload = AES.encrypt(@payload, key[:key], key[:iv])
+        strict_base64_encode(key)
       end
 
       # Extracts the entity encoded in the magic envelope data, if the signature
@@ -129,7 +128,7 @@ module DiasporaFederation
 
         data = Base64.urlsafe_decode64(magic_env.at_xpath("me:data").content)
         unless cipher_params.nil?
-          data = AES.decrypt(data, cipher_params[:key], cipher_params[:iv])
+          data = AES.decrypt(data, Base64.decode64(cipher_params[:key]), Base64.decode64(cipher_params[:iv]))
         end
 
         XmlPayload.unpack(Nokogiri::XML::Document.parse(data).root)
@@ -176,6 +175,12 @@ module DiasporaFederation
       # @param [Array<String>]
       def self.sig_subject(data_arr)
         data_arr.map {|i| Base64.urlsafe_encode64(i) }.join(".")
+      end
+
+      # @param [Hash] hash { key: "...", iv: "..." }
+      # @return [Hash] encoded hash: { key: "...", iv: "..." }
+      def strict_base64_encode(hash)
+        Hash[hash.map {|k, v| [k, Base64.strict_encode64(v)] }]
       end
     end
   end

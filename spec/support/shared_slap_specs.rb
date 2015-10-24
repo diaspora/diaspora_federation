@@ -5,7 +5,7 @@ shared_examples "a Slap instance" do
 
   context "#entity" do
     it "requires the pubkey for the first time (to verify the signature)" do
-      expect { subject.entity }.to raise_error
+      expect { subject.entity }.to raise_error ArgumentError
     end
 
     it "works when the pubkey is given" do
