@@ -153,7 +153,7 @@ GEM
     pronto-rubocop (0.4.7)
       pronto (~> 0.4.0)
       rubocop (~> 0.34.0)
-    pry (0.10.1)
+    pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
