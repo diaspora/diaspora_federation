@@ -7,6 +7,8 @@ module DiasporaFederation
   end
 end
 
+require "base64"
+
 require "diaspora_federation/salmon/aes"
 require "diaspora_federation/salmon/exceptions"
 require "diaspora_federation/salmon/xml_payload"

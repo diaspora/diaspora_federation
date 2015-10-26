@@ -5,7 +5,7 @@ module DiasporaFederation
     let(:entity) { Entities::TestEntity.new(test: "qwertzuiop") }
     let(:slap) { Salmon::Slap.generate_xml(author_id, pkey, entity) }
 
-    context ".generate_xml" do
+    describe ".generate_xml" do
       context "sanity" do
         it "accepts correct params" do
           expect {
@@ -31,7 +31,7 @@ module DiasporaFederation
       end
     end
 
-    context ".from_xml" do
+    describe ".from_xml" do
       context "sanity" do
         it "accepts salmon xml as param" do
           expect {
@@ -49,7 +49,7 @@ module DiasporaFederation
 
         it "verifies the existence of an author_id" do
           faulty_xml = <<XML
-<diaspora>
+<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
   <header/>
 </diaspora>
 XML
@@ -60,7 +60,7 @@ XML
 
         it "verifies the existence of a magic envelope" do
           faulty_xml = <<-XML
-<diaspora>
+<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
   <header>
     <author_id>#{author_id}</author_id>
   </header>

@@ -7,7 +7,7 @@ module DiasporaFederation
     let(:slap_xml) { Salmon::EncryptedSlap.generate_xml(author_id, pkey, entity, okey.public_key) }
     let(:ns) { {d: Salmon::XMLNS, me: Salmon::MagicEnvelope::XMLNS} }
 
-    context ".generate_xml" do
+    describe ".generate_xml" do
       context "sanity" do
         it "accepts correct params" do
           expect {
@@ -41,7 +41,7 @@ module DiasporaFederation
           JSON.parse(okey.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
         }
 
-        it "encoded the header correctly" do
+        it "encodes the header correctly" do
           json_header = {}
           expect {
             json_header = JSON.parse(Base64.decode64(subject))
@@ -74,7 +74,7 @@ module DiasporaFederation
       end
     end
 
-    context ".from_xml" do
+    describe ".from_xml" do
       context "sanity" do
         it "accepts correct params" do
           expect {
@@ -92,7 +92,7 @@ module DiasporaFederation
 
         it "verifies the existence of 'encrypted_header'" do
           faulty_xml = <<XML
-<diaspora>
+<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
 </diaspora>
 XML
           expect {
@@ -102,7 +102,7 @@ XML
 
         it "verifies the existence of a magic envelope" do
           faulty_xml = <<XML
-<diaspora>
+<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
   <encrypted_header/>
 </diaspora>
 XML

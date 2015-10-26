@@ -76,29 +76,16 @@ module DiasporaFederation
       def self.from_xml(slap_xml, pkey)
         raise ArgumentError unless slap_xml.instance_of?(String) && pkey.instance_of?(OpenSSL::PKey::RSA)
         doc = Nokogiri::XML::Document.parse(slap_xml)
-        ns = {d: Salmon::XMLNS, me: MagicEnvelope::XMLNS}
-        header_xpath = "d:diaspora/d:encrypted_header"
-        magicenv_xpath = "d:diaspora/me:env"
 
-        if doc.namespaces.empty?
-          ns = nil
-          header_xpath = "diaspora/encrypted_header"
-          magicenv_xpath = "diaspora/env"
+        Slap.new.tap do |slap|
+          header_elem = doc.at_xpath("d:diaspora/d:encrypted_header", Slap::NS)
+          raise MissingHeader if header_elem.nil?
+          header = header_data(header_elem.content, pkey)
+          slap.author_id = header[:author_id]
+          slap.cipher_params = {key: Base64.decode64(header[:aes_key]), iv: Base64.decode64(header[:iv])}
+
+          slap.add_magic_env_from_doc(doc)
         end
-
-        slap = Slap.new
-
-        header_elem = doc.at_xpath(header_xpath, ns)
-        raise MissingHeader if header_elem.nil?
-        header = header_data(header_elem.content, pkey)
-        slap.author_id = header[:author_id]
-        slap.cipher_params = {key: header[:aes_key], iv: header[:iv]}
-
-        magic_env_elem = doc.at_xpath(magicenv_xpath, ns)
-        raise MissingMagicEnvelope if magic_env_elem.nil?
-        slap.magic_envelope = magic_env_elem
-
-        slap
       end
 
       # Creates an encrypted Salmon Slap and returns the XML string.
@@ -115,21 +102,13 @@ module DiasporaFederation
                                    entity.is_a?(Entity) &&
                                    pubkey.instance_of?(OpenSSL::PKey::RSA)
 
-        doc = Nokogiri::XML::Document.new
-        doc.encoding = "UTF-8"
+        Slap.build_xml do |xml|
+          magic_envelope = MagicEnvelope.new(pkey, entity)
+          envelope_key = magic_envelope.encrypt!
 
-        root = Nokogiri::XML::Element.new("diaspora", doc)
-        root.default_namespace = Salmon::XMLNS
-        root.add_namespace("me", MagicEnvelope::XMLNS)
-        doc.root = root
-
-        magic_envelope = MagicEnvelope.new(pkey, entity, root)
-        envelope_key = magic_envelope.encrypt!
-
-        encrypted_header(author_id, envelope_key, pubkey, root)
-        magic_envelope.envelop
-
-        doc.to_xml
+          encrypted_header(author_id, envelope_key, pubkey, xml)
+          magic_envelope.envelop(xml)
+        end
       end
 
       # decrypts and reads the data from the encrypted XML header
@@ -167,19 +146,17 @@ module DiasporaFederation
       # @param [Hash] envelope cipher params
       # @param [OpenSSL::PKey::RSA] recipient public_key
       # @param parent_node [Nokogiri::XML::Element] parent element for insering in XML document
-      def self.encrypted_header(author_id, envelope_key, pubkey, parent_node)
-        data = header_xml(author_id, envelope_key)
+      def self.encrypted_header(author_id, envelope_key, pubkey, xml)
+        data = header_xml(author_id, strict_base64_encode(envelope_key))
         key = AES.generate_key_and_iv
         ciphertext = AES.encrypt(data, key[:key], key[:iv])
 
-        json_key = JSON.generate(key: Base64.strict_encode64(key[:key]), iv: Base64.strict_encode64(key[:iv]))
+        json_key = JSON.generate(strict_base64_encode(key))
         encrypted_key = Base64.strict_encode64(pubkey.public_encrypt(json_key))
 
         json_header = JSON.generate(aes_key: encrypted_key, ciphertext: ciphertext)
 
-        header = Nokogiri::XML::Element.new("encrypted_header", parent_node.document)
-        header.content = Base64.strict_encode64(json_header)
-        parent_node << header
+        xml.encrypted_header(Base64.strict_encode64(json_header))
       end
       private_class_method :encrypted_header
 
@@ -198,6 +175,13 @@ module DiasporaFederation
         builder.to_xml.strip
       end
       private_class_method :header_xml
+
+      # @param [Hash] hash { key: "...", iv: "..." }
+      # @return [Hash] encoded hash: { key: "...", iv: "..." }
+      def self.strict_base64_encode(hash)
+        Hash[hash.map {|k, v| [k, Base64.strict_encode64(v)] }]
+      end
+      private_class_method :strict_base64_encode
     end
   end
 end

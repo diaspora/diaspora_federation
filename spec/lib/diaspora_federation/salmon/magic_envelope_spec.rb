@@ -2,7 +2,16 @@ module DiasporaFederation
   describe Salmon::MagicEnvelope do
     let(:payload) { Entities::TestEntity.new(test: "asdf") }
     let(:pkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
-    let(:envelope) { Salmon::MagicEnvelope.new(pkey, payload).envelop }
+    let(:envelope) { envelop_xml(Salmon::MagicEnvelope.new(pkey, payload)) }
+
+    def envelop_xml(magic_env)
+      builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
+        xml.root("xmlns:me" => Salmon::MagicEnvelope::XMLNS) {
+          magic_env.envelop(xml)
+        }
+      end
+      builder.doc.at_xpath("//me:env")
+    end
 
     def sig_subj(env)
       data = Base64.urlsafe_decode64(env.at_xpath("me:data").content)
@@ -34,15 +43,15 @@ module DiasporaFederation
       end
     end
 
-    context "#envelop" do
+    describe "#envelop" do
       subject { Salmon::MagicEnvelope.new(pkey, payload) }
 
       it "should be an instance of Nokogiri::XML::Element" do
-        expect(subject.envelop).to be_an_instance_of Nokogiri::XML::Element
+        expect(envelop_xml(subject)).to be_an_instance_of Nokogiri::XML::Element
       end
 
       it "returns a magic envelope of correct structure" do
-        env = subject.envelop
+        env = envelop_xml(subject)
         expect(env.name).to eq("env")
 
         control = %w(data encoding alg sig)
@@ -55,7 +64,7 @@ module DiasporaFederation
       end
 
       it "signs the payload correctly" do
-        env = subject.envelop
+        env = envelop_xml(subject)
 
         subj = sig_subj(env)
         sig = Base64.urlsafe_decode64(env.at_xpath("me:sig").content)
@@ -64,14 +73,11 @@ module DiasporaFederation
       end
     end
 
-    context "#encrypt!" do
+    describe "#encrypt!" do
       subject { Salmon::MagicEnvelope.new(pkey, payload) }
 
       it "encrypts the payload, returning cipher params" do
-        params = {}
-        expect {
-          params = subject.encrypt!
-        }.not_to raise_error
+        params = subject.encrypt!
         expect(params).to include(:key, :iv)
       end
 
@@ -82,8 +88,8 @@ module DiasporaFederation
 
         cipher = OpenSSL::Cipher.new(Salmon::AES::CIPHER)
         cipher.encrypt
-        cipher.iv = Base64.decode64(params[:iv])
-        cipher.key = Base64.decode64(params[:key])
+        cipher.iv = params[:iv]
+        cipher.key = params[:key]
 
         ciphertext = cipher.update(plain_payload) + cipher.final
 
@@ -91,7 +97,7 @@ module DiasporaFederation
       end
     end
 
-    context ".unenvelop" do
+    describe ".unenvelop" do
       context "sanity" do
         it "works with sane input" do
           expect {
@@ -121,7 +127,7 @@ module DiasporaFederation
         end
 
         it "verifies the encoding" do
-          bad_env = Salmon::MagicEnvelope.new(pkey, payload).envelop
+          bad_env = envelop_xml(Salmon::MagicEnvelope.new(pkey, payload))
           elem = bad_env.at_xpath("me:encoding")
           elem.content = "invalid_enc"
           re_sign(bad_env, pkey)
@@ -131,7 +137,7 @@ module DiasporaFederation
         end
 
         it "verifies the algorithm" do
-          bad_env = Salmon::MagicEnvelope.new(pkey, payload).envelop
+          bad_env = envelop_xml(Salmon::MagicEnvelope.new(pkey, payload))
           elem = bad_env.at_xpath("me:alg")
           elem.content = "invalid_alg"
           re_sign(bad_env, pkey)
@@ -151,7 +157,7 @@ module DiasporaFederation
         env = Salmon::MagicEnvelope.new(pkey, payload)
         params = env.encrypt!
 
-        envelope = env.envelop
+        envelope = envelop_xml(env)
 
         entity = Salmon::MagicEnvelope.unenvelop(envelope, pkey.public_key, params)
         expect(entity).to be_an_instance_of Entities::TestEntity

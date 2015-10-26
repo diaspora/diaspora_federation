@@ -43,20 +43,11 @@ module DiasporaFederation
       #
       # @param rsa_pkey [OpenSSL::PKey::RSA] private key used for signing
       # @param payload [Entity] Entity instance
-      # @param parent_node [Nokogiri::XML::Element] parent element for insering in XML document
       # @raise [ArgumentError] if either argument is not of the right type
-      def initialize(rsa_pkey, payload, parent_node=nil)
+      def initialize(rsa_pkey, payload)
         raise ArgumentError unless rsa_pkey.instance_of?(OpenSSL::PKey::RSA) &&
                                    payload.is_a?(Entity)
 
-        if parent_node.nil?
-          doc = Nokogiri::XML::Document.new
-          parent_node = Nokogiri::XML::Element.new("root", doc)
-          parent_node.add_namespace("me", XMLNS)
-          doc.root = parent_node
-        end
-
-        @parent_node = parent_node
         @rsa_pkey = rsa_pkey
         @payload = XmlPayload.pack(payload).to_xml.strip
       end
@@ -65,17 +56,13 @@ module DiasporaFederation
       # encoded data and signs the envelope using {DIGEST}.
       #
       # @return [Nokogiri::XML::Element] XML root node
-      def envelop
-        builder = Nokogiri::XML::Builder.with(@parent_node) do |xml|
-          xml["me"].env {
-            xml["me"].data(Base64.urlsafe_encode64(@payload), type: DATA_TYPE)
-            xml["me"].encoding(ENCODING)
-            xml["me"].alg(ALGORITHM)
-            xml["me"].sig(Base64.urlsafe_encode64(signature))
-          }
-        end
-
-        builder.doc.at_xpath("//me:env")
+      def envelop(xml)
+        xml["me"].env {
+          xml["me"].data(Base64.urlsafe_encode64(@payload), type: DATA_TYPE)
+          xml["me"].encoding(ENCODING)
+          xml["me"].alg(ALGORITHM)
+          xml["me"].sig(Base64.urlsafe_encode64(signature))
+        }
       end
 
       # Encrypts the payload with a new, random AES cipher and returns the cipher
@@ -88,9 +75,9 @@ module DiasporaFederation
       #
       # @return [Hash] AES key and iv. E.g.: { key: "...", iv: "..." }
       def encrypt!
-        key = AES.generate_key_and_iv
-        @payload = AES.encrypt(@payload, key[:key], key[:iv])
-        strict_base64_encode(key)
+        AES.generate_key_and_iv.tap do |key|
+          @payload = AES.encrypt(@payload, key[:key], key[:iv])
+        end
       end
 
       # Extracts the entity encoded in the magic envelope data, if the signature
@@ -120,16 +107,10 @@ module DiasporaFederation
         raise InvalidEnvelope unless envelope_valid?(magic_env)
         raise InvalidSignature unless signature_valid?(magic_env, rsa_pubkey)
 
-        enc = magic_env.at_xpath("me:encoding").content
-        alg = magic_env.at_xpath("me:alg").content
+        raise InvalidEncoding unless encoding_valid?(magic_env)
+        raise InvalidAlgorithm unless algorithm_valid?(magic_env)
 
-        raise InvalidEncoding unless enc == ENCODING
-        raise InvalidAlgorithm unless alg == ALGORITHM
-
-        data = Base64.urlsafe_decode64(magic_env.at_xpath("me:data").content)
-        unless cipher_params.nil?
-          data = AES.decrypt(data, Base64.decode64(cipher_params[:key]), Base64.decode64(cipher_params[:iv]))
-        end
+        data = read_and_decrypt_data(magic_env, cipher_params)
 
         XmlPayload.unpack(Nokogiri::XML::Document.parse(data).root)
       end
@@ -177,11 +158,22 @@ module DiasporaFederation
         data_arr.map {|i| Base64.urlsafe_encode64(i) }.join(".")
       end
 
-      # @param [Hash] hash { key: "...", iv: "..." }
-      # @return [Hash] encoded hash: { key: "...", iv: "..." }
-      def strict_base64_encode(hash)
-        Hash[hash.map {|k, v| [k, Base64.strict_encode64(v)] }]
+      def self.encoding_valid?(magic_env)
+        magic_env.at_xpath("me:encoding").content == ENCODING
       end
+      private_class_method :encoding_valid?
+
+      def self.algorithm_valid?(magic_env)
+        magic_env.at_xpath("me:alg").content == ALGORITHM
+      end
+      private_class_method :algorithm_valid?
+
+      def self.read_and_decrypt_data(magic_env, cipher_params)
+        data = Base64.urlsafe_decode64(magic_env.at_xpath("me:data").content)
+        data = AES.decrypt(data, cipher_params[:key], cipher_params[:iv]) unless cipher_params.nil?
+        data
+      end
+      private_class_method :read_and_decrypt_data
     end
   end
 end

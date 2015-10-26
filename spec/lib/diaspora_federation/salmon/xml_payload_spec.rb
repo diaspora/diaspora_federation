@@ -3,7 +3,7 @@ module DiasporaFederation
     let(:entity) { Entities::TestEntity.new(test: "asdf") }
     let(:payload) { Salmon::XmlPayload.pack(entity) }
 
-    context ".pack" do
+    describe ".pack" do
       it "expects an Entity as param" do
         expect {
           Salmon::XmlPayload.pack(entity)
@@ -49,7 +49,7 @@ XML
       end
     end
 
-    context ".unpack" do
+    describe ".unpack" do
       context "sanity" do
         it "expects an Nokogiri::XML::Element as param" do
           expect {
@@ -124,7 +124,7 @@ XML
         end
       end
 
-      context ".entity_class_name" do
+      describe ".entity_class_name" do
         it "should parse a single word" do
           expect(Salmon::XmlPayload.send(:entity_class_name, "entity")).to eq("Entity")
         end
