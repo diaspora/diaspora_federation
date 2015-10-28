@@ -43,9 +43,8 @@ shared_examples "an XML Entity" do
 
   context "parsing" do
     it "reads its own output" do
-      packed_xml = DiasporaFederation::Salmon::XmlPayload.pack(instance).to_s
-      xml_root = Nokogiri::XML::Document.parse(packed_xml).root
-      parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(xml_root)
+      packed_xml = DiasporaFederation::Salmon::XmlPayload.pack(instance)
+      parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(packed_xml)
 
       check_entity(instance, parsed_instance)
     end
@@ -54,23 +53,18 @@ shared_examples "an XML Entity" do
   def check_entity(entity, parsed_entity)
     entity.class.class_props.each do |prop_def|
       name = prop_def[:name]
-      type = prop_def[:type]
 
-      value = entity.send(name)
-      parsed_value = parsed_entity.send(name)
-
-      validate_values(parsed_value, type, value)
+      validate_values(entity.send(name), parsed_entity.send(name), prop_def[:type])
     end
   end
 
-  def validate_values(parsed_value, type, value)
+  def validate_values(value, parsed_value, type)
     if value.nil?
       expect(parsed_value).to be_nil
     elsif type == String
       expect(parsed_value).to eq(value.to_s)
     elsif type.instance_of?(Array)
-      parsed_entities = parsed_value
-      value.each_with_index { |entity, index| check_entity(entity, parsed_entities[index]) }
+      value.each_with_index {|entity, index| check_entity(entity, parsed_value[index]) }
     elsif type.ancestors.include?(DiasporaFederation::Entity)
       check_entity(value, parsed_value)
     end
