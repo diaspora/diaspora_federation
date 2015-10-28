@@ -17,7 +17,6 @@ module DiasporaFederation
         public_key:  person.serialized_public_key
       }
     }
-    let(:klass) { Discovery::WebFinger }
 
     let(:xml) {
       <<-XML

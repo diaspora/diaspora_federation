@@ -20,7 +20,6 @@ module DiasporaFederation
         last_name:        person.last_name
       }
     }
-    let(:klass) { Discovery::HCard }
 
     let(:html) {
       <<-HTML
@@ -109,9 +108,7 @@ module DiasporaFederation
 HTML
     }
 
-    it_behaves_like "an Entity subclass" do
-      let(:xml) { nil } # disable to_xml test
-    end
+    it_behaves_like "an Entity subclass"
 
     context "generation" do
       it "creates an instance from a data hash" do

@@ -9,11 +9,11 @@ module DiasporaFederation
   <lat>#{data[:lat]}</lat>
   <lng>#{data[:lng]}</lng>
 </location>
-      XML
+XML
     }
 
-    it_behaves_like "an Entity subclass" do
-      let(:klass) { Entities::Location }
-    end
+    it_behaves_like "an Entity subclass"
+
+    it_behaves_like "an XML Entity"
   end
 end

@@ -1,7 +1,6 @@
 module DiasporaFederation
   describe Entities::Person do
     let(:data) { FactoryGirl.attributes_for(:person_entity) }
-    let(:klass) { Entities::Person }
 
     let(:xml) {
       <<-XML
@@ -30,5 +29,7 @@ XML
     }
 
     it_behaves_like "an Entity subclass"
+
+    it_behaves_like "an XML Entity"
   end
 end

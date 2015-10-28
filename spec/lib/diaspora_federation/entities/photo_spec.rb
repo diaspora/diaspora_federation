@@ -16,11 +16,11 @@ module DiasporaFederation
   <height>#{data[:height]}</height>
   <width>#{data[:width]}</width>
 </photo>
-      XML
+XML
     }
 
-    it_behaves_like "an Entity subclass" do
-      let(:klass) { Entities::Photo }
-    end
+    it_behaves_like "an Entity subclass"
+
+    it_behaves_like "an XML Entity"
   end
 end

@@ -35,7 +35,7 @@ module DiasporaFederation
         end
 
         it "produces the expected XML" do
-          xml_str = <<-XML.strip
+          xml = <<-XML.strip
 <XML>
   <post>
     <test_entity>
@@ -44,7 +44,7 @@ module DiasporaFederation
   </post>
 </XML>
 XML
-          expect(subject.to_xml).to eq(xml_str)
+          expect(subject.to_xml).to eq(xml)
         end
       end
     end
@@ -102,6 +102,24 @@ XML
         it "returns an entity instance of the original class" do
           expect(subject).to be_an_instance_of Entities::TestEntity
           expect(subject.test).to eq("asdf")
+        end
+
+        it "uses xml_name for parsing" do
+          xml = <<-XML.strip
+<XML>
+  <post>
+    <test_entity_with_xml_name>
+      <test>asdf</test>
+      <asdf>qwer</asdf>
+    </test_entity>
+  </post>
+</XML>
+XML
+          entity = Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
+
+          expect(entity).to be_an_instance_of Entities::TestEntityWithXmlName
+          expect(entity.test).to eq("asdf")
+          expect(entity.qwer).to eq("qwer")
         end
       end
 

@@ -58,8 +58,8 @@ module DiasporaFederation
       XML
     }
 
-    it_behaves_like "an Entity subclass" do
-      let(:klass) { Entities::StatusMessage }
-    end
+    it_behaves_like "an Entity subclass"
+
+    it_behaves_like "an XML Entity"
   end
 end

@@ -91,7 +91,7 @@ module DiasporaFederation
           type = prop_def[:type]
 
           if type == String
-            data[name] = parse_string_from_node(name, node)
+            data[name] = parse_string_from_node(prop_def[:xml_name], node)
           elsif type.instance_of?(Array)
             data[name] = parse_array_from_node(type, node)
           elsif type.ancestors.include?(Entity)
