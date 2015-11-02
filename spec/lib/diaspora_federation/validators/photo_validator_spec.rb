@@ -24,12 +24,9 @@ module DiasporaFederation
     context "#remote_photo_path, #remote_photo_name" do
       %i(remote_photo_name remote_photo_path).each do |prop|
         it "must not be empty" do
-          p = OpenStruct.new(FactoryGirl.attributes_for(:photo_entity))
-          p.public_send("#{prop}=", "")
-
-          v = Validators::PhotoValidator.new(p)
-          expect(v).not_to be_valid
-          expect(v.errors).to include(prop)
+          validator = Validators::PhotoValidator.new(entity_stub(entity, prop => ""))
+          expect(validator).not_to be_valid
+          expect(validator.errors).to include(prop)
         end
       end
     end
@@ -38,23 +35,17 @@ module DiasporaFederation
       %i(height width).each do |prop|
         it "validates an integer" do
           [123, "123"].each do |val|
-            p = OpenStruct.new(FactoryGirl.attributes_for(:photo_entity))
-            p.public_send("#{prop}=", val)
-
-            v = Validators::PhotoValidator.new(p)
-            expect(v).to be_valid
-            expect(v.errors).to be_empty
+            validator = Validators::PhotoValidator.new(entity_stub(entity, prop => val))
+            expect(validator).to be_valid
+            expect(validator.errors).to be_empty
           end
         end
 
         it "fails for non numeric types" do
           [true, :num, "asdf"].each do |val|
-            p = OpenStruct.new(FactoryGirl.attributes_for(:photo_entity))
-            p.public_send("#{prop}=", val)
-
-            v = Validators::PhotoValidator.new(p)
-            expect(v).not_to be_valid
-            expect(v.errors).to include(prop)
+            validator = Validators::PhotoValidator.new(entity_stub(entity, prop => val))
+            expect(validator).not_to be_valid
+            expect(validator.errors).to include(prop)
           end
         end
       end

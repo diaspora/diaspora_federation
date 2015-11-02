@@ -3,15 +3,10 @@ module DiasporaFederation
     let(:entity) { :profile_entity }
 
     def profile_stub(data={})
-      OpenStruct.new(FactoryGirl.attributes_for(:profile_entity).merge(data))
+      entity_stub(entity, data)
     end
 
-    it "validates a well-formed instance" do
-      validator = Validators::ProfileValidator.new(profile_stub)
-
-      expect(validator).to be_valid
-      expect(validator.errors).to be_empty
-    end
+    it_behaves_like "a common validator"
 
     it_behaves_like "a diaspora id validator" do
       let(:property) { :diaspora_id }

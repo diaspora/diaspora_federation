@@ -11,8 +11,7 @@ module DiasporaFederation
 
     context "#target_type" do
       it "must not be empty" do
-        entity = OpenStruct.new(FactoryGirl.attributes_for(:participation_entity, target_type: ""))
-        validator = Validators::ParticipationValidator.new(entity)
+        validator = Validators::ParticipationValidator.new(entity_stub(entity, target_type: ""))
         expect(validator).not_to be_valid
         expect(validator.errors).to include(:target_type)
       end
@@ -29,12 +28,9 @@ module DiasporaFederation
     context "#author_signature and #parent_author_signature" do
       %i(author_signature parent_author_signature).each do |prop|
         it "must not be empty" do
-          p = OpenStruct.new(FactoryGirl.attributes_for(:participation_entity))
-          p.public_send("#{prop}=", "")
-
-          v = Validators::ParticipationValidator.new(p)
-          expect(v).not_to be_valid
-          expect(v.errors).to include(prop)
+          validator = Validators::ParticipationValidator.new(entity_stub(entity, prop => ""))
+          expect(validator).not_to be_valid
+          expect(validator.errors).to include(prop)
         end
       end
     end
