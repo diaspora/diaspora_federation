@@ -3,15 +3,10 @@ module DiasporaFederation
     let(:entity) { :h_card }
 
     def hcard_stub(data={})
-      OpenStruct.new(FactoryGirl.attributes_for(:h_card).merge(data))
+      entity_stub(entity, data)
     end
 
-    it "validates a well-formed instance" do
-      validator = Validators::HCardValidator.new(hcard_stub)
-
-      expect(validator).to be_valid
-      expect(validator.errors).to be_empty
-    end
+    it_behaves_like "a common validator"
 
     describe "#full_name" do
       it_behaves_like "a name validator" do

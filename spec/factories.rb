@@ -8,6 +8,11 @@ FactoryGirl.define do
   sequence(:guid) { UUID.generate :compact }
   sequence(:diaspora_id) {|n| "person-#{n}-#{r_str}@localhost:3000" }
   sequence(:public_key) { OpenSSL::PKey::RSA.generate(1024).public_key.export }
+  sequence(:signature) do |i|
+    abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    ltr = abc[i % abc.length]
+    "#{ltr * 6}=="
+  end
 
   factory :person do
     diaspora_id
@@ -83,8 +88,30 @@ FactoryGirl.define do
     remote_photo_path "https://diaspora.example.tld/uploads/images/"
     remote_photo_name "f2a41e9d2db4d9a199c8.jpg"
     text "what you see here..."
-    status_message_guid { guid }
+    status_message_guid { generate(:guid) }
     height 480
     width 800
+  end
+
+  factory :participation_entity, class: DiasporaFederation::Entities::Participation do
+    guid
+    target_type "StatusMessage"
+    parent_guid { generate(:guid) }
+    diaspora_id
+    parent_author_signature { generate(:signature) }
+    author_signature { generate(:signature) }
+  end
+
+  factory :status_message_entity, class: DiasporaFederation::Entities::StatusMessage do
+    raw_message "i am a very interesting status update"
+    guid
+    diaspora_id
+    public(true)
+    created_at { Time.zone.now }
+  end
+
+  factory :request_entity, class: DiasporaFederation::Entities::Request do
+    sender_id { generate(:diaspora_id) }
+    recipient_id { generate(:diaspora_id) }
   end
 end

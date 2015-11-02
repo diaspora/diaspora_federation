@@ -3,15 +3,10 @@ module DiasporaFederation
     let(:entity) { :webfinger }
 
     def webfinger_stub(data={})
-      OpenStruct.new(FactoryGirl.attributes_for(:webfinger).merge(data))
+      entity_stub(entity, data)
     end
 
-    it "validates a well-formed instance" do
-      validator = Validators::WebFingerValidator.new(webfinger_stub)
-
-      expect(validator).to be_valid
-      expect(validator.errors).to be_empty
-    end
+    it_behaves_like "a common validator"
 
     describe "#acct_uri" do
       it "fails if it is nil or empty" do
