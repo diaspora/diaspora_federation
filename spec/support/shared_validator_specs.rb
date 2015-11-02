@@ -4,10 +4,22 @@ def entity_stub(entity, property, val)
   instance
 end
 
+def entity_stub_data(entity, data={})
+  OpenStruct.new(FactoryGirl.attributes_for(entity).merge(data))
+end
+
 ALPHANUMERIC_RANGE = [*"0".."9", *"A".."Z", *"a".."z"]
 
 def alphanumeric_string(length)
   Array.new(length) { ALPHANUMERIC_RANGE.sample }.join
+end
+
+shared_examples "a common validator" do
+  it "validates a well-formed instance" do
+    validator = described_class.new(entity_stub_data(entity))
+    expect(validator).to be_valid
+    expect(validator.errors).to be_empty
+  end
 end
 
 shared_examples "a diaspora id validator" do

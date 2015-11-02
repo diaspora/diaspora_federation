@@ -3,6 +3,7 @@ require "validation/rule/regular_expression"
 require "validation/rule/length"
 require "validation/rule/not_empty"
 require "validation/rule/uri"
+require "validation/rule/numeric"
 
 # +valid+ gem namespace
 module Validation
@@ -37,3 +38,7 @@ require "diaspora_federation/validators/person_validator"
 require "diaspora_federation/validators/profile_validator"
 require "diaspora_federation/validators/web_finger_validator"
 require "diaspora_federation/validators/request_validator"
+require "diaspora_federation/validators/photo_validator"
+require "diaspora_federation/validators/location_validator"
+require "diaspora_federation/validators/status_message_validator"
+require "diaspora_federation/validators/participation_validator"

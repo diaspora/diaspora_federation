@@ -2,13 +2,7 @@ module DiasporaFederation
   describe Validators::PersonValidator do
     let(:entity) { :person_entity }
 
-    it "validates a well-formed instance" do
-      instance = OpenStruct.new(FactoryGirl.attributes_for(:person_entity))
-      validator = Validators::PersonValidator.new(instance)
-
-      expect(validator).to be_valid
-      expect(validator.errors).to be_empty
-    end
+    it_behaves_like "a common validator"
 
     it_behaves_like "a diaspora id validator" do
       let(:property) { :diaspora_id }
