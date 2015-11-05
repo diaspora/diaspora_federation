@@ -1,7 +1,6 @@
 module DiasporaFederation
-  describe Validators::ParticipationValidator do
-    let(:entity) { :participation_entity }
-
+  describe Validators::MessageValidator do
+    let(:entity) { :message_entity }
     it_behaves_like "a common validator"
 
     it_behaves_like "a diaspora id validator" do
@@ -9,16 +8,16 @@ module DiasporaFederation
       let(:mandatory) { true }
     end
 
-    context "#guid, #parent_guid" do
-      %i(guid parent_guid).each do |prop|
+    context "#guid, #parent_guid, #conversation_guid" do
+      %i(guid parent_guid conversation_guid).each do |prop|
         it_behaves_like "a guid validator" do
           let(:property) { prop }
         end
       end
     end
 
-    context "#target_type and #author_signature and #parent_author_signature" do
-      %i(target_type author_signature parent_author_signature).each do |prop|
+    context "#author_signature and #parent_author_signature" do
+      %i(author_signature parent_author_signature).each do |prop|
         it_behaves_like "a property that mustn't be empty" do
           let(:property) { prop }
         end

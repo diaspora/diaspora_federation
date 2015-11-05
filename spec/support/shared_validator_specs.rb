@@ -16,7 +16,7 @@ shared_examples "a common validator" do
   end
 end
 
-shared_examples "a property with data-types restriction" do
+shared_examples "a property with a value validation/restriction" do
   it "fails if a wrong value is supplied" do
     wrong_values.each do |val|
       validator = described_class.new(entity_stub(entity, property => val))
@@ -31,6 +31,13 @@ shared_examples "a property with data-types restriction" do
       expect(validator).to be_valid
       expect(validator.errors).to be_empty
     end
+  end
+end
+
+shared_examples "a property that mustn't be empty" do
+  it_behaves_like "a property with a value validation/restriction" do
+    let(:wrong_values) { ["", nil] }
+    let(:correct_values) { [] }
   end
 end
 

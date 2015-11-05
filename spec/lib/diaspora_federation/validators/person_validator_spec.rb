@@ -20,7 +20,7 @@ module DiasporaFederation
     end
 
     describe "#profile" do
-      it_behaves_like "a property with data-types restriction" do
+      it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :profile }
         let(:wrong_values) { [nil] }
         let(:correct_values) { [] }

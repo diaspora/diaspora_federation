@@ -20,7 +20,7 @@ module DiasporaFederation
 
     %i(image_url image_url_medium image_url_small).each do |prop|
       describe "##{prop}" do
-        it_behaves_like "a property with data-types restriction" do
+        it_behaves_like "a property with a value validation/restriction" do
           let(:property) { prop }
           let(:wrong_values) { [] }
           let(:correct_values) { [nil] }
@@ -54,7 +54,7 @@ module DiasporaFederation
     end
 
     describe "#birthday" do
-      it_behaves_like "a property with data-types restriction" do
+      it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :birthday }
         let(:wrong_values) { ["asdf asdf", true, 1234] }
         let(:correct_values) { [nil, "", Date.parse("2013-06-29"), "2013-06-29"] }
@@ -71,7 +71,7 @@ module DiasporaFederation
 
     describe "#tag_string" do
       # more than 5 tags are not allowed
-      it_behaves_like "a property with data-types restriction" do
+      it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :tag_string }
         let(:wrong_values) { ["#i #have #too #many #tags #in #my #profile"] }
         let(:correct_values) { [] }

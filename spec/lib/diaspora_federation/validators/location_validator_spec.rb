@@ -5,10 +5,8 @@ module DiasporaFederation
 
     context "#lat and #lng" do
       %i(lat lng).each do |prop|
-        it_behaves_like "a property with data-types restriction" do
+        it_behaves_like "a property that mustn't be empty" do
           let(:property) { prop }
-          let(:wrong_values) { [""] }
-          let(:correct_values) { [] }
         end
       end
     end

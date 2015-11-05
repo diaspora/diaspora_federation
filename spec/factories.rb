@@ -114,4 +114,77 @@ FactoryGirl.define do
     sender_id { generate(:diaspora_id) }
     recipient_id { generate(:diaspora_id) }
   end
+
+  factory :comment_entity, class: DiasporaFederation::Entities::Comment do
+    guid
+    parent_guid { generate(:guid) }
+    parent_author_signature { generate(:signature) }
+    author_signature { generate(:signature) }
+    text "this is a very informative comment"
+    diaspora_id
+  end
+
+  factory :like_entity, class: DiasporaFederation::Entities::Like do
+    positive 1
+    guid
+    target_type "StatusMessage"
+    parent_guid { generate(:guid) }
+    parent_author_signature { generate(:signature) }
+    author_signature { generate(:signature) }
+    diaspora_id
+  end
+
+  factory :account_deletion_entity, class: DiasporaFederation::Entities::AccountDeletion do
+    diaspora_id
+  end
+
+  factory :conversation_entity, class: DiasporaFederation::Entities::Conversation do
+    guid
+    subject "this is a very informative subject"
+    created_at { DateTime.now.utc }
+    messages []
+    diaspora_id
+    participant_ids { 3.times.map { generate(:diaspora_id) }.join(";") }
+  end
+
+  factory :message_entity, class: DiasporaFederation::Entities::Message do
+    guid
+    parent_guid { generate(:guid) }
+    parent_author_signature { generate(:signature) }
+    author_signature { generate(:signature) }
+    text "this is a very informative text"
+    created_at { DateTime.now.utc }
+    diaspora_id
+    conversation_guid { generate(:guid) }
+  end
+
+  factory :relayable_retraction_entity, class: DiasporaFederation::Entities::RelayableRetraction do
+    parent_author_signature { generate(:signature) }
+    target_guid { generate(:guid) }
+    target_type "StatusMessage"
+    sender_id { generate(:diaspora_id) }
+    target_author_signature { generate(:signature) }
+  end
+
+  factory :reshare_entity, class: DiasporaFederation::Entities::Reshare do
+    root_diaspora_id { generate(:diaspora_id) }
+    root_guid { generate(:guid) }
+    guid
+    diaspora_id
+    public(true)
+    created_at { DateTime.now.utc }
+  end
+
+  factory :retraction_entity, class: DiasporaFederation::Entities::Retraction do
+    post_guid { generate(:guid) }
+    diaspora_id
+    type "StatusMessage"
+  end
+
+  factory :signed_retraction_entity, class: DiasporaFederation::Entities::SignedRetraction do
+    target_guid { generate(:guid) }
+    target_type "StatusMessage"
+    sender_id { generate(:diaspora_id) }
+    target_author_signature { generate(:signature) }
+  end
 end
