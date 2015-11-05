@@ -16,6 +16,24 @@ shared_examples "a common validator" do
   end
 end
 
+shared_examples "a property with data-types restriction" do
+  it "fails if a wrong value is supplied" do
+    wrong_values.each do |val|
+      validator = described_class.new(entity_stub(entity, property => val))
+      expect(validator).not_to be_valid
+      expect(validator.errors).to include(property)
+    end
+  end
+
+  it "validates if a correct value is supplied" do
+    correct_values.each do |val|
+      validator = described_class.new(entity_stub(entity, property => val))
+      expect(validator).to be_valid
+      expect(validator.errors).to be_empty
+    end
+  end
+end
+
 shared_examples "a diaspora id validator" do
   it "must not be nil or empty if mandatory" do
     [nil, ""].each do |val|

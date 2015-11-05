@@ -23,30 +23,20 @@ module DiasporaFederation
 
     context "#remote_photo_path, #remote_photo_name" do
       %i(remote_photo_name remote_photo_path).each do |prop|
-        it "must not be empty" do
-          validator = Validators::PhotoValidator.new(entity_stub(entity, prop => ""))
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(prop)
+        it_behaves_like "a property with data-types restriction" do
+          let(:property) { prop }
+          let(:wrong_values) { [""] }
+          let(:correct_values) { [] }
         end
       end
     end
 
     context "#height, #width" do
       %i(height width).each do |prop|
-        it "validates an integer" do
-          [123, "123"].each do |val|
-            validator = Validators::PhotoValidator.new(entity_stub(entity, prop => val))
-            expect(validator).to be_valid
-            expect(validator.errors).to be_empty
-          end
-        end
-
-        it "fails for non numeric types" do
-          [true, :num, "asdf"].each do |val|
-            validator = Validators::PhotoValidator.new(entity_stub(entity, prop => val))
-            expect(validator).not_to be_valid
-            expect(validator.errors).to include(prop)
-          end
+        it_behaves_like "a property with data-types restriction" do
+          let(:property) { prop }
+          let(:wrong_values) { [true, :num, "asdf"] }
+          let(:correct_values) { [123, "123"] }
         end
       end
     end

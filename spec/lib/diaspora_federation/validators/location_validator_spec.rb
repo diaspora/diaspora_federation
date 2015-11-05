@@ -5,10 +5,10 @@ module DiasporaFederation
 
     context "#lat and #lng" do
       %i(lat lng).each do |prop|
-        it "must not be empty" do
-          validator = Validators::LocationValidator.new(entity_stub(entity, prop => ""))
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(prop)
+        it_behaves_like "a property with data-types restriction" do
+          let(:property) { prop }
+          let(:wrong_values) { [""] }
+          let(:correct_values) { [] }
         end
       end
     end

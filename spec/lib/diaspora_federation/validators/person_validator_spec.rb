@@ -20,12 +20,10 @@ module DiasporaFederation
     end
 
     describe "#profile" do
-      it "fails if profile is nil" do
-        instance = OpenStruct.new(FactoryGirl.attributes_for(:person_entity, profile: nil))
-        validator = Validators::PersonValidator.new(instance)
-
-        expect(validator).not_to be_valid
-        expect(validator.errors).to include(:profile)
+      it_behaves_like "a property with data-types restriction" do
+        let(:property) { :profile }
+        let(:wrong_values) { [nil] }
+        let(:correct_values) { [] }
       end
     end
 

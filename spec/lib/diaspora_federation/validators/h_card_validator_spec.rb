@@ -2,10 +2,6 @@ module DiasporaFederation
   describe Validators::HCardValidator do
     let(:entity) { :h_card }
 
-    def hcard_stub(data={})
-      entity_stub(entity, data)
-    end
-
     it_behaves_like "a common validator"
 
     describe "#full_name" do
@@ -26,13 +22,10 @@ module DiasporaFederation
 
     %i(photo_large_url photo_medium_url photo_small_url).each do |prop|
       describe "##{prop}" do
-        it "must not be nil or empty" do
-          [nil, ""].each do |val|
-            validator = Validators::HCardValidator.new(hcard_stub(prop => val))
-
-            expect(validator).not_to be_valid
-            expect(validator.errors).to include(prop)
-          end
+        it_behaves_like "a property with data-types restriction" do
+          let(:property) { prop }
+          let(:wrong_values) { [nil, ""] }
+          let(:correct_values) { [] }
         end
 
         it_behaves_like "a url path validator" do

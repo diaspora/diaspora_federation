@@ -2,20 +2,13 @@ module DiasporaFederation
   describe Validators::WebFingerValidator do
     let(:entity) { :webfinger }
 
-    def webfinger_stub(data={})
-      entity_stub(entity, data)
-    end
-
     it_behaves_like "a common validator"
 
     describe "#acct_uri" do
-      it "fails if it is nil or empty" do
-        [nil, ""].each do |val|
-          validator = Validators::WebFingerValidator.new(webfinger_stub(acct_uri: val))
-
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(:acct_uri)
-        end
+      it_behaves_like "a property with data-types restriction" do
+        let(:property) { :acct_uri }
+        let(:wrong_values) { [nil, ""] }
+        let(:correct_values) { [] }
       end
     end
 
@@ -34,32 +27,10 @@ module DiasporaFederation
     # optional urls
     %i(alias_url salmon_url).each do |prop|
       describe "##{prop}" do
-        it "is allowed to be nil" do
-          validator = described_class.new(webfinger_stub(prop => nil))
-
-          expect(validator).to be_valid
-          expect(validator.errors).to be_empty
-        end
-
-        it "must not be empty" do
-          validator = described_class.new(webfinger_stub(prop => ""))
-
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(prop)
-        end
-
-        it "fails for url with special chars" do
-          validator = described_class.new(webfinger_stub(prop => "https://asdf$%.com"))
-
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(prop)
-        end
-
-        it "fails for url without scheme" do
-          validator = described_class.new(webfinger_stub(prop => "example.com"))
-
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(prop)
+        it_behaves_like "a property with data-types restriction" do
+          let(:property) { prop }
+          let(:wrong_values) { ["", "https://asdf$%.com", "example.com"] }
+          let(:correct_values) { [nil] }
         end
 
         it_behaves_like "a url path validator" do
