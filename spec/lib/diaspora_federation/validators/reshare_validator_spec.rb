@@ -3,8 +3,8 @@ module DiasporaFederation
     let(:entity) { :reshare_entity }
     it_behaves_like "a common validator"
 
-    context "#root_diaspora_id, #diaspora_id" do
-      %i(root_diaspora_id diaspora_id).each do |prop|
+    %i(root_diaspora_id diaspora_id).each do |prop|
+      describe "##{prop}" do
         it_behaves_like "a diaspora id validator" do
           let(:property) { prop }
           let(:mandatory) { true }
@@ -12,8 +12,8 @@ module DiasporaFederation
       end
     end
 
-    context "#root_guid, #guid" do
-      %i(root_guid guid).each do |prop|
+    %i(root_guid guid).each do |prop|
+      describe "##{prop}" do
         it_behaves_like "a guid validator" do
           let(:property) { prop }
         end

@@ -1,17 +1,13 @@
 module DiasporaFederation
   describe Entities::Retraction do
-    let(:data) {
-      {post_guid:   "0123456789abcdef",
-       diaspora_id: "luke@diaspora.example.tld",
-       type:        "StatusMessage"}
-    }
+    let(:data) { FactoryGirl.attributes_for(:retraction_entity) }
 
     let(:xml) {
       <<-XML
 <retraction>
-  <post_guid>0123456789abcdef</post_guid>
-  <diaspora_handle>luke@diaspora.example.tld</diaspora_handle>
-  <type>StatusMessage</type>
+  <post_guid>#{data[:post_guid]}</post_guid>
+  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
+  <type>#{data[:type]}</type>
 </retraction>
 XML
     }

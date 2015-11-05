@@ -13,7 +13,7 @@ module DiasporaFederation
       let(:property) { :guid }
     end
 
-    context "participant_ids" do
+    describe "participant_ids" do
       # must not contain more than 20 participant handles
       it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :participant_ids }

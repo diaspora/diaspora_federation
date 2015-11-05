@@ -1,19 +1,14 @@
 module DiasporaFederation
   describe Entities::SignedRetraction do
-    let(:data) {
-      {target_guid:             "0123456789abcdef",
-       target_type:             "StatusMessage",
-       sender_id:               "luke@diaspora.example.tld",
-       target_author_signature: "AAAAAA=="}
-    }
+    let(:data) { FactoryGirl.attributes_for(:signed_retraction_entity) }
 
     let(:xml) {
       <<-XML
 <signed_retraction>
-  <target_guid>0123456789abcdef</target_guid>
-  <target_type>StatusMessage</target_type>
-  <sender_handle>luke@diaspora.example.tld</sender_handle>
-  <target_author_signature>AAAAAA==</target_author_signature>
+  <target_guid>#{data[:target_guid]}</target_guid>
+  <target_type>#{data[:target_type]}</target_type>
+  <sender_handle>#{data[:sender_id]}</sender_handle>
+  <target_author_signature>#{data[:target_author_signature]}</target_author_signature>
 </signed_retraction>
 XML
     }

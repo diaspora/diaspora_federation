@@ -1,13 +1,6 @@
 module DiasporaFederation
   describe Entities::Participation do
-    let(:data) {
-      {guid:                    "0123456789abcdef",
-       target_type:             "Post",
-       parent_guid:             "fedcba9876543210",
-       parent_author_signature: "BBBBBB==",
-       author_signature:        "AAAAAA==",
-       diaspora_id:             "luke@diaspora.example.tld"}
-    }
+    let(:data) { FactoryGirl.attributes_for(:participation_entity) }
 
     let(:xml) {
       <<-XML

@@ -5,10 +5,8 @@ module DiasporaFederation
     it_behaves_like "a common validator"
 
     describe "#acct_uri" do
-      it_behaves_like "a property with data-types restriction" do
+      it_behaves_like "a property that mustn't be empty" do
         let(:property) { :acct_uri }
-        let(:wrong_values) { [nil, ""] }
-        let(:correct_values) { [] }
       end
     end
 

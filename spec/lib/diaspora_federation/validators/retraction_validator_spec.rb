@@ -12,7 +12,7 @@ module DiasporaFederation
       let(:mandatory) { true }
     end
 
-    context "#type" do
+    describe "#type" do
       it_behaves_like "a property that mustn't be empty" do
         let(:property) { :type }
       end

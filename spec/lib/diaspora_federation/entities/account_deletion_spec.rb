@@ -1,11 +1,11 @@
 module DiasporaFederation
   describe Entities::AccountDeletion do
-    let(:data) { {diaspora_id: "me@goes.byebye.tld"} }
+    let(:data) { FactoryGirl.attributes_for(:account_deletion_entity) }
 
     let(:xml) {
       <<-XML
 <account_deletion>
-  <diaspora_handle>me@goes.byebye.tld</diaspora_handle>
+  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
 </account_deletion>
 XML
     }

@@ -9,16 +9,16 @@ module DiasporaFederation
       let(:mandatory) { true }
     end
 
-    context "#guid, #parent_guid" do
-      %i(guid parent_guid).each do |prop|
+    %i(guid parent_guid).each do |prop|
+      describe "##{prop}" do
         it_behaves_like "a guid validator" do
           let(:property) { prop }
         end
       end
     end
 
-    context "#target_type and #author_signature and #parent_author_signature" do
-      %i(target_type author_signature parent_author_signature).each do |prop|
+    %i(target_type author_signature parent_author_signature).each do |prop|
+      describe "##{prop}" do
         it_behaves_like "a property that mustn't be empty" do
           let(:property) { prop }
         end

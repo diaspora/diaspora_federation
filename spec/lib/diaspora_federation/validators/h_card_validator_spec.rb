@@ -22,10 +22,8 @@ module DiasporaFederation
 
     %i(photo_large_url photo_medium_url photo_small_url).each do |prop|
       describe "##{prop}" do
-        it_behaves_like "a property with data-types restriction" do
+        it_behaves_like "a property that mustn't be empty" do
           let(:property) { prop }
-          let(:wrong_values) { [nil, ""] }
-          let(:correct_values) { [] }
         end
 
         it_behaves_like "a url path validator" do

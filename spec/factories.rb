@@ -173,6 +173,7 @@ FactoryGirl.define do
     diaspora_id
     public(true)
     created_at { DateTime.now.utc }
+    provider_display_name { "the testsuite" }
   end
 
   factory :retraction_entity, class: DiasporaFederation::Entities::Retraction do

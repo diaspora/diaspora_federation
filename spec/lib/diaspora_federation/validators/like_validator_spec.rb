@@ -9,8 +9,8 @@ module DiasporaFederation
       end
     end
 
-    context "#author_signature and #parent_author_signature" do
-      %i(author_signature parent_author_signature).each do |prop|
+    %i(author_signature parent_author_signature).each do |prop|
+      describe "##{prop}" do
         it_behaves_like "a property that mustn't be empty" do
           let(:property) { prop }
         end
