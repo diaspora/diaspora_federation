@@ -2,10 +2,6 @@ module DiasporaFederation
   describe Validators::ProfileValidator do
     let(:entity) { :profile_entity }
 
-    def profile_stub(data={})
-      entity_stub(entity, data)
-    end
-
     it_behaves_like "a common validator"
 
     it_behaves_like "a diaspora id validator" do
@@ -24,11 +20,10 @@ module DiasporaFederation
 
     %i(image_url image_url_medium image_url_small).each do |prop|
       describe "##{prop}" do
-        it "is allowed to be nil" do
-          validator = Validators::ProfileValidator.new(profile_stub(prop => nil))
-
-          expect(validator).to be_valid
-          expect(validator.errors).to be_empty
+        it_behaves_like "a property with a value validation/restriction" do
+          let(:property) { prop }
+          let(:wrong_values) { [] }
+          let(:correct_values) { [nil] }
         end
 
         it_behaves_like "a url path validator" do
@@ -59,31 +54,10 @@ module DiasporaFederation
     end
 
     describe "#birthday" do
-      it "may be empty or nil" do
-        [nil, ""].each do |val|
-          validator = Validators::ProfileValidator.new(profile_stub(birthday: val))
-
-          expect(validator).to be_valid
-          expect(validator.errors).to be_empty
-        end
-      end
-
-      it "may be a Date or date string" do
-        [Date.parse("2013-06-29"), "2013-06-29"].each do |val|
-          validator = Validators::ProfileValidator.new(profile_stub(birthday: val))
-
-          expect(validator).to be_valid
-          expect(validator.errors).to be_empty
-        end
-      end
-
-      it "must not be an arbitrary string or other object" do
-        ["asdf asdf", true, 1234].each do |val|
-          validator = Validators::ProfileValidator.new(profile_stub(birthday: val))
-
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(:birthday)
-        end
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :birthday }
+        let(:wrong_values) { ["asdf asdf", true, 1234] }
+        let(:correct_values) { [nil, "", Date.parse("2013-06-29"), "2013-06-29"] }
       end
     end
 
@@ -96,12 +70,11 @@ module DiasporaFederation
     end
 
     describe "#tag_string" do
-      it "must not contain more than 5 tags" do
-        validator = Validators::ProfileValidator.new(
-          profile_stub(tag_string: "#i #have #too #many #tags #in #my #profile"))
-
-        expect(validator).not_to be_valid
-        expect(validator.errors).to include(:tag_string)
+      # more than 5 tags are not allowed
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :tag_string }
+        let(:wrong_values) { ["#i #have #too #many #tags #in #my #profile"] }
+        let(:correct_values) { [] }
       end
     end
   end

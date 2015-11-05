@@ -1,0 +1,17 @@
+module DiasporaFederation
+  module Validators
+    class RelayableRetractionValidator < Validation::Validator
+      include Validation
+
+      rule :parent_author_signature, :not_empty
+
+      rule :target_guid, :guid
+
+      rule :target_type, :not_empty
+
+      rule :sender_id, %i(not_empty diaspora_id)
+
+      rule :target_author_signature, :not_empty
+    end
+  end
+end

@@ -9,8 +9,8 @@ module DiasporaFederation
       let(:mandatory) { true }
     end
 
-    context "#guid, #status_message_guid" do
-      %i(guid status_message_guid).each do |prop|
+    %i(guid status_message_guid).each do |prop|
+      describe "##{prop}" do
         it_behaves_like "a guid validator" do
           let(:property) { prop }
         end
@@ -21,32 +21,20 @@ module DiasporaFederation
       let(:property) { :public }
     end
 
-    context "#remote_photo_path, #remote_photo_name" do
-      %i(remote_photo_name remote_photo_path).each do |prop|
-        it "must not be empty" do
-          validator = Validators::PhotoValidator.new(entity_stub(entity, prop => ""))
-          expect(validator).not_to be_valid
-          expect(validator.errors).to include(prop)
+    %i(remote_photo_name remote_photo_path).each do |prop|
+      describe "##{prop}" do
+        it_behaves_like "a property that mustn't be empty" do
+          let(:property) { prop }
         end
       end
     end
 
-    context "#height, #width" do
-      %i(height width).each do |prop|
-        it "validates an integer" do
-          [123, "123"].each do |val|
-            validator = Validators::PhotoValidator.new(entity_stub(entity, prop => val))
-            expect(validator).to be_valid
-            expect(validator.errors).to be_empty
-          end
-        end
-
-        it "fails for non numeric types" do
-          [true, :num, "asdf"].each do |val|
-            validator = Validators::PhotoValidator.new(entity_stub(entity, prop => val))
-            expect(validator).not_to be_valid
-            expect(validator.errors).to include(prop)
-          end
+    %i(height width).each do |prop|
+      describe "##{prop}" do
+        it_behaves_like "a property with a value validation/restriction" do
+          let(:property) { prop }
+          let(:wrong_values) { [true, :num, "asdf"] }
+          let(:correct_values) { [123, "123"] }
         end
       end
     end
