@@ -4,17 +4,12 @@ module DiasporaFederation
     let(:photo2) { FactoryGirl.build(:photo_entity) }
     let(:location) { FactoryGirl.build(:location_entity) }
     let(:data) {
-      {
-        raw_message:           "this is such an interesting text",
+      FactoryGirl.attributes_for(:status_message_entity).merge!(
         photos:                [photo1, photo2],
         location:              location,
         poll:                  nil,
-        guid:                  FactoryGirl.generate(:guid),
-        diaspora_id:           FactoryGirl.generate(:diaspora_id),
-        public:                true,
-        created_at:            Time.zone.now,
         provider_display_name: "something"
-      }
+      )
     }
 
     let(:xml) {

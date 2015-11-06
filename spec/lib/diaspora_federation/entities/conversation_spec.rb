@@ -1,18 +1,12 @@
 module DiasporaFederation
   describe Entities::Conversation do
-    before do
-      @datetime = DateTime.now.utc
-    end
-
     let(:msg1) { FactoryGirl.build(:message_entity) }
     let(:msg2) { FactoryGirl.build(:message_entity) }
     let(:data) {
-      {guid:            FactoryGirl.generate(:guid),
-       subject:         "very interesting conversation subject",
-       created_at:      @datetime,
-       messages:        [msg1, msg2],
-       diaspora_id:     FactoryGirl.generate(:diaspora_id),
-       participant_ids: "#{FactoryGirl.generate(:diaspora_id)};#{FactoryGirl.generate(:diaspora_id)}"}
+      FactoryGirl.attributes_for(:conversation_entity).merge!(
+        messages:        [msg1, msg2],
+        participant_ids: "#{FactoryGirl.generate(:diaspora_id)};#{FactoryGirl.generate(:diaspora_id)}"
+      )
     }
 
     let(:xml) {
