@@ -8,6 +8,7 @@ module DiasporaFederation
         raw_message:           "this is such an interesting text",
         photos:                [photo1, photo2],
         location:              location,
+        poll:                  nil,
         guid:                  FactoryGirl.generate(:guid),
         diaspora_id:           FactoryGirl.generate(:diaspora_id),
         public:                true,
