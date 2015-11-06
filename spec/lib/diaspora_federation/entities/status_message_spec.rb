@@ -1,8 +1,8 @@
 module DiasporaFederation
   describe Entities::StatusMessage do
-    let(:photo1) { Entities::Photo.new(FactoryGirl.attributes_for(:photo_entity)) }
-    let(:photo2) { Entities::Photo.new(FactoryGirl.attributes_for(:photo_entity)) }
-    let(:location) { Entities::Location.new(FactoryGirl.attributes_for(:location_entity)) }
+    let(:photo1) { FactoryGirl.build(:photo_entity) }
+    let(:photo2) { FactoryGirl.build(:photo_entity) }
+    let(:location) { FactoryGirl.build(:location_entity) }
     let(:data) {
       {
         raw_message:           "this is such an interesting text",

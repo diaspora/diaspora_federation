@@ -54,8 +54,7 @@ FactoryGirl.define do
     url "http://localhost:3000/"
     exported_key { generate(:public_key) }
     profile {
-      DiasporaFederation::Entities::Profile.new(
-        FactoryGirl.attributes_for(:profile_entity, diaspora_id: diaspora_id))
+      FactoryGirl.build(:profile_entity, diaspora_id: diaspora_id)
     }
   end
 

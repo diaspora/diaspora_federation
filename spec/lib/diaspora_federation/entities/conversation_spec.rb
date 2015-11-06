@@ -4,8 +4,8 @@ module DiasporaFederation
       @datetime = DateTime.now.utc
     end
 
-    let(:msg1) { Entities::Message.new(FactoryGirl.attributes_for(:message_entity)) }
-    let(:msg2) { Entities::Message.new(FactoryGirl.attributes_for(:message_entity)) }
+    let(:msg1) { FactoryGirl.build(:message_entity) }
+    let(:msg2) { FactoryGirl.build(:message_entity) }
     let(:data) {
       {guid:            FactoryGirl.generate(:guid),
        subject:         "very interesting conversation subject",
