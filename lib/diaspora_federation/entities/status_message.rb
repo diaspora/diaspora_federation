@@ -4,6 +4,7 @@ module DiasporaFederation
       property :raw_message
       entity :photos, [Entities::Photo], default: []
       entity :location, Entities::Location, default: nil
+      entity :poll, Entities::Poll, default: nil
       property :guid
       property :diaspora_id, xml_name: :diaspora_handle
       property :public, default: false

@@ -5,6 +5,7 @@ def r_str
 end
 
 FactoryGirl.define do
+  initialize_with { new(attributes) }
   sequence(:guid) { UUID.generate :compact }
   sequence(:diaspora_id) {|n| "person-#{n}-#{r_str}@localhost:3000" }
   sequence(:public_key) { OpenSSL::PKey::RSA.generate(1024).public_key.export }
@@ -53,8 +54,7 @@ FactoryGirl.define do
     url "http://localhost:3000/"
     exported_key { generate(:public_key) }
     profile {
-      DiasporaFederation::Entities::Profile.new(
-        FactoryGirl.attributes_for(:profile_entity, diaspora_id: diaspora_id))
+      FactoryGirl.build(:profile_entity, diaspora_id: diaspora_id)
     }
   end
 
@@ -187,5 +187,24 @@ FactoryGirl.define do
     target_type "StatusMessage"
     sender_id { generate(:diaspora_id) }
     target_author_signature { generate(:signature) }
+  end
+
+  factory :poll_answer_entity, class: DiasporaFederation::Entities::PollAnswer do
+    guid
+    answer { "Obama is a bicycle" }
+  end
+
+  factory :poll_entity, class: DiasporaFederation::Entities::Poll do
+    guid
+    question { "Select an answer" }
+    poll_answers { 3.times.map { FactoryGirl.build(:poll_answer_entity) } }
+  end
+
+  factory :poll_participation_entity, class: DiasporaFederation::Entities::PollParticipation do
+    guid
+    parent_guid { generate(:guid) }
+    diaspora_id
+    parent_author_signature { generate(:signature) }
+    poll_answer_guid { generate(:guid) }
   end
 end

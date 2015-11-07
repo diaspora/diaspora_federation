@@ -1,19 +1,15 @@
 module DiasporaFederation
   describe Entities::StatusMessage do
-    let(:photo1) { Entities::Photo.new(FactoryGirl.attributes_for(:photo_entity)) }
-    let(:photo2) { Entities::Photo.new(FactoryGirl.attributes_for(:photo_entity)) }
-    let(:location) { Entities::Location.new(FactoryGirl.attributes_for(:location_entity)) }
+    let(:photo1) { FactoryGirl.build(:photo_entity) }
+    let(:photo2) { FactoryGirl.build(:photo_entity) }
+    let(:location) { FactoryGirl.build(:location_entity) }
     let(:data) {
-      {
-        raw_message:           "this is such an interesting text",
+      FactoryGirl.attributes_for(:status_message_entity).merge!(
         photos:                [photo1, photo2],
         location:              location,
-        guid:                  FactoryGirl.generate(:guid),
-        diaspora_id:           FactoryGirl.generate(:diaspora_id),
-        public:                true,
-        created_at:            Time.zone.now,
+        poll:                  nil,
         provider_display_name: "something"
-      }
+      )
     }
 
     let(:xml) {
