@@ -141,33 +141,33 @@ XML
           expect(entity.asdf).to eq("QWERT")
         end
       end
+    end
 
-      describe ".entity_class_name" do
-        it "should parse a single word" do
-          expect(Salmon::XmlPayload.send(:entity_class_name, "entity")).to eq("Entity")
-        end
+    describe ".entity_class_name" do
+      it "should parse a single word" do
+        expect(Salmon::XmlPayload.send(:entity_class_name, "entity")).to eq("Entity")
+      end
 
-        it "should parse with underscore" do
-          expect(Salmon::XmlPayload.send(:entity_class_name, "test_entity")).to eq("TestEntity")
-        end
+      it "should parse with underscore" do
+        expect(Salmon::XmlPayload.send(:entity_class_name, "test_entity")).to eq("TestEntity")
+      end
 
-        it "raises an error when the entity name contains special characters" do
-          expect {
-            Salmon::XmlPayload.send(:entity_class_name, "te.st-enti/ty")
-          }.to raise_error Salmon::InvalidEntityName, "'te.st-enti/ty' is invalid"
-        end
+      it "raises an error when the entity name contains special characters" do
+        expect {
+          Salmon::XmlPayload.send(:entity_class_name, "te.st-enti/ty")
+        }.to raise_error Salmon::InvalidEntityName, "'te.st-enti/ty' is invalid"
+      end
 
-        it "raises an error when the entity name contains upper case letters" do
-          expect {
-            Salmon::XmlPayload.send(:entity_class_name, "TestEntity")
-          }.to raise_error Salmon::InvalidEntityName, "'TestEntity' is invalid"
-        end
+      it "raises an error when the entity name contains upper case letters" do
+        expect {
+          Salmon::XmlPayload.send(:entity_class_name, "TestEntity")
+        }.to raise_error Salmon::InvalidEntityName, "'TestEntity' is invalid"
+      end
 
-        it "raises an error when the entity name contains numbers" do
-          expect {
-            Salmon::XmlPayload.send(:entity_class_name, "te5t_ent1ty_w1th_number5")
-          }.to raise_error Salmon::InvalidEntityName, "'te5t_ent1ty_w1th_number5' is invalid"
-        end
+      it "raises an error when the entity name contains numbers" do
+        expect {
+          Salmon::XmlPayload.send(:entity_class_name, "te5t_ent1ty_w1th_number5")
+        }.to raise_error Salmon::InvalidEntityName, "'te5t_ent1ty_w1th_number5' is invalid"
       end
     end
   end
