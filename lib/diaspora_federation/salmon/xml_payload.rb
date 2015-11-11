@@ -11,7 +11,7 @@ module DiasporaFederation
     #   </XML>
     #
     # (The +post+ element is there for historic reasons...)
-    class XmlPayload
+    module XmlPayload
       # Encapsulates an Entity inside the wrapping xml structure
       # and returns the XML Object.
       #
@@ -85,19 +85,31 @@ module DiasporaFederation
       # @param [Nokogiri::XML::Element] node xml nodes
       # @return [Entity] instance
       def self.populate_entity(klass, node)
-        data = {}
-        klass.class_props.each do |prop_def|
-          name = prop_def[:name]
-          type = prop_def[:type]
+        # Build a hash of attributes basing on XML tree. If elements are known in "props" they respect the Entity logic.
+        # All other elemnts are respected and attached to resulted hash as string.
+        # It is intended to build a hash invariable of an Entity definition, in order to support receiving objects
+        # from the future versions of Diaspora, where new elements may have been added.
+        xml_names = klass.class_props.map {|prop_def| prop_def[:xml_name].to_s }
 
-          if type == String
-            data[name] = parse_string_from_node(prop_def[:xml_name], node)
-          elsif type.instance_of?(Array)
-            data[name] = parse_array_from_node(type, node)
-          elsif type.ancestors.include?(Entity)
-            data[name] = parse_entity_from_node(type, node)
+        data = node.element_children.map { |child|
+          xml_name = child.name
+          if xml_names.include?(xml_name)
+            prop = klass.class_props.find {|prop| prop[:xml_name].to_s == xml_name }
+            type = prop[:type]
+
+            if type == String
+              [prop[:name], parse_string_from_node(xml_name, node)]
+            elsif type.instance_of?(Array)
+              [prop[:name], parse_array_from_node(type, node)]
+            elsif type.ancestors.include?(Entity)
+              [prop[:name], parse_entity_from_node(type, node)]
+            end
+          else
+            [xml_name, child.text]
           end
-        end
+        }.to_h
+
+        Entities::Relayable.verify_signatures(data) if klass.included_modules.include?(Entities::Relayable)
 
         klass.new(data)
       end

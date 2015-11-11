@@ -68,17 +68,29 @@ module DiasporaFederation
 
     private
 
+    def determine_xml_name(name, type, opts={})
+      raise ArgumentError, "xml_name is not supported for nested entities" if type != String && opts.has_key?(:xml_name)
+
+      if type == String
+        if opts.has_key? :xml_name
+          raise InvalidName, "invalid xml_name" unless name_valid?(opts[:xml_name])
+          opts[:xml_name]
+        else
+          name
+        end
+      elsif type.instance_of?(Array)
+        type.first.entity_name.to_sym
+      elsif type.ancestors.include?(Entity)
+        type.entity_name.to_sym
+      else
+        raise ArgumentError, "unknown type #{type} supplied"
+      end
+    end
+
     def define_property(name, type, opts={})
       raise InvalidName unless name_valid?(name)
 
-      xml_name = name
-      if opts.has_key? :xml_name
-        raise ArgumentError, "xml_name is not supported for nested entities" unless type == String
-        xml_name = opts[:xml_name]
-        raise InvalidName, "invalid xml_name" unless name_valid?(xml_name)
-      end
-
-      class_props << {name: name, xml_name: xml_name, type: type}
+      class_props << {name: name, xml_name: determine_xml_name(name, type, opts), type: type}
       default_props[name] = opts[:default] if opts.has_key? :default
 
       instance_eval { attr_reader name }
