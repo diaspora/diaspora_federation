@@ -5,11 +5,7 @@ module DiasporaFederation
 
       rule :guid, :guid
 
-      rule :parent_guid, :guid
-
-      rule :parent_author_signature, :not_empty
-
-      rule :author_signature, :not_empty
+      include RelayableValidator
 
       rule :diaspora_id, %i(not_empty diaspora_id)
     end

@@ -3,17 +3,11 @@ module DiasporaFederation
     let(:entity) { :like_entity }
     it_behaves_like "a common validator"
 
-    %i(guid parent_guid).each do |prop|
-      it_behaves_like "a guid validator" do
-        let(:property) { prop }
-      end
-    end
+    it_behaves_like "a relayable validator"
 
-    %i(author_signature parent_author_signature).each do |prop|
-      describe "##{prop}" do
-        it_behaves_like "a property that mustn't be empty" do
-          let(:property) { prop }
-        end
+    describe "#guid" do
+      it_behaves_like "a guid validator" do
+        let(:property) { :guid }
       end
     end
 
