@@ -34,6 +34,7 @@ module DiasporaFederation
   end
 end
 
+require "diaspora_federation/validators/relayable_validator"
 require "diaspora_federation/validators/h_card_validator"
 require "diaspora_federation/validators/person_validator"
 require "diaspora_federation/validators/profile_validator"

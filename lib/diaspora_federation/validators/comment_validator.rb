@@ -5,11 +5,7 @@ module DiasporaFederation
 
       rule :guid, :guid
 
-      rule :parent_guid, :guid
-
-      rule :parent_author_signature, :not_empty
-
-      rule :author_signature, :not_empty
+      include RelayableValidator
 
       rule :text, [:not_empty,
                    length: {maximum: 65_535}]

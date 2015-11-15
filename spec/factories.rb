@@ -93,13 +93,16 @@ FactoryGirl.define do
     width 800
   end
 
-  factory :participation_entity, class: DiasporaFederation::Entities::Participation do
-    guid
-    target_type "StatusMessage"
+  factory :relayable_entity, class: DiasporaFederation::Entities::Relayable do
     parent_guid { generate(:guid) }
-    diaspora_id
     parent_author_signature { generate(:signature) }
     author_signature { generate(:signature) }
+  end
+
+  factory :participation_entity, class: DiasporaFederation::Entities::Participation, parent: :relayable_entity do
+    guid
+    target_type "StatusMessage"
+    diaspora_id
   end
 
   factory :status_message_entity, class: DiasporaFederation::Entities::StatusMessage do
@@ -115,22 +118,16 @@ FactoryGirl.define do
     recipient_id { generate(:diaspora_id) }
   end
 
-  factory :comment_entity, class: DiasporaFederation::Entities::Comment do
+  factory :comment_entity, class: DiasporaFederation::Entities::Comment, parent: :relayable_entity do
     guid
-    parent_guid { generate(:guid) }
-    parent_author_signature { generate(:signature) }
-    author_signature { generate(:signature) }
     text "this is a very informative comment"
     diaspora_id
   end
 
-  factory :like_entity, class: DiasporaFederation::Entities::Like do
+  factory :like_entity, class: DiasporaFederation::Entities::Like, parent: :relayable_entity do
     positive 1
     guid
     target_type "StatusMessage"
-    parent_guid { generate(:guid) }
-    parent_author_signature { generate(:signature) }
-    author_signature { generate(:signature) }
     diaspora_id
   end
 
@@ -147,11 +144,8 @@ FactoryGirl.define do
     participant_ids { 3.times.map { generate(:diaspora_id) }.join(";") }
   end
 
-  factory :message_entity, class: DiasporaFederation::Entities::Message do
+  factory :message_entity, class: DiasporaFederation::Entities::Message, parent: :relayable_entity do
     guid
-    parent_guid { generate(:guid) }
-    parent_author_signature { generate(:signature) }
-    author_signature { generate(:signature) }
     text "this is a very informative text"
     created_at { DateTime.now.utc }
     diaspora_id
@@ -200,11 +194,11 @@ FactoryGirl.define do
     poll_answers { 3.times.map { FactoryGirl.build(:poll_answer_entity) } }
   end
 
-  factory :poll_participation_entity, class: DiasporaFederation::Entities::PollParticipation do
+  factory :poll_participation_entity,
+          class:  DiasporaFederation::Entities::PollParticipation,
+          parent: :relayable_entity do
     guid
-    parent_guid { generate(:guid) }
     diaspora_id
-    parent_author_signature { generate(:signature) }
     poll_answer_guid { generate(:guid) }
   end
 end

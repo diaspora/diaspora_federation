@@ -8,6 +8,7 @@ module DiasporaFederation
   end
 end
 
+require "diaspora_federation/entities/relayable"
 require "diaspora_federation/entities/profile"
 require "diaspora_federation/entities/person"
 require "diaspora_federation/entities/location"

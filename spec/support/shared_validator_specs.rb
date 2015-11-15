@@ -16,6 +16,14 @@ shared_examples "a common validator" do
   end
 end
 
+shared_examples "a relayable validator" do
+  describe "#parent_guid" do
+    it_behaves_like "a guid validator" do
+      let(:property) { :parent_guid }
+    end
+  end
+end
+
 shared_examples "a property with a value validation/restriction" do
   it "fails if a wrong value is supplied" do
     wrong_values.each do |val|
