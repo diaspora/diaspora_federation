@@ -4,6 +4,23 @@ def r_str
   SecureRandom.hex(3)
 end
 
+#
+# Sort hash according to an entity class's property sequence.
+# This is used for rspec tests in order to generate correct input hash to
+# compare results with.
+#
+def sort_hash(data, klass)
+  klass.class_props.map { |prop|
+    [prop[:name], data[prop[:name]]] unless data[prop[:name]].nil?
+  }.compact.to_h
+end
+
+def relayable_attributes_with_signatures(entity_type)
+  DiasporaFederation::Entities::Relayable.update_signatures!(
+    sort_hash(FactoryGirl.attributes_for(entity_type), FactoryGirl.factory_by_name(entity_type).build_class)
+  )
+end
+
 FactoryGirl.define do
   initialize_with { new(attributes) }
   sequence(:guid) { UUID.generate :compact }
@@ -95,8 +112,6 @@ FactoryGirl.define do
 
   factory :relayable_entity, class: DiasporaFederation::Entities::Relayable do
     parent_guid { generate(:guid) }
-    parent_author_signature { generate(:signature) }
-    author_signature { generate(:signature) }
   end
 
   factory :participation_entity, class: DiasporaFederation::Entities::Participation, parent: :relayable_entity do

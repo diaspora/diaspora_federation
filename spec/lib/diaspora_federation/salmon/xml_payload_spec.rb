@@ -121,6 +121,35 @@ XML
           expect(entity.test).to eq("asdf")
           expect(entity.qwer).to eq("qwer")
         end
+
+        it "doesn't drop unknown properties" do
+          xml = <<-XML
+<XML>
+  <post>
+    <test_entity>
+      <a_prop_from_newer_diaspora_version>some value</a_prop_from_newer_diaspora_version>
+      <test>asdf</test>
+      <some_random_property>another value</some_random_property>
+    </test_entity>
+  </post>
+</XML>
+XML
+          expect(Entities::TestEntity).to receive(:new).with(
+            "a_prop_from_newer_diaspora_version" => "some value",
+            :test                                => "asdf",
+            "some_random_property"               => "another value"
+          )
+          Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
+        end
+      end
+
+      context "relayable signature verification feature support" do
+        it "calls signatures verification on relayable unpack" do
+          entity = FactoryGirl.build(:comment_entity)
+          payload = Salmon::XmlPayload.pack(entity)
+          expect(Entities::Relayable).to receive(:verify_signatures).once
+          Salmon::XmlPayload.unpack(payload)
+        end
       end
 
       context "nested entities" do

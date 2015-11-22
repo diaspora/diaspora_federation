@@ -7,6 +7,7 @@ require "diaspora_federation/validators"
 
 require "diaspora_federation/fetcher"
 
+require "diaspora_federation/signing"
 require "diaspora_federation/entities"
 
 require "diaspora_federation/discovery"
@@ -20,6 +21,11 @@ module DiasporaFederation
     fetch_person_for_webfinger
     fetch_person_for_hcard
     save_person_after_webfinger
+    fetch_private_key_by_id
+    fetch_private_key_by_post_guid
+    fetch_public_key_by_id
+    fetch_public_key_by_post_guid
+    post_author_is_local?
   )
 
   class << self

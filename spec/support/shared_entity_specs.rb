@@ -70,3 +70,22 @@ shared_examples "an XML Entity" do
     end
   end
 end
+
+shared_examples "a relayable Entity" do
+  let(:instance) { described_class.new(data.merge(author_signature: nil, parent_author_signature: nil)) }
+
+  context "signatures generation" do
+    it "computes correct signatures for the entity" do
+      hash = instance.to_h
+      xml = DiasporaFederation::Salmon::XmlPayload.pack(instance)
+
+      author_signature = xml.at_xpath("post/*[1]/author_signature").text
+      parent_author_signature = xml.at_xpath("post/*[1]/parent_author_signature").text
+
+      expect(DiasporaFederation::Signing.verify_signature(hash, author_signature, test_pkey))
+        .to be_truthy
+      expect(DiasporaFederation::Signing.verify_signature(hash, parent_author_signature, test_pkey))
+        .to be_truthy
+    end
+  end
+end

@@ -1,7 +1,9 @@
 module DiasporaFederation
   describe Entities::Conversation do
-    let(:msg1) { FactoryGirl.build(:message_entity) }
-    let(:msg2) { FactoryGirl.build(:message_entity) }
+    let(:msg1_data) { relayable_attributes_with_signatures(:message_entity) }
+    let(:msg2_data) { relayable_attributes_with_signatures(:message_entity) }
+    let(:msg1) { FactoryGirl.build(:message_entity, msg1_data) }
+    let(:msg2) { FactoryGirl.build(:message_entity, msg2_data) }
     let(:data) {
       FactoryGirl.attributes_for(:conversation_entity).merge!(
         messages:        [msg1, msg2],

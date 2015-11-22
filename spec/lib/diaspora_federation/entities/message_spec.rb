@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Message do
-    let(:data) { FactoryGirl.attributes_for(:message_entity) }
+    let(:data) { relayable_attributes_with_signatures(:message_entity) }
 
     let(:xml) {
       <<-XML
@@ -20,5 +20,7 @@ XML
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    it_behaves_like "a relayable Entity"
   end
 end

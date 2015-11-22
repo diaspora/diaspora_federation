@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Like do
-    let(:data) { FactoryGirl.attributes_for(:like_entity) }
+    let(:data) { relayable_attributes_with_signatures(:like_entity) }
 
     let(:xml) {
       <<-XML
@@ -19,5 +19,7 @@ XML
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    it_behaves_like "a relayable Entity"
   end
 end

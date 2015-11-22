@@ -58,5 +58,29 @@ DiasporaFederation.configure do |config|
                    serialized_public_key: person.exported_key, url: person.url).save!
       end
     end
+
+    def pkey
+      @test_pkey ||= OpenSSL::PKey::RSA.generate(1024)
+    end
+
+    on :fetch_private_key_by_id do
+      pkey
+    end
+
+    on :fetch_private_key_by_post_guid do
+      pkey
+    end
+
+    on :fetch_public_key_by_id do
+      pkey.public_key
+    end
+
+    on :fetch_public_key_by_post_guid do
+      pkey.public_key
+    end
+
+    on :post_author_is_local? do
+      false
+    end
   end
 end
