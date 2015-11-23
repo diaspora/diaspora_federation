@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Comment do
-    let(:data) { relayable_attributes_with_signatures(:comment_entity) }
+    let(:data) { Test.relayable_attributes_with_signatures(:comment_entity) }
 
     let(:xml) {
       <<-XML

@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Message do
-    let(:data) { relayable_attributes_with_signatures(:message_entity) }
+    let(:data) { Test.relayable_attributes_with_signatures(:message_entity) }
 
     let(:xml) {
       <<-XML
