@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Like do
-    let(:data) { relayable_attributes_with_signatures(:like_entity) }
+    let(:data) { Test.relayable_attributes_with_signatures(:like_entity) }
 
     let(:xml) {
       <<-XML

@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::PollParticipation do
-    let(:data) { relayable_attributes_with_signatures(:poll_participation_entity) }
+    let(:data) { Test.relayable_attributes_with_signatures(:poll_participation_entity) }
 
     let(:xml) {
       <<-XML
