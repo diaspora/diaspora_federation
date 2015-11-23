@@ -17,7 +17,6 @@ module DiasporaFederation
       # @param [String] data plain input
       # @param [String] key AES key
       # @param [String] iv AES initialization vector
-      # @param [Hash] key_and_iv { key: "...", iv: "..." }
       # @return [String] base64 encoded ciphertext
       def self.encrypt(data, key, iv)
         raise ArgumentError unless data.instance_of?(String)

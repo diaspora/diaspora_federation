@@ -112,8 +112,8 @@ module DiasporaFederation
       end
 
       # decrypts and reads the data from the encrypted XML header
-      # @param [String] base64 encoded, encrypted header data
-      # @param [OpenSSL::PKey::RSA] private_key for decryption
+      # @param [String] data base64 encoded, encrypted header data
+      # @param [OpenSSL::PKey::RSA] pkey private key for decryption
       # @return [Hash] { iv: "...", aes_key: "...", author_id: "..." }
       def self.header_data(data, pkey)
         header_elem = decrypt_header(data, pkey)
@@ -128,8 +128,8 @@ module DiasporaFederation
       private_class_method :header_data
 
       # decrypts the xml header
-      # @param [String] base64 encoded, encrypted header data
-      # @param [OpenSSL::PKey::RSA] private_key for decryption
+      # @param [String] data base64 encoded, encrypted header data
+      # @param [OpenSSL::PKey::RSA] pkey private key for decryption
       # @return [Nokogiri::XML::Element] header xml document
       def self.decrypt_header(data, pkey)
         cipher_header = JSON.parse(Base64.decode64(data))
@@ -142,10 +142,10 @@ module DiasporaFederation
 
       # encrypt the header xml with an AES cipher and encrypt the cipher params
       # with the recipients public_key
-      # @param [String] diaspora_handle
-      # @param [Hash] envelope cipher params
-      # @param [OpenSSL::PKey::RSA] recipient public_key
-      # @param parent_node [Nokogiri::XML::Element] parent element for insering in XML document
+      # @param [String] author_id diaspora_handle
+      # @param [Hash] envelope_key envelope cipher params
+      # @param [OpenSSL::PKey::RSA] pubkey recipient public_key
+      # @param [Nokogiri::XML::Element] xml parent element for inserting in XML document
       def self.encrypted_header(author_id, envelope_key, pubkey, xml)
         data = header_xml(author_id, strict_base64_encode(envelope_key))
         key = AES.generate_key_and_iv
@@ -161,8 +161,8 @@ module DiasporaFederation
       private_class_method :encrypted_header
 
       # generate the header xml string, including the author, aes_key and iv
-      # @param [String] diaspora_handle of the author
-      # @param [Hash] { key: "...", iv: "..." } (values in base64)
+      # @param [String] author_id diaspora_handle of the author
+      # @param [Hash] envelope_key { key: "...", iv: "..." } (values in base64)
       # @return [String] header XML string
       def self.header_xml(author_id, envelope_key)
         builder = Nokogiri::XML::Builder.new do |xml|

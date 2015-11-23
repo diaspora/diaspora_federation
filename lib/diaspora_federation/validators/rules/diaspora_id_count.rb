@@ -15,6 +15,8 @@ module Validation
         @params = params
       end
 
+      # The error key for this rule
+      # @return [Symbol] error key
       def error_key
         :diaspora_id_count
       end
