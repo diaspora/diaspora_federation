@@ -33,19 +33,22 @@ module DiasporaFederation
 
       # Generates XML and updates signatures
       def to_xml
-        xml = entity_xml
-        hash = to_h
-        Relayable.update_signatures!(hash)
+        entity_xml.tap do |xml|
+          hash = to_h
+          Relayable.update_signatures!(hash)
 
-        xml.at_xpath("author_signature").content = hash[:author_signature]
-        xml.at_xpath("parent_author_signature").content = hash[:parent_author_signature]
-        xml
+          xml.at_xpath("author_signature").content = hash[:author_signature]
+          xml.at_xpath("parent_author_signature").content = hash[:parent_author_signature]
+        end
       end
 
       # Exception raised when verify_signatures fails to verify signatures (signatures are wrong)
       class SignatureVerificationFailed < ArgumentError
       end
 
+      # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
+      # @param [Hash] data hash with data to verify
+      # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
       def self.verify_signatures(data)
         pkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_id, data[:diaspora_id])
         raise SignatureVerificationFailed, "failed to fetch public key for #{data[:diaspora_id]}" if pkey.nil?
@@ -53,22 +56,26 @@ module DiasporaFederation
           data, data[:author_signature], pkey
         )
 
-        unless DiasporaFederation.callbacks.trigger(:post_author_is_local?, data[:parent_guid])
-          # this happens only on downstream federation
-          pkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_post_guid, data[:parent_guid])
-          raise SignatureVerificationFailed,
-                "failed to fetch public key for parent of #{data[:parent_guid]}" if pkey.nil?
-          raise SignatureVerificationFailed, "wrong parent_author_signature" unless Signing.verify_signature(
-            data, data[:parent_author_signature], pkey
-          )
-        end
+        author_is_local = DiasporaFederation.callbacks.trigger(:post_author_is_local?, data[:parent_guid])
+        verify_parent_signature(data) unless author_is_local
       end
+
+      # this happens only on downstream federation
+      # @param [Hash] data hash with data to verify
+      def self.verify_parent_signature(data)
+        pkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_post_guid, data[:parent_guid])
+        raise SignatureVerificationFailed,
+              "failed to fetch public key for parent of #{data[:parent_guid]}" if pkey.nil?
+        raise SignatureVerificationFailed, "wrong parent_author_signature" unless Signing.verify_signature(
+          data, data[:parent_author_signature], pkey
+        )
+      end
+      private_class_method :verify_parent_signature
 
       # Adds signatures to a given hash with the keys of the author and the parent
       # if the signatures are not in the hash yet and if the keys are available.
       #
       # @param [Hash] data hash given for a signing
-      # @return [Hash] reference to the input hash
       def self.update_signatures!(data)
         if data[:author_signature].nil?
           pkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_id, data[:diaspora_id])
@@ -79,8 +86,6 @@ module DiasporaFederation
           pkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_post_guid, data[:parent_guid])
           data[:parent_author_signature] = Signing.sign_with_key(data, pkey) unless pkey.nil?
         end
-
-        data
       end
     end
   end

@@ -85,25 +85,15 @@ module DiasporaFederation
       # @param [Nokogiri::XML::Element] node xml nodes
       # @return [Entity] instance
       def self.populate_entity(klass, node)
-        # Build a hash of attributes basing on XML tree. If elements are known in "props" they respect the Entity logic.
-        # All other elemnts are respected and attached to resulted hash as string.
-        # It is intended to build a hash invariable of an Entity definition, in order to support receiving objects
+        # Use all known properties to build the Entity. All other elements are respected
+        # and attached to resulted hash as string. It is intended to build a hash
+        # invariable of an Entity definition, in order to support receiving objects
         # from the future versions of Diaspora, where new elements may have been added.
-        xml_names = klass.class_props.map {|prop_def| prop_def[:xml_name].to_s }
-
         data = node.element_children.map { |child|
           xml_name = child.name
-          if xml_names.include?(xml_name)
-            prop = klass.class_props.find {|prop| prop[:xml_name].to_s == xml_name }
-            type = prop[:type]
-
-            if type == String
-              [prop[:name], parse_string_from_node(xml_name, node)]
-            elsif type.instance_of?(Array)
-              [prop[:name], parse_array_from_node(type, node)]
-            elsif type.ancestors.include?(Entity)
-              [prop[:name], parse_entity_from_node(type, node)]
-            end
+          property = klass.class_props.find {|prop| prop[:xml_name].to_s == xml_name }
+          if property
+            parse_element_from_node(property[:name], property[:type], xml_name, node)
           else
             [xml_name, child.text]
           end
@@ -114,6 +104,17 @@ module DiasporaFederation
         klass.new(data)
       end
       private_class_method :populate_entity
+
+      def self.parse_element_from_node(name, type, xml_name, node)
+        if type == String
+          [name, parse_string_from_node(xml_name, node)]
+        elsif type.instance_of?(Array)
+          [name, parse_array_from_node(type, node)]
+        elsif type.ancestors.include?(Entity)
+          [name, parse_entity_from_node(type, node)]
+        end
+      end
+      private_class_method :parse_element_from_node
 
       # create simple entry in data hash
       # @return [String] data

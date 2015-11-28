@@ -18,12 +18,13 @@ module DiasporaFederation
 
     # Generates attributes for entity constructor with correct signatures in it
     #
-    # @param [Symbol] entity_type type to generate attributes for
+    # @param [Symbol] factory_name the factory to generate attributes for (normally entity name)
     # @return [Hash] hash with correct signatures
-    def self.relayable_attributes_with_signatures(entity_type)
-      DiasporaFederation::Entities::Relayable.update_signatures!(
-        sort_hash(FactoryGirl.attributes_for(entity_type), FactoryGirl.factory_by_name(entity_type).build_class)
-      )
+    def self.relayable_attributes_with_signatures(factory_name)
+      klass = FactoryGirl.factory_by_name(factory_name).build_class
+      sort_hash(FactoryGirl.attributes_for(factory_name), klass).tap do |data|
+        DiasporaFederation::Entities::Relayable.update_signatures!(data)
+      end
     end
   end
 end
