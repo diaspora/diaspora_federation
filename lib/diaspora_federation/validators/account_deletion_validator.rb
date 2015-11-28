@@ -1,5 +1,6 @@
 module DiasporaFederation
   module Validators
+    # This validates a {Entities::AccountDeletion}
     class AccountDeletionValidator < Validation::Validator
       include Validation
 

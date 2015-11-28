@@ -1,5 +1,6 @@
 module DiasporaFederation
   module Validators
+    # This validates a {Entities::SignedRetraction}
     class SignedRetractionValidator < Validation::Validator
       include Validation
 

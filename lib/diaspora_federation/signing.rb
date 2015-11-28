@@ -1,4 +1,5 @@
 module DiasporaFederation
+  # this module defines operations of signing an arbitrary hash with an arbitrary key
   module Signing
     extend Logging
     # @param [OpenSSL::PKey::RSA] key An RSA key

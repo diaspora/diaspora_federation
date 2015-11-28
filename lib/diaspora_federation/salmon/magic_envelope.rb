@@ -126,7 +126,7 @@ module DiasporaFederation
         @rsa_pkey.sign(DIGEST, subject)
       end
 
-      # @param [Nokogiri::XML::Element]
+      # @param [Nokogiri::XML::Element] env envelope
       def self.envelope_valid?(env)
         (env.instance_of?(Nokogiri::XML::Element) &&
           env.name == "env" &&
@@ -137,8 +137,8 @@ module DiasporaFederation
       end
       private_class_method :envelope_valid?
 
-      # @param [Nokogiri::XML::Element]
-      # @param [OpenSSL::PKey::RSA] public_key
+      # @param [Nokogiri::XML::Element] env
+      # @param [OpenSSL::PKey::RSA] pkey public key
       def self.signature_valid?(env, pkey)
         subject = sig_subject([Base64.urlsafe_decode64(env.at_xpath("me:data").content),
                                env.at_xpath("me:data")["type"],
@@ -153,7 +153,7 @@ module DiasporaFederation
       # constructs the signature subject.
       # the given array should consist of the data, data_type (mimetype), encoding
       # and the algorithm
-      # @param [Array<String>]
+      # @param [Array<String>] data_arr
       def self.sig_subject(data_arr)
         data_arr.map {|i| Base64.urlsafe_encode64(i) }.join(".")
       end

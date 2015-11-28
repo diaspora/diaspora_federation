@@ -1,5 +1,6 @@
 module DiasporaFederation
   module Validators
+    # This validates a {Entities::Location}
     class LocationValidator < Validation::Validator
       include Validation
 

@@ -1,5 +1,6 @@
 module DiasporaFederation
   module Validators
+    # This validates a {Entities::Request}
     class RequestValidator < Validation::Validator
       include Validation
 

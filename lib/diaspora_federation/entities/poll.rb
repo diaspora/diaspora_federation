@@ -1,8 +1,22 @@
 module DiasporaFederation
   module Entities
+    # this entity represents a poll ant it is federated as an optional part of a status message
+    #
+    # @see Validators::PollValidator
     class Poll < Entity
+      # @!attribute [r] guid
+      #   @see HCard#guid
+      #   @return [String] guid
       property :guid
+
+      # @!attribute [r] question
+      #   Text of the question posed by a user
+      #   @return [String] question
       property :question
+
+      # @!attribute [r] poll_answers
+      #   array of possible answer to the poll
+      #   @return [[Entities::PollAnswer]] poll answers
       entity :poll_answers, [Entities::PollAnswer]
     end
   end
