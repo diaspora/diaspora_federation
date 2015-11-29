@@ -82,8 +82,6 @@ module DiasporaFederation
         type.first.entity_name.to_sym
       elsif type.ancestors.include?(Entity)
         type.entity_name.to_sym
-      else
-        raise ArgumentError, "unknown type #{type} supplied"
       end
     end
 

@@ -49,11 +49,19 @@ RSA
 
     describe ".verify_signature" do
       it "verifies correct signature" do
-        expect(Signing.verify_signature(hash, signature, pkey)).to be_truthy
+        expect(Signing.verify_signature(hash, signature, pkey.public_key)).to be_truthy
       end
 
       it "doesn't verify wrong signature" do
-        expect(Signing.verify_signature(hash, "false signature==", pkey)).to be_falsy
+        expect(Signing.verify_signature(hash, "false signature==", pkey.public_key)).to be_falsy
+      end
+
+      it "doesn't verify when signature is missing" do
+        expect(Signing.verify_signature(hash, nil, pkey.public_key)).to be_falsy
+      end
+
+      it "doesn't verify when public key is missing" do
+        expect(Signing.verify_signature(hash, signature, nil)).to be_falsy
       end
     end
   end

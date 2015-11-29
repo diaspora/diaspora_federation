@@ -9,7 +9,7 @@ module Validation
       # @option params [Fixnum] :maximum maximum allowed id count
       def initialize(params)
         unless params.include?(:maximum) && params[:maximum].is_a?(Fixnum)
-          raise "A number has to be specified for :maximum"
+          raise ArgumentError, "A number has to be specified for :maximum"
         end
 
         @params = params
