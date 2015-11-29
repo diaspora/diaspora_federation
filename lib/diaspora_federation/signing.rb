@@ -2,6 +2,10 @@ module DiasporaFederation
   # this module defines operations of signing an arbitrary hash with an arbitrary key
   module Signing
     extend Logging
+
+    # Sign the data with the key
+    #
+    # @param [Hash] hash data to sign
     # @param [OpenSSL::PKey::RSA] key An RSA key
     # @return [String] A Base64 encoded signature of #signable_string with key
     def self.sign_with_key(hash, key)
@@ -17,6 +21,7 @@ module DiasporaFederation
 
     # Check that signature is a correct signature
     #
+    # @param [Hash] hash data to verify
     # @param [String] signature The signature to be verified.
     # @param [OpenSSL::PKey::RSA] key An RSA key
     # @return [Boolean]
@@ -40,6 +45,8 @@ module DiasporaFederation
 
     private
 
+    # @param [Hash] hash data to sign
+    # @return [String] signature data string
     def self.signable_string(hash)
       hash.map { |name, value|
         value.to_s unless name.match(/signature/)

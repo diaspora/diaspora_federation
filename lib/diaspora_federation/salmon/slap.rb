@@ -93,6 +93,11 @@ module DiasporaFederation
         end
       end
 
+      # Builds the xml for the Salmon Slap.
+      #
+      # @yield [xml] Invokes the block with the
+      #   {http://www.rubydoc.info/gems/nokogiri/Nokogiri/XML/Builder Nokogiri::XML::Builder}
+      # @return [String] Slap XML
       def self.build_xml
         builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
           xml.diaspora("xmlns" => Salmon::XMLNS, "xmlns:me" => MagicEnvelope::XMLNS) {
@@ -102,6 +107,9 @@ module DiasporaFederation
         builder.to_xml
       end
 
+      # Parses the magic envelop from the document.
+      #
+      # @param [Nokogiri::XML::Document] doc Salmon XML Document
       def add_magic_env_from_doc(doc)
         @magic_envelope = doc.at_xpath("d:diaspora/me:env", Slap::NS).tap do |env|
           raise MissingMagicEnvelope if env.nil?

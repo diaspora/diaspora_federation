@@ -76,7 +76,7 @@ module DiasporaFederation
     # {http://www.rubydoc.info/gems/nokogiri/Nokogiri/XML/Element Nokogiri::XML::Element}s
     #
     # @see Nokogiri::XML::Node.to_xml
-    # @see Salmon::XmlPayload.pack
+    # @see XmlPayload#pack
     #
     # @return [Nokogiri::XML::Element] root element containing properties as child elements
     def to_xml

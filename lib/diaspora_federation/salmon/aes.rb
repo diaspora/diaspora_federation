@@ -18,8 +18,11 @@ module DiasporaFederation
       # @param [String] key AES key
       # @param [String] iv AES initialization vector
       # @return [String] base64 encoded ciphertext
+      # @raise [ArgumentError] if any of the arguments is missing or not the correct type
       def self.encrypt(data, key, iv)
-        raise ArgumentError unless data.instance_of?(String)
+        raise ArgumentError unless data.instance_of?(String) &&
+                                   key.instance_of?(String) &&
+                                   iv.instance_of?(String)
 
         cipher = OpenSSL::Cipher.new(CIPHER)
         cipher.encrypt

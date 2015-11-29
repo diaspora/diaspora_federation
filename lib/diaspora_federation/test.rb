@@ -1,7 +1,7 @@
 require "diaspora_federation/test/factories"
 
 module DiasporaFederation
-  # This module incapsulates helper functions maybe wanted by a testsuite of a diaspora_federation gem user application
+  # This module encapsulates helper functions maybe wanted by a testsuite of a diaspora_federation gem user application
   module Test
     # Sort hash according to an entity class's property sequence.
     # This is used for rspec tests in order to generate correct input hash to

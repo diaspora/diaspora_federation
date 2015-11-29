@@ -32,6 +32,8 @@ module DiasporaFederation
       end
 
       # Generates XML and updates signatures
+      # @see Entity#to_xml
+      # @return [Nokogiri::XML::Element] root element containing properties as child elements
       def to_xml
         entity_xml.tap do |xml|
           hash = to_h

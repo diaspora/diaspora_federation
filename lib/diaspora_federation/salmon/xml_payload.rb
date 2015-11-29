@@ -82,18 +82,18 @@ module DiasporaFederation
       # Works recursively on nested Entities and Arrays thereof.
       #
       # @param [Class] klass entity class
-      # @param [Nokogiri::XML::Element] node xml nodes
+      # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Entity] instance
-      def self.populate_entity(klass, node)
+      def self.populate_entity(klass, root_node)
         # Use all known properties to build the Entity. All other elements are respected
         # and attached to resulted hash as string. It is intended to build a hash
         # invariable of an Entity definition, in order to support receiving objects
         # from the future versions of Diaspora, where new elements may have been added.
-        data = node.element_children.map { |child|
+        data = root_node.element_children.map { |child|
           xml_name = child.name
           property = klass.class_props.find {|prop| prop[:xml_name].to_s == xml_name }
           if property
-            parse_element_from_node(property[:name], property[:type], xml_name, node)
+            parse_element_from_node(property[:name], property[:type], xml_name, root_node)
           else
             [xml_name, child.text]
           end
@@ -105,6 +105,11 @@ module DiasporaFederation
       end
       private_class_method :populate_entity
 
+      # @param [Symbol] name property name
+      # @param [Class] type target type to parse
+      # @param [String] xml_name xml tag to parse
+      # @param [Nokogiri::XML::Element] node XML node to parse
+      # @return [Array<Symbol, Object>] parsed data
       def self.parse_element_from_node(name, type, xml_name, node)
         if type == String
           [name, parse_string_from_node(xml_name, node)]
@@ -117,26 +122,35 @@ module DiasporaFederation
       private_class_method :parse_element_from_node
 
       # create simple entry in data hash
+      #
+      # @param [String] name xml tag to parse
+      # @param [Nokogiri::XML::Element] root_node XML root_node to parse
       # @return [String] data
-      def self.parse_string_from_node(name, node)
-        n = node.xpath(name.to_s)
-        n.first.text if n.any?
+      def self.parse_string_from_node(name, root_node)
+        node = root_node.xpath(name.to_s)
+        node.first.text if node.any?
       end
       private_class_method :parse_string_from_node
 
       # create an entry in the data hash for the nested entity
+      #
+      # @param [Class] type target type to parse
+      # @param [Nokogiri::XML::Element] root_node XML node to parse
       # @return [Entity] parsed child entity
-      def self.parse_entity_from_node(type, node)
-        n = node.xpath(type.entity_name)
-        populate_entity(type, n.first) if n.any?
+      def self.parse_entity_from_node(type, root_node)
+        node = root_node.xpath(type.entity_name)
+        populate_entity(type, node.first) if node.any?
       end
       private_class_method :parse_entity_from_node
 
       # collect all nested children of that type and create an array in the data hash
+      #
+      # @param [Array<Class>] type target type to parse
+      # @param [Nokogiri::XML::Element] root_node XML node to parse
       # @return [Array<Entity>] array with parsed child entities
-      def self.parse_array_from_node(type, node)
-        n = node.xpath(type.first.entity_name)
-        n.map {|child| populate_entity(type.first, child) }
+      def self.parse_array_from_node(type, root_node)
+        node = root_node.xpath(type.first.entity_name)
+        node.map {|child| populate_entity(type.first, child) }
       end
       private_class_method :parse_array_from_node
     end
