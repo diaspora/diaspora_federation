@@ -4,7 +4,7 @@ module DiasporaFederation
     it_behaves_like "a common validator"
 
     it_behaves_like "a guid validator" do
-      let(:property) { :post_guid }
+      let(:property) { :target_guid }
     end
 
     it_behaves_like "a diaspora id validator" do
@@ -14,7 +14,7 @@ module DiasporaFederation
 
     describe "#type" do
       it_behaves_like "a property that mustn't be empty" do
-        let(:property) { :type }
+        let(:property) { :target_type }
       end
     end
   end

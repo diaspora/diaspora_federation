@@ -34,11 +34,11 @@ module DiasporaFederation
       #   @return [String] target type
       property :target_type
 
-      # @!attribute [r] sender_id
+      # @!attribute [r] diaspora_id
       #   The diaspora ID of the person who deletes a post
       #   @see Person#diaspora_id
       #   @return [String] diaspora ID
-      property :sender_id, xml_name: :sender_handle
+      property :diaspora_id, xml_name: :sender_handle
 
       # @!attribute [r] target_author_signature
       #   Contains a signature of the entity using the private key of the

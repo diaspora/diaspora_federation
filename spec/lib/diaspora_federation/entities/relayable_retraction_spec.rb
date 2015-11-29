@@ -8,7 +8,7 @@ module DiasporaFederation
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
   <target_guid>#{data[:target_guid]}</target_guid>
   <target_type>#{data[:target_type]}</target_type>
-  <sender_handle>#{data[:sender_id]}</sender_handle>
+  <sender_handle>#{data[:diaspora_id]}</sender_handle>
   <target_author_signature>#{data[:target_author_signature]}</target_author_signature>
 </relayable_retraction>
 XML

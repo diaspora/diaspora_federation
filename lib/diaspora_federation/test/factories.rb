@@ -143,7 +143,7 @@ FactoryGirl.define do
     parent_author_signature { generate(:signature) }
     target_guid { generate(:guid) }
     target_type "Post"
-    sender_id { generate(:diaspora_id) }
+    diaspora_id
     target_author_signature { generate(:signature) }
   end
 
@@ -158,15 +158,15 @@ FactoryGirl.define do
   end
 
   factory :retraction_entity, class: DiasporaFederation::Entities::Retraction do
-    post_guid { generate(:guid) }
+    target_guid { generate(:guid) }
     diaspora_id
-    type "Post"
+    target_type "Post"
   end
 
   factory :signed_retraction_entity, class: DiasporaFederation::Entities::SignedRetraction do
     target_guid { generate(:guid) }
     target_type "Post"
-    sender_id { generate(:diaspora_id) }
+    diaspora_id
     target_author_signature { generate(:signature) }
   end
 

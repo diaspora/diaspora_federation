@@ -4,7 +4,7 @@ module DiasporaFederation
     it_behaves_like "a common validator"
 
     it_behaves_like "a diaspora id validator" do
-      let(:property) { :sender_id }
+      let(:property) { :diaspora_id }
       let(:mandatory) { true }
     end
 

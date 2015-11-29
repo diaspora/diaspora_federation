@@ -5,9 +5,9 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <retraction>
-  <post_guid>#{data[:post_guid]}</post_guid>
+  <post_guid>#{data[:target_guid]}</post_guid>
   <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
-  <type>#{data[:type]}</type>
+  <type>#{data[:target_type]}</type>
 </retraction>
 XML
     }

@@ -4,11 +4,11 @@ module DiasporaFederation
     class RetractionValidator < Validation::Validator
       include Validation
 
-      rule :post_guid, :guid
+      rule :target_guid, :guid
 
       rule :diaspora_id, %i(not_empty diaspora_id)
 
-      rule :type, :not_empty
+      rule :target_type, :not_empty
     end
   end
 end
