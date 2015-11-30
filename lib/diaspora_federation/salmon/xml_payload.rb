@@ -89,7 +89,7 @@ module DiasporaFederation
         # and attached to resulted hash as string. It is intended to build a hash
         # invariable of an Entity definition, in order to support receiving objects
         # from the future versions of Diaspora, where new elements may have been added.
-        data = root_node.element_children.map { |child|
+        data = Hash[root_node.element_children.map { |child|
           xml_name = child.name
           property = klass.class_props.find {|prop| prop[:xml_name].to_s == xml_name }
           if property
@@ -97,7 +97,7 @@ module DiasporaFederation
           else
             [xml_name, child.text]
           end
-        }.to_h
+        }]
 
         Entities::Relayable.verify_signatures(data) if klass.included_modules.include?(Entities::Relayable)
 
