@@ -294,7 +294,7 @@ DEPENDENCIES
   pry-byebug
   pry-debundle
   rspec-collection_matchers (~> 1.1.2)
-  rspec-rails (~> 3.3.2)
+  rspec-rails (~> 3.3.3)
   rubocop (= 0.35.1)
   simplecov (= 0.10.0)
   simplecov-rcov (= 0.2.3)
