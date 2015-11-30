@@ -241,7 +241,7 @@ GEM
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
     slop (3.6.0)
-    spring (1.4.0)
+    spring (1.4.4)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
     spring-watcher-listen (2.0.0)
