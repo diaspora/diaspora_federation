@@ -12,11 +12,9 @@ module DiasporaFederation
       let(:property) { :target_guid }
     end
 
-    %i(target_type target_author_signature).each do |prop|
-      describe "##{prop}" do
-        it_behaves_like "a property that mustn't be empty" do
-          let(:property) { prop }
-        end
+    describe "#target_type" do
+      it_behaves_like "a property that mustn't be empty" do
+        let(:property) { :target_type }
       end
     end
   end

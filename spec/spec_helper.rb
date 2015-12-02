@@ -35,7 +35,7 @@ def alice
 end
 
 def test_pkey
-  DiasporaFederation.callbacks.trigger(:fetch_private_key_by_id)
+  DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id)
 end
 
 # Requires supporting files with custom matchers and macros, etc,
