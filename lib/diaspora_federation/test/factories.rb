@@ -5,11 +5,6 @@ FactoryGirl.define do
   sequence(:guid) { UUID.generate :compact }
   sequence(:diaspora_id) {|n| "person-#{n}-#{SecureRandom.hex(3)}@localhost:3000" }
   sequence(:public_key) { OpenSSL::PKey::RSA.generate(1024).public_key.export }
-  sequence(:signature) do |i|
-    abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    ltr = abc[i % abc.length]
-    "#{ltr * 6}=="
-  end
 
   factory :webfinger, class: DiasporaFederation::Discovery::WebFinger do
     guid
@@ -140,11 +135,9 @@ FactoryGirl.define do
   end
 
   factory :relayable_retraction_entity, class: DiasporaFederation::Entities::RelayableRetraction do
-    parent_author_signature { generate(:signature) }
     target_guid { generate(:guid) }
-    target_type "Post"
+    target_type "Comment"
     diaspora_id
-    target_author_signature { generate(:signature) }
   end
 
   factory :reshare_entity, class: DiasporaFederation::Entities::Reshare do
@@ -167,7 +160,6 @@ FactoryGirl.define do
     target_guid { generate(:guid) }
     target_type "Post"
     diaspora_id
-    target_author_signature { generate(:signature) }
   end
 
   factory :poll_answer_entity, class: DiasporaFederation::Entities::PollAnswer do
