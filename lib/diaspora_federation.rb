@@ -21,11 +21,12 @@ module DiasporaFederation
     fetch_person_for_webfinger
     fetch_person_for_hcard
     save_person_after_webfinger
-    fetch_private_key_by_id
-    fetch_private_key_by_post_guid
-    fetch_public_key_by_id
-    fetch_public_key_by_post_guid
-    post_author_is_local?
+    fetch_private_key_by_diaspora_id
+    fetch_author_private_key_by_entity_guid
+    fetch_public_key_by_diaspora_id
+    fetch_author_public_key_by_entity_guid
+    entity_author_is_local?
+    fetch_entity_author_id_by_guid
   )
 
   class << self

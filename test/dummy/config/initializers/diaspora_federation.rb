@@ -63,24 +63,28 @@ DiasporaFederation.configure do |config|
       @test_pkey ||= OpenSSL::PKey::RSA.generate(1024)
     end
 
-    on :fetch_private_key_by_id do
+    on :fetch_private_key_by_diaspora_id do
       pkey
     end
 
-    on :fetch_private_key_by_post_guid do
+    on :fetch_author_private_key_by_entity_guid do
       pkey
     end
 
-    on :fetch_public_key_by_id do
+    on :fetch_public_key_by_diaspora_id do
       pkey.public_key
     end
 
-    on :fetch_public_key_by_post_guid do
+    on :fetch_author_public_key_by_entity_guid do
       pkey.public_key
     end
 
-    on :post_author_is_local? do
+    on :entity_author_is_local? do
       false
+    end
+
+    on :fetch_entity_author_id_by_guid do
+      nil
     end
   end
 end

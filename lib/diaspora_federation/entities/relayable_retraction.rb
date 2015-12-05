@@ -22,7 +22,7 @@ module DiasporaFederation
       #   Contains a signature of the entity using the private key of the author of a parent post
       #   This signature is mandatory only when federation from an upstream author to the subscribers.
       #   @return [String] parent author signature
-      property :parent_author_signature
+      property :parent_author_signature, default: nil
 
       # @!attribute [r] target_guid
       #   guid of a post to be deleted
@@ -46,7 +46,45 @@ module DiasporaFederation
       #   This signature is mandatory only when federation from the subscriber to an upstream
       #   author is done.
       #   @return [String] target author signature
-      property :target_author_signature
+      property :target_author_signature, default: nil
+
+      # Generates XML and updates signatures
+      # @see Entity#to_xml
+      # @return [Nokogiri::XML::Element] root element containing properties as child elements
+      def to_xml
+        entity_xml.tap do |xml|
+          hash = to_h
+          RelayableRetraction.update_signatures!(hash)
+          xml.at_xpath("target_author_signature").content = hash[:target_author_signature]
+          xml.at_xpath("parent_author_signature").content = hash[:parent_author_signature]
+        end
+      end
+
+      # Adds signatures to a given hash with the keys of the author and the parent
+      # if the signatures are not in the hash yet and if the keys are available.
+      #
+      # @param [Hash] hash hash given for a signing
+      def self.update_signatures!(hash)
+        target_author = DiasporaFederation.callbacks.trigger(
+          :fetch_entity_author_id_by_guid,
+          hash[:target_type],
+          hash[:target_guid]
+        )
+        pkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
+
+        fill_required_signature(target_author, pkey, hash) unless pkey.nil?
+      end
+
+      def self.fill_required_signature(target_author, pkey, hash)
+        if target_author == hash[:diaspora_id] && hash[:target_author_signature].nil?
+          hash[:target_author_signature] =
+            Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), pkey)
+        elsif target_author != hash[:diaspora_id] && hash[:parent_author_signature].nil?
+          hash[:parent_author_signature] =
+            Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), pkey)
+        end
+      end
+      private_class_method :fill_required_signature
     end
   end
 end

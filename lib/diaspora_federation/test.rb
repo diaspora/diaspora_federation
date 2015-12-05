@@ -26,5 +26,29 @@ module DiasporaFederation
         DiasporaFederation::Entities::Relayable.update_signatures!(data)
       end
     end
+
+    # Generates attributes for signed retraction entity constructor with correct signatures in it
+    #
+    # @return [Hash] hash with correct signatures
+    def self.signed_retraction_attributes_with_signatures
+      sort_hash(FactoryGirl.attributes_for(:signed_retraction_entity), Entities::SignedRetraction).tap do |data|
+        Entities::SignedRetraction.update_signatures!(data)
+      end
+    end
+
+    # Generates attributes for relayable retraction entity constructor with correct signatures in it
+    #
+    # @return [Hash] hash with correct signatures
+    def self.relayable_retraction_attributes_with_signatures
+      sort_hash(
+        FactoryGirl.attributes_for(
+          :relayable_retraction_entity,
+          target_author_signature: "false sig"
+        ),
+        Entities::RelayableRetraction
+      ).tap do |data|
+        Entities::RelayableRetraction.update_signatures!(data)
+      end
+    end
   end
 end
