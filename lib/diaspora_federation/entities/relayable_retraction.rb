@@ -17,6 +17,7 @@ module DiasporaFederation
     # is not checked, only parent_author_signature is checked.
     #
     # @see Validators::RelayableRetractionValidator
+    # @deprecated will be replaced with {Entities::Retraction}
     class RelayableRetraction < Entity
       # @!attribute [r] parent_author_signature
       #   Contains a signature of the entity using the private key of the author of a parent post

@@ -4,6 +4,7 @@ module DiasporaFederation
     # entity of post type ({Entities::StatusMessage})
     #
     # @see Validators::SignedRetractionValidator
+    # @deprecated will be replaced with {Entities::Retraction}
     class SignedRetraction < Entity
       # @!attribute [r] target_guid
       #   guid of a post to be deleted
