@@ -22,21 +22,24 @@ module DiasporaFederation
       # @!attribute [r] parent_author_signature
       #   Contains a signature of the entity using the private key of the author of a parent post
       #   This signature is mandatory only when federation from an upstream author to the subscribers.
+      #   @see Relayable#parent_author_signature
       #   @return [String] parent author signature
       property :parent_author_signature, default: nil
 
       # @!attribute [r] target_guid
-      #   guid of a post to be deleted
-      #   @see HCard#guid
+      #   guid of a relayable to be deleted
+      #   @see Comment#guid
       #   @return [String] target guid
       property :target_guid
 
       # @!attribute [r] target_type
+      #   a string describing a type of the target
+      #   @see Retraction#target_type
       #   @return [String] target type
       property :target_type
 
       # @!attribute [r] diaspora_id
-      #   The diaspora ID of the person who deletes a post
+      #   The diaspora ID of the person who deletes a relayable
       #   @see Person#diaspora_id
       #   @return [String] diaspora ID
       property :diaspora_id, xml_name: :sender_handle
@@ -46,6 +49,7 @@ module DiasporaFederation
       #   author of a federated relayable entity ({Entities::Comment}, {Entities::Like})
       #   This signature is mandatory only when federation from the subscriber to an upstream
       #   author is done.
+      #   @see Relayable#author_signature
       #   @return [String] target author signature
       property :target_author_signature, default: nil
 

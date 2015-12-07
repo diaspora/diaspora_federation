@@ -11,29 +11,31 @@ module DiasporaFederation
       property :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] first_name
-      #   @deprecated
+      #   @deprecated We decided to only use one name field, these should be removed
+      #     in later iterations (will affect older Diaspora* installations).
       #   @see #full_name
-      #   @see HCard#first_name
+      #   @see Discovery::HCard#first_name
       #   @return [String] first name
       property :first_name, default: nil
 
       # @!attribute [r] last_name
-      #   @deprecated
+      #   @deprecated We decided to only use one name field, these should be removed
+      #     in later iterations (will affect older Diaspora* installations).
       #   @see #full_name
-      #   @see HCard#last_name
+      #   @see Discovery::HCard#last_name
       #   @return [String] last name
       property :last_name, default: nil
 
       # @!attribute [r] image_url
-      #   @see HCard#photo_large_url
+      #   @see Discovery::HCard#photo_large_url
       #   @return [String] url to the big avatar (300x300)
       property :image_url, default: nil
       # @!attribute [r] image_url_medium
-      #   @see HCard#photo_medium_url
+      #   @see Discovery::HCard#photo_medium_url
       #   @return [String] url to the medium avatar (100x100)
       property :image_url_medium, default: nil
       # @!attribute [r] image_url_small
-      #   @see HCard#photo_small_url
+      #   @see Discovery::HCard#photo_small_url
       #   @return [String] url to the small avatar (50x50)
       property :image_url_small, default: nil
 
@@ -43,7 +45,7 @@ module DiasporaFederation
       property :location, default: nil
 
       # @!attribute [r] searchable
-      #   @see HCard#searchable
+      #   @see Discovery::HCard#searchable
       #   @return [Boolean] searchable flag
       property :searchable, default: true
 

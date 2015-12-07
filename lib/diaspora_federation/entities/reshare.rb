@@ -12,12 +12,14 @@ module DiasporaFederation
 
       # @!attribute [r] root_guid
       #   guid of the original post
-      #   @see HCard#guid
+      #   @see StatusMessage#guid
       #   @return [String] root guid
       property :root_guid
 
       # @!attribute [r] guid
-      #   @see HCard#guid
+      #   a random string of at least 16 chars.
+      #   @see Validation::Rule::Guid
+      #   @see StatusMessage#guid
       #   @return [String] guid
       property :guid
 
@@ -39,6 +41,7 @@ module DiasporaFederation
 
       # @!attribute [r] provider_display_name
       #   a string that describes a means by which a user has posted the reshare
+      #   @see StatusMessage#provider_display_name
       #   @return [String] provider display name
       property :provider_display_name, default: nil
     end

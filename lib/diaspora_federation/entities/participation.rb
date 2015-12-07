@@ -5,12 +5,14 @@ module DiasporaFederation
     # @see Validators::Participation
     class Participation < Entity
       # @!attribute [r] guid
-      #   @see HCard#guid
-      #   @return [String] guid
+      #   a random string of at least 16 chars.
+      #   @see Validation::Rule::Guid
+      #   @return [String] participation guid
       property :guid
 
       # @!attribute [r] target_type
-      #   a string describing a type of the target to subscribe on
+      #   a string describing a type of the target to subscribe on.
+      #   currently only "Post" is supported.
       #   @return [String] target type
       property :target_type
 

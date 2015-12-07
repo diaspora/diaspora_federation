@@ -6,27 +6,30 @@ module DiasporaFederation
     # logic is embedded into Salmon XML processing code.
     module Relayable
       # on inclusion of this module the required properties for a relayable are added to the object that includes it
-      def self.included(model)
-        model.class_eval do
-          # @!attribute [r] parent_guid
-          #   @see HCard#guid
-          #   @return [String] parent guid
+      #
+      # @!attribute [r] parent_guid
+      #   @see StatusMessage#guid
+      #   @return [String] parent guid
+      #
+      # @!attribute [r] parent_author_signature
+      #   Contains a signature of the entity using the private key of the author of a parent post
+      #   This signature is required only when federation from upstream (parent) post author to
+      #   downstream subscribers. This is the case when the parent author has to resend a relayable
+      #   received from one of his subscribers to all others.
+      #
+      #   @return [String] parent author signature
+      #
+      # @!attribute [r] author_signature
+      #   Contains a signature of the entity using the private key of the author of a post itself.
+      #   The presence of this signature is mandatory. Without it the entity won't be accepted by
+      #   a target pod.
+      #   @return [String] author signature
+      #
+      # @param [Entity] entity the entity in which it is included
+      def self.included(entity)
+        entity.class_eval do
           property :parent_guid
-
-          # @!attribute [r] parent_author_signature
-          #   Contains a signature of the entity using the private key of the author of a parent post
-          #   This signature is required only when federation from upstream (parent) post author to
-          #   downstream subscribers. This is the case when the parent author has to resend a relayable
-          #   received from one of his subscribers to all others.
-          #
-          #   @return [String] parent author signature
           property :parent_author_signature, default: nil
-
-          # @!attribute [r] author_signature
-          #   Contains a signature of the entity using the private key of the author of a post itself.
-          #   The presence of this signature is mandatory. Without it the entity won't be accepted by
-          #   a target pod.
-          #   @return [String] author signature
           property :author_signature, default: nil
         end
       end

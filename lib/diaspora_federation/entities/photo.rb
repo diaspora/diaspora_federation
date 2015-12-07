@@ -5,14 +5,15 @@ module DiasporaFederation
     # @see Validators::PhotoValidator
     class Photo < Entity
       # @!attribute [r] guid
-      #   @see HCard#guid
+      #   a random string of at least 16 chars.
+      #   @see Validation::Rule::Guid
       #   @return [String] guid
       property :guid
 
       # @!attribute [r] diaspora_id
       #   The diaspora ID of the person who uploaded the photo
       #   @see Person#diaspora_id
-      #   @return [String] diaspora ID
+      #   @return [String] author diaspora ID
       property :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] public
@@ -40,7 +41,7 @@ module DiasporaFederation
 
       # @!attribute [r] status_message_guid
       #   guid of a status message this message belongs to
-      #   @see HCard#guid
+      #   @see StatusMessage#guid
       #   @return [String] guid
       property :status_message_guid
 

@@ -5,8 +5,9 @@ module DiasporaFederation
     # @see Validators::MessageValidator
     class Message < Entity
       # @!attribute [r] guid
-      #   @see HCard#guid
-      #   @return [String] guid
+      #   a random string of at least 16 chars.
+      #   @see Validation::Rule::Guid
+      #   @return [String] message guid
       property :guid
 
       include Relayable
@@ -22,14 +23,14 @@ module DiasporaFederation
       property :created_at, default: -> { Time.now.utc }
 
       # @!attribute [r] diaspora_id
-      #   The diaspora ID of the message author
+      #   The diaspora ID of the message author.
       #   @see Person#diaspora_id
       #   @return [String] diaspora ID
       property :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] conversation_guid
       #   guid of a conversation this message belongs to
-      #   @see HCard#guid
+      #   @see Conversation#guid
       #   @return [String] conversation guid
       property :conversation_guid
     end

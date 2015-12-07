@@ -41,14 +41,13 @@ module DiasporaFederation
     # @see http://www.ietf.org/rfc/rfc6350.txt "vCard Format Specification"
     class HCard < Entity
       # @!attribute [r] guid
-      #   This is just the guid. When a user creates an account on a pod, the pod
-      #   MUST assign them a guid - a random hexadecimal string of at least 8
-      #   hexadecimal digits.
+      #   @see Entities::Person#guid
       #   @return [String] guid
       property :guid
 
       # @!attribute [r] nickname
       #   the first part of the diaspora ID
+      #   @see Entities::Person#diaspora_id
       #   @return [String] nickname
       property :nickname
 

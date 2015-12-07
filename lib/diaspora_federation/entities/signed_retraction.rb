@@ -8,11 +8,13 @@ module DiasporaFederation
     class SignedRetraction < Entity
       # @!attribute [r] target_guid
       #   guid of a post to be deleted
-      #   @see HCard#guid
+      #   @see Retraction#target_guid
       #   @return [String] target guid
       property :target_guid
 
       # @!attribute [r] target_type
+      #   A string describing the type of the target.
+      #   @see Retraction#target_type
       #   @return [String] target type
       property :target_type
 
@@ -55,7 +57,7 @@ module DiasporaFederation
       # a signature since it is included from signable_string for SignedRetraction and RelayableRetraction
       #
       # @param [Hash] data hash of the retraction properties
-      # @retrun [Hash] hash copy without :diaspora_id member
+      # @return [Hash] hash copy without :diaspora_id member
       def self.apply_signable_exceptions(data)
         data.dup.tap {|data| data.delete(:diaspora_id) }
       end

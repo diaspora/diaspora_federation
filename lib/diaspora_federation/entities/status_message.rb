@@ -5,7 +5,7 @@ module DiasporaFederation
     # @see Validators::StatusMessageValidator
     class StatusMessage < Entity
       # @!attribute [r] raw_message
-      #   text of the status message composed by a user
+      #   text of the status message composed by the user
       #   @return [String] text of the status message
       property :raw_message
 
@@ -25,8 +25,9 @@ module DiasporaFederation
       entity :poll, Entities::Poll, default: nil
 
       # @!attribute [r] guid
-      #   @see HCard#guid
-      #   @return [String] guid
+      #   a random string of at least 16 chars.
+      #   @see Validation::Rule::Guid
+      #   @return [String] status message guid
       property :guid
 
       # @!attribute [r] diaspora_id
@@ -36,7 +37,7 @@ module DiasporaFederation
       property :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] public
-      #   Points if the status message is visible to everyone or only to some aspects
+      #   shows whether the status message is visible to everyone or only to some aspects
       #   @return [Boolean] is it public
       property :public, default: false
 

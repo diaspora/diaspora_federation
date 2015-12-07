@@ -5,7 +5,8 @@ module DiasporaFederation
     # @see Validators::PollAnswerValidator
     class PollAnswer < Entity
       # @!attribute [r] guid
-      #   @see HCard#guid
+      #   a random string of at least 16 chars.
+      #   @see Validation::Rule::Guid
       #   @return [String] guid
       property :guid
 

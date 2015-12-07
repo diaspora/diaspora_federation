@@ -81,10 +81,7 @@ module DiasporaFederation
       #     specification (will affect older Diaspora* installations).
       #
       #   @see HCard#guid
-      #
-      #   This is just the guid. When a user creates an account on a pod, the pod
-      #   MUST assign them a guid - a random hexadecimal string of at least 8
-      #   hexadecimal digits.
+      #   @see Entities::Person#guid
       #   @return [String] guid
       property :guid
 
@@ -93,7 +90,7 @@ module DiasporaFederation
       #     +hCard+, which actually has fields for an +KEY+ defined in the +vCard+
       #     specification (will affect older Diaspora* installations).
       #
-      #   @see HCard#pubkey
+      #   @see HCard#public_key
       #
       #   When a user is created on the pod, the pod MUST generate a pgp keypair
       #   for them. This key is used for signing messages. The format is a

@@ -5,18 +5,21 @@ module DiasporaFederation
     # @see Validators::LikeValidator
     class Like < Entity
       # @!attribute [r] positive
-      #   If true set a like, if false, set a dislike (dislikes are currently not
-      #   implemented in the Diaspora's frontend).
+      #   If +true+ set a like, if +false+, set a dislike (dislikes are currently not
+      #   implemented in the Diaspora frontend).
       #   @return [Boolean] is it a like or a dislike
       property :positive
 
       # @!attribute [r] guid
-      #   @see HCard#guid
-      #   @return [String] guid
+      #   a random string of at least 16 chars.
+      #   @see Validation::Rule::Guid
+      #   @return [String] like guid
       property :guid
 
       # @!attribute [r] target_type
-      #   a string describing a type of the target
+      #   A string describing the type of the target.
+      #   Can be "Post" or "Comment" (Comments are currently not implemented in the
+      #   Diaspora Frontend).
       #   @return [String] target type
       property :target_type
 
