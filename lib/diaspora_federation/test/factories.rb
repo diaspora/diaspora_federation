@@ -1,3 +1,4 @@
+require "diaspora_federation"
 require "factory_girl"
 
 FactoryGirl.define do

@@ -1,4 +1,5 @@
 require_dependency "diaspora_federation/application_controller"
+require "diaspora_federation/receiver"
 
 module DiasporaFederation
   # this controller processes receiving messages
@@ -11,6 +12,7 @@ module DiasporaFederation
     def public
       logger.info "received a public message"
       logger.debug CGI.unescape(params[:xml])
+      Receiver::Public.new(CGI.unescape(params[:xml])).receive!
       render nothing: true, status: :ok
     end
 
@@ -20,7 +22,12 @@ module DiasporaFederation
     def private
       logger.info "received a private message for #{params[:guid]}"
       logger.debug CGI.unescape(params[:xml])
-      render nothing: true, status: :ok
+      begin
+        Receiver::Private.new(params[:guid], CGI.unescape(params[:xml])).receive!
+        render nothing: true, status: :ok
+      rescue RecipientNotFound
+        render nothing: true, status: 404
+      end
     end
 
     private

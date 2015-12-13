@@ -86,5 +86,12 @@ DiasporaFederation.configure do |config|
     on :fetch_entity_author_id_by_guid do
       nil
     end
+
+    on :fetch_private_key_by_user_guid do
+      nil
+    end
+
+    on :entity_persist do
+    end
   end
 end

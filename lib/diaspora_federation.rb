@@ -12,6 +12,7 @@ require "diaspora_federation/entities"
 
 require "diaspora_federation/discovery"
 require "diaspora_federation/salmon"
+require "diaspora_federation/receiver"
 
 # diaspora* federation library
 module DiasporaFederation
@@ -22,11 +23,13 @@ module DiasporaFederation
     fetch_person_for_hcard
     save_person_after_webfinger
     fetch_private_key_by_diaspora_id
+    fetch_private_key_by_user_guid
     fetch_author_private_key_by_entity_guid
     fetch_public_key_by_diaspora_id
     fetch_author_public_key_by_entity_guid
     entity_author_is_local?
     fetch_entity_author_id_by_guid
+    entity_persist
   )
 
   class << self
