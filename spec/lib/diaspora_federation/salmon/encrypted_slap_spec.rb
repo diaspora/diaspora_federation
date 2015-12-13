@@ -118,7 +118,7 @@ XML
       subject { Salmon::EncryptedSlap.from_xml(slap_xml, okey) }
 
       it "should have cipher params set" do
-        expect(subject.cipher_params).to_not be_nil
+        expect(subject.instance_variable_get(:@cipher_params)).to_not be_nil
       end
 
       it_behaves_like "a Slap instance"

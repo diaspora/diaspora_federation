@@ -25,9 +25,17 @@ module DiasporaFederation
     #   author_pubkey = however_you_retrieve_the_authors_public_key(slap.author_id)
     #
     #   entity = slap.entity(author_pubkey)
-    #
     class Slap
-      attr_accessor :author_id, :magic_envelope, :cipher_params
+      # the author of the slap
+      # @overload author_id
+      #   @return [String] the author diaspora id
+      # @overload author_id=
+      #   @param [String] the author diaspora id
+      attr_accessor :author_id
+
+      # the key and iv if it is an encrypted slap
+      # @param [Hash] value hash containing the key and iv
+      attr_writer :cipher_params
 
       # Namespaces
       NS = {d: Salmon::XMLNS, me: MagicEnvelope::XMLNS}
@@ -47,7 +55,7 @@ module DiasporaFederation
         return @entity unless @entity.nil?
 
         raise ArgumentError unless pubkey.instance_of?(OpenSSL::PKey::RSA)
-        @entity = MagicEnvelope.unenvelop(magic_envelope, pubkey, @cipher_params)
+        @entity = MagicEnvelope.unenvelop(@magic_envelope, pubkey, @cipher_params)
         @entity
       end
 

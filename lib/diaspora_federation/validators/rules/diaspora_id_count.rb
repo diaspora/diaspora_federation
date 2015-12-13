@@ -3,8 +3,11 @@ module Validation
     # Rule for validating the number of Diaspora* ids in a string.
     # The evaluated string is split at ";" and the result will be counted.
     class DiasporaIdCount
+      # This rule must have a +maximum+ param
+      # @return [Hash] params
       attr_reader :params
 
+      # create a new rule for a maximum diaspora id count validation
       # @param [Hash] params
       # @option params [Fixnum] :maximum maximum allowed id count
       def initialize(params)

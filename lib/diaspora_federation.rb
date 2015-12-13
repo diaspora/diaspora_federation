@@ -33,7 +33,6 @@ module DiasporaFederation
     # {Callbacks} instance with defined callbacks
     # @see Callbacks#on
     # @see Callbacks#trigger
-    #
     attr_reader :callbacks
 
     # the pod url
@@ -122,6 +121,7 @@ module DiasporaFederation
     #   @param [String] guid of the entity
     #   @return [String] Diaspora ID of the person
     #
+    # @see Callbacks#on
     #
     # @example
     #   config.define_callbacks do

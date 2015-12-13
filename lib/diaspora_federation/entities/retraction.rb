@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Entities
-    # this entity represents a claim of deletion of a previously federated
+    # this entity represents a claim of deletion of a previously federated entity
     #
     # @see Validators::RetractionValidator
     class Retraction < Entity
