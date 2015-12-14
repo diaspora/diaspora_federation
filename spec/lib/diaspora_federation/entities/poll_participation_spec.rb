@@ -20,5 +20,11 @@ XML
     it_behaves_like "an XML Entity"
 
     it_behaves_like "a relayable Entity"
+
+    describe ".get_target_entity_type" do
+      it "returns \"Poll\" as target type" do
+        expect(described_class.get_target_entity_type(data)).to eq("Poll")
+      end
+    end
   end
 end
