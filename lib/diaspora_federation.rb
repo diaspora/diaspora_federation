@@ -186,3 +186,5 @@ module DiasporaFederation
   class ConfigurationError < RuntimeError
   end
 end
+
+require "diaspora_federation/hydra_wrapper"
