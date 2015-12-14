@@ -33,6 +33,10 @@ module DiasporaFederation
       #   @see Conversation#guid
       #   @return [String] conversation guid
       property :conversation_guid
+
+      def self.get_target_entity_type(*)
+        "Conversation"
+      end
     end
   end
 end
