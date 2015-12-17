@@ -87,10 +87,6 @@ DiasporaFederation.configure do |config|
       nil
     end
 
-    on :fetch_private_key_by_user_guid do
-      nil
-    end
-
     on :queue_public_receive do
     end
 
@@ -98,7 +94,7 @@ DiasporaFederation.configure do |config|
       true
     end
 
-    on :entity_persist do
+    on :save_entity_after_receive do
     end
   end
 end

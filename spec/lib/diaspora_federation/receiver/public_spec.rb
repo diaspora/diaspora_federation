@@ -10,12 +10,12 @@ module DiasporaFederation
       )
     }
 
-    it "calls entity_persist if everyting is fine" do
+    it "calls save_entity_after_receive if everything is fine" do
       expect(DiasporaFederation.callbacks).to receive(:trigger)
                                                 .with(:fetch_public_key_by_diaspora_id, sender_id)
                                                 .and_return(sender_key)
       expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                .with(:entity_persist, kind_of(Entity), nil, sender_id)
+                                                .with(:save_entity_after_receive, kind_of(Entity))
 
       described_class.new(xml).receive!
     end
@@ -25,11 +25,15 @@ module DiasporaFederation
                                                 .with(:fetch_public_key_by_diaspora_id, sender_id)
                                                 .and_return(nil)
 
-      expect { described_class.new(xml).receive! }.to raise_error SenderNotFound
+      expect {
+        described_class.new(xml).receive!
+      }.to raise_error SenderKeyNotFound
     end
 
     it "raises when bad xml was supplied" do
-      expect { described_class.new("<XML/>").receive! }.to raise_error Salmon::MissingAuthor
+      expect {
+        described_class.new("<XML/>").receive!
+      }.to raise_error Salmon::MissingAuthor
     end
   end
 end

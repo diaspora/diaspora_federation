@@ -23,7 +23,6 @@ module DiasporaFederation
     fetch_person_for_hcard
     save_person_after_webfinger
     fetch_private_key_by_diaspora_id
-    fetch_private_key_by_user_guid
     fetch_author_private_key_by_entity_guid
     fetch_public_key_by_diaspora_id
     fetch_author_public_key_by_entity_guid
@@ -31,7 +30,7 @@ module DiasporaFederation
     fetch_entity_author_id_by_guid
     queue_public_receive
     queue_private_receive
-    entity_persist
+    save_entity_after_receive
   )
 
   class << self
@@ -135,6 +134,10 @@ module DiasporaFederation
     #   @param [String] guid guid of the receiver person
     #   @param [String] xml salmon xml
     #   @return [Boolean] true if successful, false if the user was not found
+    #
+    # save_entity_after_receive
+    #   After the xml was parsed and processed the gem calls this callback to persist the entity
+    #   @param [DiasporaFederation::Entity] entity the received entity after processing
     #
     # @see Callbacks#on
     #

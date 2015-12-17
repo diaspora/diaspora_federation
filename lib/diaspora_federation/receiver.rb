@@ -1,6 +1,10 @@
 module DiasporaFederation
-  # SenderNotFound is raised when failed to fetch a public key of the sender of the received message
-  class SenderNotFound < Exception
+  # Raised if failed to fetch a public key of the sender of the received message
+  class SenderKeyNotFound < Exception
+  end
+
+  # Raised if recipient private key is missing for a private receive
+  class RecipientKeyNotFound < Exception
   end
 
   # Common base for Private and Public receivers
@@ -13,9 +17,9 @@ module DiasporaFederation
 
     def receive!
       sender_id = slap.author_id
-      pkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, sender_id)
-      raise SenderNotFound if pkey.nil?
-      DiasporaFederation.callbacks.trigger(:entity_persist, slap.entity(pkey), @recipient_guid, sender_id)
+      public_key = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, sender_id)
+      raise SenderKeyNotFound if public_key.nil?
+      DiasporaFederation.callbacks.trigger(:save_entity_after_receive, slap.entity(public_key))
     end
   end
 end
