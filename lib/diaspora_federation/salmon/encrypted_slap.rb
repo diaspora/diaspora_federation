@@ -1,3 +1,5 @@
+require "json"
+
 module DiasporaFederation
   module Salmon
     # +EncryptedSlap+ provides class methods for generating and parsing encrypted

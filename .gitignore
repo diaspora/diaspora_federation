@@ -26,3 +26,5 @@ test/dummy/log/*.log*
 test/dummy/tmp/
 test/dummy/.sass-cache
 test/dummy/test/fixtures/*.y*ml
+
+rspec-persistance.txt

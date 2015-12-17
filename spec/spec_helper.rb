@@ -46,6 +46,8 @@ support_files.each {|f| require f }
 require fixture_builder_file
 
 RSpec.configure do |config|
+  config.example_status_persistence_file_path = "spec/rspec-persistance.txt"
+
   config.infer_spec_type_from_file_location!
 
   config.render_views
