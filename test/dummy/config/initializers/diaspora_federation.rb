@@ -91,6 +91,13 @@ DiasporaFederation.configure do |config|
       nil
     end
 
+    on :queue_public_receive do
+    end
+
+    on :queue_private_receive do
+      true
+    end
+
     on :entity_persist do
     end
   end

@@ -29,6 +29,8 @@ module DiasporaFederation
     fetch_author_public_key_by_entity_guid
     entity_author_is_local?
     fetch_entity_author_id_by_guid
+    queue_public_receive
+    queue_private_receive
     entity_persist
   )
 
@@ -123,6 +125,16 @@ module DiasporaFederation
     #   @param [String] entity type (Post, Comment, Like, etc)
     #   @param [String] guid of the entity
     #   @return [String] Diaspora ID of the person
+    #
+    # queue_public_receive
+    #   Queue a public salmon xml to process in background
+    #   @param [String] xml salmon xml
+    #
+    # queue_private_receive
+    #   Queue a private salmon xml to process in background
+    #   @param [String] guid guid of the receiver person
+    #   @param [String] xml salmon xml
+    #   @return [Boolean] true if successful, false if the user was not found
     #
     # @see Callbacks#on
     #

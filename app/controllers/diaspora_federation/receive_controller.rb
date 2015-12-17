@@ -11,8 +11,11 @@ module DiasporaFederation
     # POST /receive/public
     def public
       logger.info "received a public message"
-      logger.debug CGI.unescape(params[:xml])
-      Receiver::Public.new(CGI.unescape(params[:xml])).receive!
+      xml = CGI.unescape(params[:xml])
+      logger.debug xml
+
+      DiasporaFederation.callbacks.trigger(:queue_public_receive, xml)
+
       render nothing: true, status: :ok
     end
 
@@ -21,13 +24,12 @@ module DiasporaFederation
     # POST /receive/users/:guid
     def private
       logger.info "received a private message for #{params[:guid]}"
-      logger.debug CGI.unescape(params[:xml])
-      begin
-        Receiver::Private.new(params[:guid], CGI.unescape(params[:xml])).receive!
-        render nothing: true, status: :ok
-      rescue RecipientNotFound
-        render nothing: true, status: 404
-      end
+      xml = CGI.unescape(params[:xml])
+      logger.debug xml
+
+      success = DiasporaFederation.callbacks.trigger(:queue_private_receive, params[:guid], xml)
+
+      render nothing: true, status: success ? :ok : 404
     end
 
     private
