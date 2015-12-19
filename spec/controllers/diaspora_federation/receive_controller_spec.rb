@@ -20,7 +20,7 @@ module DiasporaFederation
         expect(DiasporaFederation.callbacks).to receive(:trigger)
                                                   .with(:queue_public_receive, "<diaspora/>")
 
-        post :public, xml: CGI::escape("<diaspora/>")
+        post :public, xml: CGI.escape("<diaspora/>")
       end
     end
 
@@ -53,7 +53,7 @@ module DiasporaFederation
                                                   .with(:queue_private_receive, "any-guid", "<diaspora/>")
                                                   .and_return(true)
 
-        post :private, guid: "any-guid", xml: CGI::escape("<diaspora/>")
+        post :private, guid: "any-guid", xml: CGI.escape("<diaspora/>")
       end
     end
   end

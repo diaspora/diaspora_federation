@@ -1,5 +1,4 @@
 module DiasporaFederation
-
   class Receiver
     # Receiver::Private is used to receive private messages, which are addressed to a specific user, encrypted with his
     # public key and packed using Salmon::EncryptedSlap
