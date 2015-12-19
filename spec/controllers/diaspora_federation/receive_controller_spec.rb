@@ -15,6 +15,13 @@ module DiasporaFederation
         post :public, xml: "<diaspora/>"
         expect(response.code).to eq("200")
       end
+
+      it "unescapes the xml before sending it to the callback" do
+        expect(DiasporaFederation.callbacks).to receive(:trigger)
+                                                  .with(:queue_public_receive, "<diaspora/>")
+
+        post :public, xml: CGI::escape("<diaspora/>")
+      end
     end
 
     describe "POST #private" do
@@ -32,13 +39,21 @@ module DiasporaFederation
         expect(response.code).to eq("422")
       end
 
-      it "returns a 200 if receive! reports no errors" do
+      it "returns a 200 if the callback returned true" do
         expect(DiasporaFederation.callbacks).to receive(:trigger)
                                                   .with(:queue_private_receive, "any-guid", "<diaspora/>")
                                                   .and_return(true)
 
         post :private, guid: "any-guid", xml: "<diaspora/>"
         expect(response.code).to eq("200")
+      end
+
+      it "unescapes the xml before sending it to the callback" do
+        expect(DiasporaFederation.callbacks).to receive(:trigger)
+                                                  .with(:queue_private_receive, "any-guid", "<diaspora/>")
+                                                  .and_return(true)
+
+        post :private, guid: "any-guid", xml: CGI::escape("<diaspora/>")
       end
     end
   end
