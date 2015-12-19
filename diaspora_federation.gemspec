@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = "~> 2.0"
 
-  s.add_dependency "nokogiri", "~> 1.6", ">= 1.6.6.4"
+  s.add_dependency "nokogiri", "~> 1.6", ">= 1.6.7.1"
   s.add_dependency "faraday", "~> 0.9.0"
   s.add_dependency "faraday_middleware", "~> 0.10.0"
   s.add_dependency "typhoeus", "~> 0.7"
