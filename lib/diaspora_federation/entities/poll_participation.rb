@@ -23,6 +23,10 @@ module DiasporaFederation
       #   @see PollAnswer#guid
       #   @return [String] poll answer guid
       property :poll_answer_guid
+
+      def self.get_target_entity_type(*)
+        "Poll"
+      end
     end
   end
 end

@@ -10,6 +10,10 @@ module DiasporaFederation
       }
     }
 
+    class SomeRelayable < Entity
+      include Entities::Relayable
+    end
+
     describe ".verify_signatures" do
       it "doesn't raise anything if correct data were passed" do
         hash[:author_signature] = Signing.sign_with_key(hash, author_pkey)
@@ -28,14 +32,14 @@ module DiasporaFederation
         expect(DiasporaFederation.callbacks).to receive(:trigger)
                                                   .with(:entity_author_is_local?, "Post", hash[:parent_guid])
                                                   .and_return(false)
-        expect { Entities::Relayable.verify_signatures(hash) }.not_to raise_error
+        expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.not_to raise_error
       end
 
       it "raises when no public key for author was fetched" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(:fetch_public_key_by_diaspora_id, anything)
                                                   .and_return(nil)
 
-        expect { Entities::Relayable.verify_signatures(hash) }.to raise_error(
+        expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.to raise_error(
           Entities::Relayable::SignatureVerificationFailed
         )
       end
@@ -46,7 +50,7 @@ module DiasporaFederation
         expect(DiasporaFederation.callbacks).to receive(:trigger)
                                                   .with(:fetch_public_key_by_diaspora_id, hash[:diaspora_id])
                                                   .and_return(author_pkey.public_key)
-        expect { Entities::Relayable.verify_signatures(hash) }.to raise_error(
+        expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.to raise_error(
           Entities::Relayable::SignatureVerificationFailed
         )
       end
@@ -67,7 +71,7 @@ module DiasporaFederation
         expect(DiasporaFederation.callbacks).to receive(:trigger)
                                                   .with(:entity_author_is_local?, "Post", hash[:parent_guid])
                                                   .and_return(false)
-        expect { Entities::Relayable.verify_signatures(hash) }.to raise_error(
+        expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.to raise_error(
           Entities::Relayable::SignatureVerificationFailed
         )
       end
@@ -89,7 +93,7 @@ module DiasporaFederation
         expect(DiasporaFederation.callbacks).to receive(:trigger)
                                                   .with(:entity_author_is_local?, "Post", hash[:parent_guid])
                                                   .and_return(false)
-        expect { Entities::Relayable.verify_signatures(hash) }.to raise_error(
+        expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.to raise_error(
           Entities::Relayable::SignatureVerificationFailed
         )
       end
@@ -104,7 +108,7 @@ module DiasporaFederation
         expect(DiasporaFederation.callbacks).to receive(:trigger)
                                                   .with(:entity_author_is_local?, "Post", hash[:parent_guid])
                                                   .and_return(true)
-        expect { Entities::Relayable.verify_signatures(hash) }.not_to raise_error
+        expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.not_to raise_error
       end
     end
 
@@ -121,7 +125,7 @@ module DiasporaFederation
                                                   )
                                                   .and_return(parent_pkey)
 
-        Entities::Relayable.update_signatures!(hash)
+        Entities::Relayable.update_signatures!(hash, SomeRelayable)
         expect(Signing.verify_signature(hash, hash[:author_signature], author_pkey)).to be_truthy
         expect(Signing.verify_signature(hash, hash[:parent_author_signature], parent_pkey)).to be_truthy
       end
@@ -130,7 +134,7 @@ module DiasporaFederation
         signatures = {author_signature: "aa", parent_author_signature: "bb"}
         hash.merge!(signatures)
 
-        Entities::Relayable.update_signatures!(hash)
+        Entities::Relayable.update_signatures!(hash, SomeRelayable)
         expect(hash[:author_signature]).to eq(signatures[:author_signature])
         expect(hash[:parent_author_signature]).to eq(signatures[:parent_author_signature])
       end
@@ -147,7 +151,7 @@ module DiasporaFederation
                                                   )
                                                   .and_return(nil)
 
-        Entities::Relayable.update_signatures!(hash)
+        Entities::Relayable.update_signatures!(hash, SomeRelayable)
         expect(hash[:author_signature]).to eq(nil)
         expect(hash[:parent_author_signature]).to eq(nil)
       end
