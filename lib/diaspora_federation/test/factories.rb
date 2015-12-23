@@ -120,7 +120,7 @@ FactoryGirl.define do
   factory :conversation_entity, class: DiasporaFederation::Entities::Conversation do
     guid
     subject "this is a very informative subject"
-    created_at { DateTime.now.utc }
+    created_at { Time.zone.now }
     messages []
     diaspora_id
     participant_ids { 3.times.map { generate(:diaspora_id) }.join(";") }
@@ -129,7 +129,7 @@ FactoryGirl.define do
   factory :message_entity, class: DiasporaFederation::Entities::Message, parent: :relayable_entity do
     guid
     text "this is a very informative text"
-    created_at { DateTime.now.utc }
+    created_at { Time.zone.now }
     diaspora_id
     conversation_guid { generate(:guid) }
   end
@@ -146,7 +146,7 @@ FactoryGirl.define do
     guid
     diaspora_id
     public(true)
-    created_at { DateTime.now.utc }
+    created_at { Time.zone.now }
     provider_display_name { "the testsuite" }
   end
 
