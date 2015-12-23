@@ -31,6 +31,10 @@ module DiasporaFederation
           property :parent_guid
           property :parent_author_signature, default: nil
           property :author_signature, default: nil
+
+          def self.get_target_entity_type(data)
+            data[:target_type] || "Post"
+          end
         end
       end
 
@@ -40,7 +44,7 @@ module DiasporaFederation
       def to_xml
         entity_xml.tap do |xml|
           hash = to_h
-          Relayable.update_signatures!(hash)
+          Relayable.update_signatures!(hash, self.class)
 
           xml.at_xpath("author_signature").content = hash[:author_signature]
           xml.at_xpath("parent_author_signature").content = hash[:parent_author_signature]
@@ -54,21 +58,29 @@ module DiasporaFederation
       # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
       # @param [Hash] data hash with data to verify
       # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
-      def self.verify_signatures(data)
+      def self.verify_signatures(data, klass)
         pkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, data[:diaspora_id])
         raise SignatureVerificationFailed, "failed to fetch public key for #{data[:diaspora_id]}" if pkey.nil?
         raise SignatureVerificationFailed, "wrong author_signature" unless Signing.verify_signature(
           data, data[:author_signature], pkey
         )
 
-        author_is_local = DiasporaFederation.callbacks.trigger(:entity_author_is_local?, "Post", data[:parent_guid])
-        verify_parent_signature(data) unless author_is_local
+        author_is_local = DiasporaFederation.callbacks.trigger(
+          :entity_author_is_local?,
+          klass.get_target_entity_type(data),
+          data[:parent_guid]
+        )
+        verify_parent_signature(data, klass) unless author_is_local
       end
 
       # this happens only on downstream federation
       # @param [Hash] data hash with data to verify
-      def self.verify_parent_signature(data)
-        pkey = DiasporaFederation.callbacks.trigger(:fetch_author_public_key_by_entity_guid, "Post", data[:parent_guid])
+      def self.verify_parent_signature(data, klass)
+        pkey = DiasporaFederation.callbacks.trigger(
+          :fetch_author_public_key_by_entity_guid,
+          klass.get_target_entity_type(data),
+          data[:parent_guid]
+        )
         raise SignatureVerificationFailed,
               "failed to fetch public key for author of #{data[:parent_guid]}" if pkey.nil?
         raise SignatureVerificationFailed, "wrong parent_author_signature" unless Signing.verify_signature(
@@ -81,7 +93,7 @@ module DiasporaFederation
       # if the signatures are not in the hash yet and if the keys are available.
       #
       # @param [Hash] data hash given for a signing
-      def self.update_signatures!(data)
+      def self.update_signatures!(data, klass)
         if data[:author_signature].nil?
           pkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, data[:diaspora_id])
           data[:author_signature] = Signing.sign_with_key(data, pkey) unless pkey.nil?
@@ -90,7 +102,7 @@ module DiasporaFederation
         if data[:parent_author_signature].nil?
           pkey = DiasporaFederation.callbacks.trigger(
             :fetch_author_private_key_by_entity_guid,
-            "Post",
+            klass.get_target_entity_type(data),
             data[:parent_guid]
           )
           data[:parent_author_signature] = Signing.sign_with_key(data, pkey) unless pkey.nil?

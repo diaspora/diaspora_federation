@@ -23,7 +23,7 @@ module DiasporaFederation
     def self.relayable_attributes_with_signatures(factory_name)
       klass = FactoryGirl.factory_by_name(factory_name).build_class
       sort_hash(FactoryGirl.attributes_for(factory_name), klass).tap do |data|
-        DiasporaFederation::Entities::Relayable.update_signatures!(data)
+        DiasporaFederation::Entities::Relayable.update_signatures!(data, klass)
       end
     end
 
