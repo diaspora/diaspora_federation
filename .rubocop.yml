@@ -13,6 +13,8 @@ Metrics/LineLength:
 # the code easier to read (by naming things), but can also clutter the class
 Metrics/MethodLength:
   Max: 20
+  Exclude:
+    - "lib/diaspora_federation/test/factories.rb"
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
 Metrics/ClassLength:
@@ -152,6 +154,8 @@ Metrics/PerceivedComplexity:
   Max: 10
 Metrics/AbcSize:
   Max: 20
+  Exclude:
+    - "lib/diaspora_federation/test/factories.rb"
 
 Metrics/ModuleLength:
   Max: 1500

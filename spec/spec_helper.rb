@@ -22,7 +22,6 @@ require "rspec/rails"
 require "webmock/rspec"
 
 # load factory girl factories
-require "diaspora_federation/test"
 require "factories"
 
 # load test entities

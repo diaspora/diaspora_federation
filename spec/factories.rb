@@ -1,3 +1,7 @@
+require "diaspora_federation/test"
+
+DiasporaFederation::Test::Factories.federation_factories
+
 FactoryGirl.define do
   factory :person do
     diaspora_id
