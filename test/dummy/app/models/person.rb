@@ -1,11 +1,12 @@
 class Person < ActiveRecord::Base
   include ::Diaspora::Guid
 
-  def alias_url;   "#{url}people/#{guid}" end
-  def hcard_url;   "#{url}hcard/users/#{guid}" end
-  def profile_url; "#{url}u/#{nickname}" end
-  def atom_url;    "#{url}public/#{nickname}.atom" end
-  def salmon_url;  "#{url}receive/users/#{guid}" end
+  def alias_url;     "#{url}people/#{guid}" end
+  def hcard_url;     "#{url}hcard/users/#{guid}" end
+  def profile_url;   "#{url}u/#{nickname}" end
+  def atom_url;      "#{url}public/#{nickname}.atom" end
+  def salmon_url;    "#{url}receive/users/#{guid}" end
+  def subscribe_url; "#{url}people?q={uri}" end
 
   def nickname; diaspora_id.split("@")[0] end
 

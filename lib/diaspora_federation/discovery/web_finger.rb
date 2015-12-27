@@ -75,6 +75,10 @@ module DiasporaFederation
       #     Panzer draft for Salmon, paragraph 3.3
       property :salmon_url
 
+      # @!attribute [r] subscribe_url
+      #   This url is used to find another user on the home-pod of the user in the webfinger.
+      property :subscribe_url
+
       # @!attribute [r] guid
       #   @deprecated Either convert these to +Property+ elements or move to the
       #     +hCard+, which actually has fields for an +UID+ defined in the +vCard+
@@ -121,6 +125,9 @@ module DiasporaFederation
       # +salmon_url+ link relation
       REL_SALMON = "salmon"
 
+      # +subscribe_url+ link relation
+      REL_SUBSCRIBE = "http://ostatus.org/schema/1.0/subscribe"
+
       # @deprecated This should be a +Property+ or moved to the +hcard+, but +Link+
       #   is inappropriate according to the specification (will affect older
       #   Diaspora* installations).
@@ -152,17 +159,19 @@ module DiasporaFederation
         public_key = parse_link(links, REL_PUBKEY)
 
         new(
-          acct_uri:    data[:subject],
-          alias_url:   parse_alias(data[:aliases]),
-          hcard_url:   parse_link(links, REL_HCARD),
-          seed_url:    parse_link(links, REL_SEED),
-          profile_url: parse_link(links, REL_PROFILE),
-          atom_url:    parse_link(links, REL_ATOM),
-          salmon_url:  parse_link(links, REL_SALMON),
+          acct_uri:      data[:subject],
+          alias_url:     parse_alias(data[:aliases]),
+          hcard_url:     parse_link(links, REL_HCARD),
+          seed_url:      parse_link(links, REL_SEED),
+          profile_url:   parse_link(links, REL_PROFILE),
+          atom_url:      parse_link(links, REL_ATOM),
+          salmon_url:    parse_link(links, REL_SALMON),
+
+          subscribe_url: parse_link_template(links, REL_SUBSCRIBE),
 
           # TODO: remove me!  ##########
-          guid:        parse_link(links, REL_GUID),
-          public_key:  (Base64.strict_decode64(public_key) if public_key)
+          guid:          parse_link(links, REL_GUID),
+          public_key:    (Base64.strict_decode64(public_key) if public_key)
         )
       end
 
@@ -182,27 +191,18 @@ module DiasporaFederation
       private_class_method :parse_xml_and_validate
 
       def add_links_to(doc)
-        doc.links << {rel:  REL_HCARD,
-                      type: "text/html",
-                      href: @hcard_url}
-        doc.links << {rel:  REL_SEED,
-                      type: "text/html",
-                      href: @seed_url}
+        doc.links << {rel: REL_HCARD, type: "text/html", href: @hcard_url}
+        doc.links << {rel: REL_SEED, type: "text/html", href: @seed_url}
 
         # TODO: remove me!  ##############
-        doc.links << {rel:  REL_GUID,
-                      type: "text/html",
-                      href: @guid}
+        doc.links << {rel: REL_GUID, type: "text/html", href: @guid}
         ##################################
 
-        doc.links << {rel:  REL_PROFILE,
-                      type: "text/html",
-                      href: @profile_url}
-        doc.links << {rel:  REL_ATOM,
-                      type: "application/atom+xml",
-                      href: @atom_url}
-        doc.links << {rel:  REL_SALMON,
-                      href: @salmon_url}
+        doc.links << {rel: REL_PROFILE, type: "text/html", href: @profile_url}
+        doc.links << {rel: REL_ATOM, type: "application/atom+xml", href: @atom_url}
+        doc.links << {rel: REL_SALMON, href: @salmon_url}
+
+        doc.links << {rel: REL_SUBSCRIBE, template: @subscribe_url}
 
         # TODO: remove me!  ##############
         doc.links << {rel:  REL_PUBKEY,
@@ -211,11 +211,22 @@ module DiasporaFederation
         ##################################
       end
 
+      def self.find_link(links, rel)
+        links.find {|l| l[:rel] == rel }
+      end
+      private_class_method :find_link
+
       def self.parse_link(links, rel)
-        element = links.find {|l| l[:rel] == rel }
+        element = find_link(links, rel)
         element ? element[:href] : nil
       end
       private_class_method :parse_link
+
+      def self.parse_link_template(links, rel)
+        element = find_link(links, rel)
+        element ? element[:template] : nil
+      end
+      private_class_method :parse_link_template
 
       # this method is used to parse the alias_url from the XML.
       # * redmatrix has sometimes no alias, return nil

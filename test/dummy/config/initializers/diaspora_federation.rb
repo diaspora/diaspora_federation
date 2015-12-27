@@ -20,15 +20,16 @@ DiasporaFederation.configure do |config|
       person = Person.find_by(diaspora_id: diaspora_id)
       if person
         DiasporaFederation::Discovery::WebFinger.new(
-          acct_uri:    "acct:#{person.diaspora_id}",
-          alias_url:   person.alias_url,
-          hcard_url:   person.hcard_url,
-          seed_url:    person.url,
-          profile_url: person.profile_url,
-          atom_url:    person.atom_url,
-          salmon_url:  person.salmon_url,
-          guid:        person.guid,
-          public_key:  person.serialized_public_key
+          acct_uri:      "acct:#{person.diaspora_id}",
+          alias_url:     person.alias_url,
+          hcard_url:     person.hcard_url,
+          seed_url:      person.url,
+          profile_url:   person.profile_url,
+          atom_url:      person.atom_url,
+          salmon_url:    person.salmon_url,
+          subscribe_url: person.subscribe_url,
+          guid:          person.guid,
+          public_key:    person.serialized_public_key
         )
       end
     end

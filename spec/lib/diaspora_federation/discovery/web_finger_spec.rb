@@ -6,15 +6,16 @@ module DiasporaFederation
 
     let(:data) {
       {
-        acct_uri:    "acct:#{person.diaspora_id}",
-        alias_url:   person.alias_url,
-        hcard_url:   person.hcard_url,
-        seed_url:    person.url,
-        profile_url: person.profile_url,
-        atom_url:    person.atom_url,
-        salmon_url:  person.salmon_url,
-        guid:        person.guid,
-        public_key:  person.serialized_public_key
+        acct_uri:      "acct:#{person.diaspora_id}",
+        alias_url:     person.alias_url,
+        hcard_url:     person.hcard_url,
+        seed_url:      person.url,
+        profile_url:   person.profile_url,
+        atom_url:      person.atom_url,
+        salmon_url:    person.salmon_url,
+        guid:          person.guid,
+        public_key:    person.serialized_public_key,
+        subscribe_url: person.subscribe_url
       }
     }
 
@@ -30,6 +31,7 @@ module DiasporaFederation
   <Link rel="http://webfinger.net/rel/profile-page" type="text/html" href="#{person.profile_url}"/>
   <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="#{person.atom_url}"/>
   <Link rel="salmon" href="#{person.salmon_url}"/>
+  <Link rel="http://ostatus.org/schema/1.0/subscribe" template="#{person.subscribe_url}"/>
   <Link rel="diaspora-public-key" type="RSA" href="#{public_key_base64}"/>
 </XRD>
 XML
@@ -54,6 +56,7 @@ XML
         expect(wf.profile_url).to eq(person.profile_url)
         expect(wf.atom_url).to eq(person.atom_url)
         expect(wf.salmon_url).to eq(person.salmon_url)
+        expect(wf.subscribe_url).to eq(person.subscribe_url)
 
         expect(wf.guid).to eq(person.guid)
         expect(wf.public_key).to eq(person.serialized_public_key)
@@ -150,6 +153,7 @@ XML
         expect(wf.profile_url).to eq(person.profile_url)
         expect(wf.atom_url).to eq(person.atom_url)
         expect(wf.salmon_url).to eq(person.salmon_url)
+        expect(wf.subscribe_url).to eq("https://pod.example.tld/follow?url={uri}")
 
         expect(wf.guid).to eq(person.guid)
         expect(wf.public_key).to eq(person.serialized_public_key)
@@ -211,6 +215,7 @@ XML
   <Link rel="http://webfinger.net/rel/profile-page" type="text/html" href="#{person.profile_url}"/>
   <Link rel="http://schemas.google.com/g/2010#updates-from" type="application/atom+xml" href="#{person.atom_url}"/>
   <Link rel="salmon" href="#{person.salmon_url}"/>
+  <Link rel="http://ostatus.org/schema/1.0/subscribe" template="#{person.subscribe_url}"/>
 </XRD>
 XML
 
@@ -222,6 +227,7 @@ XML
         expect(wf.profile_url).to eq(person.profile_url)
         expect(wf.atom_url).to eq(person.atom_url)
         expect(wf.salmon_url).to eq(person.salmon_url)
+        expect(wf.subscribe_url).to eq(person.subscribe_url)
 
         expect(wf.guid).to be_nil
         expect(wf.public_key).to be_nil

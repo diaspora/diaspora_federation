@@ -21,6 +21,7 @@ module DiasporaFederation
             atom_url "http://localhost:3000/public/user.atom"
             salmon_url "http://localhost:3000/receive/users/0123456789abcdef"
             public_key
+            subscribe_url "http://localhost:3000/people?q={uri}"
           end
 
           factory :h_card, class: DiasporaFederation::Discovery::HCard do
