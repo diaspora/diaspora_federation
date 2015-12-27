@@ -2,8 +2,9 @@
 # This command will automatically be run when you run "rails" with Rails 4 gems installed from the root of your application.
 
 begin
-  load File.expand_path("../spring", __FILE__)
-rescue LoadError
+  load File.expand_path('../spring', __FILE__)
+rescue LoadError => e
+  raise unless e.message.include?('spring')
 end
 
 ENGINE_ROOT = File.expand_path('../..', __FILE__)
