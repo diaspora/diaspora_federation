@@ -16,7 +16,7 @@ module DiasporaFederation
 
       DiasporaFederation.callbacks.trigger(:queue_public_receive, xml)
 
-      render nothing: true, status: :ok
+      render nothing: true, status: 202
     end
 
     # receives private messages for a user
@@ -29,7 +29,7 @@ module DiasporaFederation
 
       success = DiasporaFederation.callbacks.trigger(:queue_private_receive, params[:guid], xml)
 
-      render nothing: true, status: success ? :ok : 404
+      render nothing: true, status: success ? 202 : 404
     end
 
     private
