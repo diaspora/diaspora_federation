@@ -12,7 +12,7 @@ PATH
       rails (~> 4.2)
     diaspora_federation-test (0.0.10)
       diaspora_federation (= 0.0.10)
-      factory_girl (~> 4.5.0)
+      factory_girl (~> 4.5, >= 4.5.0)
 
 GEM
   remote: https://rubygems.org/
