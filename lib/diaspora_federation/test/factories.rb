@@ -74,7 +74,7 @@ module DiasporaFederation
             guid
             diaspora_id
             public(true)
-            created_at { Time.zone.now }
+            created_at { Time.now.utc }
             remote_photo_path "https://diaspora.example.tld/uploads/images/"
             remote_photo_name "f2a41e9d2db4d9a199c8.jpg"
             text "what you see here..."
@@ -99,7 +99,7 @@ module DiasporaFederation
             guid
             diaspora_id
             public(true)
-            created_at { Time.zone.now }
+            created_at { Time.now.utc }
           end
 
           factory :request_entity, class: DiasporaFederation::Entities::Request do
@@ -127,7 +127,7 @@ module DiasporaFederation
           factory :conversation_entity, class: DiasporaFederation::Entities::Conversation do
             guid
             subject "this is a very informative subject"
-            created_at { DateTime.now.utc }
+            created_at { Time.now.utc }
             messages []
             diaspora_id
             participant_ids { 3.times.map { generate(:diaspora_id) }.join(";") }
@@ -136,7 +136,7 @@ module DiasporaFederation
           factory :message_entity, class: DiasporaFederation::Entities::Message, parent: :relayable_entity do
             guid
             text "this is a very informative text"
-            created_at { DateTime.now.utc }
+            created_at { Time.now.utc }
             diaspora_id
             conversation_guid { generate(:guid) }
           end
@@ -153,7 +153,7 @@ module DiasporaFederation
             guid
             diaspora_id
             public(true)
-            created_at { DateTime.now.utc }
+            created_at { Time.now.utc }
             provider_display_name { "the testsuite" }
           end
 
