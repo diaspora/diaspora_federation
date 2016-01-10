@@ -9,11 +9,17 @@ module DiasporaFederation
       let(:mandatory) { true }
     end
 
-    %i(guid status_message_guid).each do |prop|
-      describe "##{prop}" do
-        it_behaves_like "a guid validator" do
-          let(:property) { prop }
-        end
+    describe "#guid" do
+      it_behaves_like "a guid validator" do
+        let(:property) { :guid }
+      end
+    end
+
+    describe "#status_message_guid" do
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :status_message_guid }
+        let(:wrong_values) { ["aaaaaa", "zzz+-#*$$", ""] }
+        let(:correct_values) { ["1234567890ABCDefgh_ijkl-mnopQR@example.com:3000", nil] }
       end
     end
 

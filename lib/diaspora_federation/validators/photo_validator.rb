@@ -14,7 +14,7 @@ module DiasporaFederation
 
       rule :remote_photo_name, :not_empty
 
-      rule :status_message_guid, :guid
+      rule :status_message_guid, guid: {nilable: true}
 
       rule :height, :numeric
 
