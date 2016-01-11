@@ -1,5 +1,4 @@
 require_dependency "diaspora_federation/application_controller"
-require "diaspora_federation/receiver"
 
 module DiasporaFederation
   # this controller processes receiving messages

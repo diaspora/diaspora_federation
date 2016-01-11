@@ -12,7 +12,7 @@ require "diaspora_federation/entities"
 
 require "diaspora_federation/discovery"
 require "diaspora_federation/salmon"
-require "diaspora_federation/receiver"
+require "diaspora_federation/federation"
 
 # diaspora* federation library
 module DiasporaFederation
