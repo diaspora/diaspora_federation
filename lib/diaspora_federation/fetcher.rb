@@ -25,16 +25,16 @@ module DiasporaFederation
 
     def self.create_default_connection
       options = {
-        request: {timeout: 30},
+        request: {timeout: DiasporaFederation.http_timeout},
         ssl:     {ca_file: DiasporaFederation.certificate_authorities}
       }
 
       @connection = Faraday::Connection.new(options) do |builder|
-        builder.use FaradayMiddleware::FollowRedirects, limit: 4
+        builder.use FaradayMiddleware::FollowRedirects, limit: DiasporaFederation.http_redirect_limit
         builder.adapter Faraday.default_adapter
       end
 
-      @connection.headers["User-Agent"] = "DiasporaFederation/#{DiasporaFederation::VERSION}"
+      @connection.headers["User-Agent"] = DiasporaFederation.http_user_agent
     end
     private_class_method :create_default_connection
   end

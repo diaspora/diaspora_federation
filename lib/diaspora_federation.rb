@@ -33,6 +33,13 @@ module DiasporaFederation
     save_entity_after_receive
   )
 
+  # defaults
+  @http_concurrency = 20
+  @http_timeout = 30
+  @http_verbose = false
+  @http_redirect_limit = 4
+  @http_user_agent = "DiasporaFederation/#{DiasporaFederation::VERSION}"
+
   class << self
     # {Callbacks} instance with defined callbacks
     # @see Callbacks#on
@@ -52,6 +59,27 @@ module DiasporaFederation
     # @example
     #   config.certificate_authorities = AppConfig.environment.certificate_authorities.get
     attr_accessor :certificate_authorities
+
+    # Maximum number of parallel HTTP requests made to other pods
+    #
+    # @example
+    #   config.http_concurrency = AppConfig.settings.typhoeus_concurrency.to_i
+    attr_accessor :http_concurrency
+
+    # timeout in seconds for http-requests
+    attr_accessor :http_timeout
+
+    # Turn on extra verbose output when sending stuff.
+    #
+    # @example
+    #   config.http_verbose = AppConfig.settings.typhoeus_verbose?
+    attr_accessor :http_verbose
+
+    # max redirects to follow
+    attr_reader :http_redirect_limit
+
+    # user agent used for http-requests
+    attr_reader :http_user_agent
 
     # configure the federation library
     #
@@ -167,6 +195,8 @@ module DiasporaFederation
         end
       end
 
+      validate_http_config
+
       unless @callbacks.definition_complete?
         configuration_error "Missing handlers for #{@callbacks.missing_handlers.join(', ')}"
       end
@@ -175,6 +205,14 @@ module DiasporaFederation
     end
 
     private
+
+    def validate_http_config
+      configuration_error "http_concurrency: please configure a number" unless @http_concurrency.is_a?(Fixnum)
+      configuration_error "http_timeout: please configure a number" unless @http_timeout.is_a?(Fixnum)
+
+      return unless !@http_verbose.is_a?(TrueClass) && !@http_verbose.is_a?(FalseClass)
+      configuration_error "http_verbose: please configure a boolean"
+    end
 
     def configuration_error(message)
       logger.fatal("diaspora federation configuration error: #{message}")
