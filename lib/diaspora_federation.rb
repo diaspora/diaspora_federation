@@ -31,6 +31,7 @@ module DiasporaFederation
     queue_public_receive
     queue_private_receive
     save_entity_after_receive
+    update_pod
   )
 
   # defaults
