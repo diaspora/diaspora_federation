@@ -51,12 +51,9 @@ module DiasporaFederation
       # @param [OpenSSL::PKey::RSA] pubkey public key for validating the signature
       # @return [Entity] entity instance from the XML
       # @raise [ArgumentError] if the public key is of the wrong type
-      def entity(pubkey=nil)
-        return @entity unless @entity.nil?
-
+      def entity(pubkey)
         raise ArgumentError unless pubkey.instance_of?(OpenSSL::PKey::RSA)
-        @entity = MagicEnvelope.unenvelop(@magic_envelope, pubkey, @cipher_params)
-        @entity
+        MagicEnvelope.unenvelop(@magic_envelope, pubkey, @cipher_params)
       end
 
       # Parses an unencrypted Salmon XML string and returns a new instance of
@@ -83,13 +80,13 @@ module DiasporaFederation
       # Creates an unencrypted Salmon Slap and returns the XML string.
       #
       # @param [String] author_id Diaspora* handle of the author
-      # @param [OpenSSL::PKey::RSA] pkey sender private_key for signing the magic envelope
+      # @param [OpenSSL::PKey::RSA] privkey sender private_key for signing the magic envelope
       # @param [Entity] entity payload
       # @return [String] Salmon XML string
       # @raise [ArgumentError] if any of the arguments is not the correct type
-      def self.generate_xml(author_id, pkey, entity)
+      def self.generate_xml(author_id, privkey, entity)
         raise ArgumentError unless author_id.instance_of?(String) &&
-                                   pkey.instance_of?(OpenSSL::PKey::RSA) &&
+                                   privkey.instance_of?(OpenSSL::PKey::RSA) &&
                                    entity.is_a?(Entity)
 
         build_xml do |xml|
@@ -97,7 +94,7 @@ module DiasporaFederation
             xml.author_id(author_id)
           }
 
-          MagicEnvelope.new(pkey, entity).envelop(xml)
+          MagicEnvelope.new(privkey, entity).envelop(xml)
         end
       end
 

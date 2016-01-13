@@ -1,22 +1,22 @@
 module DiasporaFederation
   describe Salmon::EncryptedSlap do
     let(:author_id) { "user_test@diaspora.example.tld" }
-    let(:pkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
-    let(:okey) { OpenSSL::PKey::RSA.generate(1024) } # use small key for speedy specs
+    let(:privkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
+    let(:recipient_key) { OpenSSL::PKey::RSA.generate(1024) } # use small key for speedy specs
     let(:entity) { Entities::TestEntity.new(test: "qwertzuiop") }
-    let(:slap_xml) { Salmon::EncryptedSlap.generate_xml(author_id, pkey, entity, okey.public_key) }
+    let(:slap_xml) { Salmon::EncryptedSlap.generate_xml(author_id, privkey, entity, recipient_key.public_key) }
     let(:ns) { {d: Salmon::XMLNS, me: Salmon::MagicEnvelope::XMLNS} }
 
     describe ".generate_xml" do
       context "sanity" do
         it "accepts correct params" do
           expect {
-            Salmon::EncryptedSlap.generate_xml(author_id, pkey, entity, okey.public_key)
+            Salmon::EncryptedSlap.generate_xml(author_id, privkey, entity, recipient_key.public_key)
           }.not_to raise_error
         end
 
         it "raises an error when the params are the wrong type" do
-          ["asdf", 1234, true, :symbol, entity, pkey].each do |val|
+          ["asdf", 1234, true, :symbol, entity, privkey].each do |val|
             expect {
               Salmon::EncryptedSlap.generate_xml(val, val, val, val)
             }.to raise_error ArgumentError
@@ -38,7 +38,7 @@ module DiasporaFederation
         }
         let(:cipher_header) { JSON.parse(Base64.decode64(subject)) }
         let(:header_key) {
-          JSON.parse(okey.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
+          JSON.parse(recipient_key.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
         }
 
         it "encodes the header correctly" do
@@ -52,7 +52,7 @@ module DiasporaFederation
         it "encrypts the public_key encrypted header correctly" do
           key = {}
           expect {
-            key = JSON.parse(okey.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
+            key = JSON.parse(recipient_key.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
           }.not_to raise_error
           expect(key).to include("key", "iv")
         end
@@ -78,12 +78,12 @@ module DiasporaFederation
       context "sanity" do
         it "accepts correct params" do
           expect {
-            Salmon::EncryptedSlap.from_xml(slap_xml, okey)
+            Salmon::EncryptedSlap.from_xml(slap_xml, recipient_key)
           }.not_to raise_error
         end
 
         it "raises an error when the params have a wrong type" do
-          [1234, false, :symbol, entity, pkey].each do |val|
+          [1234, false, :symbol, entity, privkey].each do |val|
             expect {
               Salmon::EncryptedSlap.from_xml(val, val)
             }.to raise_error ArgumentError
@@ -96,7 +96,7 @@ module DiasporaFederation
 </diaspora>
 XML
           expect {
-            Salmon::EncryptedSlap.from_xml(faulty_xml, okey)
+            Salmon::EncryptedSlap.from_xml(faulty_xml, recipient_key)
           }.to raise_error Salmon::MissingHeader
         end
 
@@ -108,14 +108,14 @@ XML
 XML
           expect(Salmon::EncryptedSlap).to receive(:header_data).and_return(aes_key: "", iv: "", author_id: "")
           expect {
-            Salmon::EncryptedSlap.from_xml(faulty_xml, okey)
+            Salmon::EncryptedSlap.from_xml(faulty_xml, recipient_key)
           }.to raise_error Salmon::MissingMagicEnvelope
         end
       end
     end
 
     context "generated instance" do
-      subject { Salmon::EncryptedSlap.from_xml(slap_xml, okey) }
+      subject { Salmon::EncryptedSlap.from_xml(slap_xml, recipient_key) }
 
       it "should have cipher params set" do
         expect(subject.instance_variable_get(:@cipher_params)).to_not be_nil

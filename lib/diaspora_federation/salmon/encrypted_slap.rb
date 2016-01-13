@@ -68,21 +68,21 @@ module DiasporaFederation
       # containing an encrypted payload.
       #
       # @param [String] slap_xml encrypted Salmon xml
-      # @param [OpenSSL::PKey::RSA] pkey recipient private_key for decryption
+      # @param [OpenSSL::PKey::RSA] privkey recipient private_key for decryption
       #
       # @return [Slap] new Slap instance
       #
       # @raise [ArgumentError] if any of the arguments is of the wrong type
       # @raise [MissingHeader] if the +encrypted_header+ element is missing in the XML
       # @raise [MissingMagicEnvelope] if the +me:env+ element is missing in the XML
-      def self.from_xml(slap_xml, pkey)
-        raise ArgumentError unless slap_xml.instance_of?(String) && pkey.instance_of?(OpenSSL::PKey::RSA)
+      def self.from_xml(slap_xml, privkey)
+        raise ArgumentError unless slap_xml.instance_of?(String) && privkey.instance_of?(OpenSSL::PKey::RSA)
         doc = Nokogiri::XML::Document.parse(slap_xml)
 
         Slap.new.tap do |slap|
           header_elem = doc.at_xpath("d:diaspora/d:encrypted_header", Slap::NS)
           raise MissingHeader if header_elem.nil?
-          header = header_data(header_elem.content, pkey)
+          header = header_data(header_elem.content, privkey)
           slap.author_id = header[:author_id]
           slap.cipher_params = {key: Base64.decode64(header[:aes_key]), iv: Base64.decode64(header[:iv])}
 
@@ -93,19 +93,19 @@ module DiasporaFederation
       # Creates an encrypted Salmon Slap and returns the XML string.
       #
       # @param [String] author_id Diaspora* handle of the author
-      # @param [OpenSSL::PKey::RSA] pkey sender private key for signing the magic envelope
+      # @param [OpenSSL::PKey::RSA] privkey sender private key for signing the magic envelope
       # @param [Entity] entity payload
       # @param [OpenSSL::PKey::RSA] pubkey recipient public key for encrypting the AES key
       # @return [String] Salmon XML string
       # @raise [ArgumentError] if any of the arguments is of the wrong type
-      def self.generate_xml(author_id, pkey, entity, pubkey)
+      def self.generate_xml(author_id, privkey, entity, pubkey)
         raise ArgumentError unless author_id.instance_of?(String) &&
-                                   pkey.instance_of?(OpenSSL::PKey::RSA) &&
+                                   privkey.instance_of?(OpenSSL::PKey::RSA) &&
                                    entity.is_a?(Entity) &&
                                    pubkey.instance_of?(OpenSSL::PKey::RSA)
 
         Slap.build_xml do |xml|
-          magic_envelope = MagicEnvelope.new(pkey, entity)
+          magic_envelope = MagicEnvelope.new(privkey, entity)
           envelope_key = magic_envelope.encrypt!
 
           encrypted_header(author_id, envelope_key, pubkey, xml)
@@ -115,10 +115,10 @@ module DiasporaFederation
 
       # decrypts and reads the data from the encrypted XML header
       # @param [String] data base64 encoded, encrypted header data
-      # @param [OpenSSL::PKey::RSA] pkey private key for decryption
+      # @param [OpenSSL::PKey::RSA] privkey private key for decryption
       # @return [Hash] { iv: "...", aes_key: "...", author_id: "..." }
-      def self.header_data(data, pkey)
-        header_elem = decrypt_header(data, pkey)
+      def self.header_data(data, privkey)
+        header_elem = decrypt_header(data, privkey)
         raise InvalidHeader unless header_elem.name == "decrypted_header"
 
         iv = header_elem.at_xpath("iv").content
@@ -131,11 +131,11 @@ module DiasporaFederation
 
       # decrypts the xml header
       # @param [String] data base64 encoded, encrypted header data
-      # @param [OpenSSL::PKey::RSA] pkey private key for decryption
+      # @param [OpenSSL::PKey::RSA] privkey private key for decryption
       # @return [Nokogiri::XML::Element] header xml document
-      def self.decrypt_header(data, pkey)
+      def self.decrypt_header(data, privkey)
         cipher_header = JSON.parse(Base64.decode64(data))
-        key = JSON.parse(pkey.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
+        key = JSON.parse(privkey.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
 
         xml = AES.decrypt(cipher_header["ciphertext"], Base64.decode64(key["key"]), Base64.decode64(key["iv"]))
         Nokogiri::XML::Document.parse(xml).root

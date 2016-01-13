@@ -6,11 +6,11 @@ module DiasporaFederation
     # Sign the data with the key
     #
     # @param [Hash] hash data to sign
-    # @param [OpenSSL::PKey::RSA] key An RSA key
+    # @param [OpenSSL::PKey::RSA] privkey An RSA key
     # @return [String] A Base64 encoded signature of #signable_string with key
-    def self.sign_with_key(hash, key)
+    def self.sign_with_key(hash, privkey)
       sig = Base64.strict_encode64(
-        key.sign(
+        privkey.sign(
           OpenSSL::Digest::SHA256.new,
           signable_string(hash)
         )
@@ -23,10 +23,10 @@ module DiasporaFederation
     #
     # @param [Hash] hash data to verify
     # @param [String] signature The signature to be verified.
-    # @param [OpenSSL::PKey::RSA] key An RSA key
+    # @param [OpenSSL::PKey::RSA] pubkey An RSA key
     # @return [Boolean]
-    def self.verify_signature(hash, signature, key)
-      if key.nil?
+    def self.verify_signature(hash, signature, pubkey)
+      if pubkey.nil?
         logger.warn "event=verify_signature status=abort reason=no_key guid=#{hash[:guid]}"
         return false
       elsif signature.nil?
@@ -34,7 +34,7 @@ module DiasporaFederation
         return false
       end
 
-      validity = key.verify(
+      validity = pubkey.verify(
         OpenSSL::Digest::SHA256.new,
         Base64.decode64(signature),
         signable_string(hash)

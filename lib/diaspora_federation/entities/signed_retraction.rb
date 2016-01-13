@@ -48,8 +48,10 @@ module DiasporaFederation
       # @param [Hash] data hash given for a signing
       def self.update_signatures!(data)
         if data[:target_author_signature].nil?
-          pkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, data[:diaspora_id])
-          data[:target_author_signature] = Signing.sign_with_key(apply_signable_exceptions(data), pkey) unless pkey.nil?
+          privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, data[:diaspora_id])
+          unless privkey.nil?
+            data[:target_author_signature] = Signing.sign_with_key(apply_signable_exceptions(data), privkey)
+          end
         end
       end
 

@@ -75,18 +75,21 @@ module DiasporaFederation
           hash[:target_type],
           hash[:target_guid]
         )
-        pkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
 
-        fill_required_signature(target_author, pkey, hash) unless pkey.nil?
+        fill_required_signature(target_author, privkey, hash) unless privkey.nil?
       end
 
-      def self.fill_required_signature(target_author, pkey, hash)
+      # @param [String] target_author the author of the entity to retract
+      # @param [OpenSSL::PKey::RSA] privkey private key of sender
+      # @param [Hash] hash hash given for a signing
+      def self.fill_required_signature(target_author, privkey, hash)
         if target_author == hash[:diaspora_id] && hash[:target_author_signature].nil?
           hash[:target_author_signature] =
-            Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), pkey)
+            Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), privkey)
         elsif target_author != hash[:diaspora_id] && hash[:parent_author_signature].nil?
           hash[:parent_author_signature] =
-            Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), pkey)
+            Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), privkey)
         end
       end
       private_class_method :fill_required_signature

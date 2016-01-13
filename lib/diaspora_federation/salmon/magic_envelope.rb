@@ -41,14 +41,14 @@ module DiasporaFederation
 
       # Creates a new instance of MagicEnvelope.
       #
-      # @param [OpenSSL::PKey::RSA] rsa_pkey private key used for signing
+      # @param [OpenSSL::PKey::RSA] rsa_privkey private key used for signing
       # @param [Entity] payload Entity instance
       # @raise [ArgumentError] if either argument is not of the right type
-      def initialize(rsa_pkey, payload)
-        raise ArgumentError unless rsa_pkey.instance_of?(OpenSSL::PKey::RSA) &&
+      def initialize(rsa_privkey, payload)
+        raise ArgumentError unless rsa_privkey.instance_of?(OpenSSL::PKey::RSA) &&
                                    payload.is_a?(Entity)
 
-        @rsa_pkey = rsa_pkey
+        @rsa_privkey = rsa_privkey
         @payload = XmlPayload.pack(payload).to_xml.strip
       end
 
@@ -126,7 +126,7 @@ module DiasporaFederation
                                           DATA_TYPE,
                                           ENCODING,
                                           ALGORITHM])
-        @rsa_pkey.sign(DIGEST, subject)
+        @rsa_privkey.sign(DIGEST, subject)
       end
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
@@ -141,16 +141,16 @@ module DiasporaFederation
       private_class_method :envelope_valid?
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
-      # @param [OpenSSL::PKey::RSA] pkey public key
+      # @param [OpenSSL::PKey::RSA] pubkey public key
       # @return [Boolean]
-      def self.signature_valid?(env, pkey)
+      def self.signature_valid?(env, pubkey)
         subject = sig_subject([Base64.urlsafe_decode64(env.at_xpath("me:data").content),
                                env.at_xpath("me:data")["type"],
                                env.at_xpath("me:encoding").content,
                                env.at_xpath("me:alg").content])
 
         sig = Base64.urlsafe_decode64(env.at_xpath("me:sig").content)
-        pkey.verify(DIGEST, sig, subject)
+        pubkey.verify(DIGEST, sig, subject)
       end
       private_class_method :signature_valid?
 

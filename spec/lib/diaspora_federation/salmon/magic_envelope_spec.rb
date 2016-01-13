@@ -1,8 +1,8 @@
 module DiasporaFederation
   describe Salmon::MagicEnvelope do
     let(:payload) { Entities::TestEntity.new(test: "asdf") }
-    let(:pkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
-    let(:envelope) { envelop_xml(Salmon::MagicEnvelope.new(pkey, payload)) }
+    let(:privkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
+    let(:envelope) { envelop_xml(Salmon::MagicEnvelope.new(privkey, payload)) }
 
     def envelop_xml(magic_env)
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
@@ -30,7 +30,7 @@ module DiasporaFederation
     context "sanity" do
       it "constructs an instance" do
         expect {
-          Salmon::MagicEnvelope.new(pkey, payload)
+          Salmon::MagicEnvelope.new(privkey, payload)
         }.not_to raise_error
       end
 
@@ -44,7 +44,7 @@ module DiasporaFederation
     end
 
     describe "#envelop" do
-      subject { Salmon::MagicEnvelope.new(pkey, payload) }
+      subject { Salmon::MagicEnvelope.new(privkey, payload) }
 
       it "should be an instance of Nokogiri::XML::Element" do
         expect(envelop_xml(subject)).to be_an_instance_of Nokogiri::XML::Element
@@ -69,12 +69,12 @@ module DiasporaFederation
         subj = sig_subj(env)
         sig = Base64.urlsafe_decode64(env.at_xpath("me:sig").content)
 
-        expect(pkey.public_key.verify(OpenSSL::Digest::SHA256.new, sig, subj)).to be_truthy
+        expect(privkey.public_key.verify(OpenSSL::Digest::SHA256.new, sig, subj)).to be_truthy
       end
     end
 
     describe "#encrypt!" do
-      subject { Salmon::MagicEnvelope.new(pkey, payload) }
+      subject { Salmon::MagicEnvelope.new(privkey, payload) }
 
       it "encrypts the payload, returning cipher params" do
         params = subject.encrypt!
@@ -101,7 +101,7 @@ module DiasporaFederation
       context "sanity" do
         it "works with sane input" do
           expect {
-            Salmon::MagicEnvelope.unenvelop(envelope, pkey.public_key)
+            Salmon::MagicEnvelope.unenvelop(envelope, privkey.public_key)
           }.not_to raise_error
         end
 
@@ -115,7 +115,7 @@ module DiasporaFederation
 
         it "verifies the envelope structure" do
           expect {
-            Salmon::MagicEnvelope.unenvelop(Nokogiri::XML::Document.parse("<asdf/>").root, pkey.public_key)
+            Salmon::MagicEnvelope.unenvelop(Nokogiri::XML::Document.parse("<asdf/>").root, privkey.public_key)
           }.to raise_error Salmon::InvalidEnvelope
         end
 
@@ -127,39 +127,39 @@ module DiasporaFederation
         end
 
         it "verifies the encoding" do
-          bad_env = envelop_xml(Salmon::MagicEnvelope.new(pkey, payload))
+          bad_env = envelop_xml(Salmon::MagicEnvelope.new(privkey, payload))
           elem = bad_env.at_xpath("me:encoding")
           elem.content = "invalid_enc"
-          re_sign(bad_env, pkey)
+          re_sign(bad_env, privkey)
           expect {
-            Salmon::MagicEnvelope.unenvelop(bad_env, pkey.public_key)
+            Salmon::MagicEnvelope.unenvelop(bad_env, privkey.public_key)
           }.to raise_error Salmon::InvalidEncoding
         end
 
         it "verifies the algorithm" do
-          bad_env = envelop_xml(Salmon::MagicEnvelope.new(pkey, payload))
+          bad_env = envelop_xml(Salmon::MagicEnvelope.new(privkey, payload))
           elem = bad_env.at_xpath("me:alg")
           elem.content = "invalid_alg"
-          re_sign(bad_env, pkey)
+          re_sign(bad_env, privkey)
           expect {
-            Salmon::MagicEnvelope.unenvelop(bad_env, pkey.public_key)
+            Salmon::MagicEnvelope.unenvelop(bad_env, privkey.public_key)
           }.to raise_error Salmon::InvalidAlgorithm
         end
       end
 
       it "returns the original entity" do
-        entity = Salmon::MagicEnvelope.unenvelop(envelope, pkey.public_key)
+        entity = Salmon::MagicEnvelope.unenvelop(envelope, privkey.public_key)
         expect(entity).to be_an_instance_of Entities::TestEntity
         expect(entity.test).to eq("asdf")
       end
 
       it "decrypts on the fly, when cipher params are present" do
-        env = Salmon::MagicEnvelope.new(pkey, payload)
+        env = Salmon::MagicEnvelope.new(privkey, payload)
         params = env.encrypt!
 
         envelope = envelop_xml(env)
 
-        entity = Salmon::MagicEnvelope.unenvelop(envelope, pkey.public_key, params)
+        entity = Salmon::MagicEnvelope.unenvelop(envelope, privkey.public_key, params)
         expect(entity).to be_an_instance_of Entities::TestEntity
         expect(entity.test).to eq("asdf")
       end

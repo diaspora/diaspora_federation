@@ -60,24 +60,24 @@ DiasporaFederation.configure do |config|
       end
     end
 
-    def pkey
-      @test_pkey ||= OpenSSL::PKey::RSA.generate(1024)
+    def privkey
+      @test_privkey ||= OpenSSL::PKey::RSA.generate(1024)
     end
 
     on :fetch_private_key_by_diaspora_id do
-      pkey
+      privkey
     end
 
     on :fetch_author_private_key_by_entity_guid do
-      pkey
+      privkey
     end
 
     on :fetch_public_key_by_diaspora_id do
-      pkey.public_key
+      privkey.public_key
     end
 
     on :fetch_author_public_key_by_entity_guid do
-      pkey.public_key
+      privkey.public_key
     end
 
     on :entity_author_is_local? do

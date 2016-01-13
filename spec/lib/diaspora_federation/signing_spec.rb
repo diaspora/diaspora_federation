@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Signing do
-    let(:pkey) {
+    let(:privkey) {
       OpenSSL::PKey::RSA.new <<-RSA
 -----BEGIN RSA PRIVATE KEY-----
 MIICXAIBAAKBgQDT7vBTAl0Z55bPcBjM9dvSOTuVtBxsgfrw2W0hTAYpd1H5032C
@@ -43,21 +43,21 @@ RSA
 
     describe ".sign_with_key" do
       it "produces correct signature" do
-        expect(Signing.sign_with_key(hash, pkey)).to eq(signature)
+        expect(Signing.sign_with_key(hash, privkey)).to eq(signature)
       end
     end
 
     describe ".verify_signature" do
       it "verifies correct signature" do
-        expect(Signing.verify_signature(hash, signature, pkey.public_key)).to be_truthy
+        expect(Signing.verify_signature(hash, signature, privkey.public_key)).to be_truthy
       end
 
       it "doesn't verify wrong signature" do
-        expect(Signing.verify_signature(hash, "false signature==", pkey.public_key)).to be_falsy
+        expect(Signing.verify_signature(hash, "false signature==", privkey.public_key)).to be_falsy
       end
 
       it "doesn't verify when signature is missing" do
-        expect(Signing.verify_signature(hash, nil, pkey.public_key)).to be_falsy
+        expect(Signing.verify_signature(hash, nil, privkey.public_key)).to be_falsy
       end
 
       it "doesn't verify when public key is missing" do

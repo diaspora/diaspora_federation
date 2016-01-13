@@ -1,20 +1,20 @@
 module DiasporaFederation
   describe Salmon::Slap do
     let(:author_id) { "test_user@pod.somedomain.tld" }
-    let(:pkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
+    let(:privkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
     let(:entity) { Entities::TestEntity.new(test: "qwertzuiop") }
-    let(:slap) { Salmon::Slap.generate_xml(author_id, pkey, entity) }
+    let(:slap) { Salmon::Slap.generate_xml(author_id, privkey, entity) }
 
     describe ".generate_xml" do
       context "sanity" do
         it "accepts correct params" do
           expect {
-            Salmon::Slap.generate_xml(author_id, pkey, entity)
+            Salmon::Slap.generate_xml(author_id, privkey, entity)
           }.not_to raise_error
         end
 
         it "raises an error when the params are the wrong type" do
-          ["asdf", 1234, true, :symbol, entity, pkey].each do |val|
+          ["asdf", 1234, true, :symbol, entity, privkey].each do |val|
             expect {
               Salmon::Slap.generate_xml(val, val, val)
             }.to raise_error ArgumentError
@@ -40,7 +40,7 @@ module DiasporaFederation
         end
 
         it "raises an error when the param has a wrong type" do
-          [1234, false, :symbol, entity, pkey].each do |val|
+          [1234, false, :symbol, entity, privkey].each do |val|
             expect {
               Salmon::Slap.from_xml(val)
             }.to raise_error ArgumentError
