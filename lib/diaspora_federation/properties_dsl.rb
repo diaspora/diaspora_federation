@@ -49,7 +49,7 @@ module DiasporaFederation
     # resolved on each call
     # @return [Hash] default values
     def default_values
-      default_props.each_with_object({}) { |(name, prop), hash|
+      default_props.each_with_object({}) {|(name, prop), hash|
         hash[name] = prop.respond_to?(:call) ? prop.call : prop
       }
     end
@@ -105,7 +105,7 @@ module DiasporaFederation
     # @param [Class] type the type to check
     # @return [Boolean]
     def type_valid?(type)
-      [type].flatten.all? { |type|
+      [type].flatten.all? {|type|
         type.respond_to?(:ancestors) && type.ancestors.include?(Entity)
       }
     end

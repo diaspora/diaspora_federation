@@ -5,12 +5,11 @@ module DiasporaFederation
     let(:envelope) { envelop_xml(Salmon::MagicEnvelope.new(privkey, payload)) }
 
     def envelop_xml(magic_env)
-      builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
+      Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
         xml.root("xmlns:me" => Salmon::MagicEnvelope::XMLNS) {
-          magic_env.envelop(xml)
+          xml.parent << magic_env.envelop
         }
-      end
-      builder.doc.at_xpath("//me:env")
+      }.doc.at_xpath("//me:env")
     end
 
     def sig_subj(env)

@@ -48,7 +48,7 @@ module DiasporaFederation
     # @param [Hash] hash data to sign
     # @return [String] signature data string
     def self.signable_string(hash)
-      hash.map { |name, value|
+      hash.map {|name, value|
         value.to_s unless name.match(/signature/)
       }.compact.join(";")
     end

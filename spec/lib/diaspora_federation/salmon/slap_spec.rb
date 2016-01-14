@@ -3,7 +3,7 @@ module DiasporaFederation
     let(:author_id) { "test_user@pod.somedomain.tld" }
     let(:privkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
     let(:entity) { Entities::TestEntity.new(test: "qwertzuiop") }
-    let(:slap) { Salmon::Slap.generate_xml(author_id, privkey, entity) }
+    let(:slap_xml) { Salmon::Slap.generate_xml(author_id, privkey, entity) }
 
     describe ".generate_xml" do
       context "sanity" do
@@ -13,10 +13,26 @@ module DiasporaFederation
           }.not_to raise_error
         end
 
-        it "raises an error when the params are the wrong type" do
-          ["asdf", 1234, true, :symbol, entity, privkey].each do |val|
+        it "raises an error when the author_id is the wrong type" do
+          [1234, true, :symbol, entity, privkey].each do |val|
             expect {
-              Salmon::Slap.generate_xml(val, val, val)
+              Salmon::Slap.generate_xml(val, privkey, entity)
+            }.to raise_error ArgumentError
+          end
+        end
+
+        it "raises an error when the privkey is the wrong type" do
+          ["asdf", 1234, true, :symbol, entity].each do |val|
+            expect {
+              Salmon::Slap.generate_xml(author_id, val, entity)
+            }.to raise_error ArgumentError
+          end
+        end
+
+        it "raises an error when the entity is the wrong type" do
+          ["asdf", 1234, true, :symbol, privkey].each do |val|
+            expect {
+              Salmon::Slap.generate_xml(author_id, privkey, val)
             }.to raise_error ArgumentError
           end
         end
@@ -24,7 +40,7 @@ module DiasporaFederation
 
       it "generates valid xml" do
         ns = {d: Salmon::XMLNS, me: Salmon::MagicEnvelope::XMLNS}
-        doc = Nokogiri::XML::Document.parse(slap)
+        doc = Nokogiri::XML::Document.parse(slap_xml)
         expect(doc.root.name).to eq("diaspora")
         expect(doc.at_xpath("d:diaspora/d:header/d:author_id", ns).content).to eq(author_id)
         expect(doc.xpath("d:diaspora/me:env", ns)).to have(1).item
@@ -35,7 +51,7 @@ module DiasporaFederation
       context "sanity" do
         it "accepts salmon xml as param" do
           expect {
-            Salmon::Slap.from_xml(slap)
+            Salmon::Slap.from_xml(slap_xml)
           }.not_to raise_error
         end
 
@@ -75,7 +91,7 @@ XML
 
     context "generated instance" do
       it_behaves_like "a Slap instance" do
-        subject { Salmon::Slap.from_xml(slap) }
+        subject { Salmon::Slap.from_xml(slap_xml) }
       end
     end
   end

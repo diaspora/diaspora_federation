@@ -67,7 +67,7 @@ module DiasporaFederation
       # Generates an XML document from the current instance and returns it as string
       # @return [String] XML document
       def to_xml
-        builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
+        Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
           xml.XRD("xmlns" => XMLNS) {
             xml.Expires(@expires.strftime(DATETIME_FORMAT)) if @expires.instance_of?(DateTime)
 
@@ -77,8 +77,7 @@ module DiasporaFederation
             add_properties_to(xml)
             add_links_to(xml)
           }
-        end
-        builder.to_xml
+        }.to_xml
       end
 
       # Parse the XRD document from the given string and create a hash containing

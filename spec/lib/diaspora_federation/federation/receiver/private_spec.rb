@@ -4,12 +4,8 @@ module DiasporaFederation
     let(:sender_key) { OpenSSL::PKey::RSA.generate(1024) }
     let(:recipient_key) { OpenSSL::PKey::RSA.generate(1024) }
     let(:xml) {
-      DiasporaFederation::Salmon::EncryptedSlap.generate_xml(
-        sender_id,
-        sender_key,
-        FactoryGirl.build(:request_entity),
-        recipient_key
-      )
+      DiasporaFederation::Salmon::EncryptedSlap.prepare(sender_id, sender_key, FactoryGirl.build(:request_entity))
+        .generate_xml(recipient_key)
     }
 
     it "calls save_entity_after_receive if everything is fine" do

@@ -33,10 +33,6 @@ module DiasporaFederation
       #   @param [String] the author diaspora id
       attr_accessor :author_id
 
-      # the key and iv if it is an encrypted slap
-      # @param [Hash] value hash containing the key and iv
-      attr_writer :cipher_params
-
       # Namespaces
       NS = {d: Salmon::XMLNS, me: MagicEnvelope::XMLNS}
 
@@ -94,7 +90,7 @@ module DiasporaFederation
             xml.author_id(author_id)
           }
 
-          MagicEnvelope.new(privkey, entity).envelop(xml)
+          xml.parent << MagicEnvelope.new(privkey, entity).envelop
         end
       end
 
@@ -104,12 +100,11 @@ module DiasporaFederation
       #   {http://www.rubydoc.info/gems/nokogiri/Nokogiri/XML/Builder Nokogiri::XML::Builder}
       # @return [String] Slap XML
       def self.build_xml
-        builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
+        Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
           xml.diaspora("xmlns" => Salmon::XMLNS, "xmlns:me" => MagicEnvelope::XMLNS) {
             yield xml
           }
-        end
-        builder.to_xml
+        }.to_xml
       end
 
       # Parses the magic envelop from the document.

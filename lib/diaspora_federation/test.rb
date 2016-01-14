@@ -11,7 +11,7 @@ module DiasporaFederation
     # @param [Entity.Class] klass entity type to sort according to
     # @return [Hash] sorted hash
     def self.sort_hash(data, klass)
-      Hash[klass.class_props.map { |prop|
+      Hash[klass.class_props.map {|prop|
         [prop[:name], data[prop[:name]]] unless data[prop[:name]].nil?
       }.compact]
     end

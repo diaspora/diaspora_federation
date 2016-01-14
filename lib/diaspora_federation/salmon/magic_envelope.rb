@@ -55,14 +55,20 @@ module DiasporaFederation
       # Builds the XML structure for the magic envelope, inserts the {ENCODING}
       # encoded data and signs the envelope using {DIGEST}.
       #
-      # @param [Nokogiri::XML::Builder] xml Salmon XML builder
-      def envelop(xml)
-        xml["me"].env {
-          xml["me"].data(Base64.urlsafe_encode64(@payload), type: DATA_TYPE)
-          xml["me"].encoding(ENCODING)
-          xml["me"].alg(ALGORITHM)
-          xml["me"].sig(Base64.urlsafe_encode64(signature))
-        }
+      # @return [Nokogiri::XML::Element] XML root node
+      def envelop
+        env_doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
+        Nokogiri::XML::Element.new("me:env", env_doc).tap do |env|
+          env << Nokogiri::XML::Element.new("me:data", env_doc).tap {|node|
+            node.content = Base64.urlsafe_encode64(@payload)
+            node["type"] = DATA_TYPE
+          }
+          env << Nokogiri::XML::Element.new("me:encoding", env_doc).tap {|node| node.content = ENCODING }
+          env << Nokogiri::XML::Element.new("me:alg", env_doc).tap {|node| node.content = ALGORITHM }
+          env << Nokogiri::XML::Element.new("me:sig", env_doc).tap {|node|
+            node.content = Base64.urlsafe_encode64(signature)
+          }
+        end
       end
 
       # Encrypts the payload with a new, random AES cipher and returns the cipher
@@ -102,8 +108,8 @@ module DiasporaFederation
       # @raise [InvalidEncoding] if the data is wrongly encoded
       # @raise [InvalidAlgorithm] if the algorithm used doesn't match
       def self.unenvelop(magic_env, rsa_pubkey, cipher_params=nil)
-        raise ArgumentError unless rsa_pubkey.instance_of?(OpenSSL::PKey::RSA) &&
-                                   magic_env.instance_of?(Nokogiri::XML::Element)
+        raise ArgumentError unless magic_env.instance_of?(Nokogiri::XML::Element) &&
+                                   rsa_pubkey.instance_of?(OpenSSL::PKey::RSA)
 
         raise InvalidEnvelope unless envelope_valid?(magic_env)
         raise InvalidSignature unless signature_valid?(magic_env, rsa_pubkey)
