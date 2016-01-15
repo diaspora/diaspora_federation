@@ -52,7 +52,8 @@ group :development, :test do
   gem "rspec-rails", "~> 3.4.0"
 
   # automatic test runs
-  gem "guard-rspec", require: false
+  gem "guard-rspec",   require: false
+  gem "guard-rubocop", require: false
 
   # preloading environment
   gem "spring"

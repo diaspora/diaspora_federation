@@ -21,3 +21,8 @@ guard :rspec, cmd: "NO_COVERAGE=true bin/rspec" do
   watch(rails.app_controller)  { "#{rspec.spec_dir}/controllers" }
   watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
 end
+
+guard :rubocop do
+  watch(/.+\.rb$/)
+  watch(/\.rubocop\.yml$/) {|m| File.dirname(m[0]) }
+end
