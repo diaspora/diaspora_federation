@@ -34,6 +34,8 @@ module DiasporaFederation
       #   @return [String] conversation guid
       property :conversation_guid
 
+      # The {Message} parent is a {Conversation}
+      # @return [String] parent entity type
       def self.get_target_entity_type(*)
         "Conversation"
       end

@@ -24,6 +24,8 @@ module DiasporaFederation
       #   @return [String] poll answer guid
       property :poll_answer_guid
 
+      # The {PollParticipation} parent is a {Poll}
+      # @return [String] parent entity type
       def self.get_target_entity_type(*)
         "Poll"
       end

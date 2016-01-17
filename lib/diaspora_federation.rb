@@ -61,16 +61,16 @@ module DiasporaFederation
     #   config.certificate_authorities = AppConfig.environment.certificate_authorities.get
     attr_accessor :certificate_authorities
 
-    # Maximum number of parallel HTTP requests made to other pods
+    # Maximum number of parallel HTTP requests made to other pods (default: +20+)
     #
     # @example
     #   config.http_concurrency = AppConfig.settings.typhoeus_concurrency.to_i
     attr_accessor :http_concurrency
 
-    # timeout in seconds for http-requests
+    # timeout in seconds for http-requests (default: +30+)
     attr_accessor :http_timeout
 
-    # Turn on extra verbose output when sending stuff.
+    # Turn on extra verbose output when sending stuff. (default: +false+)
     #
     # @example
     #   config.http_verbose = AppConfig.settings.typhoeus_verbose?

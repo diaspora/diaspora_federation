@@ -32,6 +32,8 @@ module DiasporaFederation
           property :parent_author_signature, default: nil
           property :author_signature, default: nil
 
+          # get the type of the parent entity
+          # @return [String] parent entity type
           def self.get_target_entity_type(data)
             data[:target_type] || "Post"
           end
@@ -57,6 +59,7 @@ module DiasporaFederation
 
       # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
       # @param [Hash] data hash with data to verify
+      # @param [Class] klass entity type
       # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
       def self.verify_signatures(data, klass)
         pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, data[:diaspora_id])
@@ -75,6 +78,7 @@ module DiasporaFederation
 
       # this happens only on downstream federation
       # @param [Hash] data hash with data to verify
+      # @param [Class] klass entity type
       def self.verify_parent_signature(data, klass)
         pubkey = DiasporaFederation.callbacks.trigger(
           :fetch_author_public_key_by_entity_guid,
@@ -93,6 +97,7 @@ module DiasporaFederation
       # if the signatures are not in the hash yet and if the keys are available.
       #
       # @param [Hash] data hash given for a signing
+      # @param [Class] klass entity type
       def self.update_signatures!(data, klass)
         if data[:author_signature].nil?
           privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, data[:diaspora_id])

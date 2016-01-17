@@ -6,6 +6,8 @@ module DiasporaFederation
       class Public < Receiver
         protected
 
+        # parses the public slap xml
+        # @return [Salmon::Slap] slap instance
         def slap
           @salmon ||= Salmon::Slap.from_xml(@salmon_xml)
         end
