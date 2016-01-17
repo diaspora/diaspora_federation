@@ -45,6 +45,29 @@ module DiasporaFederation
         end
       end
 
+      context "http configs" do
+        it "should fail if the http_concurrency is not a number" do
+          DiasporaFederation.http_concurrency = nil
+          expect { DiasporaFederation.validate_config }.to raise_error ConfigurationError,
+                                                                       "http_concurrency: please configure a number"
+          DiasporaFederation.http_concurrency = 20
+        end
+
+        it "should fail if the http_timeout is not a number" do
+          DiasporaFederation.http_timeout = nil
+          expect { DiasporaFederation.validate_config }.to raise_error ConfigurationError,
+                                                                       "http_timeout: please configure a number"
+          DiasporaFederation.http_timeout = 30
+        end
+
+        it "should fail if the http_verbose is not a boolean" do
+          DiasporaFederation.http_verbose = nil
+          expect { DiasporaFederation.validate_config }.to raise_error ConfigurationError,
+                                                                       "http_verbose: please configure a boolean"
+          DiasporaFederation.http_verbose = false
+        end
+      end
+
       it "should validate the callbacks" do
         expect(DiasporaFederation.callbacks).to receive(:definition_complete?).and_return(false)
         expect { DiasporaFederation.validate_config }.to raise_error ConfigurationError, "Missing handlers for "
