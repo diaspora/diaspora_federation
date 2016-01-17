@@ -27,10 +27,10 @@ module DiasporaFederation
         # Create a new instance for a message
         #
         # @param [String] sender_id sender diaspora-ID
-        # @param [String] guid guid of the object to send (can be nil if the object has no guid)
-        def initialize(sender_id, guid)
+        # @param [String] obj_str object string representation for logging (e.g. type@guid)
+        def initialize(sender_id, obj_str)
           @sender_id = sender_id
-          @guid = guid
+          @obj_str = obj_str
           @urls_to_retry = []
         end
 
@@ -64,7 +64,7 @@ module DiasporaFederation
             success = response.success?
             DiasporaFederation.callbacks.trigger(:update_pod, pod_url(response.effective_url), success)
 
-            log_line = "success=#{success} sender=#{@sender_id} guid=#{@guid} url=#{response.effective_url} " \
+            log_line = "success=#{success} sender=#{@sender_id} obj=#{@obj_str} url=#{response.effective_url} " \
                        "message=#{response.return_code} code=#{response.response_code} time=#{response.total_time}"
             if success
               logger.info(log_line)
