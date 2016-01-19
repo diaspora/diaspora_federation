@@ -3,7 +3,7 @@ module DiasporaFederation
   # {http://www.salmon-protocol.org/ Salmon Protocol}.
   module Salmon
     # XML namespace url
-    XMLNS = "https://joindiaspora.com/protocol"
+    XMLNS = "https://joindiaspora.com/protocol".freeze
   end
 end
 

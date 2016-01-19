@@ -2,7 +2,7 @@ def entity_stub(entity, data={})
   OpenStruct.new(FactoryGirl.attributes_for(entity).merge(data))
 end
 
-ALPHANUMERIC_RANGE = [*"0".."9", *"A".."Z", *"a".."z"]
+ALPHANUMERIC_RANGE = [*"0".."9", *"A".."Z", *"a".."z"].freeze
 
 def alphanumeric_string(length)
   Array.new(length) { ALPHANUMERIC_RANGE.sample }.join

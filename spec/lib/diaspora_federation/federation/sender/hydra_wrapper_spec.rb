@@ -16,9 +16,9 @@ module DiasporaFederation
     describe "#insert_job" do
       it "queues a request to hydra" do
         expect(hydra).to receive(:queue).with(kind_of(Typhoeus::Request))
-        expect(Typhoeus::Request).to receive(:new)
-                                       .with(url, Federation::Sender::HydraWrapper.hydra_opts.merge(body: {xml: xml}))
-                                       .and_call_original
+        expect(Typhoeus::Request).to receive(:new).with(
+          url, Federation::Sender::HydraWrapper.hydra_opts.merge(body: {xml: xml})
+        ).and_call_original
 
         hydra_wrapper.insert_job(url, xml)
       end

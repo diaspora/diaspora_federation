@@ -43,14 +43,13 @@ module DiasporaFederation
       validity
     end
 
-    private
-
     # @param [Hash] hash data to sign
     # @return [String] signature data string
     def self.signable_string(hash)
       hash.map {|name, value|
-        value.to_s unless name.match(/signature/)
+        value.to_s unless name =~ /signature/
       }.compact.join(";")
     end
+    private_class_method :signable_string
   end
 end

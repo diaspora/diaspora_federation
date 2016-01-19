@@ -54,8 +54,6 @@ module DiasporaFederation
         populate_entity(klass, data)
       end
 
-      private
-
       # @param [Nokogiri::XML::Element] element
       def self.wrap_valid?(element)
         (element.name == "XML" && !element.at_xpath("post").nil? &&

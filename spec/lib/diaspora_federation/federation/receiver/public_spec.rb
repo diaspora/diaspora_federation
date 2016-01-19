@@ -11,19 +11,19 @@ module DiasporaFederation
     }
 
     it "calls save_entity_after_receive if everything is fine" do
-      expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                .with(:fetch_public_key_by_diaspora_id, sender_id)
-                                                .and_return(sender_key)
-      expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                .with(:save_entity_after_receive, kind_of(Entity))
+      expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+        :fetch_public_key_by_diaspora_id, sender_id
+      ).and_return(sender_key)
+
+      expect(DiasporaFederation.callbacks).to receive(:trigger).with(:save_entity_after_receive, kind_of(Entity))
 
       described_class.new(xml).receive!
     end
 
     it "raises when sender public key is not available" do
-      expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                .with(:fetch_public_key_by_diaspora_id, sender_id)
-                                                .and_return(nil)
+      expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+        :fetch_public_key_by_diaspora_id, sender_id
+      ).and_return(nil)
 
       expect {
         described_class.new(xml).receive!

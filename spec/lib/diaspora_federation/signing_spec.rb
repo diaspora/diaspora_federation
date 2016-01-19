@@ -37,7 +37,7 @@ RSA
 
     describe ".signable_string" do
       it "forms correct string for a hash" do
-        expect(Signing.signable_string(hash)).to eq("1;2;3;4")
+        expect(Signing.send(:signable_string, hash)).to eq("1;2;3;4")
       end
     end
 

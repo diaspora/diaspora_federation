@@ -45,13 +45,13 @@ module DiasporaFederation
       end
     end
 
-    private
-
     # creates the host-meta xml with the configured server_uri and caches it
     # @return [String] XML string
     def self.host_meta_xml
       @host_meta_xml ||= Discovery::HostMeta.from_base_url(DiasporaFederation.server_uri.to_s).to_xml
     end
+
+    private
 
     def find_person_webfinger(query)
       DiasporaFederation.callbacks.trigger(:fetch_person_for_webfinger, query.strip.downcase.sub("acct:", ""))

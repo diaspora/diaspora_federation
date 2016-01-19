@@ -23,16 +23,13 @@ XML
       let(:hash) { FactoryGirl.attributes_for(:relayable_retraction_entity) }
 
       it "updates author signature when it was nil and key was supplied" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(
-                                                    :fetch_entity_author_id_by_guid,
-                                                    hash[:target_type],
-                                                    hash[:target_guid]
-                                                  )
-                                                  .and_return(hash[:diaspora_id])
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(author_pkey)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_entity_author_id_by_guid, hash[:target_type], hash[:target_guid]
+        ).and_return(hash[:diaspora_id])
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey)
 
         Entities::RelayableRetraction.update_signatures!(hash)
 
@@ -43,16 +40,13 @@ XML
       end
 
       it "updates parent author signature when it was nil, key was supplied and sender is not author of the target" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(
-                                                    :fetch_entity_author_id_by_guid,
-                                                    hash[:target_type],
-                                                    hash[:target_guid]
-                                                  )
-                                                  .and_return(FactoryGirl.generate(:diaspora_id))
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(author_pkey)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_entity_author_id_by_guid, hash[:target_type], hash[:target_guid]
+        ).and_return(FactoryGirl.generate(:diaspora_id))
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey)
 
         Entities::RelayableRetraction.update_signatures!(hash)
 
@@ -71,12 +65,13 @@ XML
       end
 
       it "doesn't change signatures if keys weren't supplied" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(nil)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_entity_author_id_by_guid, "Comment", hash[:target_guid])
-                                                  .and_return(hash[:diaspora_id])
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(nil)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_entity_author_id_by_guid, "Comment", hash[:target_guid]
+        ).and_return(hash[:diaspora_id])
 
         Entities::RelayableRetraction.update_signatures!(hash)
         expect(hash[:target_author_signature]).to eq(nil)

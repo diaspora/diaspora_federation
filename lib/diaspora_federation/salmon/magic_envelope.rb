@@ -25,19 +25,19 @@ module DiasporaFederation
       attr_reader :payload
 
       # encoding used for the payload data
-      ENCODING = "base64url"
+      ENCODING = "base64url".freeze
 
       # algorithm used for signing the payload data
-      ALGORITHM = "RSA-SHA256"
+      ALGORITHM = "RSA-SHA256".freeze
 
       # mime type describing the payload data
-      DATA_TYPE = "application/xml"
+      DATA_TYPE = "application/xml".freeze
 
       # digest instance used for signing
       DIGEST = OpenSSL::Digest::SHA256.new
 
       # XML namespace url
-      XMLNS = "http://salmon-protocol.org/ns/magic-env"
+      XMLNS = "http://salmon-protocol.org/ns/magic-env".freeze
 
       # Creates a new instance of MagicEnvelope.
       #
@@ -128,10 +128,7 @@ module DiasporaFederation
       #
       # @return [String] the signature
       def signature
-        subject = self.class.sig_subject([@payload,
-                                          DATA_TYPE,
-                                          ENCODING,
-                                          ALGORITHM])
+        subject = MagicEnvelope.send(:sig_subject, [@payload, DATA_TYPE, ENCODING, ALGORITHM])
         @rsa_privkey.sign(DIGEST, subject)
       end
 
@@ -168,6 +165,7 @@ module DiasporaFederation
       def self.sig_subject(data_arr)
         data_arr.map {|i| Base64.urlsafe_encode64(i) }.join(".")
       end
+      private_class_method :sig_subject
 
       # @param [Nokogiri::XML::Element] magic_env magic envelope XML
       # @return [Boolean]

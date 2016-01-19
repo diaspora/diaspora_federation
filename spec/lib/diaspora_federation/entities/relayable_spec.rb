@@ -19,25 +19,25 @@ module DiasporaFederation
         hash[:author_signature] = Signing.sign_with_key(hash, author_pkey)
         hash[:parent_author_signature] = Signing.sign_with_key(hash, parent_pkey)
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_public_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(author_pkey.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(
-                                                    :fetch_author_public_key_by_entity_guid,
-                                                    "Post",
-                                                    hash[:parent_guid]
-                                                  )
-                                                  .and_return(parent_pkey.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:entity_author_is_local?, "Post", hash[:parent_guid])
-                                                  .and_return(false)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_public_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey.public_key)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_author_public_key_by_entity_guid, "Post", hash[:parent_guid]
+        ).and_return(parent_pkey.public_key)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :entity_author_is_local?, "Post", hash[:parent_guid]
+        ).and_return(false)
+
         expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.not_to raise_error
       end
 
       it "raises when no public key for author was fetched" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:fetch_public_key_by_diaspora_id, anything)
-                                                  .and_return(nil)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_public_key_by_diaspora_id, anything
+        ).and_return(nil)
 
         expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.to raise_error(
           Entities::Relayable::SignatureVerificationFailed
@@ -47,9 +47,10 @@ module DiasporaFederation
       it "raises when bad author signature was passed" do
         hash[:author_signature] = nil
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_public_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(author_pkey.public_key)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_public_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey.public_key)
+
         expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.to raise_error(
           Entities::Relayable::SignatureVerificationFailed
         )
@@ -58,19 +59,18 @@ module DiasporaFederation
       it "raises when no public key for parent author was fetched" do
         hash[:author_signature] = Signing.sign_with_key(hash, author_pkey)
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_public_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(author_pkey.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(
-                                                    :fetch_author_public_key_by_entity_guid,
-                                                    "Post",
-                                                    hash[:parent_guid]
-                                                  )
-                                                  .and_return(nil)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:entity_author_is_local?, "Post", hash[:parent_guid])
-                                                  .and_return(false)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_public_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey.public_key)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_author_public_key_by_entity_guid, "Post", hash[:parent_guid]
+        ).and_return(nil)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :entity_author_is_local?, "Post", hash[:parent_guid]
+        ).and_return(false)
+
         expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.to raise_error(
           Entities::Relayable::SignatureVerificationFailed
         )
@@ -80,19 +80,18 @@ module DiasporaFederation
         hash[:author_signature] = Signing.sign_with_key(hash, author_pkey)
         hash[:parent_author_signature] = nil
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_public_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(author_pkey.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(
-                                                    :fetch_author_public_key_by_entity_guid,
-                                                    "Post",
-                                                    hash[:parent_guid]
-                                                  )
-                                                  .and_return(parent_pkey.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:entity_author_is_local?, "Post", hash[:parent_guid])
-                                                  .and_return(false)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_public_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey.public_key)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_author_public_key_by_entity_guid, "Post", hash[:parent_guid]
+        ).and_return(parent_pkey.public_key)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :entity_author_is_local?, "Post", hash[:parent_guid]
+        ).and_return(false)
+
         expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.to raise_error(
           Entities::Relayable::SignatureVerificationFailed
         )
@@ -102,28 +101,27 @@ module DiasporaFederation
         hash[:author_signature] = Signing.sign_with_key(hash, author_pkey)
         hash[:parent_author_signature] = nil
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_public_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(author_pkey.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:entity_author_is_local?, "Post", hash[:parent_guid])
-                                                  .and_return(true)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_public_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey.public_key)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :entity_author_is_local?, "Post", hash[:parent_guid]
+        ).and_return(true)
+
         expect { Entities::Relayable.verify_signatures(hash, SomeRelayable) }.not_to raise_error
       end
     end
 
     describe ".update_singatures!" do
       it "updates signatures when they were nil and keys were supplied" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(author_pkey)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(
-                                                    :fetch_author_private_key_by_entity_guid,
-                                                    "Post",
-                                                    hash[:parent_guid]
-                                                  )
-                                                  .and_return(parent_pkey)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_author_private_key_by_entity_guid, "Post", hash[:parent_guid]
+        ).and_return(parent_pkey)
 
         Entities::Relayable.update_signatures!(hash, SomeRelayable)
         expect(Signing.verify_signature(hash, hash[:author_signature], author_pkey)).to be_truthy
@@ -140,16 +138,13 @@ module DiasporaFederation
       end
 
       it "doesn't change signatures if keys weren't supplied" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(nil)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(
-                                                    :fetch_author_private_key_by_entity_guid,
-                                                    "Post",
-                                                    hash[:parent_guid]
-                                                  )
-                                                  .and_return(nil)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(nil)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_author_private_key_by_entity_guid, "Post", hash[:parent_guid]
+        ).and_return(nil)
 
         Entities::Relayable.update_signatures!(hash, SomeRelayable)
         expect(hash[:author_signature]).to eq(nil)

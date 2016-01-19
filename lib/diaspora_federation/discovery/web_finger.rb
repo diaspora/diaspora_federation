@@ -104,35 +104,35 @@ module DiasporaFederation
       property :public_key
 
       # +hcard_url+ link relation
-      REL_HCARD = "http://microformats.org/profile/hcard"
+      REL_HCARD = "http://microformats.org/profile/hcard".freeze
 
       # +seed_url+ link relation
-      REL_SEED = "http://joindiaspora.com/seed_location"
+      REL_SEED = "http://joindiaspora.com/seed_location".freeze
 
       # @deprecated This should be a +Property+ or moved to the +hCard+, but +Link+
       #   is inappropriate according to the specification (will affect older
       #   Diaspora* installations).
       # +guid+ link relation
-      REL_GUID = "http://joindiaspora.com/guid"
+      REL_GUID = "http://joindiaspora.com/guid".freeze
 
       # +profile_url+ link relation.
       # @note This might just as well be an +Alias+ instead of a +Link+.
-      REL_PROFILE = "http://webfinger.net/rel/profile-page"
+      REL_PROFILE = "http://webfinger.net/rel/profile-page".freeze
 
       # +atom_url+ link relation
-      REL_ATOM = "http://schemas.google.com/g/2010#updates-from"
+      REL_ATOM = "http://schemas.google.com/g/2010#updates-from".freeze
 
       # +salmon_url+ link relation
-      REL_SALMON = "salmon"
+      REL_SALMON = "salmon".freeze
 
       # +subscribe_url+ link relation
-      REL_SUBSCRIBE = "http://ostatus.org/schema/1.0/subscribe"
+      REL_SUBSCRIBE = "http://ostatus.org/schema/1.0/subscribe".freeze
 
       # @deprecated This should be a +Property+ or moved to the +hcard+, but +Link+
       #   is inappropriate according to the specification (will affect older
       #   Diaspora* installations).
       # +pubkey+ link relation
-      REL_PUBKEY = "diaspora-public-key"
+      REL_PUBKEY = "diaspora-public-key".freeze
 
       # Create the XML string from the current WebFinger instance
       # @return [String] XML string

@@ -34,7 +34,7 @@ module DiasporaFederation
       attr_accessor :author_id
 
       # Namespaces
-      NS = {d: Salmon::XMLNS, me: MagicEnvelope::XMLNS}
+      NS = {d: Salmon::XMLNS, me: MagicEnvelope::XMLNS}.freeze
 
       # Returns new instance of the Entity that is contained within the XML of
       # this Slap.

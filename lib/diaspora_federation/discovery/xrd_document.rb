@@ -29,13 +29,13 @@ module DiasporaFederation
     # @see http://docs.oasis-open.org/xri/xrd/v1.0/xrd-1.0.html Extensible Resource Descriptor (XRD) Version 1.0
     class XrdDocument
       # xml namespace url
-      XMLNS = "http://docs.oasis-open.org/ns/xri/xrd-1.0"
+      XMLNS = "http://docs.oasis-open.org/ns/xri/xrd-1.0".freeze
 
       # +Link+ element attributes
-      LINK_ATTRS = %i(rel type href template)
+      LINK_ATTRS = %i(rel type href template).freeze
 
       # format string for datetime (+Expires+ element)
-      DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+      DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ".freeze
 
       # The <Expires> element contains a time value which specifies the instant at
       # and after which the document has expired and SHOULD NOT be used.
@@ -107,7 +107,7 @@ module DiasporaFederation
 
       private
 
-      NS = {xrd: XMLNS}
+      NS = {xrd: XMLNS}.freeze
 
       def add_aliases_to(xml)
         @aliases.each do |a|

@@ -22,9 +22,9 @@ XML
       let(:hash) { FactoryGirl.attributes_for(:signed_retraction_entity) }
 
       it "updates author signature when it was nil and key was supplied" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(author_pkey)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey)
 
         signable_hash = hash.select do |key, _|
           %i(target_guid target_type).include?(key)
@@ -44,9 +44,9 @@ XML
       end
 
       it "doesn't change signature if a key wasn't supplied" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-                                                  .with(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
-                                                  .and_return(nil)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(nil)
 
         Entities::SignedRetraction.update_signatures!(hash)
         expect(hash[:author_signature]).to eq(nil)

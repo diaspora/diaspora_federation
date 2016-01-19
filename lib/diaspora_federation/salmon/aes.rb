@@ -3,7 +3,7 @@ module DiasporaFederation
     # class for AES encryption and decryption
     class AES
       # OpenSSL aes cipher definition
-      CIPHER = "AES-256-CBC"
+      CIPHER = "AES-256-CBC".freeze
 
       # generates a random AES key and initialization vector
       # @return [Hash] { key: "...", iv: "..." }

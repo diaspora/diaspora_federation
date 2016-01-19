@@ -132,7 +132,7 @@ module DiasporaFederation
             created_at { Time.now.utc }
             messages []
             diaspora_id
-            participant_ids { 3.times.map { generate(:diaspora_id) }.join(";") }
+            participant_ids { Array.new(3) { generate(:diaspora_id) }.join(";") }
           end
 
           factory :message_entity, class: DiasporaFederation::Entities::Message, parent: :relayable_entity do
@@ -179,7 +179,7 @@ module DiasporaFederation
           factory :poll_entity, class: DiasporaFederation::Entities::Poll do
             guid
             question { "Select an answer" }
-            poll_answers { 3.times.map { FactoryGirl.build(:poll_answer_entity) } }
+            poll_answers { Array.new(3) { FactoryGirl.build(:poll_answer_entity) } }
           end
 
           factory :poll_participation_entity,

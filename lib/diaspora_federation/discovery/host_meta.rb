@@ -26,7 +26,7 @@ module DiasporaFederation
       end
 
       # URL fragment to append to the base URL
-      WEBFINGER_SUFFIX = "/webfinger?q={uri}"
+      WEBFINGER_SUFFIX = "/webfinger?q={uri}".freeze
 
       # Returns the WebFinger URL that was used to build this instance (either from
       # xml or by giving a base URL).

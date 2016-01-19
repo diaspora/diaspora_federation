@@ -121,7 +121,7 @@ module DiasporaFederation
         photo_small:  ".entity_photo_small .photo[src]",
         key:          ".key",
         searchable:   ".searchable"
-      }
+      }.freeze
 
       # Create the HTML string from the current HCard instance
       # @return [String] HTML string
@@ -209,13 +209,13 @@ module DiasporaFederation
       #
       # @param container [Nokogiri::XML::Element] parent element for added property HTML
       # @param name [Symbol] property name
-      # @param block [Proc] block returning an element
-      def add_property(container, name, &block)
+      # @yield [Nokogiri::HTML::Builder] html builder
+      def add_property(container, name)
         Nokogiri::HTML::Builder.with(container) do |html|
           html.dl(class: "entity_#{name}") {
             html.dt(name.to_s.capitalize)
             html.dd {
-              block.call(html)
+              yield html
             }
           }
         end

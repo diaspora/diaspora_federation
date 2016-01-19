@@ -1,9 +1,11 @@
 AllCops:
-  RunRailsCops: true
   Exclude:
     - "bin/**/*"
     - "test/dummy/bin/**/*"
     - "test/dummy/db/**/*"
+
+Rails:
+  Enabled: true
 
 # Commonly used screens these days easily fit more than 80 characters.
 Metrics/LineLength:
@@ -18,6 +20,8 @@ Metrics/MethodLength:
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
 Metrics/ClassLength:
+  Max: 1500
+Metrics/ModuleLength:
   Max: 1500
 
 # No space makes the method definition shorter and differentiates
@@ -144,10 +148,6 @@ Style/DotPosition:
 
 
 # diaspora_federation rules
-Rails/TimeZone:
-  Exclude:
-    - "spec/**/*"
-
 Metrics/CyclomaticComplexity:
   Max: 10
 Metrics/PerceivedComplexity:
@@ -157,8 +157,9 @@ Metrics/AbcSize:
   Exclude:
     - "lib/diaspora_federation/test/factories.rb"
 
-Metrics/ModuleLength:
-  Max: 1500
+Rails/TimeZone:
+  Exclude:
+    - "spec/lib/**/*"
 
 Style/SingleLineMethods:
   Exclude:
