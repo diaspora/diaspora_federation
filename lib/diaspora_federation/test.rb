@@ -21,10 +21,7 @@ module DiasporaFederation
     # @param [Symbol] factory_name the factory to generate attributes for (normally entity name)
     # @return [Hash] hash with correct signatures
     def self.relayable_attributes_with_signatures(factory_name)
-      klass = FactoryGirl.factory_by_name(factory_name).build_class
-      sort_hash(FactoryGirl.attributes_for(factory_name), klass).tap do |data|
-        DiasporaFederation::Entities::Relayable.update_signatures!(data, klass)
-      end
+      FactoryGirl.build(factory_name).to_signed_h
     end
 
     # Generates attributes for signed retraction entity constructor with correct signatures in it

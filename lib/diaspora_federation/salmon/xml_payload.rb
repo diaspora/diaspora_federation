@@ -97,11 +97,9 @@ module DiasporaFederation
           end
         }]
 
-        if klass.included_modules.include?(Entities::Relayable)
-          Entities::Relayable.verify_signatures(data, klass)
+        klass.new(data).tap do |entity|
+          entity.verify_signatures if entity.respond_to? :verify_signatures
         end
-
-        klass.new(data)
       end
       private_class_method :populate_entity
 

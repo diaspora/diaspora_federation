@@ -21,6 +21,12 @@ module DiasporaFederation
       #   @see Person#diaspora_id
       #   @return [String] diaspora ID
       property :diaspora_id, xml_name: :diaspora_handle
+
+      # The {Comment} parent is a Post
+      # @return [String] target type
+      def target_type
+        "Post"
+      end
     end
   end
 end

@@ -147,7 +147,7 @@ XML
         it "calls signatures verification on relayable unpack" do
           entity = FactoryGirl.build(:comment_entity)
           payload = Salmon::XmlPayload.pack(entity)
-          expect(Entities::Relayable).to receive(:verify_signatures).once
+          expect(Signing).to receive(:verify_signature).twice.and_call_original
           Salmon::XmlPayload.unpack(payload)
         end
       end

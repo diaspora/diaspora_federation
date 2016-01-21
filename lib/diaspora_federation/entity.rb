@@ -35,6 +35,10 @@ module DiasporaFederation
   class Entity
     extend PropertiesDSL
 
+    # the original data hash with which the entity was created
+    # @return [Hash] original data
+    attr_reader :data
+
     # Initializes the Entity with the given attribute hash and freezes the created
     # instance it returns.
     #
@@ -55,6 +59,8 @@ module DiasporaFederation
       unless missing_props.empty?
         raise ArgumentError, "missing required properties: #{missing_props.join(', ')}"
       end
+
+      @data = data
 
       self.class.default_values.merge(data).each do |k, v|
         instance_variable_set("@#{k}", nilify(v)) if setable?(k, v)
