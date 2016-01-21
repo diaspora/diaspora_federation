@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Like do
-    let(:data) { Test.attributes_with_signatures(:like_entity) }
+    let(:data) { FactoryGirl.build(:like_entity).to_h }
 
     let(:xml) {
       <<-XML

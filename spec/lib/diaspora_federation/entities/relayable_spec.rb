@@ -119,7 +119,7 @@ module DiasporaFederation
       end
     end
 
-    describe "#to_signed_h" do
+    describe "#to_h" do
       it "updates signatures when they were nil and keys were supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
@@ -129,7 +129,7 @@ module DiasporaFederation
           :fetch_author_private_key_by_entity_guid, "Target", hash[:parent_guid]
         ).and_return(parent_pkey)
 
-        signed_hash = SomeRelayable.new(hash).to_signed_h
+        signed_hash = SomeRelayable.new(hash).to_h
 
         expect(Signing.verify_signature(signed_hash, signed_hash[:author_signature], author_pkey)).to be_truthy
         expect(Signing.verify_signature(signed_hash, signed_hash[:parent_author_signature], parent_pkey)).to be_truthy
@@ -138,7 +138,7 @@ module DiasporaFederation
       it "doesn't change signatures if they are already set" do
         hash.merge!(author_signature: "aa", parent_author_signature: "bb").delete(:some_other_data)
 
-        expect(SomeRelayable.new(hash).to_signed_h).to eq(hash)
+        expect(SomeRelayable.new(hash).to_h).to eq(hash)
       end
 
       it "doesn't change signatures if keys weren't supplied" do
@@ -150,7 +150,7 @@ module DiasporaFederation
           :fetch_author_private_key_by_entity_guid, "Target", hash[:parent_guid]
         ).and_return(nil)
 
-        signed_hash = SomeRelayable.new(hash).to_signed_h
+        signed_hash = SomeRelayable.new(hash).to_h
 
         expect(signed_hash[:author_signature]).to eq(nil)
         expect(signed_hash[:parent_author_signature]).to eq(nil)

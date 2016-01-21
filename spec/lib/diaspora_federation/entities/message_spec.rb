@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Message do
-    let(:data) { Test.attributes_with_signatures(:message_entity) }
+    let(:data) { FactoryGirl.build(:message_entity).to_h }
 
     let(:xml) {
       <<-XML

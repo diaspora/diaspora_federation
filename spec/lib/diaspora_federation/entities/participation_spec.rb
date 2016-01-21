@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Participation do
-    let(:data) { Test.attributes_with_signatures(:participation_entity) }
+    let(:data) { FactoryGirl.build(:participation_entity).to_h }
 
     let(:xml) {
       <<-XML

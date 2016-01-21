@@ -58,7 +58,7 @@ module DiasporaFederation
       # @return [Nokogiri::XML::Element] root element containing properties as child elements
       def to_xml
         entity_xml.tap do |xml|
-          hash = to_signed_h
+          hash = to_h
           xml.at_xpath("target_author_signature").content = hash[:target_author_signature]
           xml.at_xpath("parent_author_signature").content = hash[:parent_author_signature]
         end
@@ -67,12 +67,13 @@ module DiasporaFederation
       # Adds signatures to the hash with the keys of the author and the parent
       # if the signatures are not in the hash yet and if the keys are available.
       #
+      # @see Entity#to_h
       # @return [Hash] entity data hash with updated signatures
-      def to_signed_h
+      def to_h
         target_author = DiasporaFederation.callbacks.trigger(:fetch_entity_author_id_by_guid, target_type, target_guid)
         privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, diaspora_id)
 
-        to_h.tap do |hash|
+        super.tap do |hash|
           fill_required_signature(target_author, privkey, hash) unless privkey.nil?
         end
       end

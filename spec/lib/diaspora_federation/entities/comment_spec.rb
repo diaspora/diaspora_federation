@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Comment do
-    let(:data) { Test.attributes_with_signatures(:comment_entity) }
+    let(:data) { FactoryGirl.build(:comment_entity).to_h }
 
     let(:xml) {
       <<-XML

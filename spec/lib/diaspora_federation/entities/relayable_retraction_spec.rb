@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::RelayableRetraction do
-    let(:data) { Test.attributes_with_signatures(:relayable_retraction_entity) }
+    let(:data) { FactoryGirl.build(:relayable_retraction_entity).to_h }
 
     let(:xml) {
       <<-XML
@@ -18,7 +18,7 @@ XML
 
     it_behaves_like "an XML Entity"
 
-    describe "#to_signed_h" do
+    describe "#to_h" do
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
       let(:hash) { FactoryGirl.attributes_for(:relayable_retraction_entity) }
 
@@ -31,7 +31,7 @@ XML
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(author_pkey)
 
-        signed_hash = Entities::RelayableRetraction.new(hash).to_signed_h
+        signed_hash = Entities::RelayableRetraction.new(hash).to_h
 
         signable_hash = hash.select do |key, _|
           %i(target_guid target_type).include?(key)
@@ -48,7 +48,7 @@ XML
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(author_pkey)
 
-        signed_hash = Entities::RelayableRetraction.new(hash).to_signed_h
+        signed_hash = Entities::RelayableRetraction.new(hash).to_h
 
         signable_hash = hash.select do |key, _|
           %i(target_guid target_type).include?(key)
@@ -59,7 +59,7 @@ XML
       it "doesn't change signatures if they are already set" do
         hash.merge!(target_author_signature: "aa", parent_author_signature: "bb")
 
-        expect(Entities::RelayableRetraction.new(hash).to_signed_h).to eq(hash)
+        expect(Entities::RelayableRetraction.new(hash).to_h).to eq(hash)
       end
 
       it "doesn't change signatures if keys weren't supplied" do
@@ -71,7 +71,7 @@ XML
           :fetch_entity_author_id_by_guid, "Comment", hash[:target_guid]
         ).and_return(hash[:diaspora_id])
 
-        signed_hash = Entities::RelayableRetraction.new(hash).to_signed_h
+        signed_hash = Entities::RelayableRetraction.new(hash).to_h
         expect(signed_hash[:target_author_signature]).to eq(nil)
       end
     end
