@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::SignedRetraction do
-    let(:data) { Test.signed_retraction_attributes_with_signatures }
+    let(:data) { Test.attributes_with_signatures(:signed_retraction_entity) }
 
     let(:xml) {
       <<-XML
@@ -17,7 +17,7 @@ XML
 
     it_behaves_like "an XML Entity"
 
-    describe ".update_singatures!" do
+    describe "#to_signed_h" do
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
       let(:hash) { FactoryGirl.attributes_for(:signed_retraction_entity) }
 
@@ -30,17 +30,15 @@ XML
           %i(target_guid target_type).include?(key)
         end
 
-        Entities::SignedRetraction.update_signatures!(hash)
+        signed_hash = Entities::SignedRetraction.new(hash).to_signed_h
 
-        expect(Signing.verify_signature(signable_hash, hash[:target_author_signature], author_pkey)).to be_truthy
+        expect(Signing.verify_signature(signable_hash, signed_hash[:target_author_signature], author_pkey)).to be_truthy
       end
 
       it "doesn't change signature if it is already set" do
-        signatures = {target_author_signature: "aa"}
-        hash.merge!(signatures)
+        hash[:target_author_signature] = "aa"
 
-        Entities::SignedRetraction.update_signatures!(hash)
-        expect(hash[:target_author_signature]).to eq(signatures[:target_author_signature])
+        expect(Entities::SignedRetraction.new(hash).to_signed_h).to eq(hash)
       end
 
       it "doesn't change signature if a key wasn't supplied" do
@@ -48,8 +46,8 @@ XML
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(nil)
 
-        Entities::SignedRetraction.update_signatures!(hash)
-        expect(hash[:author_signature]).to eq(nil)
+        signed_hash = Entities::SignedRetraction.new(hash).to_signed_h
+        expect(signed_hash[:author_signature]).to eq(nil)
       end
     end
   end

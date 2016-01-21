@@ -58,41 +58,39 @@ module DiasporaFederation
       # @return [Nokogiri::XML::Element] root element containing properties as child elements
       def to_xml
         entity_xml.tap do |xml|
-          hash = to_h
-          RelayableRetraction.update_signatures!(hash)
+          hash = to_signed_h
           xml.at_xpath("target_author_signature").content = hash[:target_author_signature]
           xml.at_xpath("parent_author_signature").content = hash[:parent_author_signature]
         end
       end
 
-      # Adds signatures to a given hash with the keys of the author and the parent
+      # Adds signatures to the hash with the keys of the author and the parent
       # if the signatures are not in the hash yet and if the keys are available.
       #
-      # @param [Hash] hash hash given for a signing
-      def self.update_signatures!(hash)
-        target_author = DiasporaFederation.callbacks.trigger(
-          :fetch_entity_author_id_by_guid,
-          hash[:target_type],
-          hash[:target_guid]
-        )
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, hash[:diaspora_id])
+      # @return [Hash] entity data hash with updated signatures
+      def to_signed_h
+        target_author = DiasporaFederation.callbacks.trigger(:fetch_entity_author_id_by_guid, target_type, target_guid)
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, diaspora_id)
 
-        fill_required_signature(target_author, privkey, hash) unless privkey.nil?
+        to_h.tap do |hash|
+          fill_required_signature(target_author, privkey, hash) unless privkey.nil?
+        end
       end
+
+      private
 
       # @param [String] target_author the author of the entity to retract
       # @param [OpenSSL::PKey::RSA] privkey private key of sender
       # @param [Hash] hash hash given for a signing
-      def self.fill_required_signature(target_author, privkey, hash)
-        if target_author == hash[:diaspora_id] && hash[:target_author_signature].nil?
+      def fill_required_signature(target_author, privkey, hash)
+        if target_author == diaspora_id && target_author_signature.nil?
           hash[:target_author_signature] =
             Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), privkey)
-        elsif target_author != hash[:diaspora_id] && hash[:parent_author_signature].nil?
+        elsif target_author != diaspora_id && parent_author_signature.nil?
           hash[:parent_author_signature] =
             Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), privkey)
         end
       end
-      private_class_method :fill_required_signature
     end
   end
 end

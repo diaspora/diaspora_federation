@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Participation do
-    let(:data) { Test.relayable_attributes_with_signatures(:participation_entity) }
+    let(:data) { Test.attributes_with_signatures(:participation_entity) }
 
     let(:xml) {
       <<-XML

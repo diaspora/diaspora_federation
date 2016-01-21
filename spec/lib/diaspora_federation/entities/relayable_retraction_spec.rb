@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::RelayableRetraction do
-    let(:data) { Test.relayable_retraction_attributes_with_signatures }
+    let(:data) { Test.attributes_with_signatures(:relayable_retraction_entity) }
 
     let(:xml) {
       <<-XML
@@ -9,7 +9,7 @@ module DiasporaFederation
   <target_guid>#{data[:target_guid]}</target_guid>
   <target_type>#{data[:target_type]}</target_type>
   <sender_handle>#{data[:diaspora_id]}</sender_handle>
-  <target_author_signature>#{data[:target_author_signature]}</target_author_signature>
+  <target_author_signature/>
 </relayable_retraction>
 XML
     }
@@ -18,7 +18,7 @@ XML
 
     it_behaves_like "an XML Entity"
 
-    describe ".update_singatures!" do
+    describe "#to_signed_h" do
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
       let(:hash) { FactoryGirl.attributes_for(:relayable_retraction_entity) }
 
@@ -31,12 +31,12 @@ XML
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(author_pkey)
 
-        Entities::RelayableRetraction.update_signatures!(hash)
+        signed_hash = Entities::RelayableRetraction.new(hash).to_signed_h
 
         signable_hash = hash.select do |key, _|
           %i(target_guid target_type).include?(key)
         end
-        expect(Signing.verify_signature(signable_hash, hash[:target_author_signature], author_pkey)).to be_truthy
+        expect(Signing.verify_signature(signable_hash, signed_hash[:target_author_signature], author_pkey)).to be_truthy
       end
 
       it "updates parent author signature when it was nil, key was supplied and sender is not author of the target" do
@@ -48,20 +48,18 @@ XML
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(author_pkey)
 
-        Entities::RelayableRetraction.update_signatures!(hash)
+        signed_hash = Entities::RelayableRetraction.new(hash).to_signed_h
 
         signable_hash = hash.select do |key, _|
           %i(target_guid target_type).include?(key)
         end
-        expect(Signing.verify_signature(signable_hash, hash[:parent_author_signature], author_pkey)).to be_truthy
+        expect(Signing.verify_signature(signable_hash, signed_hash[:parent_author_signature], author_pkey)).to be_truthy
       end
 
       it "doesn't change signatures if they are already set" do
-        signatures = {target_author_signature: "aa"}
-        hash.merge!(signatures)
+        hash.merge!(target_author_signature: "aa", parent_author_signature: "bb")
 
-        Entities::RelayableRetraction.update_signatures!(hash)
-        expect(hash[:target_author_signature]).to eq(signatures[:target_author_signature])
+        expect(Entities::RelayableRetraction.new(hash).to_signed_h).to eq(hash)
       end
 
       it "doesn't change signatures if keys weren't supplied" do
@@ -73,8 +71,8 @@ XML
           :fetch_entity_author_id_by_guid, "Comment", hash[:target_guid]
         ).and_return(hash[:diaspora_id])
 
-        Entities::RelayableRetraction.update_signatures!(hash)
-        expect(hash[:target_author_signature]).to eq(nil)
+        signed_hash = Entities::RelayableRetraction.new(hash).to_signed_h
+        expect(signed_hash[:target_author_signature]).to eq(nil)
       end
     end
   end

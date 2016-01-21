@@ -1,7 +1,7 @@
 module DiasporaFederation
   describe Entities::Conversation do
-    let(:msg1_data) { Test.relayable_attributes_with_signatures(:message_entity) }
-    let(:msg2_data) { Test.relayable_attributes_with_signatures(:message_entity) }
+    let(:msg1_data) { Test.attributes_with_signatures(:message_entity) }
+    let(:msg2_data) { Test.attributes_with_signatures(:message_entity) }
     let(:msg1) { FactoryGirl.build(:message_entity, msg1_data) }
     let(:msg2) { FactoryGirl.build(:message_entity, msg2_data) }
     let(:data) {
