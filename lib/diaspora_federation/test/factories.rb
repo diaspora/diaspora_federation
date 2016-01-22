@@ -92,7 +92,7 @@ module DiasporaFederation
           factory :participation_entity,
                   class: DiasporaFederation::Entities::Participation, parent: :relayable_entity do
             guid
-            target_type "Post"
+            parent_type "Post"
             diaspora_id
           end
 
@@ -118,7 +118,7 @@ module DiasporaFederation
           factory :like_entity, class: DiasporaFederation::Entities::Like, parent: :relayable_entity do
             positive true
             guid
-            target_type "Post"
+            parent_type "Post"
             diaspora_id
           end
 

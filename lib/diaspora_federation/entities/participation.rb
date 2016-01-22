@@ -10,11 +10,11 @@ module DiasporaFederation
       #   @return [String] participation guid
       property :guid
 
-      # @!attribute [r] target_type
+      # @!attribute [r] parent_type
       #   a string describing a type of the target to subscribe on.
       #   currently only "Post" is supported.
-      #   @return [String] target type
-      property :target_type
+      #   @return [String] parent type
+      property :parent_type, xml_name: :target_type
 
       include Relayable
 

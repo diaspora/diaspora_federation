@@ -16,12 +16,12 @@ module DiasporaFederation
       #   @return [String] like guid
       property :guid
 
-      # @!attribute [r] target_type
-      #   A string describing the type of the target.
+      # @!attribute [r] parent_type
+      #   A string describing the type of the parent.
       #   Can be "Post" or "Comment" (Comments are currently not implemented in the
       #   Diaspora Frontend).
-      #   @return [String] target type
-      property :target_type
+      #   @return [String] parent type
+      property :parent_type, xml_name: :target_type
 
       include Relayable
 

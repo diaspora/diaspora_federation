@@ -17,9 +17,11 @@ module DiasporaFederation
       end
     end
 
-    describe "#target_type" do
-      it_behaves_like "a property that mustn't be empty" do
-        let(:property) { :target_type }
+    describe "#parent_type" do
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :parent_type }
+        let(:wrong_values) { [nil, "", "any", "Postxxx", "post"] }
+        let(:correct_values) { ["Post"] }
       end
     end
   end

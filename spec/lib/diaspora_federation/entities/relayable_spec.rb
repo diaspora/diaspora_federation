@@ -15,7 +15,7 @@ module DiasporaFederation
 
       property :diaspora_id, xml_name: :diaspora_handle
 
-      def target_type
+      def parent_type
         "Target"
       end
     end

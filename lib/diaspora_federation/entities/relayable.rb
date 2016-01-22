@@ -48,7 +48,7 @@ module DiasporaFederation
 
           if parent_author_signature.nil?
             privkey = DiasporaFederation.callbacks.trigger(
-              :fetch_author_private_key_by_entity_guid, target_type, parent_guid
+              :fetch_author_private_key_by_entity_guid, parent_type, parent_guid
             )
             hash[:parent_author_signature] = Signing.sign_with_key(hash, privkey) unless privkey.nil?
           end
@@ -79,7 +79,7 @@ module DiasporaFederation
           data, author_signature, pubkey
         )
 
-        author_is_local = DiasporaFederation.callbacks.trigger(:entity_author_is_local?, target_type, parent_guid)
+        author_is_local = DiasporaFederation.callbacks.trigger(:entity_author_is_local?, parent_type, parent_guid)
         verify_parent_signature unless author_is_local
       end
 
@@ -87,7 +87,7 @@ module DiasporaFederation
 
       # this happens only on downstream federation
       def verify_parent_signature
-        pubkey = DiasporaFederation.callbacks.trigger(:fetch_author_public_key_by_entity_guid, target_type, parent_guid)
+        pubkey = DiasporaFederation.callbacks.trigger(:fetch_author_public_key_by_entity_guid, parent_type, parent_guid)
 
         raise SignatureVerificationFailed, "failed to fetch public key for author of #{parent_guid}" if pubkey.nil?
         raise SignatureVerificationFailed, "wrong parent_author_signature" unless Signing.verify_signature(

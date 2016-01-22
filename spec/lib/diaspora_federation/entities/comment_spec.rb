@@ -21,9 +21,9 @@ XML
 
     it_behaves_like "a relayable Entity"
 
-    describe "#target_type" do
-      it "returns \"Post\" as target type" do
-        expect(described_class.new(data).target_type).to eq("Post")
+    describe "#parent_type" do
+      it "returns \"Post\" as parent type" do
+        expect(described_class.new(data).parent_type).to eq("Post")
       end
     end
   end

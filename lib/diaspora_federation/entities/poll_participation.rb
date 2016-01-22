@@ -25,8 +25,8 @@ module DiasporaFederation
       property :poll_answer_guid
 
       # The {PollParticipation} parent is a {Poll}
-      # @return [String] target type
-      def target_type
+      # @return [String] parent type
+      def parent_type
         "Poll"
       end
     end

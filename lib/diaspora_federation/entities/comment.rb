@@ -23,8 +23,8 @@ module DiasporaFederation
       property :diaspora_id, xml_name: :diaspora_handle
 
       # The {Comment} parent is a Post
-      # @return [String] target type
-      def target_type
+      # @return [String] parent type
+      def parent_type
         "Post"
       end
     end

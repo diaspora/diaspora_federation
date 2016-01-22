@@ -35,8 +35,8 @@ module DiasporaFederation
       property :conversation_guid
 
       # The {Message} parent is a {Conversation}
-      # @return [String] target type
-      def target_type
+      # @return [String] parent type
+      def parent_type
         "Conversation"
       end
     end

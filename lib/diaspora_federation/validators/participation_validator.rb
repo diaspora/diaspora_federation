@@ -6,7 +6,7 @@ module DiasporaFederation
 
       rule :guid, :guid
 
-      rule :target_type, :not_empty
+      rule :parent_type, [:not_empty, regular_expression: {regex: /\APost\z/}]
 
       include RelayableValidator
 

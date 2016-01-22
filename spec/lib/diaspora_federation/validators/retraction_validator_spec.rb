@@ -12,7 +12,7 @@ module DiasporaFederation
       let(:mandatory) { true }
     end
 
-    describe "#type" do
+    describe "#target_type" do
       it_behaves_like "a property that mustn't be empty" do
         let(:property) { :target_type }
       end
