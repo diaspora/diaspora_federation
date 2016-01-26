@@ -34,7 +34,7 @@ module DiasporaFederation
     describe "#send" do
       let(:response) {
         Typhoeus::Response.new(
-          code:          200,
+          code:          202,
           body:          "",
           time:          0.2,
           effective_url: url.sub("http://", "https://"),
@@ -68,9 +68,28 @@ module DiasporaFederation
         expect(hydra_wrapper.send).to eq([url2])
       end
 
-      it "calls the update_pod callback for all responses with effective_url and success-status" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:update_pod, "https://example.org/", true)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:update_pod, "http://example.com/", false)
+      it "calls the update_pod callback for all responses with effective_url and status" do
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:update_pod, "https://example.org/", 202)
+        expect(DiasporaFederation.callbacks).to receive(:trigger)
+          .with(:update_pod, "http://example.com/", :couldnt_resolve_host)
+
+        hydra_wrapper.send
+      end
+
+      it "calls the update_pod callback with http status code when there was no error" do
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:update_pod, "https://example.org/", 202)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:update_pod, "http://example.net/", 404)
+        allow(DiasporaFederation.callbacks).to receive(:trigger)
+
+        not_found = Typhoeus::Response.new(
+          code:          404,
+          body:          "",
+          time:          0.2,
+          effective_url: "http://example.net/",
+          return_code:   :ok
+        )
+        Typhoeus.stub("http://example.net/receive/not_found").and_return(not_found)
+        hydra_wrapper.insert_job("http://example.net/receive/not_found", xml)
 
         hydra_wrapper.send
       end

@@ -61,9 +61,9 @@ module DiasporaFederation
         # @param [Typhoeus::Request] request
         def prepare_request(request)
           request.on_complete do |response|
-            success = response.success?
-            DiasporaFederation.callbacks.trigger(:update_pod, pod_url(response.effective_url), success)
+            DiasporaFederation.callbacks.trigger(:update_pod, pod_url(response.effective_url), status(response))
 
+            success = response.success?
             log_line = "success=#{success} sender=#{@sender_id} obj=#{@obj_str} url=#{response.effective_url} " \
                        "message=#{response.return_code} code=#{response.response_code} time=#{response.total_time}"
             if success
@@ -81,6 +81,10 @@ module DiasporaFederation
         # @return [String] pod root-url
         def pod_url(url)
           URI.parse(url).tap {|uri| uri.path = "/" }.to_s
+        end
+
+        def status(res)
+          res.return_code == :ok ? res.response_code : res.return_code
         end
       end
     end

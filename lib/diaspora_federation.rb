@@ -168,6 +168,11 @@ module DiasporaFederation
     #   After the xml was parsed and processed the gem calls this callback to persist the entity
     #   @param [DiasporaFederation::Entity] entity the received entity after processing
     #
+    # update_pod
+    #   Update the pod status
+    #   @param [String] url the pod url
+    #   @param [Symbol, Integer] status the error as {Symbol} or the http-status as {Integer} if it was :ok
+    #
     # @see Callbacks#on
     #
     # @example
