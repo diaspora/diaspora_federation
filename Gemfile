@@ -49,7 +49,7 @@ end
 
 group :development, :test do
   # unit tests
-  gem "rspec-rails", "~> 3.4.0"
+  gem "rspec-rails", "~> 3.4.1"
 
   # automatic test runs
   gem "guard-rspec",   require: false
