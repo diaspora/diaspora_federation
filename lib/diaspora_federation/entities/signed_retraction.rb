@@ -48,21 +48,23 @@ module DiasporaFederation
         super.tap do |hash|
           if target_author_signature.nil?
             privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, diaspora_id)
-            unless privkey.nil?
-              hash[:target_author_signature] =
-                Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), privkey)
-            end
+            hash[:target_author_signature] = SignedRetraction.sign_with_key(privkey, self) unless privkey.nil?
           end
         end
       end
 
-      # Deletes :diaspora_id (xml_name: sender_handle) from the hash in order to compute
-      # a signature since it is included from signable_string for SignedRetraction and RelayableRetraction
-      #
-      # @param [Hash] data hash of the retraction properties
-      # @return [Hash] hash copy without :diaspora_id member
-      def self.apply_signable_exceptions(data)
-        data.dup.tap {|data| data.delete(:diaspora_id) }
+      # use only {Retraction} for receive
+      # @return [Retraction] instance as normal retraction
+      def to_retraction
+        Retraction.new(diaspora_id: diaspora_id, target_guid: target_guid, target_type: target_type)
+      end
+
+      # Create signature for a retraction
+      # @param [OpenSSL::PKey::RSA] privkey private key of sender
+      # @param [SignedRetraction, RelayableRetraction] ret the retraction to sign
+      # @return [String] a Base64 encoded signature of the retraction with the key
+      def self.sign_with_key(privkey, ret)
+        Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, [ret.target_guid, ret.target_type].join(";")))
       end
     end
   end

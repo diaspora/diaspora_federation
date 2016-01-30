@@ -78,6 +78,12 @@ module DiasporaFederation
         end
       end
 
+      # use only {Retraction} for receive
+      # @return [Retraction] instance as normal retraction
+      def to_retraction
+        Retraction.new(diaspora_id: diaspora_id, target_guid: target_guid, target_type: target_type)
+      end
+
       private
 
       # @param [String] target_author the author of the entity to retract
@@ -85,11 +91,9 @@ module DiasporaFederation
       # @param [Hash] hash hash given for a signing
       def fill_required_signature(target_author, privkey, hash)
         if target_author == diaspora_id && target_author_signature.nil?
-          hash[:target_author_signature] =
-            Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), privkey)
+          hash[:target_author_signature] = SignedRetraction.sign_with_key(privkey, self)
         elsif target_author != diaspora_id && parent_author_signature.nil?
-          hash[:parent_author_signature] =
-            Signing.sign_with_key(SignedRetraction.apply_signable_exceptions(hash), privkey)
+          hash[:parent_author_signature] = SignedRetraction.sign_with_key(privkey, self)
         end
       end
     end

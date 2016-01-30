@@ -75,5 +75,17 @@ XML
         expect(signed_hash[:target_author_signature]).to eq(nil)
       end
     end
+
+    describe "#to_retraction" do
+      it "copies the attributes to a Retraction" do
+        relayable_retraction = FactoryGirl.build(:relayable_retraction_entity)
+        retraction = relayable_retraction.to_retraction
+
+        expect(retraction).to be_a(Entities::Retraction)
+        expect(retraction.diaspora_id).to eq(relayable_retraction.diaspora_id)
+        expect(retraction.target_guid).to eq(relayable_retraction.target_guid)
+        expect(retraction.target_type).to eq(relayable_retraction.target_type)
+      end
+    end
   end
 end
