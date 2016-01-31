@@ -147,8 +147,11 @@ XML
         it "calls signatures verification on relayable unpack" do
           entity = FactoryGirl.build(:comment_entity)
           payload = Salmon::XmlPayload.pack(entity)
-          expect(Signing).to receive(:verify_signature).twice.and_call_original
-          Salmon::XmlPayload.unpack(payload)
+          payload.at_xpath("post/*[1]/author_signature").content = nil
+
+          expect {
+            Salmon::XmlPayload.unpack(payload)
+          }.to raise_error DiasporaFederation::Entities::Relayable::SignatureVerificationFailed
         end
       end
 

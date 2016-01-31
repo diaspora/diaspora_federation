@@ -64,7 +64,7 @@ module DiasporaFederation
       # @param [SignedRetraction, RelayableRetraction] ret the retraction to sign
       # @return [String] a Base64 encoded signature of the retraction with the key
       def self.sign_with_key(privkey, ret)
-        Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, [ret.target_guid, ret.target_type].join(";")))
+        Base64.strict_encode64(privkey.sign(Relayable::DIGEST, [ret.target_guid, ret.target_type].join(";")))
       end
     end
   end

@@ -31,12 +31,12 @@ XML
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(author_pkey)
 
+        signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
+
         signed_hash = Entities::RelayableRetraction.new(hash).to_h
 
-        signable_hash = hash.select do |key, _|
-          %i(target_guid target_type).include?(key)
-        end
-        expect(Signing.verify_signature(signable_hash, signed_hash[:target_author_signature], author_pkey)).to be_truthy
+        signature = Base64.decode64(signed_hash[:target_author_signature])
+        expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
       end
 
       it "updates parent author signature when it was nil, key was supplied and sender is not author of the target" do
@@ -48,12 +48,12 @@ XML
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(author_pkey)
 
+        signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
+
         signed_hash = Entities::RelayableRetraction.new(hash).to_h
 
-        signable_hash = hash.select do |key, _|
-          %i(target_guid target_type).include?(key)
-        end
-        expect(Signing.verify_signature(signable_hash, signed_hash[:parent_author_signature], author_pkey)).to be_truthy
+        signature = Base64.decode64(signed_hash[:parent_author_signature])
+        expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
       end
 
       it "doesn't change signatures if they are already set" do

@@ -75,17 +75,20 @@ shared_examples "a relayable Entity" do
   let(:instance) { described_class.new(data.merge(author_signature: nil, parent_author_signature: nil)) }
 
   context "signatures generation" do
+    def legacy_verify_signature(pubkey, signature, signed_string)
+      pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
+    end
+
     it "computes correct signatures for the entity" do
-      hash = instance.to_h
+      signed_string = instance.to_h.map {|name, value| value.to_s unless name =~ /signature/ }.compact.join(";")
+
       xml = DiasporaFederation::Salmon::XmlPayload.pack(instance)
 
       author_signature = xml.at_xpath("post/*[1]/author_signature").text
       parent_author_signature = xml.at_xpath("post/*[1]/parent_author_signature").text
 
-      expect(DiasporaFederation::Signing.verify_signature(hash, author_signature, test_pkey))
-        .to be_truthy
-      expect(DiasporaFederation::Signing.verify_signature(hash, parent_author_signature, test_pkey))
-        .to be_truthy
+      expect(legacy_verify_signature(test_pkey, author_signature, signed_string)).to be_truthy
+      expect(legacy_verify_signature(test_pkey, parent_author_signature, signed_string)).to be_truthy
     end
   end
 end

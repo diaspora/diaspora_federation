@@ -2,9 +2,14 @@ module DiasporaFederation
   module Entities
     # this is a module that defines common properties for relayable entities
     # which include Like, Comment, Participation, Message, etc. Each relayable
-    # has a parent, identified by guid. Relayables also are signed and signing/verificating
+    # has a parent, identified by guid. Relayables also are signed and signing/verification
     # logic is embedded into Salmon XML processing code.
     module Relayable
+      include Logging
+
+      # digest instance used for signing
+      DIGEST = OpenSSL::Digest::SHA256.new
+
       # on inclusion of this module the required properties for a relayable are added to the object that includes it
       #
       # @!attribute [r] parent_guid
@@ -43,15 +48,12 @@ module DiasporaFederation
         super.tap do |hash|
           if author_signature.nil?
             privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, diaspora_id)
-            hash[:author_signature] = Signing.sign_with_key(hash, privkey) unless privkey.nil?
+            raise AuthorPrivateKeyNotFound, "author=#{diaspora_id} guid=#{guid}" if privkey.nil?
+            hash[:author_signature] = sign_with_key(privkey, hash)
+            logger.info "event=sign_with_key signature=author_signature author=#{diaspora_id} guid=#{guid}"
           end
 
-          if parent_author_signature.nil?
-            privkey = DiasporaFederation.callbacks.trigger(
-              :fetch_author_private_key_by_entity_guid, parent_type, parent_guid
-            )
-            hash[:parent_author_signature] = Signing.sign_with_key(hash, privkey) unless privkey.nil?
-          end
+          try_sign_with_parent_author(hash) if parent_author_signature.nil?
         end
       end
 
@@ -66,33 +68,84 @@ module DiasporaFederation
         end
       end
 
-      # Exception raised when verify_signatures fails to verify signatures (signatures are wrong)
-      class SignatureVerificationFailed < ArgumentError
-      end
-
       # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
       # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
       def verify_signatures
         pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, diaspora_id)
-        raise SignatureVerificationFailed, "failed to fetch public key for #{diaspora_id}" if pubkey.nil?
-        raise SignatureVerificationFailed, "wrong author_signature" unless Signing.verify_signature(
-          data, author_signature, pubkey
-        )
+        raise PublicKeyNotFound, "author_signature author=#{diaspora_id} guid=#{guid}" if pubkey.nil?
+        raise SignatureVerificationFailed, "wrong author_signature" unless verify_signature(pubkey, author_signature)
 
-        author_is_local = DiasporaFederation.callbacks.trigger(:entity_author_is_local?, parent_type, parent_guid)
-        verify_parent_signature unless author_is_local
+        parent_author_local = DiasporaFederation.callbacks.trigger(:entity_author_is_local?, parent_type, parent_guid)
+        verify_parent_author_signature unless parent_author_local
       end
 
       private
 
+      # sign with parent author, if the parent author is local (if the private key is found)
+      # @param [Hash] hash the hash to sign
+      def try_sign_with_parent_author(hash)
+        privkey = DiasporaFederation.callbacks.trigger(
+          :fetch_author_private_key_by_entity_guid, parent_type, parent_guid
+        )
+        unless privkey.nil?
+          hash[:parent_author_signature] = sign_with_key(privkey, hash)
+          logger.info "event=sign_with_key signature=parent_author_signature guid=#{guid}"
+        end
+      end
+
       # this happens only on downstream federation
-      def verify_parent_signature
+      def verify_parent_author_signature
         pubkey = DiasporaFederation.callbacks.trigger(:fetch_author_public_key_by_entity_guid, parent_type, parent_guid)
 
-        raise SignatureVerificationFailed, "failed to fetch public key for author of #{parent_guid}" if pubkey.nil?
-        raise SignatureVerificationFailed, "wrong parent_author_signature" unless Signing.verify_signature(
-          data, parent_author_signature, pubkey
-        )
+        raise PublicKeyNotFound, "parent_author_signature parent_guid=#{parent_guid} guid=#{guid}" if pubkey.nil?
+        unless verify_signature(pubkey, parent_author_signature)
+          raise SignatureVerificationFailed, "wrong parent_author_signature parent_guid=#{parent_guid}"
+        end
+      end
+
+      # Sign the data with the key
+      #
+      # @param [OpenSSL::PKey::RSA] privkey An RSA key
+      # @param [Hash] hash data to sign
+      # @return [String] A Base64 encoded signature of #signable_string with key
+      def sign_with_key(privkey, hash)
+        Base64.strict_encode64(privkey.sign(DIGEST, signable_string(hash)))
+      end
+
+      # Check that signature is a correct signature
+      #
+      # @param [OpenSSL::PKey::RSA] pubkey An RSA key
+      # @param [String] signature The signature to be verified.
+      # @return [Boolean]
+      def verify_signature(pubkey, signature)
+        if signature.nil?
+          logger.warn "event=verify_signature status=abort reason=no_signature guid=#{guid}"
+          return false
+        end
+
+        validity = pubkey.verify(DIGEST, Base64.decode64(signature), signable_string(data))
+        logger.info "event=verify_signature status=complete guid=#{guid} validity=#{validity}"
+        validity
+      end
+
+      # @param [Hash] hash data to sign
+      # @return [String] signature data string
+      def signable_string(hash)
+        hash.map {|name, value|
+          value.to_s unless name =~ /signature/
+        }.compact.join(";")
+      end
+
+      # Exception raised when creating the author_signature failes, because the private key was not found
+      class AuthorPrivateKeyNotFound < RuntimeError
+      end
+
+      # Exception raised when verify_signatures fails to verify signatures (no public key found)
+      class PublicKeyNotFound < RuntimeError
+      end
+
+      # Exception raised when verify_signatures fails to verify signatures (signatures are wrong)
+      class SignatureVerificationFailed < RuntimeError
       end
     end
   end

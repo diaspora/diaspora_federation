@@ -4,6 +4,7 @@ module DiasporaFederation
     let(:parent_pkey) { OpenSSL::PKey::RSA.generate(1024) }
     let(:hash) {
       {
+        guid:            FactoryGirl.generate(:guid),
         diaspora_id:     FactoryGirl.generate(:diaspora_id),
         parent_guid:     FactoryGirl.generate(:guid),
         some_other_data: "a_random_string"
@@ -11,33 +12,39 @@ module DiasporaFederation
     }
 
     class SomeRelayable < Entity
-      include Entities::Relayable
-
+      property :guid
       property :diaspora_id, xml_name: :diaspora_handle
 
+      include Entities::Relayable
+
       def parent_type
-        "Target"
+        "Parent"
       end
+    end
+
+    def legacy_sign_with_key(privkey, hash)
+      Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, hash.values.join(";")))
     end
 
     describe "#verify_signatures" do
       it "doesn't raise anything if correct data were passed" do
-        hash[:author_signature] = Signing.sign_with_key(hash, author_pkey)
-        hash[:parent_author_signature] = Signing.sign_with_key(hash, parent_pkey)
+        signed_hash = hash.dup
+        signed_hash[:author_signature] = legacy_sign_with_key(author_pkey, hash)
+        signed_hash[:parent_author_signature] = legacy_sign_with_key(parent_pkey, hash)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(author_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_public_key_by_entity_guid, "Target", hash[:parent_guid]
+          :fetch_author_public_key_by_entity_guid, "Parent", hash[:parent_guid]
         ).and_return(parent_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Target", hash[:parent_guid]
+          :entity_author_is_local?, "Parent", hash[:parent_guid]
         ).and_return(false)
 
-        expect { SomeRelayable.new(hash).verify_signatures }.not_to raise_error
+        expect { SomeRelayable.new(signed_hash).verify_signatures }.not_to raise_error
       end
 
       it "raises when no public key for author was fetched" do
@@ -47,7 +54,7 @@ module DiasporaFederation
 
         expect {
           SomeRelayable.new(hash).verify_signatures
-        }.to raise_error Entities::Relayable::SignatureVerificationFailed
+        }.to raise_error Entities::Relayable::PublicKeyNotFound
       end
 
       it "raises when bad author signature was passed" do
@@ -63,27 +70,27 @@ module DiasporaFederation
       end
 
       it "raises when no public key for parent author was fetched" do
-        hash[:author_signature] = Signing.sign_with_key(hash, author_pkey)
+        hash[:author_signature] = legacy_sign_with_key(author_pkey, hash)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(author_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_public_key_by_entity_guid, "Target", hash[:parent_guid]
+          :fetch_author_public_key_by_entity_guid, "Parent", hash[:parent_guid]
         ).and_return(nil)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Target", hash[:parent_guid]
+          :entity_author_is_local?, "Parent", hash[:parent_guid]
         ).and_return(false)
 
         expect {
           SomeRelayable.new(hash).verify_signatures
-        }.to raise_error Entities::Relayable::SignatureVerificationFailed
+        }.to raise_error Entities::Relayable::PublicKeyNotFound
       end
 
       it "raises when bad parent author signature was passed" do
-        hash[:author_signature] = Signing.sign_with_key(hash, author_pkey)
+        hash[:author_signature] = legacy_sign_with_key(author_pkey, hash)
         hash[:parent_author_signature] = nil
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -91,11 +98,11 @@ module DiasporaFederation
         ).and_return(author_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_public_key_by_entity_guid, "Target", hash[:parent_guid]
+          :fetch_author_public_key_by_entity_guid, "Parent", hash[:parent_guid]
         ).and_return(parent_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Target", hash[:parent_guid]
+          :entity_author_is_local?, "Parent", hash[:parent_guid]
         ).and_return(false)
 
         expect {
@@ -104,7 +111,7 @@ module DiasporaFederation
       end
 
       it "doesn't raise if parent_author_signature isn't set but we're on upstream federation" do
-        hash[:author_signature] = Signing.sign_with_key(hash, author_pkey)
+        hash[:author_signature] = legacy_sign_with_key(author_pkey, hash)
         hash[:parent_author_signature] = nil
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -112,7 +119,7 @@ module DiasporaFederation
         ).and_return(author_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Target", hash[:parent_guid]
+          :entity_author_is_local?, "Parent", hash[:parent_guid]
         ).and_return(true)
 
         expect { SomeRelayable.new(hash).verify_signatures }.not_to raise_error
@@ -126,13 +133,19 @@ module DiasporaFederation
         ).and_return(author_pkey)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_private_key_by_entity_guid, "Target", hash[:parent_guid]
+          :fetch_author_private_key_by_entity_guid, "Parent", hash[:parent_guid]
         ).and_return(parent_pkey)
+
+        signed_string = hash.reject {|key, _| key == :some_other_data }.values.join(";")
 
         signed_hash = SomeRelayable.new(hash).to_h
 
-        expect(Signing.verify_signature(signed_hash, signed_hash[:author_signature], author_pkey)).to be_truthy
-        expect(Signing.verify_signature(signed_hash, signed_hash[:parent_author_signature], parent_pkey)).to be_truthy
+        def verify_signature(pubkey, signature, signed_string)
+          pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
+        end
+
+        expect(verify_signature(author_pkey, signed_hash[:author_signature], signed_string)).to be_truthy
+        expect(verify_signature(parent_pkey, signed_hash[:parent_author_signature], signed_string)).to be_truthy
       end
 
       it "doesn't change signatures if they are already set" do
@@ -141,18 +154,27 @@ module DiasporaFederation
         expect(SomeRelayable.new(hash).to_h).to eq(hash)
       end
 
-      it "doesn't change signatures if keys weren't supplied" do
+      it "raises when author_signature not set and key isn't supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
         ).and_return(nil)
 
+        expect {
+          SomeRelayable.new(hash).to_h
+        }.to raise_error Entities::Relayable::AuthorPrivateKeyNotFound
+      end
+
+      it "doesn't set parent_author_signature if key isn't supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_private_key_by_entity_guid, "Target", hash[:parent_guid]
+          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+        ).and_return(author_pkey)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_author_private_key_by_entity_guid, "Parent", hash[:parent_guid]
         ).and_return(nil)
 
         signed_hash = SomeRelayable.new(hash).to_h
 
-        expect(signed_hash[:author_signature]).to eq(nil)
         expect(signed_hash[:parent_author_signature]).to eq(nil)
       end
     end

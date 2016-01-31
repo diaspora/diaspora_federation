@@ -7,7 +7,6 @@ require "diaspora_federation/validators"
 
 require "diaspora_federation/fetcher"
 
-require "diaspora_federation/signing"
 require "diaspora_federation/entities"
 
 require "diaspora_federation/discovery"
@@ -221,7 +220,7 @@ module DiasporaFederation
     end
 
     def configuration_error(message)
-      logger.fatal("diaspora federation configuration error: #{message}")
+      logger.fatal "diaspora federation configuration error: #{message}"
       raise ConfigurationError, message
     end
   end
