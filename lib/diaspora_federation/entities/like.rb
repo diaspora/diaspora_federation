@@ -4,6 +4,10 @@ module DiasporaFederation
     #
     # @see Validators::LikeValidator
     class Like < Entity
+      # old signature order
+      # @deprecated
+      LEGACY_SIGNATURE_ORDER = %i(positive guid parent_type parent_guid diaspora_id).freeze
+
       # @!attribute [r] positive
       #   If +true+ set a like, if +false+, set a dislike (dislikes are currently not
       #   implemented in the Diaspora frontend).

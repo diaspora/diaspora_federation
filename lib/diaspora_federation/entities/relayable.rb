@@ -109,7 +109,7 @@ module DiasporaFederation
       # @param [Hash] hash data to sign
       # @return [String] A Base64 encoded signature of #signable_string with key
       def sign_with_key(privkey, hash)
-        Base64.strict_encode64(privkey.sign(DIGEST, signable_string(hash)))
+        Base64.strict_encode64(privkey.sign(DIGEST, legacy_signature_data(hash)))
       end
 
       # Check that signature is a correct signature
@@ -123,17 +123,16 @@ module DiasporaFederation
           return false
         end
 
-        validity = pubkey.verify(DIGEST, Base64.decode64(signature), signable_string(data))
+        validity = pubkey.verify(DIGEST, Base64.decode64(signature), legacy_signature_data(data))
         logger.info "event=verify_signature status=complete guid=#{guid} validity=#{validity}"
         validity
       end
 
       # @param [Hash] hash data to sign
       # @return [String] signature data string
-      def signable_string(hash)
-        hash.map {|name, value|
-          value.to_s unless name =~ /signature/
-        }.compact.join(";")
+      # @deprecated
+      def legacy_signature_data(hash)
+        self.class::LEGACY_SIGNATURE_ORDER.map {|name| hash[name] }.join(";")
       end
 
       # Exception raised when creating the author_signature failes, because the private key was not found

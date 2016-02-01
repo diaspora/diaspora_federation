@@ -4,6 +4,10 @@ module DiasporaFederation
     #
     # @see Validators::PollParticipationValidator
     class PollParticipation < Entity
+      # old signature order
+      # @deprecated
+      LEGACY_SIGNATURE_ORDER = %i(guid parent_guid diaspora_id poll_answer_guid).freeze
+
       # @!attribute [r] guid
       #   a random string of at least 16 chars.
       #   @see Validation::Rule::Guid

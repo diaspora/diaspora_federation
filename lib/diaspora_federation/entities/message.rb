@@ -4,6 +4,10 @@ module DiasporaFederation
     #
     # @see Validators::MessageValidator
     class Message < Entity
+      # old signature order
+      # @deprecated
+      LEGACY_SIGNATURE_ORDER = %i(guid parent_guid text created_at diaspora_id conversation_guid).freeze
+
       # @!attribute [r] guid
       #   a random string of at least 16 chars.
       #   @see Validation::Rule::Guid

@@ -12,6 +12,8 @@ module DiasporaFederation
     }
 
     class SomeRelayable < Entity
+      LEGACY_SIGNATURE_ORDER = %i(guid diaspora_id parent_guid).freeze
+
       property :guid
       property :diaspora_id, xml_name: :diaspora_handle
 
@@ -22,15 +24,19 @@ module DiasporaFederation
       end
     end
 
-    def legacy_sign_with_key(privkey, hash)
-      Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, hash.values.join(";")))
-    end
-
     describe "#verify_signatures" do
-      it "doesn't raise anything if correct data were passed" do
+      def legacy_signature_data
+        %i(guid diaspora_id parent_guid).map {|name| hash[name] }.join(";")
+      end
+
+      def sign_with_key(privkey, signature_data)
+        Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, signature_data))
+      end
+
+      it "doesn't raise anything if correct signatures with legacy-string were passed" do
         signed_hash = hash.dup
-        signed_hash[:author_signature] = legacy_sign_with_key(author_pkey, hash)
-        signed_hash[:parent_author_signature] = legacy_sign_with_key(parent_pkey, hash)
+        signed_hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
+        signed_hash[:parent_author_signature] = sign_with_key(parent_pkey, legacy_signature_data)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, hash[:diaspora_id]
@@ -70,7 +76,7 @@ module DiasporaFederation
       end
 
       it "raises when no public key for parent author was fetched" do
-        hash[:author_signature] = legacy_sign_with_key(author_pkey, hash)
+        hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, hash[:diaspora_id]
@@ -90,7 +96,7 @@ module DiasporaFederation
       end
 
       it "raises when bad parent author signature was passed" do
-        hash[:author_signature] = legacy_sign_with_key(author_pkey, hash)
+        hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
         hash[:parent_author_signature] = nil
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -111,7 +117,7 @@ module DiasporaFederation
       end
 
       it "doesn't raise if parent_author_signature isn't set but we're on upstream federation" do
-        hash[:author_signature] = legacy_sign_with_key(author_pkey, hash)
+        hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
         hash[:parent_author_signature] = nil
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
