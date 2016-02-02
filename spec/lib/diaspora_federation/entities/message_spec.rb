@@ -1,12 +1,13 @@
 module DiasporaFederation
   describe Entities::Message do
-    let(:data) { FactoryGirl.build(:message_entity).to_h }
+    let(:parent) { FactoryGirl.create(:conversation, author: bob) }
+    let(:data) { FactoryGirl.build(:message_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_h }
 
     let(:xml) {
       <<-XML
 <message>
   <guid>#{data[:guid]}</guid>
-  <parent_guid>#{data[:parent_guid]}</parent_guid>
+  <parent_guid>#{parent.guid}</parent_guid>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
   <author_signature>#{data[:author_signature]}</author_signature>
   <text>#{data[:text]}</text>

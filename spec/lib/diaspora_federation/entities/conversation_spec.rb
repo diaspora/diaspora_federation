@@ -1,20 +1,23 @@
 module DiasporaFederation
   describe Entities::Conversation do
-    let(:msg1_data) { FactoryGirl.build(:message_entity).to_h }
-    let(:msg2_data) { FactoryGirl.build(:message_entity).to_h }
-    let(:msg1) { FactoryGirl.build(:message_entity, msg1_data) }
-    let(:msg2) { FactoryGirl.build(:message_entity, msg2_data) }
+    let(:parent) { FactoryGirl.create(:conversation, author: bob) }
+    let(:msg1) { FactoryGirl.build(:message_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_h }
+    let(:msg2) { FactoryGirl.build(:message_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_h }
+    let(:signed_msg1) { Entities::Message.new(msg1) }
+    let(:signed_msg2) { Entities::Message.new(msg2) }
     let(:data) {
       FactoryGirl.attributes_for(:conversation_entity).merge!(
-        messages:        [msg1, msg2],
-        participant_ids: "#{FactoryGirl.generate(:diaspora_id)};#{FactoryGirl.generate(:diaspora_id)}"
+        messages:        [signed_msg1, signed_msg2],
+        diaspora_id:     bob.diaspora_id,
+        guid:            parent.guid,
+        participant_ids: "#{bob.diaspora_id};#{FactoryGirl.generate(:diaspora_id)}"
       )
     }
 
     let(:xml) {
       <<-XML
 <conversation>
-  <guid>#{data[:guid]}</guid>
+  <guid>#{parent.guid}</guid>
   <subject>#{data[:subject]}</subject>
   <created_at>#{data[:created_at]}</created_at>
 #{data[:messages].map {|a| a.to_xml.to_s.indent(2) }.join("\n")}

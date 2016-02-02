@@ -33,6 +33,10 @@ def alice
   @alice ||= Person.find_by(diaspora_id: "alice@localhost:3000")
 end
 
+def bob
+  @bob ||= Person.find_by(diaspora_id: "bob@localhost:3000")
+end
+
 def test_pkey
   DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id)
 end

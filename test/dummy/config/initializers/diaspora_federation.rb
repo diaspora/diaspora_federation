@@ -60,32 +60,34 @@ DiasporaFederation.configure do |config|
       end
     end
 
-    def privkey
-      @test_privkey ||= OpenSSL::PKey::RSA.generate(1024)
+    on :fetch_private_key_by_diaspora_id do |diaspora_id|
+      key = Person.where(diaspora_id: diaspora_id).pluck(:serialized_private_key).first
+      OpenSSL::PKey::RSA.new(key) unless key.nil?
     end
 
-    on :fetch_private_key_by_diaspora_id do
-      privkey
+    on :fetch_author_private_key_by_entity_guid do |entity_type, guid|
+      key = Entity.where(entity_type: entity_type, guid: guid).joins(:author).pluck(:serialized_private_key).first
+      OpenSSL::PKey::RSA.new(key) unless key.nil?
     end
 
-    on :fetch_author_private_key_by_entity_guid do
-      privkey
+    on :fetch_public_key_by_diaspora_id do |diaspora_id|
+      key = Person.where(diaspora_id: diaspora_id).pluck(:serialized_public_key).first
+      key = DiasporaFederation::Discovery::Discovery.new(diaspora_id).fetch_and_save.exported_key if key.nil?
+      OpenSSL::PKey::RSA.new(key) unless key.nil?
     end
 
-    on :fetch_public_key_by_diaspora_id do
-      privkey.public_key
+    on :fetch_author_public_key_by_entity_guid do |entity_type, guid|
+      key = Entity.where(entity_type: entity_type, guid: guid).joins(:author).pluck(:serialized_public_key).first
+      OpenSSL::PKey::RSA.new(key) unless key.nil?
     end
 
-    on :fetch_author_public_key_by_entity_guid do
-      privkey.public_key
+    on :entity_author_is_local? do |entity_type, guid|
+      Entity.where(entity_type: entity_type, guid: guid).joins(:author)
+            .where.not("people.serialized_private_key" => nil).exists?
     end
 
-    on :entity_author_is_local? do
-      false
-    end
-
-    on :fetch_entity_author_id_by_guid do
-      nil
+    on :fetch_entity_author_id_by_guid do |entity_type, guid|
+      Entity.where(entity_type: entity_type, guid: guid).joins(:author).pluck(:diaspora_id).first
     end
 
     on :queue_public_receive do

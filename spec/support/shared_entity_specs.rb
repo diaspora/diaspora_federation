@@ -87,8 +87,10 @@ shared_examples "a relayable Entity" do
       author_signature = xml.at_xpath("post/*[1]/author_signature").text
       parent_author_signature = xml.at_xpath("post/*[1]/parent_author_signature").text
 
-      expect(legacy_verify_signature(test_pkey, author_signature, signed_string)).to be_truthy
-      expect(legacy_verify_signature(test_pkey, parent_author_signature, signed_string)).to be_truthy
+      alice_public_key = OpenSSL::PKey::RSA.new(alice.serialized_public_key)
+      bob_public_key = OpenSSL::PKey::RSA.new(bob.serialized_public_key)
+      expect(legacy_verify_signature(alice_public_key, author_signature, signed_string)).to be_truthy
+      expect(legacy_verify_signature(bob_public_key, parent_author_signature, signed_string)).to be_truthy
     end
   end
 end

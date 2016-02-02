@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::RelayableRetraction do
-    let(:data) { FactoryGirl.build(:relayable_retraction_entity).to_h }
+    let(:data) { FactoryGirl.build(:relayable_retraction_entity, diaspora_id: alice.diaspora_id).to_h }
 
     let(:xml) {
       <<-XML
