@@ -12,9 +12,25 @@ module DiasporaFederation
 
       # on inclusion of this module the required properties for a relayable are added to the object that includes it
       #
+      # @!attribute [r] diaspora_id
+      #   The diaspora ID of the author.
+      #   @see Person#diaspora_id
+      #   @return [String] diaspora ID
+      #
+      # @!attribute [r] guid
+      #   a random string of at least 16 chars.
+      #   @see Validation::Rule::Guid
+      #   @return [String] comment guid
+      #
       # @!attribute [r] parent_guid
       #   @see StatusMessage#guid
       #   @return [String] parent guid
+      #
+      # @!attribute [r] author_signature
+      #   Contains a signature of the entity using the private key of the author of a post itself.
+      #   The presence of this signature is mandatory. Without it the entity won't be accepted by
+      #   a target pod.
+      #   @return [String] author signature
       #
       # @!attribute [r] parent_author_signature
       #   Contains a signature of the entity using the private key of the author of a parent post
@@ -24,18 +40,14 @@ module DiasporaFederation
       #
       #   @return [String] parent author signature
       #
-      # @!attribute [r] author_signature
-      #   Contains a signature of the entity using the private key of the author of a post itself.
-      #   The presence of this signature is mandatory. Without it the entity won't be accepted by
-      #   a target pod.
-      #   @return [String] author signature
-      #
       # @param [Entity] entity the entity in which it is included
       def self.included(entity)
         entity.class_eval do
+          property :diaspora_id, xml_name: :diaspora_handle
+          property :guid
           property :parent_guid
-          property :parent_author_signature, default: nil
           property :author_signature, default: nil
+          property :parent_author_signature, default: nil
         end
       end
 

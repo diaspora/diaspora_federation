@@ -54,7 +54,7 @@ module DiasporaFederation
     #   recipient_pubkey = however_you_retrieve_the_recipients_public_key()
     #   entity = YourEntity.new(attr: "val")
     #
-    #   slap_xml = EncryptedSlap.generate_xml(author_id, author_privkey, entity, recipient_pubkey)
+    #   slap_xml = EncryptedSlap.prepare(author_id, author_privkey, entity).generate_xml(recipient_pubkey)
     #
     # @example Parsing a Salmon Slap
     #   recipient_privkey = however_you_retrieve_the_recipients_private_key()

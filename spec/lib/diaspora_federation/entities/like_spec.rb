@@ -13,13 +13,13 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <like>
-  <positive>#{data[:positive]}</positive>
-  <guid>#{data[:guid]}</guid>
-  <target_type>#{parent.entity_type}</target_type>
-  <parent_guid>#{parent.guid}</parent_guid>
-  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
-  <author_signature>#{data[:author_signature]}</author_signature>
   <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
+  <guid>#{data[:guid]}</guid>
+  <parent_guid>#{parent.guid}</parent_guid>
+  <author_signature>#{data[:author_signature]}</author_signature>
+  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
+  <positive>#{data[:positive]}</positive>
+  <target_type>#{parent.entity_type}</target_type>
 </like>
 XML
     }

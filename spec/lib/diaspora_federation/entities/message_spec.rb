@@ -6,13 +6,13 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <message>
+  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
-  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
   <author_signature>#{data[:author_signature]}</author_signature>
+  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
   <text>#{data[:text]}</text>
   <created_at>#{data[:created_at]}</created_at>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
   <conversation_guid>#{data[:conversation_guid]}</conversation_guid>
 </message>
 XML

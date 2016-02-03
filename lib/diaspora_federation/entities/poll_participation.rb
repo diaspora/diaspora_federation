@@ -8,19 +8,7 @@ module DiasporaFederation
       # @deprecated
       LEGACY_SIGNATURE_ORDER = %i(guid parent_guid diaspora_id poll_answer_guid).freeze
 
-      # @!attribute [r] guid
-      #   a random string of at least 16 chars.
-      #   @see Validation::Rule::Guid
-      #   @return [String] guid
-      property :guid
-
       include Relayable
-
-      # @!attribute [r] diaspora_id
-      #   The diaspora ID of the person who voted in the poll
-      #   @see Person#diaspora_id
-      #   @return [String] diaspora ID
-      property :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] poll_answer_guid
       #   guid of the answer selected by the user.

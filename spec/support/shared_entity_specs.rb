@@ -80,7 +80,7 @@ shared_examples "a relayable Entity" do
     end
 
     it "computes correct signatures for the entity" do
-      signed_string = instance.to_h.map {|name, value| value.to_s unless name =~ /signature/ }.compact.join(";")
+      signed_string = described_class::LEGACY_SIGNATURE_ORDER.map {|name| data[name] }.join(";")
 
       xml = DiasporaFederation::Salmon::XmlPayload.pack(instance)
 

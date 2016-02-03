@@ -8,12 +8,6 @@ module DiasporaFederation
       # @deprecated
       LEGACY_SIGNATURE_ORDER = %i(guid parent_guid text created_at diaspora_id conversation_guid).freeze
 
-      # @!attribute [r] guid
-      #   a random string of at least 16 chars.
-      #   @see Validation::Rule::Guid
-      #   @return [String] message guid
-      property :guid
-
       include Relayable
 
       # @!attribute [r] text
@@ -25,12 +19,6 @@ module DiasporaFederation
       #   message creation time
       #   @return [Time] creation time
       property :created_at, default: -> { Time.now.utc }
-
-      # @!attribute [r] diaspora_id
-      #   The diaspora ID of the message author.
-      #   @see Person#diaspora_id
-      #   @return [String] diaspora ID
-      property :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] conversation_guid
       #   guid of a conversation this message belongs to
