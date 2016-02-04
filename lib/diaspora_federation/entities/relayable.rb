@@ -56,8 +56,8 @@ module DiasporaFederation
       #
       # @see Entity#to_h
       # @return [Hash] entity data hash with updated signatures
-      def to_h
-        super.tap do |hash|
+      def to_signed_h
+        to_h.tap do |hash|
           if author_signature.nil?
             privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, diaspora_id)
             raise AuthorPrivateKeyNotFound, "author=#{diaspora_id} guid=#{guid}" if privkey.nil?
@@ -74,7 +74,7 @@ module DiasporaFederation
       # @return [Nokogiri::XML::Element] root element containing properties as child elements
       def to_xml
         entity_xml.tap do |xml|
-          hash = to_h
+          hash = to_signed_h
           xml.at_xpath("author_signature").content = hash[:author_signature]
           xml.at_xpath("parent_author_signature").content = hash[:parent_author_signature]
         end
@@ -135,7 +135,7 @@ module DiasporaFederation
           return false
         end
 
-        validity = pubkey.verify(DIGEST, Base64.decode64(signature), legacy_signature_data(data))
+        validity = pubkey.verify(DIGEST, Base64.decode64(signature), legacy_signature_data(to_h))
         logger.info "event=verify_signature status=complete guid=#{guid} validity=#{validity}"
         validity
       end

@@ -1,10 +1,14 @@
 module DiasporaFederation
   describe Entities::Conversation do
     let(:parent) { FactoryGirl.create(:conversation, author: bob) }
-    let(:msg1) { FactoryGirl.build(:message_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_h }
-    let(:msg2) { FactoryGirl.build(:message_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_h }
-    let(:signed_msg1) { Entities::Message.new(msg1) }
-    let(:signed_msg2) { Entities::Message.new(msg2) }
+    let(:signed_msg1) {
+      msg = FactoryGirl.build(:message_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
+      Entities::Message.new(msg)
+    }
+    let(:signed_msg2) {
+      msg = FactoryGirl.build(:message_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
+      Entities::Message.new(msg)
+    }
     let(:data) {
       FactoryGirl.attributes_for(:conversation_entity).merge!(
         messages:        [signed_msg1, signed_msg2],

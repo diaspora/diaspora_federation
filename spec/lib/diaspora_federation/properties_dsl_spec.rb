@@ -123,5 +123,22 @@ module DiasporaFederation
         expect(Entities::TestDefaultEntity.class_prop_names).to include(:test1, :test2, :test3, :test4)
       end
     end
+
+    describe ".find_property_for_xml_name" do
+      it "finds property by xml_name" do
+        dsl.property :test, xml_name: :xml_test
+        expect(dsl.find_property_for_xml_name("xml_test")).to eq(dsl.class_props.first)
+      end
+
+      it "finds property by name" do
+        dsl.property :test, xml_name: :xml_test
+        expect(dsl.find_property_for_xml_name("test")).to eq(dsl.class_props.first)
+      end
+
+      it "returns nil if property is not defined" do
+        dsl.property :test, xml_name: :xml_test
+        expect(dsl.find_property_for_xml_name("unknown")).to be_nil
+      end
+    end
   end
 end

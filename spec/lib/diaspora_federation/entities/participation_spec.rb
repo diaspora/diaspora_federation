@@ -7,7 +7,7 @@ module DiasporaFederation
         diaspora_id: alice.diaspora_id,
         parent_guid: parent.guid,
         parent_type: parent.entity_type
-      ).to_h
+      ).to_signed_h
     }
 
     let(:xml) {

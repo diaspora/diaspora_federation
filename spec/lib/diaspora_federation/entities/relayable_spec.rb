@@ -132,7 +132,7 @@ module DiasporaFederation
       end
     end
 
-    describe "#to_h" do
+    describe "#to_signed_h" do
       it "updates signatures when they were nil and keys were supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
@@ -144,7 +144,7 @@ module DiasporaFederation
 
         signed_string = hash.reject {|key, _| key == :some_other_data }.values.join(";")
 
-        signed_hash = SomeRelayable.new(hash).to_h
+        signed_hash = SomeRelayable.new(hash).to_signed_h
 
         def verify_signature(pubkey, signature, signed_string)
           pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
@@ -157,7 +157,7 @@ module DiasporaFederation
       it "doesn't change signatures if they are already set" do
         hash.merge!(author_signature: "aa", parent_author_signature: "bb").delete(:some_other_data)
 
-        expect(SomeRelayable.new(hash).to_h).to eq(hash)
+        expect(SomeRelayable.new(hash).to_signed_h).to eq(hash)
       end
 
       it "raises when author_signature not set and key isn't supplied" do
@@ -166,7 +166,7 @@ module DiasporaFederation
         ).and_return(nil)
 
         expect {
-          SomeRelayable.new(hash).to_h
+          SomeRelayable.new(hash).to_signed_h
         }.to raise_error Entities::Relayable::AuthorPrivateKeyNotFound
       end
 
@@ -179,7 +179,7 @@ module DiasporaFederation
           :fetch_author_private_key_by_entity_guid, "Parent", hash[:parent_guid]
         ).and_return(nil)
 
-        signed_hash = SomeRelayable.new(hash).to_h
+        signed_hash = SomeRelayable.new(hash).to_signed_h
 
         expect(signed_hash[:parent_author_signature]).to eq(nil)
       end

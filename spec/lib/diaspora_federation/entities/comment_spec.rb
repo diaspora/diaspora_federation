@@ -1,7 +1,9 @@
 module DiasporaFederation
   describe Entities::Comment do
     let(:parent) { FactoryGirl.create(:post, author: bob) }
-    let(:data) { FactoryGirl.build(:comment_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_h }
+    let(:data) {
+      FactoryGirl.build(:comment_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
+    }
 
     let(:xml) {
       <<-XML

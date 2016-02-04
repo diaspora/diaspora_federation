@@ -83,38 +83,41 @@ module DiasporaFederation
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Entity] instance
       def self.populate_entity(klass, root_node)
-        # Use all known properties to build the Entity. All other elements are respected
-        # and attached to resulted hash as string. It is intended to build a hash
-        # invariable of an Entity definition, in order to support receiving objects
+        # Use all known properties to build the Entity (entity_data). All additional xml elements
+        # are respected and attached to a hash as string (additional_xml_elements). It is intended
+        # to build a hash invariable of an Entity definition, in order to support receiving objects
         # from the future versions of Diaspora, where new elements may have been added.
-        data = Hash[root_node.element_children.map {|child|
-          xml_name = child.name
-          property = klass.class_props.find {|prop| prop[:xml_name].to_s == xml_name }
-          if property
-            parse_element_from_node(property[:name], property[:type], xml_name, root_node)
-          else
-            [xml_name, child.text]
-          end
-        }]
+        entity_data = {}
+        additional_xml_elements = {}
 
-        klass.new(data).tap do |entity|
+        root_node.element_children.each do |child|
+          xml_name = child.name
+          property = klass.find_property_for_xml_name(xml_name)
+
+          if property
+            entity_data[property[:name]] = parse_element_from_node(property[:type], xml_name, root_node)
+          else
+            additional_xml_elements[xml_name] = child.text
+          end
+        end
+
+        klass.new(entity_data, additional_xml_elements).tap do |entity|
           entity.verify_signatures if entity.respond_to? :verify_signatures
         end
       end
       private_class_method :populate_entity
 
-      # @param [Symbol] name property name
       # @param [Class] type target type to parse
       # @param [String] xml_name xml tag to parse
       # @param [Nokogiri::XML::Element] node XML node to parse
-      # @return [Array<Symbol, Object>] parsed data
-      def self.parse_element_from_node(name, type, xml_name, node)
+      # @return [Object] parsed data
+      def self.parse_element_from_node(type, xml_name, node)
         if type == String
-          [name, parse_string_from_node(xml_name, node)]
+          parse_string_from_node(xml_name, node)
         elsif type.instance_of?(Array)
-          [name, parse_array_from_node(type, node)]
+          parse_array_from_node(type, node)
         elsif type.ancestors.include?(Entity)
-          [name, parse_entity_from_node(type, node)]
+          parse_entity_from_node(type, node)
         end
       end
       private_class_method :parse_element_from_node

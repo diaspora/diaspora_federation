@@ -66,6 +66,13 @@ module DiasporaFederation
       @class_prop_names ||= class_props.map {|p| p[:name] }
     end
 
+    # finds a property by +xml_name+ or +name+
+    # @param [String] xml_name name of the property from the received xml
+    # @return [Hash] the property data
+    def find_property_for_xml_name(xml_name)
+      class_props.find {|prop| prop[:xml_name].to_s == xml_name || prop[:name].to_s == xml_name }
+    end
+
     private
 
     def determine_xml_name(name, type, opts={})

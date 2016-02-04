@@ -2,6 +2,17 @@ module DiasporaFederation
   describe Salmon::XmlPayload do
     let(:entity) { Entities::TestEntity.new(test: "asdf") }
     let(:payload) { Salmon::XmlPayload.pack(entity) }
+    let(:entity_xml) {
+      <<-XML.strip
+<XML>
+  <post>
+    <test_entity>
+      <test>asdf</test>
+    </test_entity>
+  </post>
+</XML>
+XML
+    }
 
     describe ".pack" do
       it "expects an Entity as param" do
@@ -35,16 +46,7 @@ module DiasporaFederation
         end
 
         it "produces the expected XML" do
-          xml = <<-XML.strip
-<XML>
-  <post>
-    <test_entity>
-      <test>asdf</test>
-    </test_entity>
-  </post>
-</XML>
-XML
-          expect(subject.to_xml).to eq(xml)
+          expect(subject.to_xml).to eq(entity_xml)
         end
       end
     end
@@ -103,7 +105,9 @@ XML
           expect(subject).to be_an_instance_of Entities::TestEntity
           expect(subject.test).to eq("asdf")
         end
+      end
 
+      context "parsing" do
         it "uses xml_name for parsing" do
           xml = <<-XML.strip
 <XML>
@@ -111,6 +115,24 @@ XML
     <test_entity_with_xml_name>
       <test>asdf</test>
       <asdf>qwer</asdf>
+    </test_entity>
+  </post>
+</XML>
+XML
+          entity = Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
+
+          expect(entity).to be_an_instance_of Entities::TestEntityWithXmlName
+          expect(entity.test).to eq("asdf")
+          expect(entity.qwer).to eq("qwer")
+        end
+
+        it "allows name for parsing even when property has a xml_name" do
+          xml = <<-XML.strip
+<XML>
+  <post>
+    <test_entity_with_xml_name>
+      <test>asdf</test>
+      <qwer>qwer</qwer>
     </test_entity>
   </post>
 </XML>
@@ -134,12 +156,23 @@ XML
   </post>
 </XML>
 XML
-          expect(Entities::TestEntity).to receive(:new).with(
+
+          entity = Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
+
+          expect(entity).to be_an_instance_of Entities::TestEntity
+          expect(entity.test).to eq("asdf")
+          expect(entity.additional_xml_elements).to eq(
             "a_prop_from_newer_diaspora_version" => "some value",
-            :test                                => "asdf",
             "some_random_property"               => "another value"
           )
-          Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
+        end
+
+        it "creates Entity with nil 'additional_xml_elements' if the xml has only known properties" do
+          entity = Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(entity_xml).root)
+
+          expect(entity).to be_an_instance_of Entities::TestEntity
+          expect(entity.test).to eq("asdf")
+          expect(entity.additional_xml_elements).to be_nil
         end
       end
 
