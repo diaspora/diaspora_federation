@@ -4,7 +4,7 @@ module DiasporaFederation
     class RequestValidator < Validation::Validator
       include Validation
 
-      rule :sender_id, %i(not_empty diaspora_id)
+      rule :diaspora_id, %i(not_empty diaspora_id)
       rule :recipient_id, %i(not_empty diaspora_id)
     end
   end

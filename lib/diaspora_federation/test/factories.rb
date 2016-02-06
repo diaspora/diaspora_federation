@@ -105,7 +105,7 @@ module DiasporaFederation
           end
 
           factory :request_entity, class: DiasporaFederation::Entities::Request do
-            sender_id { generate(:diaspora_id) }
+            diaspora_id
             recipient_id { generate(:diaspora_id) }
           end
 

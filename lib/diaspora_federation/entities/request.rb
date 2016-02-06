@@ -5,11 +5,11 @@ module DiasporaFederation
     #
     # @see Validators::RequestValidator
     class Request < Entity
-      # @!attribute [r] sender_id
+      # @!attribute [r] diaspora_id
       #   The diaspora ID of the person who shares his profile
       #   @see Person#diaspora_id
       #   @return [String] sender ID
-      property :sender_id, xml_name: :sender_handle
+      property :diaspora_id, xml_name: :sender_handle
 
       # @!attribute [r] recipient_id
       #   The diaspora ID of the person who will be shared with
