@@ -6,24 +6,28 @@ module DiasporaFederation
     let(:guid) { FactoryGirl.generate(:guid) }
     let(:parent_guid) { FactoryGirl.generate(:guid) }
     let(:diaspora_id) { FactoryGirl.generate(:diaspora_id) }
+    let(:property) { "hello" }
     let(:new_property) { "some text" }
-    let(:hash) { {guid: guid, diaspora_id: diaspora_id, parent_guid: parent_guid} }
+    let(:hash) { {guid: guid, diaspora_id: diaspora_id, parent_guid: parent_guid, property: property} }
 
-    let(:signature_data) { "#{diaspora_id};#{guid};#{parent_guid}" }
-    let(:signature_data_with_new_property) { "#{diaspora_id};#{guid};#{new_property};#{parent_guid}" }
-    let(:legacy_signature_data) { "#{guid};#{diaspora_id};#{parent_guid}" }
+    let(:signature_data) { "#{diaspora_id};#{guid};#{parent_guid};#{property}" }
+    let(:signature_data_with_new_property) { "#{diaspora_id};#{guid};#{new_property};#{parent_guid};#{property}" }
+    let(:legacy_signature_data) { "#{guid};#{diaspora_id};#{property};#{parent_guid}" }
 
     class SomeRelayable < Entity
-      LEGACY_SIGNATURE_ORDER = %i(guid diaspora_id parent_guid).freeze
-
-      property :guid
-      property :diaspora_id, xml_name: :diaspora_handle
+      LEGACY_SIGNATURE_ORDER = %i(guid diaspora_id property parent_guid).freeze
 
       include Entities::Relayable
+
+      property :property
 
       def parent_type
         "Parent"
       end
+    end
+
+    def verify_signature(pubkey, signature, signed_string)
+      pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
     end
 
     describe "#verify_signatures" do
@@ -186,10 +190,6 @@ module DiasporaFederation
     end
 
     describe "#to_signed_h" do
-      def verify_signature(pubkey, signature, signed_string)
-        pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
-      end
-
       it "updates signatures when they were nil and keys were supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, diaspora_id
@@ -249,6 +249,45 @@ module DiasporaFederation
             verify_signature(parent_pkey, signed_hash[:parent_author_signature], signature_data_with_new_property)
           ).to be_truthy
         end
+      end
+    end
+
+    describe "#to_xml" do
+      it "adds new unknown xml elements to the xml again" do
+        hash.merge!(author_signature: "aa", parent_author_signature: "bb")
+        xml = SomeRelayable.new(hash, "new_property" => new_property).to_xml
+
+        expected_xml = <<-XML
+<some_relayable>
+  <diaspora_handle>#{diaspora_id}</diaspora_handle>
+  <guid>#{guid}</guid>
+  <parent_guid>#{parent_guid}</parent_guid>
+  <author_signature>aa</author_signature>
+  <parent_author_signature>bb</parent_author_signature>
+  <property>#{property}</property>
+  <new_property>#{new_property}</new_property>
+</some_relayable>
+XML
+
+        expect(xml.to_s.strip).to eq(expected_xml.strip)
+      end
+
+      it "computes correct signatures for the entity" do
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_private_key_by_diaspora_id, diaspora_id
+        ).and_return(author_pkey)
+
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_author_private_key_by_entity_guid, "Parent", parent_guid
+        ).and_return(parent_pkey)
+
+        xml = DiasporaFederation::Salmon::XmlPayload.pack(SomeRelayable.new(hash))
+
+        author_signature = xml.at_xpath("post/*[1]/author_signature").text
+        parent_author_signature = xml.at_xpath("post/*[1]/parent_author_signature").text
+
+        expect(verify_signature(author_pkey, author_signature, legacy_signature_data)).to be_truthy
+        expect(verify_signature(parent_pkey, parent_author_signature, legacy_signature_data)).to be_truthy
       end
     end
   end

@@ -75,7 +75,7 @@ shared_examples "a relayable Entity" do
   let(:instance) { described_class.new(data.merge(author_signature: nil, parent_author_signature: nil)) }
 
   context "signatures generation" do
-    def legacy_verify_signature(pubkey, signature, signed_string)
+    def verify_signature(pubkey, signature, signed_string)
       pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
     end
 
@@ -89,8 +89,8 @@ shared_examples "a relayable Entity" do
 
       alice_public_key = OpenSSL::PKey::RSA.new(alice.serialized_public_key)
       bob_public_key = OpenSSL::PKey::RSA.new(bob.serialized_public_key)
-      expect(legacy_verify_signature(alice_public_key, author_signature, signed_string)).to be_truthy
-      expect(legacy_verify_signature(bob_public_key, parent_author_signature, signed_string)).to be_truthy
+      expect(verify_signature(alice_public_key, author_signature, signed_string)).to be_truthy
+      expect(verify_signature(bob_public_key, parent_author_signature, signed_string)).to be_truthy
     end
   end
 end

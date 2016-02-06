@@ -77,6 +77,8 @@ module DiasporaFederation
           hash = to_signed_h
           xml.at_xpath("author_signature").content = hash[:author_signature]
           xml.at_xpath("parent_author_signature").content = hash[:parent_author_signature]
+
+          add_additional_elements_to(xml) if additional_xml_elements
         end
       end
 
@@ -102,6 +104,14 @@ module DiasporaFederation
         unless privkey.nil?
           hash[:parent_author_signature] = sign_with_key(privkey, hash)
           logger.info "event=sign status=complete signature=parent_author_signature guid=#{guid}"
+        end
+      end
+
+      # Adds additional unknown elements to the xml
+      # @param [Nokogiri::XML::Element] xml entity xml
+      def add_additional_elements_to(xml)
+        additional_xml_elements.each do |element, value|
+          xml << Nokogiri::XML::Element.new(element, xml.document).tap {|node| node.content = value }
         end
       end
 
