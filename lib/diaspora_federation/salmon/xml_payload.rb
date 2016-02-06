@@ -18,6 +18,7 @@ module DiasporaFederation
       # @param [Entity] entity subject
       # @return [Nokogiri::XML::Element] XML root node
       # @raise [ArgumentError] if the argument is not an Entity subclass
+      # @deprecated
       def self.pack(entity)
         raise ArgumentError, "only instances of DiasporaFederation::Entity allowed" unless entity.is_a?(Entity)
 
@@ -39,14 +40,12 @@ module DiasporaFederation
       # @return [Entity] re-constructed Entity instance
       # @raise [ArgumentError] if the argument is not an
       #   {http://www.rubydoc.info/gems/nokogiri/Nokogiri/XML/Element Nokogiri::XML::Element}
-      # @raise [InvalidStructure] if the XML doesn't look like the wrapper XML
       # @raise [UnknownEntity] if the class for the entity contained inside the
       #   XML can't be found
       def self.unpack(xml)
         raise ArgumentError, "only Nokogiri::XML::Element allowed" unless xml.instance_of?(Nokogiri::XML::Element)
-        raise Salmon::InvalidStructure unless wrap_valid?(xml)
 
-        data = xml.at_xpath("post/*[1]")
+        data = xml_wrapped?(xml) ? xml.at_xpath("post/*[1]") : xml
         klass_name = entity_class_name(data.name)
         raise Salmon::UnknownEntity, "'#{klass_name}' not found" unless Entities.const_defined?(klass_name)
 
@@ -55,11 +54,12 @@ module DiasporaFederation
       end
 
       # @param [Nokogiri::XML::Element] element
-      def self.wrap_valid?(element)
+      # @deprecated
+      def self.xml_wrapped?(element)
         (element.name == "XML" && !element.at_xpath("post").nil? &&
          !element.at_xpath("post").children.empty?)
       end
-      private_class_method :wrap_valid?
+      private_class_method :xml_wrapped?
 
       # Transform the given String from the lowercase underscored version to a
       # camelized variant, used later for getting the Class constant.

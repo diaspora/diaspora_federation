@@ -67,7 +67,7 @@ XML
           end
         end
 
-        it "raises an error when the xml is wrong" do
+        it "raises an error when the entity is unknown" do
           xml = <<-XML
 <XML>
   <post>
@@ -81,17 +81,6 @@ XML
             Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
           }.to raise_error Salmon::UnknownEntity, "'UnknownEntity' not found"
         end
-
-        it "raises an error when the entity is not found" do
-          xml = <<-XML
-<root>
-  <weird/>
-</root>
-XML
-          expect {
-            Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
-          }.to raise_error Salmon::InvalidStructure
-        end
       end
 
       context "returned object" do
@@ -104,6 +93,21 @@ XML
         it "returns an entity instance of the original class" do
           expect(subject).to be_an_instance_of Entities::TestEntity
           expect(subject.test).to eq("asdf")
+        end
+      end
+
+      context "unwrapped xml" do
+        it "allows unwrapped entities" do
+          xml = <<-XML
+<test_entity>
+  <test>asdf</test>
+</test_entity>
+          XML
+
+          entity = Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
+
+          expect(entity).to be_an_instance_of Entities::TestEntity
+          expect(entity.test).to eq("asdf")
         end
       end
 

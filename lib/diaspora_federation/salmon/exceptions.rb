@@ -33,11 +33,6 @@ module DiasporaFederation
     class InvalidEncoding < RuntimeError
     end
 
-    # Raised, if the XML structure of the parsed document doesn't resemble the
-    # expected structure.
-    class InvalidStructure < RuntimeError
-    end
-
     # Raised, if the entity name in the XML is invalid
     class InvalidEntityName < RuntimeError
     end
