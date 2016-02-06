@@ -62,7 +62,7 @@ module DiasporaFederation
             privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, diaspora_id)
             raise AuthorPrivateKeyNotFound, "author=#{diaspora_id} guid=#{guid}" if privkey.nil?
             hash[:author_signature] = sign_with_key(privkey, hash)
-            logger.info "event=sign_with_key signature=author_signature author=#{diaspora_id} guid=#{guid}"
+            logger.info "event=sign status=complete signature=author_signature author=#{diaspora_id} guid=#{guid}"
           end
 
           try_sign_with_parent_author(hash) if parent_author_signature.nil?
@@ -101,7 +101,7 @@ module DiasporaFederation
         )
         unless privkey.nil?
           hash[:parent_author_signature] = sign_with_key(privkey, hash)
-          logger.info "event=sign_with_key signature=parent_author_signature guid=#{guid}"
+          logger.info "event=sign status=complete signature=parent_author_signature guid=#{guid}"
         end
       end
 
@@ -121,23 +121,55 @@ module DiasporaFederation
       # @param [Hash] hash data to sign
       # @return [String] A Base64 encoded signature of #signable_string with key
       def sign_with_key(privkey, hash)
-        Base64.strict_encode64(privkey.sign(DIGEST, legacy_signature_data(hash)))
+        signature_data_string = if additional_xml_elements
+                                  logger.info "event=sign method=alphabetic guid=#{guid}"
+                                  signature_data(hash.merge(additional_xml_elements))
+                                else
+                                  logger.info "event=sign method=legacy guid=#{guid}"
+                                  legacy_signature_data(hash)
+                                end
+        Base64.strict_encode64(privkey.sign(DIGEST, signature_data_string))
       end
 
       # Check that signature is a correct signature
       #
       # @param [OpenSSL::PKey::RSA] pubkey An RSA key
       # @param [String] signature The signature to be verified.
-      # @return [Boolean]
+      # @return [Boolean] signature valid
       def verify_signature(pubkey, signature)
         if signature.nil?
           logger.warn "event=verify_signature status=abort reason=no_signature guid=#{guid}"
           return false
         end
 
-        validity = pubkey.verify(DIGEST, Base64.decode64(signature), legacy_signature_data(to_h))
-        logger.info "event=verify_signature status=complete guid=#{guid} validity=#{validity}"
-        validity
+        valid = verify_legacy_signature(pubkey, signature)
+
+        unless valid
+          logger.info "event=verify_signature method=alphabetic status=retry guid=#{guid}"
+          hash_to_verify = additional_xml_elements ? to_h.merge(additional_xml_elements) : to_h
+          valid = pubkey.verify(DIGEST, Base64.decode64(signature), signature_data(hash_to_verify))
+        end
+
+        logger.info "event=verify_signature status=complete guid=#{guid} valid=#{valid}"
+        valid
+      end
+
+      def verify_legacy_signature(pubkey, signature)
+        if additional_xml_elements
+          logger.info "event=verify_signature method=legacy status=skip guid=#{guid}"
+          false
+        else
+          valid = pubkey.verify(DIGEST, Base64.decode64(signature), legacy_signature_data(to_h))
+          logger.info "event=verify_signature method=legacy guid=#{guid} valid=#{valid}"
+          valid
+        end
+      end
+
+      # @param [Hash] hash data to sign
+      # @return [String] signature data string
+      def signature_data(hash)
+        # remove signatures from hash and sort properties alphabetically
+        Hash[hash.reject {|name, _| name =~ /signature/ }.map {|name, value| [name.to_s, value] }.sort].values.join(";")
       end
 
       # @param [Hash] hash data to sign
