@@ -90,7 +90,7 @@ module DiasporaFederation
             xml.author_id(author_id)
           }
 
-          xml.parent << MagicEnvelope.new(privkey, entity).envelop
+          xml.parent << MagicEnvelope.new(entity).envelop(privkey, author_id)
         end
       end
 

@@ -13,7 +13,7 @@ module DiasporaFederation
     #     <me:data type="application/xml">{data}</me:data>
     #     <me:encoding>base64url</me:encoding>
     #     <me:alg>RSA-SHA256</me:alg>
-    #     <me:sig>{signature}</me:sig>
+    #     <me:sig key_id="{sender}">{signature}</me:sig>
     #   </me:env>
     #
     # When parsing the XML of an incoming Magic Envelope {MagicEnvelope.unenvelop}
@@ -21,9 +21,6 @@ module DiasporaFederation
     #
     # @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-magicsig-01.html
     class MagicEnvelope
-      # returns the payload (only used for testing purposes)
-      attr_reader :payload
-
       # encoding used for the payload data
       ENCODING = "base64url".freeze
 
@@ -41,34 +38,31 @@ module DiasporaFederation
 
       # Creates a new instance of MagicEnvelope.
       #
-      # @param [OpenSSL::PKey::RSA] rsa_privkey private key used for signing
       # @param [Entity] payload Entity instance
       # @raise [ArgumentError] if either argument is not of the right type
-      def initialize(rsa_privkey, payload)
-        raise ArgumentError unless rsa_privkey.instance_of?(OpenSSL::PKey::RSA) &&
-                                   payload.is_a?(Entity)
+      def initialize(payload)
+        raise ArgumentError unless payload.is_a?(Entity)
 
-        @rsa_privkey = rsa_privkey
         @payload = XmlPayload.pack(payload).to_xml.strip
       end
 
       # Builds the XML structure for the magic envelope, inserts the {ENCODING}
       # encoded data and signs the envelope using {DIGEST}.
       #
+      # @param [OpenSSL::PKey::RSA] privkey private key used for signing
+      # @param [String] sender_id diaspora-ID of the sender
       # @return [Nokogiri::XML::Element] XML root node
-      def envelop
-        env_doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
-        Nokogiri::XML::Element.new("me:env", env_doc).tap do |env|
-          env << Nokogiri::XML::Element.new("me:data", env_doc).tap {|node|
-            node.content = Base64.urlsafe_encode64(@payload)
-            node["type"] = DATA_TYPE
+      def envelop(privkey, sender_id)
+        raise ArgumentError unless privkey.instance_of?(OpenSSL::PKey::RSA) && sender_id.is_a?(String)
+
+        build_xml {|xml|
+          xml["me"].env("xmlns:me" => XMLNS) {
+            xml["me"].data(Base64.urlsafe_encode64(@payload), type: DATA_TYPE)
+            xml["me"].encoding(ENCODING)
+            xml["me"].alg(ALGORITHM)
+            xml["me"].sig(Base64.urlsafe_encode64(sign(privkey)), key_id: Base64.urlsafe_encode64(sender_id))
           }
-          env << Nokogiri::XML::Element.new("me:encoding", env_doc).tap {|node| node.content = ENCODING }
-          env << Nokogiri::XML::Element.new("me:alg", env_doc).tap {|node| node.content = ALGORITHM }
-          env << Nokogiri::XML::Element.new("me:sig", env_doc).tap {|node|
-            node.content = Base64.urlsafe_encode64(signature)
-          }
-        end
+        }
       end
 
       # Encrypts the payload with a new, random AES cipher and returns the cipher
@@ -124,12 +118,24 @@ module DiasporaFederation
 
       private
 
+      # Builds the xml root node of the magic envelope.
+      #
+      # @yield [xml] Invokes the block with the
+      #   {http://www.rubydoc.info/gems/nokogiri/Nokogiri/XML/Builder Nokogiri::XML::Builder}
+      # @return [Nokogiri::XML::Element] XML root node
+      def build_xml
+        Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
+          yield xml
+        }.doc.root
+      end
+
       # create the signature for all fields according to specification
       #
+      # @param [OpenSSL::PKey::RSA] privkey private key used for signing
       # @return [String] the signature
-      def signature
+      def sign(privkey)
         subject = MagicEnvelope.send(:sig_subject, [@payload, DATA_TYPE, ENCODING, ALGORITHM])
-        @rsa_privkey.sign(DIGEST, subject)
+        privkey.sign(DIGEST, subject)
       end
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
@@ -137,8 +143,6 @@ module DiasporaFederation
         (env.instance_of?(Nokogiri::XML::Element) &&
           env.name == "env" &&
           !env.at_xpath("me:data").content.empty? &&
-          !env.at_xpath("me:encoding").content.empty? &&
-          !env.at_xpath("me:alg").content.empty? &&
           !env.at_xpath("me:sig").content.empty?)
       end
       private_class_method :envelope_valid?

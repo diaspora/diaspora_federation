@@ -113,9 +113,9 @@ module DiasporaFederation
         EncryptedSlap.new.tap do |slap|
           slap.author_id = author_id
 
-          magic_envelope = MagicEnvelope.new(privkey, entity)
+          magic_envelope = MagicEnvelope.new(entity)
           slap.cipher_params = magic_envelope.encrypt!
-          slap.magic_envelope_xml = magic_envelope.envelop
+          slap.magic_envelope_xml = magic_envelope.envelop(privkey, author_id)
         end
       end
 
