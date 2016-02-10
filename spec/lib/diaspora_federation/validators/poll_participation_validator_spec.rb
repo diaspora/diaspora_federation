@@ -6,16 +6,9 @@ module DiasporaFederation
 
     it_behaves_like "a relayable validator"
 
-    it_behaves_like "a diaspora id validator" do
-      let(:property) { :diaspora_id }
-      let(:mandatory) { true }
-    end
-
-    %i(guid poll_answer_guid).each do |prop|
-      describe "##{prop}" do
-        it_behaves_like "a guid validator" do
-          let(:property) { prop }
-        end
+    describe "#poll_answer_guid" do
+      it_behaves_like "a guid validator" do
+        let(:property) { :poll_answer_guid }
       end
     end
   end

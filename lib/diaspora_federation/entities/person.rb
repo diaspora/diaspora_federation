@@ -11,11 +11,11 @@ module DiasporaFederation
       #   @return [String] guid
       property :guid
 
-      # @!attribute [r] diaspora_id
+      # @!attribute [r] author
       #   The diaspora ID of the person
       #   @see Validation::Rule::DiasporaId
       #   @return [String] diaspora ID
-      property :diaspora_id, xml_name: :diaspora_handle
+      property :author, xml_name: :diaspora_handle
 
       # @!attribute [r] url
       #   @see Discovery::WebFinger#seed_url

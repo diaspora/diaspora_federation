@@ -5,17 +5,17 @@ module DiasporaFederation
 
     let(:guid) { FactoryGirl.generate(:guid) }
     let(:parent_guid) { FactoryGirl.generate(:guid) }
-    let(:diaspora_id) { FactoryGirl.generate(:diaspora_id) }
+    let(:author) { FactoryGirl.generate(:diaspora_id) }
     let(:property) { "hello" }
     let(:new_property) { "some text" }
-    let(:hash) { {guid: guid, diaspora_id: diaspora_id, parent_guid: parent_guid, property: property} }
+    let(:hash) { {guid: guid, author: author, parent_guid: parent_guid, property: property} }
 
-    let(:signature_data) { "#{diaspora_id};#{guid};#{parent_guid};#{property}" }
-    let(:signature_data_with_new_property) { "#{diaspora_id};#{guid};#{new_property};#{parent_guid};#{property}" }
-    let(:legacy_signature_data) { "#{guid};#{diaspora_id};#{property};#{parent_guid}" }
+    let(:signature_data) { "#{author};#{guid};#{parent_guid};#{property}" }
+    let(:signature_data_with_new_property) { "#{author};#{guid};#{new_property};#{parent_guid};#{property}" }
+    let(:legacy_signature_data) { "#{guid};#{author};#{property};#{parent_guid}" }
 
     class SomeRelayable < Entity
-      LEGACY_SIGNATURE_ORDER = %i(guid diaspora_id property parent_guid).freeze
+      LEGACY_SIGNATURE_ORDER = %i(guid author property parent_guid).freeze
 
       include Entities::Relayable
 
@@ -41,7 +41,7 @@ module DiasporaFederation
         signed_hash[:parent_author_signature] = sign_with_key(parent_pkey, legacy_signature_data)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, diaspora_id
+          :fetch_public_key_by_diaspora_id, author
         ).and_return(author_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -69,7 +69,7 @@ module DiasporaFederation
         hash[:author_signature] = nil
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, diaspora_id
+          :fetch_public_key_by_diaspora_id, author
         ).and_return(author_pkey.public_key)
 
         expect {
@@ -81,7 +81,7 @@ module DiasporaFederation
         hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, diaspora_id
+          :fetch_public_key_by_diaspora_id, author
         ).and_return(author_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -102,7 +102,7 @@ module DiasporaFederation
         hash[:parent_author_signature] = nil
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, diaspora_id
+          :fetch_public_key_by_diaspora_id, author
         ).and_return(author_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -123,7 +123,7 @@ module DiasporaFederation
         hash[:parent_author_signature] = nil
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, diaspora_id
+          :fetch_public_key_by_diaspora_id, author
         ).and_return(author_pkey.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -140,7 +140,7 @@ module DiasporaFederation
           signed_hash[:parent_author_signature] = sign_with_key(parent_pkey, signature_data)
 
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, diaspora_id
+            :fetch_public_key_by_diaspora_id, author
           ).and_return(author_pkey.public_key)
 
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -160,7 +160,7 @@ module DiasporaFederation
           signed_hash[:parent_author_signature] = sign_with_key(parent_pkey, signature_data_with_new_property)
 
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, diaspora_id
+            :fetch_public_key_by_diaspora_id, author
           ).and_return(author_pkey.public_key)
 
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -179,7 +179,7 @@ module DiasporaFederation
           signed_hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
 
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, diaspora_id
+            :fetch_public_key_by_diaspora_id, author
           ).and_return(author_pkey.public_key)
 
           expect {
@@ -192,7 +192,7 @@ module DiasporaFederation
     describe "#to_signed_h" do
       it "updates signatures when they were nil and keys were supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, diaspora_id
+          :fetch_private_key_by_diaspora_id, author
         ).and_return(author_pkey)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -213,7 +213,7 @@ module DiasporaFederation
 
       it "raises when author_signature not set and key isn't supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, diaspora_id
+          :fetch_private_key_by_diaspora_id, author
         ).and_return(nil)
 
         expect {
@@ -223,7 +223,7 @@ module DiasporaFederation
 
       it "doesn't set parent_author_signature if key isn't supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, diaspora_id
+          :fetch_private_key_by_diaspora_id, author
         ).and_return(author_pkey)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -259,7 +259,7 @@ module DiasporaFederation
 
         expected_xml = <<-XML
 <some_relayable>
-  <diaspora_handle>#{diaspora_id}</diaspora_handle>
+  <diaspora_handle>#{author}</diaspora_handle>
   <guid>#{guid}</guid>
   <parent_guid>#{parent_guid}</parent_guid>
   <author_signature>aa</author_signature>
@@ -274,7 +274,7 @@ XML
 
       it "computes correct signatures for the entity" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, diaspora_id
+          :fetch_private_key_by_diaspora_id, author
         ).and_return(author_pkey)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(

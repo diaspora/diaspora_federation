@@ -47,7 +47,6 @@ module DiasporaFederation
 
       # @!attribute [r] nickname
       #   the first part of the diaspora ID
-      #   @see Entities::Person#diaspora_id
       #   @return [String] nickname
       property :nickname
 

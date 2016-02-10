@@ -18,11 +18,11 @@ module DiasporaFederation
       #   @return [String] target type
       property :target_type
 
-      # @!attribute [r] diaspora_id
+      # @!attribute [r] author
       #   The diaspora ID of the person who deletes a post
-      #   @see Person#diaspora_id
+      #   @see Person#author
       #   @return [String] diaspora ID
-      property :diaspora_id, xml_name: :sender_handle
+      property :author, xml_name: :sender_handle
 
       # @!attribute [r] author_signature
       #   Contains a signature of the entity using the private key of the author of a post
@@ -47,7 +47,7 @@ module DiasporaFederation
       def to_h
         super.tap do |hash|
           if target_author_signature.nil?
-            privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, diaspora_id)
+            privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, author)
             hash[:target_author_signature] = SignedRetraction.sign_with_key(privkey, self) unless privkey.nil?
           end
         end
@@ -56,7 +56,7 @@ module DiasporaFederation
       # use only {Retraction} for receive
       # @return [Retraction] instance as normal retraction
       def to_retraction
-        Retraction.new(diaspora_id: diaspora_id, target_guid: target_guid, target_type: target_type)
+        Retraction.new(author: author, target_guid: target_guid, target_type: target_type)
       end
 
       # Create signature for a retraction

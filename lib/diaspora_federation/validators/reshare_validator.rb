@@ -4,13 +4,13 @@ module DiasporaFederation
     class ReshareValidator < Validation::Validator
       include Validation
 
-      rule :root_diaspora_id, %i(not_empty diaspora_id)
+      rule :root_author, %i(not_empty diaspora_id)
 
       rule :root_guid, :guid
 
-      rule :guid, :guid
+      rule :author, %i(not_empty diaspora_id)
 
-      rule :diaspora_id, %i(not_empty diaspora_id)
+      rule :guid, :guid
 
       rule :public, :boolean
     end

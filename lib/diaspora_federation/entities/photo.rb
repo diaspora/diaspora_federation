@@ -10,11 +10,11 @@ module DiasporaFederation
       #   @return [String] guid
       property :guid
 
-      # @!attribute [r] diaspora_id
+      # @!attribute [r] author
       #   The diaspora ID of the person who uploaded the photo
-      #   @see Person#diaspora_id
+      #   @see Person#author
       #   @return [String] author diaspora ID
-      property :diaspora_id, xml_name: :diaspora_handle
+      property :author, xml_name: :diaspora_handle
 
       # @!attribute [r] public
       #   Points if the photo is visible to everyone or only to some aspects

@@ -182,7 +182,7 @@ XML
 
       context "relayable signature verification feature support" do
         it "calls signatures verification on relayable unpack" do
-          entity = FactoryGirl.build(:comment_entity, diaspora_id: alice.diaspora_id)
+          entity = FactoryGirl.build(:comment_entity, author: alice.diaspora_id)
           payload = Salmon::XmlPayload.pack(entity)
           payload.at_xpath("post/*[1]/author_signature").content = nil
 

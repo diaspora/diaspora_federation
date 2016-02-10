@@ -4,11 +4,11 @@ module DiasporaFederation
     #
     # @see Validators::ReshareValidator
     class Reshare < Entity
-      # @!attribute [r] diaspora_id
+      # @!attribute [r] root_author
       #   The diaspora ID of the person who posted the original post
-      #   @see Person#diaspora_id
+      #   @see Person#author
       #   @return [String] diaspora ID
-      property :root_diaspora_id # inconsistent, everywhere else it's "handle"
+      property :root_author, xml_name: :root_diaspora_id
 
       # @!attribute [r] root_guid
       #   guid of the original post
@@ -16,18 +16,18 @@ module DiasporaFederation
       #   @return [String] root guid
       property :root_guid
 
+      # @!attribute [r] author
+      #   The diaspora ID of the person who reshares a post
+      #   @see Person#author
+      #   @return [String] diaspora ID
+      property :author, xml_name: :diaspora_handle
+
       # @!attribute [r] guid
       #   a random string of at least 16 chars.
       #   @see Validation::Rule::Guid
       #   @see StatusMessage#guid
       #   @return [String] guid
       property :guid
-
-      # @!attribute [r] diaspora_id
-      #   The diaspora ID of the person who reshares a post
-      #   @see Person#diaspora_id
-      #   @return [String] diaspora ID
-      property :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] public
       #   has no meaning at the moment

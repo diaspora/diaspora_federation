@@ -4,11 +4,11 @@ module DiasporaFederation
     #
     # @see Validators::AccountDeletionValidator
     class AccountDeletion < Entity
-      # @!attribute [r] diaspora_id
+      # @!attribute [r] author
       #   The diaspora ID of the deleted account
-      #   @see Person#diaspora_id
+      #   @see Person#author
       #   @return [String] diaspora ID
-      property :diaspora_id, xml_name: :diaspora_handle
+      property :author, xml_name: :diaspora_handle
     end
   end
 end

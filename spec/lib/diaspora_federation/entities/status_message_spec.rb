@@ -15,10 +15,12 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <status_message>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <guid>#{data[:guid]}</guid>
   <raw_message>#{data[:raw_message]}</raw_message>
   <photo>
     <guid>#{photo1.guid}</guid>
-    <diaspora_handle>#{photo1.diaspora_id}</diaspora_handle>
+    <diaspora_handle>#{photo1.author}</diaspora_handle>
     <public>#{photo1.public}</public>
     <created_at>#{photo1.created_at}</created_at>
     <remote_photo_path>#{photo1.remote_photo_path}</remote_photo_path>
@@ -30,7 +32,7 @@ module DiasporaFederation
   </photo>
   <photo>
     <guid>#{photo2.guid}</guid>
-    <diaspora_handle>#{photo2.diaspora_id}</diaspora_handle>
+    <diaspora_handle>#{photo2.author}</diaspora_handle>
     <public>#{photo2.public}</public>
     <created_at>#{photo2.created_at}</created_at>
     <remote_photo_path>#{photo2.remote_photo_path}</remote_photo_path>
@@ -45,8 +47,6 @@ module DiasporaFederation
     <lat>#{location.lat}</lat>
     <lng>#{location.lng}</lng>
   </location>
-  <guid>#{data[:guid]}</guid>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
   <public>#{data[:public]}</public>
   <created_at>#{data[:created_at]}</created_at>
   <provider_display_name>#{data[:provider_display_name]}</provider_display_name>

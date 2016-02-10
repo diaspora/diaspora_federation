@@ -5,7 +5,7 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <profile>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <first_name>#{data[:first_name]}</first_name>
   <last_name/>
   <image_url>#{data[:image_url]}</image_url>

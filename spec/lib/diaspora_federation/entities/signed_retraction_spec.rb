@@ -1,13 +1,13 @@
 module DiasporaFederation
   describe Entities::SignedRetraction do
-    let(:data) { FactoryGirl.build(:signed_retraction_entity, diaspora_id: alice.diaspora_id).to_h }
+    let(:data) { FactoryGirl.build(:signed_retraction_entity, author: alice.diaspora_id).to_h }
 
     let(:xml) {
       <<-XML
 <signed_retraction>
   <target_guid>#{data[:target_guid]}</target_guid>
   <target_type>#{data[:target_type]}</target_type>
-  <sender_handle>#{data[:diaspora_id]}</sender_handle>
+  <sender_handle>#{data[:author]}</sender_handle>
   <target_author_signature>#{data[:target_author_signature]}</target_author_signature>
 </signed_retraction>
 XML
@@ -23,7 +23,7 @@ XML
 
       it "updates author signature when it was nil and key was supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+          :fetch_private_key_by_diaspora_id, hash[:author]
         ).and_return(author_pkey)
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
@@ -44,7 +44,7 @@ XML
 
       it "doesn't change signature if a key wasn't supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+          :fetch_private_key_by_diaspora_id, hash[:author]
         ).and_return(nil)
 
         signed_hash = Entities::SignedRetraction.new(hash).to_h
@@ -58,7 +58,7 @@ XML
         retraction = signed_retraction.to_retraction
 
         expect(retraction).to be_a(Entities::Retraction)
-        expect(retraction.diaspora_id).to eq(signed_retraction.diaspora_id)
+        expect(retraction.author).to eq(signed_retraction.author)
         expect(retraction.target_guid).to eq(signed_retraction.target_guid)
         expect(retraction.target_type).to eq(signed_retraction.target_type)
       end

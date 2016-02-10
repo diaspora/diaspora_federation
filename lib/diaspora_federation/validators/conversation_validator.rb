@@ -6,9 +6,9 @@ module DiasporaFederation
 
       rule :guid, :guid
 
-      rule :diaspora_id, %i(not_empty diaspora_id)
+      rule :author, %i(not_empty diaspora_id)
 
-      rule :participant_ids, diaspora_id_count: {maximum: 20}
+      rule :participants, diaspora_id_count: {maximum: 20}
     end
   end
 end

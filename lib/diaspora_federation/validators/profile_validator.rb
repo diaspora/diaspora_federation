@@ -4,7 +4,7 @@ module DiasporaFederation
     class ProfileValidator < Validation::Validator
       include Validation
 
-      rule :diaspora_id, :diaspora_id
+      rule :author, :diaspora_id
 
       # the name must not contain a semicolon because of mentions
       # @{<full_name> ; <diaspora_id>}

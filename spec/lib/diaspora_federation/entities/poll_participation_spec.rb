@@ -2,17 +2,13 @@ module DiasporaFederation
   describe Entities::PollParticipation do
     let(:parent) { FactoryGirl.create(:poll, author: bob) }
     let(:data) {
-      FactoryGirl.build(
-        :poll_participation_entity,
-        diaspora_id: alice.diaspora_id,
-        parent_guid: parent.guid
-      ).to_signed_h
+      FactoryGirl.build(:poll_participation_entity, author: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
     }
 
     let(:xml) {
       <<-XML
 <poll_participation>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
   <author_signature>#{data[:author_signature]}</author_signature>

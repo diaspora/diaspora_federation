@@ -42,16 +42,16 @@ module DiasporaFederation
 
           factory :person_entity, class: DiasporaFederation::Entities::Person do
             guid
-            diaspora_id
+            author { generate(:diaspora_id) }
             url "http://localhost:3000/"
             exported_key { generate(:public_key) }
             profile {
-              FactoryGirl.build(:profile_entity, diaspora_id: diaspora_id)
+              FactoryGirl.build(:profile_entity, author: author)
             }
           end
 
           factory :profile_entity, class: DiasporaFederation::Entities::Profile do
-            diaspora_id
+            author { generate(:diaspora_id) }
             first_name "my name"
             last_name nil
             image_url "/assets/user/default.png"
@@ -74,7 +74,7 @@ module DiasporaFederation
 
           factory :photo_entity, class: DiasporaFederation::Entities::Photo do
             guid
-            diaspora_id
+            author { generate(:diaspora_id) }
             public(true)
             created_at { Time.now.utc }
             remote_photo_path "https://diaspora.example.tld/uploads/images/"
@@ -91,84 +91,84 @@ module DiasporaFederation
 
           factory :participation_entity,
                   class: DiasporaFederation::Entities::Participation, parent: :relayable_entity do
+            author { generate(:diaspora_id) }
             guid
             parent_type "Post"
-            diaspora_id
           end
 
           factory :status_message_entity, class: DiasporaFederation::Entities::StatusMessage do
             raw_message "i am a very interesting status update"
+            author { generate(:diaspora_id) }
             guid
-            diaspora_id
             public(true)
             created_at { Time.now.utc }
           end
 
           factory :request_entity, class: DiasporaFederation::Entities::Request do
-            diaspora_id
-            recipient_id { generate(:diaspora_id) }
+            author { generate(:diaspora_id) }
+            recipient { generate(:diaspora_id) }
           end
 
           factory :comment_entity, class: DiasporaFederation::Entities::Comment, parent: :relayable_entity do
+            author { generate(:diaspora_id) }
             guid
             text "this is a very informative comment"
-            diaspora_id
           end
 
           factory :like_entity, class: DiasporaFederation::Entities::Like, parent: :relayable_entity do
             positive true
+            author { generate(:diaspora_id) }
             guid
             parent_type "Post"
-            diaspora_id
           end
 
           factory :account_deletion_entity, class: DiasporaFederation::Entities::AccountDeletion do
-            diaspora_id
+            author { generate(:diaspora_id) }
           end
 
           factory :conversation_entity, class: DiasporaFederation::Entities::Conversation do
+            author { generate(:diaspora_id) }
             guid
             subject "this is a very informative subject"
             created_at { Time.now.utc }
             messages []
-            diaspora_id
-            participant_ids { Array.new(3) { generate(:diaspora_id) }.join(";") }
+            participants { Array.new(3) { generate(:diaspora_id) }.join(";") }
           end
 
           factory :message_entity, class: DiasporaFederation::Entities::Message, parent: :relayable_entity do
             guid
+            author { generate(:diaspora_id) }
             text "this is a very informative text"
             created_at { Time.now.utc }
-            diaspora_id
             conversation_guid { generate(:guid) }
           end
 
           factory :relayable_retraction_entity, class: DiasporaFederation::Entities::RelayableRetraction do
+            author { generate(:diaspora_id) }
             target_guid { generate(:guid) }
             target_type "Comment"
-            diaspora_id
           end
 
           factory :reshare_entity, class: DiasporaFederation::Entities::Reshare do
-            root_diaspora_id { generate(:diaspora_id) }
+            root_author { generate(:diaspora_id) }
             root_guid { generate(:guid) }
             guid
-            diaspora_id
+            author { generate(:diaspora_id) }
             public(true)
             created_at { Time.now.utc }
             provider_display_name { "the testsuite" }
           end
 
           factory :retraction_entity, class: DiasporaFederation::Entities::Retraction do
+            author { generate(:diaspora_id) }
             target_guid { generate(:guid) }
-            diaspora_id
             target_type "Post"
           end
 
           factory :signed_retraction_entity, class: DiasporaFederation::Entities::SignedRetraction do
+            author { generate(:diaspora_id) }
             target_guid { generate(:guid) }
             target_type "Post"
-            diaspora_id
           end
 
           factory :poll_answer_entity, class: DiasporaFederation::Entities::PollAnswer do
@@ -184,8 +184,8 @@ module DiasporaFederation
 
           factory :poll_participation_entity,
                   class:  DiasporaFederation::Entities::PollParticipation, parent: :relayable_entity do
+            author { generate(:diaspora_id) }
             guid
-            diaspora_id
             poll_answer_guid { generate(:guid) }
           end
         end

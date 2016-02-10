@@ -6,6 +6,8 @@ module DiasporaFederation
       # @param [Validation::Validator] validator the validator in which it is included
       def self.included(validator)
         validator.class_eval do
+          rule :author, %i(not_empty diaspora_id)
+          rule :guid, :guid
           rule :parent_guid, :guid
         end
       end

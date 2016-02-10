@@ -2,19 +2,19 @@ module DiasporaFederation
   describe Entities::Conversation do
     let(:parent) { FactoryGirl.create(:conversation, author: bob) }
     let(:signed_msg1) {
-      msg = FactoryGirl.build(:message_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
+      msg = FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
       Entities::Message.new(msg)
     }
     let(:signed_msg2) {
-      msg = FactoryGirl.build(:message_entity, diaspora_id: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
+      msg = FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
       Entities::Message.new(msg)
     }
     let(:data) {
       FactoryGirl.attributes_for(:conversation_entity).merge!(
-        messages:        [signed_msg1, signed_msg2],
-        diaspora_id:     bob.diaspora_id,
-        guid:            parent.guid,
-        participant_ids: "#{bob.diaspora_id};#{FactoryGirl.generate(:diaspora_id)}"
+        messages:     [signed_msg1, signed_msg2],
+        author:       bob.diaspora_id,
+        guid:         parent.guid,
+        participants: "#{bob.diaspora_id};#{FactoryGirl.generate(:diaspora_id)}"
       )
     }
 
@@ -25,8 +25,8 @@ module DiasporaFederation
   <subject>#{data[:subject]}</subject>
   <created_at>#{data[:created_at]}</created_at>
 #{data[:messages].map {|a| a.to_xml.to_s.indent(2) }.join("\n")}
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
-  <participant_handles>#{data[:participant_ids]}</participant_handles>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <participant_handles>#{data[:participants]}</participant_handles>
 </conversation>
 XML
     }

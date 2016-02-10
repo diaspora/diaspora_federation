@@ -5,7 +5,7 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <account_deletion>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
 </account_deletion>
 XML
     }

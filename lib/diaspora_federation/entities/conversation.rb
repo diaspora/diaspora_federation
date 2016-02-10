@@ -22,17 +22,16 @@ module DiasporaFederation
       #   @return [[Entities::Message]] Messages of this conversation
       entity :messages, [Entities::Message]
 
-      # @!attribute [r] diaspora_id
+      # @!attribute [r] author
       #   The diaspora ID of the person initiated the conversation.
-      #   @see Person#diaspora_id
+      #   @see Person#author
       #   @return [String] diaspora ID
-      property :diaspora_id, xml_name: :diaspora_handle
+      property :author, xml_name: :diaspora_handle
 
-      # @!attribute [r] participant_ids
+      # @!attribute [r] participants
       #   The diaspora IDs of the persons participating the conversation separated by ";".
-      #   @see Person#diaspora_id
       #   @return [String] participants diaspora IDs
-      property :participant_ids, xml_name: :participant_handles
+      property :participants, xml_name: :participant_handles
     end
   end
 end

@@ -4,7 +4,7 @@ module DiasporaFederation
     let(:data) {
       FactoryGirl.build(
         :like_entity,
-        diaspora_id: alice.diaspora_id,
+        author:      alice.diaspora_id,
         parent_guid: parent.guid,
         parent_type: parent.entity_type
       ).to_signed_h
@@ -13,7 +13,7 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <like>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
   <author_signature>#{data[:author_signature]}</author_signature>

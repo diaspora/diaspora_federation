@@ -6,10 +6,10 @@ module DiasporaFederation
       <<-XML
 <person>
   <guid>#{data[:guid]}</guid>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <url>#{data[:url]}</url>
   <profile>
-    <diaspora_handle>#{data[:profile].diaspora_id}</diaspora_handle>
+    <diaspora_handle>#{data[:profile].author}</diaspora_handle>
     <first_name>#{data[:profile].first_name}</first_name>
     <last_name/>
     <image_url>#{data[:profile].image_url}</image_url>

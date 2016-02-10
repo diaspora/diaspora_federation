@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::RelayableRetraction do
-    let(:data) { FactoryGirl.build(:relayable_retraction_entity, diaspora_id: alice.diaspora_id).to_h }
+    let(:data) { FactoryGirl.build(:relayable_retraction_entity, author: alice.diaspora_id).to_h }
 
     let(:xml) {
       <<-XML
@@ -8,7 +8,7 @@ module DiasporaFederation
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
   <target_guid>#{data[:target_guid]}</target_guid>
   <target_type>#{data[:target_type]}</target_type>
-  <sender_handle>#{data[:diaspora_id]}</sender_handle>
+  <sender_handle>#{data[:author]}</sender_handle>
   <target_author_signature/>
 </relayable_retraction>
 XML
@@ -25,10 +25,10 @@ XML
       it "updates author signature when it was nil and key was supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_entity_author_id_by_guid, hash[:target_type], hash[:target_guid]
-        ).and_return(hash[:diaspora_id])
+        ).and_return(hash[:author])
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+          :fetch_private_key_by_diaspora_id, hash[:author]
         ).and_return(author_pkey)
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
@@ -45,7 +45,7 @@ XML
         ).and_return(FactoryGirl.generate(:diaspora_id))
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+          :fetch_private_key_by_diaspora_id, hash[:author]
         ).and_return(author_pkey)
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
@@ -64,12 +64,12 @@ XML
 
       it "doesn't change signatures if keys weren't supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:diaspora_id]
+          :fetch_private_key_by_diaspora_id, hash[:author]
         ).and_return(nil)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_entity_author_id_by_guid, "Comment", hash[:target_guid]
-        ).and_return(hash[:diaspora_id])
+        ).and_return(hash[:author])
 
         signed_hash = Entities::RelayableRetraction.new(hash).to_h
         expect(signed_hash[:target_author_signature]).to eq(nil)
@@ -82,7 +82,7 @@ XML
         retraction = relayable_retraction.to_retraction
 
         expect(retraction).to be_a(Entities::Retraction)
-        expect(retraction.diaspora_id).to eq(relayable_retraction.diaspora_id)
+        expect(retraction.author).to eq(relayable_retraction.author)
         expect(retraction.target_guid).to eq(relayable_retraction.target_guid)
         expect(retraction.target_type).to eq(relayable_retraction.target_type)
       end

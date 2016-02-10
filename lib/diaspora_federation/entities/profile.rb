@@ -4,11 +4,11 @@ module DiasporaFederation
     #
     # @see Validators::ProfileValidator
     class Profile < Entity
-      # @!attribute [r] diaspora_id
+      # @!attribute [r] author
       #   The diaspora ID of the person
-      #   @see Person#diaspora_id
+      #   @see Person#author
       #   @return [String] diaspora ID
-      property :diaspora_id, xml_name: :diaspora_handle
+      property :author, xml_name: :diaspora_handle
 
       # @!attribute [r] first_name
       #   @deprecated We decided to only use one name field, these should be removed

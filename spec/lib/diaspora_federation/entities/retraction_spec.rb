@@ -5,8 +5,8 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <retraction>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <post_guid>#{data[:target_guid]}</post_guid>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
   <type>#{data[:target_type]}</type>
 </retraction>
 XML

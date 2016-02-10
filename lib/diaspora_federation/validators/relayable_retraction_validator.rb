@@ -9,7 +9,7 @@ module DiasporaFederation
 
       rule :target_type, :not_empty
 
-      rule :diaspora_id, %i(not_empty diaspora_id)
+      rule :author, %i(not_empty diaspora_id)
     end
   end
 end

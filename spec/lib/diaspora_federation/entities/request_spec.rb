@@ -5,8 +5,8 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <request>
-  <sender_handle>#{data[:diaspora_id]}</sender_handle>
-  <recipient_handle>#{data[:recipient_id]}</recipient_handle>
+  <sender_handle>#{data[:author]}</sender_handle>
+  <recipient_handle>#{data[:recipient]}</recipient_handle>
 </request>
 XML
     }

@@ -6,7 +6,7 @@ module DiasporaFederation
     class PollParticipation < Entity
       # old signature order
       # @deprecated
-      LEGACY_SIGNATURE_ORDER = %i(guid parent_guid diaspora_id poll_answer_guid).freeze
+      LEGACY_SIGNATURE_ORDER = %i(guid parent_guid author poll_answer_guid).freeze
 
       include Relayable
 

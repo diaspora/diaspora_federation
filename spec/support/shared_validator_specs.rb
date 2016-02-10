@@ -17,6 +17,17 @@ shared_examples "a common validator" do
 end
 
 shared_examples "a relayable validator" do
+  it_behaves_like "a diaspora id validator" do
+    let(:property) { :author }
+    let(:mandatory) { true }
+  end
+
+  describe "#guid" do
+    it_behaves_like "a guid validator" do
+      let(:property) { :guid }
+    end
+  end
+
   describe "#parent_guid" do
     it_behaves_like "a guid validator" do
       let(:property) { :parent_guid }

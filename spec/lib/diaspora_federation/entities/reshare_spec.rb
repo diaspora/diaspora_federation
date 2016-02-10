@@ -5,10 +5,10 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <reshare>
-  <root_diaspora_id>#{data[:root_diaspora_id]}</root_diaspora_id>
+  <root_diaspora_id>#{data[:root_author]}</root_diaspora_id>
   <root_guid>#{data[:root_guid]}</root_guid>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{data[:guid]}</guid>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
   <public>#{data[:public]}</public>
   <created_at>#{data[:created_at]}</created_at>
   <provider_display_name>#{data[:provider_display_name]}</provider_display_name>

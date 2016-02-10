@@ -6,7 +6,7 @@ module DiasporaFederation
       <<-XML
 <photo>
   <guid>#{data[:guid]}</guid>
-  <diaspora_handle>#{data[:diaspora_id]}</diaspora_handle>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <public>#{data[:public]}</public>
   <created_at>#{data[:created_at]}</created_at>
   <remote_photo_path>#{data[:remote_photo_path]}</remote_photo_path>

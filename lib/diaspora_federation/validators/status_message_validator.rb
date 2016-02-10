@@ -4,9 +4,9 @@ module DiasporaFederation
     class StatusMessageValidator < Validation::Validator
       include Validation
 
-      rule :guid, :guid
+      rule :author, %i(not_empty diaspora_id)
 
-      rule :diaspora_id, %i(not_empty diaspora_id)
+      rule :guid, :guid
 
       rule :public, :boolean
     end

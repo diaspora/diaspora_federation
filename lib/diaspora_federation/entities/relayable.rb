@@ -12,9 +12,9 @@ module DiasporaFederation
 
       # on inclusion of this module the required properties for a relayable are added to the object that includes it
       #
-      # @!attribute [r] diaspora_id
+      # @!attribute [r] author
       #   The diaspora ID of the author.
-      #   @see Person#diaspora_id
+      #   @see Person#author
       #   @return [String] diaspora ID
       #
       # @!attribute [r] guid
@@ -43,7 +43,7 @@ module DiasporaFederation
       # @param [Entity] entity the entity in which it is included
       def self.included(entity)
         entity.class_eval do
-          property :diaspora_id, xml_name: :diaspora_handle
+          property :author, xml_name: :diaspora_handle
           property :guid
           property :parent_guid
           property :author_signature, default: nil
@@ -59,10 +59,10 @@ module DiasporaFederation
       def to_signed_h
         to_h.tap do |hash|
           if author_signature.nil?
-            privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, diaspora_id)
-            raise AuthorPrivateKeyNotFound, "author=#{diaspora_id} guid=#{guid}" if privkey.nil?
+            privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, author)
+            raise AuthorPrivateKeyNotFound, "author=#{author} guid=#{guid}" if privkey.nil?
             hash[:author_signature] = sign_with_key(privkey, hash)
-            logger.info "event=sign status=complete signature=author_signature author=#{diaspora_id} guid=#{guid}"
+            logger.info "event=sign status=complete signature=author_signature author=#{author} guid=#{guid}"
           end
 
           try_sign_with_parent_author(hash) if parent_author_signature.nil?
@@ -85,8 +85,8 @@ module DiasporaFederation
       # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
       # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
       def verify_signatures
-        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, diaspora_id)
-        raise PublicKeyNotFound, "author_signature author=#{diaspora_id} guid=#{guid}" if pubkey.nil?
+        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, author)
+        raise PublicKeyNotFound, "author_signature author=#{author} guid=#{guid}" if pubkey.nil?
         raise SignatureVerificationFailed, "wrong author_signature" unless verify_signature(pubkey, author_signature)
 
         parent_author_local = DiasporaFederation.callbacks.trigger(:entity_author_is_local?, parent_type, parent_guid)

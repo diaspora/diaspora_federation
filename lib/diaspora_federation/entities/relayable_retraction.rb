@@ -38,11 +38,11 @@ module DiasporaFederation
       #   @return [String] target type
       property :target_type
 
-      # @!attribute [r] diaspora_id
+      # @!attribute [r] author
       #   The diaspora ID of the person who deletes a relayable
-      #   @see Person#diaspora_id
+      #   @see Person#author
       #   @return [String] diaspora ID
-      property :diaspora_id, xml_name: :sender_handle
+      property :author, xml_name: :sender_handle
 
       # @!attribute [r] target_author_signature
       #   Contains a signature of the entity using the private key of the
@@ -71,7 +71,7 @@ module DiasporaFederation
       # @return [Hash] entity data hash with updated signatures
       def to_h
         target_author = DiasporaFederation.callbacks.trigger(:fetch_entity_author_id_by_guid, target_type, target_guid)
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, diaspora_id)
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, author)
 
         super.tap do |hash|
           fill_required_signature(target_author, privkey, hash) unless privkey.nil?
@@ -81,7 +81,7 @@ module DiasporaFederation
       # use only {Retraction} for receive
       # @return [Retraction] instance as normal retraction
       def to_retraction
-        Retraction.new(diaspora_id: diaspora_id, target_guid: target_guid, target_type: target_type)
+        Retraction.new(author: author, target_guid: target_guid, target_type: target_type)
       end
 
       private
@@ -90,9 +90,9 @@ module DiasporaFederation
       # @param [OpenSSL::PKey::RSA] privkey private key of sender
       # @param [Hash] hash hash given for a signing
       def fill_required_signature(target_author, privkey, hash)
-        if target_author == diaspora_id && target_author_signature.nil?
+        if target_author == author && target_author_signature.nil?
           hash[:target_author_signature] = SignedRetraction.sign_with_key(privkey, self)
-        elsif target_author != diaspora_id && parent_author_signature.nil?
+        elsif target_author != author && parent_author_signature.nil?
           hash[:parent_author_signature] = SignedRetraction.sign_with_key(privkey, self)
         end
       end

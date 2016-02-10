@@ -6,7 +6,7 @@ module DiasporaFederation
     class Like < Entity
       # old signature order
       # @deprecated
-      LEGACY_SIGNATURE_ORDER = %i(positive guid parent_type parent_guid diaspora_id).freeze
+      LEGACY_SIGNATURE_ORDER = %i(positive guid parent_type parent_guid author).freeze
 
       include Relayable
 
