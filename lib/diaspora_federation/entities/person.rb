@@ -15,7 +15,11 @@ module DiasporaFederation
       #   The diaspora ID of the person
       #   @see Validation::Rule::DiasporaId
       #   @return [String] diaspora ID
-      property :author, xml_name: :diaspora_handle
+      # @!attribute [r] diaspora_id
+      #   Alias for author
+      #   @see Person#author
+      #   @return [String] diaspora ID
+      property :author, alias: :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] url
       #   @see Discovery::WebFinger#seed_url

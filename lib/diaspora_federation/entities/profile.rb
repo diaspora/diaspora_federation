@@ -8,7 +8,11 @@ module DiasporaFederation
       #   The diaspora ID of the person
       #   @see Person#author
       #   @return [String] diaspora ID
-      property :author, xml_name: :diaspora_handle
+      # @!attribute [r] diaspora_id
+      #   Alias for author
+      #   @see Profile#author
+      #   @return [String] diaspora ID
+      property :author, alias: :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] first_name
       #   @deprecated We decided to only use one name field, these should be removed

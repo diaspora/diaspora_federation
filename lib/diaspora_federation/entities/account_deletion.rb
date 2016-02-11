@@ -8,7 +8,11 @@ module DiasporaFederation
       #   The diaspora ID of the deleted account
       #   @see Person#author
       #   @return [String] diaspora ID
-      property :author, xml_name: :diaspora_handle
+      # @!attribute [r] diaspora_id
+      #   Alias for author
+      #   @see AccountDeletion#author
+      #   @return [String] diaspora ID
+      property :author, alias: :diaspora_id, xml_name: :diaspora_handle
     end
   end
 end

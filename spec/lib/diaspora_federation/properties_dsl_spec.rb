@@ -124,6 +124,35 @@ module DiasporaFederation
       end
     end
 
+    describe ".resolv_aliases" do
+      it "resolves the defined alias" do
+        dsl.property :test, alias: :test_alias
+        data = dsl.resolv_aliases(test_alias: "foo")
+        expect(data[:test]).to eq("foo")
+        expect(data).not_to have_key(:test_alias)
+      end
+
+      it "raises when alias and original property are present" do
+        dsl.property :test, alias: :test_alias
+        expect {
+          dsl.resolv_aliases(test_alias: "foo", test: "bar")
+        }.to raise_error PropertiesDSL::InvalidData, "only use 'test_alias' OR 'test'"
+      end
+
+      it "returns original data if no alias is defined" do
+        dsl.property :test, alias: :test_alias
+        data = dsl.resolv_aliases(test: "foo")
+        expect(data[:test]).to eq("foo")
+      end
+
+      it "returns original data if alias is defined, but not present" do
+        dsl.property :test
+        data = dsl.resolv_aliases(test: "foo")
+        expect(data[:test]).to eq("foo")
+        expect(data).not_to have_key(:test_alias)
+      end
+    end
+
     describe ".find_property_for_xml_name" do
       it "finds property by xml_name" do
         dsl.property :test, xml_name: :xml_test

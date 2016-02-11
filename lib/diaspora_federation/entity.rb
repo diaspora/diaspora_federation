@@ -56,15 +56,16 @@ module DiasporaFederation
     # @return [Entity] new instance
     def initialize(data, additional_xml_elements=nil)
       raise ArgumentError, "expected a Hash" unless data.is_a?(Hash)
-      missing_props = self.class.missing_props(data)
+      entity_data = self.class.resolv_aliases(data)
+      missing_props = self.class.missing_props(entity_data)
       unless missing_props.empty?
         raise ArgumentError, "missing required properties: #{missing_props.join(', ')}"
       end
 
       @additional_xml_elements = nilify(additional_xml_elements)
 
-      self.class.default_values.merge(data).each do |k, v|
-        instance_variable_set("@#{k}", nilify(v)) if setable?(k, v)
+      self.class.default_values.merge(entity_data).each do |name, value|
+        instance_variable_set("@#{name}", nilify(value)) if setable?(name, value)
       end
 
       freeze
