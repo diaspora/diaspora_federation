@@ -170,6 +170,38 @@ module DiasporaFederation
         expect(entity).to be_an_instance_of Entities::TestEntity
         expect(entity.test).to eq("asdf")
       end
+
+      context "use key_id from magic envelope" do
+        it "returns the original entity" do
+          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :fetch_public_key_by_diaspora_id, sender_id
+          ).and_return(privkey.public_key)
+
+          entity = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey, sender_id))
+          expect(entity).to be_an_instance_of Entities::TestEntity
+          expect(entity.test).to eq("asdf")
+        end
+
+        it "raises if the magic envelope has no key_id" do
+          bad_env = envelope.envelop(privkey, sender_id)
+
+          bad_env.at_xpath("me:sig").attributes["key_id"].remove
+
+          expect {
+            Salmon::MagicEnvelope.unenvelop(bad_env)
+          }.to raise_error Salmon::InvalidEnvelope
+        end
+
+        it "raises if the sender key is not found" do
+          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :fetch_public_key_by_diaspora_id, sender_id
+          ).and_return(nil)
+
+          expect {
+            Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey, sender_id))
+          }.to raise_error Salmon::SenderKeyNotFound
+        end
+      end
     end
   end
 end

@@ -20,6 +20,10 @@ module DiasporaFederation
     class InvalidHeader < RuntimeError
     end
 
+    # Raised, if failed to fetch the public key of the sender of the received message
+    class SenderKeyNotFound < RuntimeError
+    end
+
     # Raised, if the Magic Envelope XML structure is malformed.
     class InvalidEnvelope < RuntimeError
     end

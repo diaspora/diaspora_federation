@@ -101,9 +101,8 @@ module DiasporaFederation
       # @raise [InvalidSignature] if the signature can't be verified
       # @raise [InvalidEncoding] if the data is wrongly encoded
       # @raise [InvalidAlgorithm] if the algorithm used doesn't match
-      def self.unenvelop(magic_env, rsa_pubkey, cipher_params=nil)
-        raise ArgumentError unless magic_env.instance_of?(Nokogiri::XML::Element) &&
-                                   rsa_pubkey.instance_of?(OpenSSL::PKey::RSA)
+      def self.unenvelop(magic_env, rsa_pubkey=nil, cipher_params=nil)
+        raise ArgumentError unless magic_env.instance_of?(Nokogiri::XML::Element)
 
         raise InvalidEnvelope unless envelope_valid?(magic_env)
         raise InvalidSignature unless signature_valid?(magic_env, rsa_pubkey)
@@ -148,7 +147,7 @@ module DiasporaFederation
       private_class_method :envelope_valid?
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
-      # @param [OpenSSL::PKey::RSA] pubkey public key
+      # @param [OpenSSL::PKey::RSA] pubkey public key or nil
       # @return [Boolean]
       def self.signature_valid?(env, pubkey)
         subject = sig_subject([Base64.urlsafe_decode64(env.at_xpath("me:data").content),
@@ -156,10 +155,26 @@ module DiasporaFederation
                                env.at_xpath("me:encoding").content,
                                env.at_xpath("me:alg").content])
 
+        sender_key = pubkey || sender_key(env)
+
         sig = Base64.urlsafe_decode64(env.at_xpath("me:sig").content)
-        pubkey.verify(DIGEST, sig, subject)
+        sender_key.verify(DIGEST, sig, subject)
       end
       private_class_method :signature_valid?
+
+      # reads the +key_id+ from the magic envelope
+      # @param [Nokogiri::XML::Element] env magic envelope XML
+      # @return [OpenSSL::PKey::RSA] sender public key
+      def self.sender_key(env)
+        key_id = env.at_xpath("me:sig")["key_id"]
+        raise InvalidEnvelope, "no key_id" unless key_id # TODO: move to `envelope_valid?`
+        sender = Base64.urlsafe_decode64(key_id)
+
+        sender_key = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, sender)
+        raise SenderKeyNotFound unless sender_key
+        sender_key
+      end
+      private_class_method :sender_key
 
       # constructs the signature subject.
       # the given array should consist of the data, data_type (mimetype), encoding
