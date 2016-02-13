@@ -63,6 +63,7 @@ module DiasporaFederation
     #
     #   entity = slap.entity(author_pubkey)
     #
+    # @deprecated
     class EncryptedSlap < Slap
       # the key and iv if it is an encrypted slap
       # @param [Hash] value hash containing the key and iv

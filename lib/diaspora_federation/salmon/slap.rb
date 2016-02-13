@@ -25,6 +25,8 @@ module DiasporaFederation
     #   author_pubkey = however_you_retrieve_the_authors_public_key(slap.author_id)
     #
     #   entity = slap.entity(author_pubkey)
+    #
+    # @deprecated
     class Slap
       # the author of the slap
       # @overload author_id

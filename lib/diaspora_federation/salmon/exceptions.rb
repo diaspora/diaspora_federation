@@ -1,18 +1,22 @@
 module DiasporaFederation
   module Salmon
     # Raised, if the element containing the Magic Envelope is missing from the XML
+    # @deprecated
     class MissingMagicEnvelope < RuntimeError
     end
 
     # Raised, if the element containing the author is empty.
+    # @deprecated
     class MissingAuthor < RuntimeError
     end
 
     # Raised, if the element containing the header is missing from the XML
+    # @deprecated
     class MissingHeader < RuntimeError
     end
 
     # Raised if the decrypted header has an unexpected XML structure
+    # @deprecated
     class InvalidHeader < RuntimeError
     end
 
