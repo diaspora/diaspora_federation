@@ -1,5 +1,5 @@
 module DiasporaFederation
-  describe Federation::Receiver::Private do
+  describe Federation::Receiver::PrivateSlapReceiver do
     let(:sender_id) { FactoryGirl.generate(:diaspora_id) }
     let(:sender_key) { OpenSSL::PKey::RSA.generate(1024) }
     let(:recipient_key) { OpenSSL::PKey::RSA.generate(1024) }
@@ -25,13 +25,13 @@ module DiasporaFederation
 
       expect {
         described_class.new(xml, recipient_key).receive!
-      }.to raise_error Federation::SenderKeyNotFound
+      }.to raise_error Salmon::SenderKeyNotFound
     end
 
     it "raises when recipient private key is not available" do
       expect {
         described_class.new(xml, nil).receive!
-      }.to raise_error Federation::RecipientKeyNotFound
+      }.to raise_error ArgumentError, "no recipient key provided"
     end
 
     it "raises when bad xml was supplied" do

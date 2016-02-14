@@ -1,5 +1,5 @@
 module DiasporaFederation
-  describe Federation::Receiver::Public do
+  describe Federation::Receiver::PublicSlapReceiver do
     let(:sender_id) { FactoryGirl.generate(:diaspora_id) }
     let(:sender_key) { OpenSSL::PKey::RSA.generate(1024) }
     let(:xml) {
@@ -27,7 +27,7 @@ module DiasporaFederation
 
       expect {
         described_class.new(xml).receive!
-      }.to raise_error Federation::SenderKeyNotFound
+      }.to raise_error Salmon::SenderKeyNotFound
     end
 
     it "raises when bad xml was supplied" do
