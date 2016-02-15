@@ -4,6 +4,5 @@ module DiasporaFederation
   end
 end
 
-require "diaspora_federation/federation/exceptions"
 require "diaspora_federation/federation/receiver"
 require "diaspora_federation/federation/sender"

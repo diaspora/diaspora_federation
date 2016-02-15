@@ -63,6 +63,7 @@ module DiasporaFederation
     #
     #   entity = slap.entity(author_pubkey)
     #
+    # @deprecated
     class EncryptedSlap < Slap
       # the key and iv if it is an encrypted slap
       # @param [Hash] value hash containing the key and iv
@@ -113,9 +114,9 @@ module DiasporaFederation
         EncryptedSlap.new.tap do |slap|
           slap.author_id = author_id
 
-          magic_envelope = MagicEnvelope.new(privkey, entity)
+          magic_envelope = MagicEnvelope.new(entity)
           slap.cipher_params = magic_envelope.encrypt!
-          slap.magic_envelope_xml = magic_envelope.envelop
+          slap.magic_envelope_xml = magic_envelope.envelop(privkey, author_id)
         end
       end
 
@@ -172,11 +173,11 @@ module DiasporaFederation
       # @param [OpenSSL::PKey::RSA] pubkey recipient public_key
       # @return [String] encrypted base64 encoded header
       def encrypted_header(author_id, envelope_key, pubkey)
-        encoded_key = Hash[envelope_key.map {|k, v| [k, Base64.strict_encode64(v)] }]
-        data = header_xml(author_id, encoded_key)
-        ciphertext = AES.encrypt(data, envelope_key[:key], envelope_key[:iv])
+        data = header_xml(author_id, strict_base64_encode(envelope_key))
+        header_key = AES.generate_key_and_iv
+        ciphertext = AES.encrypt(data, header_key[:key], header_key[:iv])
 
-        json_key = JSON.generate(encoded_key)
+        json_key = JSON.generate(strict_base64_encode(header_key))
         encrypted_key = Base64.strict_encode64(pubkey.public_encrypt(json_key))
 
         json_header = JSON.generate(aes_key: encrypted_key, ciphertext: ciphertext)
@@ -196,6 +197,12 @@ module DiasporaFederation
             xml.author_id(author_id)
           }
         }.to_xml.strip
+      end
+
+      # @param [Hash] hash { key: "...", iv: "..." }
+      # @return [Hash] encoded hash: { key: "...", iv: "..." }
+      def strict_base64_encode(hash)
+        Hash[hash.map {|k, v| [k, Base64.strict_encode64(v)] }]
       end
     end
   end

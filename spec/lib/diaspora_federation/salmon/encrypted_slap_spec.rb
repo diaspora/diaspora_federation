@@ -67,16 +67,23 @@ module DiasporaFederation
           doc1 = Nokogiri::XML::Document.parse(slap.generate_xml(recipient_key.public_key))
           enc_header1 = doc1.at_xpath("d:diaspora/d:encrypted_header", ns).content
           cipher_header1 = JSON.parse(Base64.decode64(enc_header1))
-          key_json1 = recipient_key.private_decrypt(Base64.decode64(cipher_header1["aes_key"]))
+          header_key1 = JSON.parse(recipient_key.private_decrypt(Base64.decode64(cipher_header1["aes_key"])))
+          decrypted_header1 = Salmon::AES.decrypt(cipher_header1["ciphertext"],
+                                                  Base64.decode64(header_key1["key"]),
+                                                  Base64.decode64(header_key1["iv"]))
 
           recipient2_key = OpenSSL::PKey::RSA.generate(1024)
           doc2 = Nokogiri::XML::Document.parse(slap.generate_xml(recipient2_key.public_key))
           enc_header2 = doc2.at_xpath("d:diaspora/d:encrypted_header", ns).content
           cipher_header2 = JSON.parse(Base64.decode64(enc_header2))
-          key_json2 = recipient2_key.private_decrypt(Base64.decode64(cipher_header2["aes_key"]))
+          header_key2 = JSON.parse(recipient2_key.private_decrypt(Base64.decode64(cipher_header2["aes_key"])))
+          decrypted_header2 = Salmon::AES.decrypt(cipher_header2["ciphertext"],
+                                                  Base64.decode64(header_key2["key"]),
+                                                  Base64.decode64(header_key2["iv"]))
 
           expect(enc_header1).not_to eq(enc_header2)
-          expect(key_json1).to eq(key_json2)
+          expect(header_key1).not_to eq(header_key2)
+          expect(decrypted_header1).to eq(decrypted_header2)
           expect(doc1.xpath("d:diaspora/me:env", ns).to_xml).to eq(doc2.xpath("d:diaspora/me:env", ns).to_xml)
         end
 
