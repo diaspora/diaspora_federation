@@ -11,9 +11,9 @@ module DiasporaFederation
   #   entity :nested, NestedEntity
   #   entity :multiple, [OtherEntity]
   module PropertiesDSL
-    # @return [Array<Hash>] hash of declared entity properties
+    # @return [Hash] hash of declared entity properties
     def class_props
-      @class_props ||= []
+      @class_props ||= {}
     end
 
     # Define a generic (string-type) property
@@ -43,7 +43,7 @@ module DiasporaFederation
     # Return array of missing required property names
     # @return [Array<Symbol>] missing required property names
     def missing_props(args)
-      class_prop_names - default_props.keys - args.keys
+      class_props.keys - default_props.keys - args.keys
     end
 
     # Return a new hash of default values, with dynamic values
@@ -53,18 +53,6 @@ module DiasporaFederation
       default_props.each_with_object({}) {|(name, prop), hash|
         hash[name] = prop.respond_to?(:call) ? prop.call : prop
       }
-    end
-
-    # Returns all nested Entities
-    # @return [Array<Hash>] nested properties
-    def nested_class_props
-      @nested_class_props ||= class_props.select {|p| p[:type] != String }
-    end
-
-    # Returns all property names
-    # @return [Array] property names
-    def class_prop_names
-      @class_prop_names ||= class_props.map {|p| p[:name] }
     end
 
     # @param [Hash] data entity data
@@ -81,15 +69,22 @@ module DiasporaFederation
       }]
     end
 
+    # @return [Symbol] alias for the xml-generation/parsing
+    # @deprecated
+    def xml_names
+      @xml_names ||= {}
+    end
+
     # finds a property by +xml_name+ or +name+
     # @param [String] xml_name name of the property from the received xml
     # @return [Hash] the property data
     def find_property_for_xml_name(xml_name)
-      class_props.find {|prop| prop[:xml_name].to_s == xml_name || prop[:name].to_s == xml_name }
+      class_props.keys.find {|name| name.to_s == xml_name || xml_names[name].to_s == xml_name }
     end
 
     private
 
+    # @deprecated
     def determine_xml_name(name, type, opts={})
       raise ArgumentError, "xml_name is not supported for nested entities" if type != String && opts.has_key?(:xml_name)
 
@@ -110,8 +105,9 @@ module DiasporaFederation
     def define_property(name, type, opts={})
       raise InvalidName unless name_valid?(name)
 
-      class_props << {name: name, xml_name: determine_xml_name(name, type, opts), type: type}
+      class_props[name] = type
       default_props[name] = opts[:default] if opts.has_key? :default
+      xml_names[name] = determine_xml_name(name, type, opts)
 
       instance_eval { attr_reader name }
 

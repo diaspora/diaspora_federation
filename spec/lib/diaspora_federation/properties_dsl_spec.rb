@@ -7,9 +7,8 @@ module DiasporaFederation
         dsl.property :test
         properties = dsl.class_props
         expect(properties).to have(1).item
-        expect(properties.first[:name]).to eq(:test)
-        expect(properties.first[:xml_name]).to eq(:test)
-        expect(properties.first[:type]).to eq(String)
+        expect(properties[:test]).to eq(String)
+        expect(dsl.xml_names[:test]).to eq(:test)
       end
 
       it "will not accept other types for names" do
@@ -26,18 +25,16 @@ module DiasporaFederation
         dsl.property :zzzz
         properties = dsl.class_props
         expect(properties).to have(3).items
-        expect(properties.map {|e| e[:name] }).to include(:test, :asdf, :zzzz)
-        expect(properties.map {|e| e[:xml_name] }).to include(:test, :asdf, :zzzz)
-        properties.each {|e| expect(e[:type]).to eq(String) }
+        expect(properties.keys).to include(:test, :asdf, :zzzz)
+        properties.values.each {|type| expect(type).to eq(String) }
       end
 
       it "can add an xml name to simple properties with a symbol" do
         dsl.property :test, xml_name: :xml_test
         properties = dsl.class_props
         expect(properties).to have(1).item
-        expect(properties.first[:name]).to eq(:test)
-        expect(properties.first[:xml_name]).to eq(:xml_test)
-        expect(properties.first[:type]).to eq(String)
+        expect(properties[:test]).to eq(String)
+        expect(dsl.xml_names[:test]).to eq(:xml_test)
       end
 
       it "will not accept other types for xml names" do
@@ -51,24 +48,22 @@ module DiasporaFederation
 
     context "nested entities" do
       it "gets included in the properties" do
-        expect(Entities::TestNestedEntity.class_prop_names).to include(:test, :multi)
+        expect(Entities::TestNestedEntity.class_props.keys).to include(:test, :multi)
       end
 
       it "can define nested entities" do
         dsl.entity :other, Entities::TestEntity
         properties = dsl.class_props
         expect(properties).to have(1).item
-        expect(properties.first[:name]).to eq(:other)
-        expect(properties.first[:type]).to eq(Entities::TestEntity)
+        expect(properties[:other]).to eq(Entities::TestEntity)
       end
 
       it "can define an array of a nested entity" do
         dsl.entity :other, [Entities::TestEntity]
         properties = dsl.class_props
         expect(properties).to have(1).item
-        expect(properties.first[:name]).to eq(:other)
-        expect(properties.first[:type]).to be_an_instance_of(Array)
-        expect(properties.first[:type].first).to eq(Entities::TestEntity)
+        expect(properties[:other]).to be_an_instance_of(Array)
+        expect(properties[:other].first).to eq(Entities::TestEntity)
       end
 
       it "must be an entity subclass" do
@@ -108,22 +103,6 @@ module DiasporaFederation
       end
     end
 
-    describe ".nested_class_props" do
-      it "returns the definition of nested class properties in an array" do
-        n_props = Entities::TestNestedEntity.nested_class_props
-        expect(n_props).to be_an_instance_of(Array)
-        expect(n_props.map {|p| p[:name] }).to include(:test, :multi)
-        expect(n_props.map {|p| p[:type] }).to include(Entities::TestEntity, [Entities::OtherEntity])
-      end
-    end
-
-    describe ".class_prop_names" do
-      it "returns the names of all class props in an array" do
-        expect(Entities::TestDefaultEntity.class_prop_names).to be_an_instance_of(Array)
-        expect(Entities::TestDefaultEntity.class_prop_names).to include(:test1, :test2, :test3, :test4)
-      end
-    end
-
     describe ".resolv_aliases" do
       it "resolves the defined alias" do
         dsl.property :test, alias: :test_alias
@@ -156,12 +135,12 @@ module DiasporaFederation
     describe ".find_property_for_xml_name" do
       it "finds property by xml_name" do
         dsl.property :test, xml_name: :xml_test
-        expect(dsl.find_property_for_xml_name("xml_test")).to eq(dsl.class_props.first)
+        expect(dsl.find_property_for_xml_name("xml_test")).to eq(:test)
       end
 
       it "finds property by name" do
         dsl.property :test, xml_name: :xml_test
-        expect(dsl.find_property_for_xml_name("test")).to eq(dsl.class_props.first)
+        expect(dsl.find_property_for_xml_name("test")).to eq(:test)
       end
 
       it "returns nil if property is not defined" do

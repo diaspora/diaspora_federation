@@ -4,7 +4,7 @@ shared_examples "an Entity subclass" do
   end
 
   it "has its properties set" do
-    expect(described_class.class_prop_names).to include(*data.keys)
+    expect(described_class.class_props.keys).to include(*data.keys)
   end
 
   context "behaviour" do
@@ -51,10 +51,8 @@ shared_examples "an XML Entity" do
   end
 
   def check_entity(entity, parsed_entity)
-    entity.class.class_props.each do |prop_def|
-      name = prop_def[:name]
-
-      validate_values(entity.send(name), parsed_entity.send(name), prop_def[:type])
+    entity.class.class_props.each do |name, type|
+      validate_values(entity.send(name), parsed_entity.send(name), type)
     end
   end
 

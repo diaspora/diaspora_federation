@@ -95,7 +95,7 @@ module DiasporaFederation
           property = klass.find_property_for_xml_name(xml_name)
 
           if property
-            entity_data[property[:name]] = parse_element_from_node(property[:type], xml_name, root_node)
+            entity_data[property] = parse_element_from_node(klass.class_props[property], xml_name, root_node)
           else
             additional_xml_elements[xml_name] = child.text
           end

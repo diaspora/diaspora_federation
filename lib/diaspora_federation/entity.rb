@@ -75,7 +75,7 @@ module DiasporaFederation
     # Returns a Hash representing this Entity (attributes => values)
     # @return [Hash] entity data (mostly equal to the hash used for initialization).
     def to_h
-      self.class.class_prop_names.each_with_object({}) do |prop, hash|
+      self.class.class_props.keys.each_with_object({}) do |prop, hash|
         hash[prop] = public_send(prop)
       end
     end
@@ -103,26 +103,22 @@ module DiasporaFederation
     private
 
     def setable?(name, val)
-      prop_def = self.class.class_props.find {|p| p[:name] == name }
-      return false if prop_def.nil? # property undefined
+      type = self.class.class_props[name]
+      return false if type.nil? # property undefined
 
-      setable_string?(prop_def, val) || setable_nested?(prop_def, val) || setable_multi?(prop_def, val)
+      setable_string?(type, val) || setable_nested?(type, val) || setable_multi?(type, val)
     end
 
-    def setable_string?(definition, val)
-      (definition[:type] == String && val.respond_to?(:to_s))
+    def setable_string?(type, val)
+      type == String && val.respond_to?(:to_s)
     end
 
-    def setable_nested?(definition, val)
-      t = definition[:type]
-      (t.is_a?(Class) && t.ancestors.include?(Entity) && val.is_a?(Entity))
+    def setable_nested?(type, val)
+      type.is_a?(Class) && type.ancestors.include?(Entity) && val.is_a?(Entity)
     end
 
-    def setable_multi?(definition, val)
-      t = definition[:type]
-      (t.instance_of?(Array) &&
-        val.instance_of?(Array) &&
-        val.all? {|v| v.instance_of?(t.first) })
+    def setable_multi?(type, val)
+      type.instance_of?(Array) && val.instance_of?(Array) && val.all? {|v| v.instance_of?(type.first) }
     end
 
     def nilify(value)
@@ -146,35 +142,36 @@ module DiasporaFederation
       "Failed validation for properties: #{errors.join(' | ')}"
     end
 
+    def xml_elements
+      Hash[to_h.map {|name, value| [name, self.class.class_props[name] == String ? value.to_s : value] }]
+    end
+
     # Serialize the Entity into XML elements
     # @return [Nokogiri::XML::Element] root node
     def entity_xml
       doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
       Nokogiri::XML::Element.new(self.class.entity_name, doc).tap do |root_element|
-        self.class.class_props.each do |prop_def|
-          add_property_to_xml(doc, prop_def, root_element)
+        xml_elements.each do |name, value|
+          add_property_to_xml(doc, root_element, name, value)
         end
       end
     end
 
-    def add_property_to_xml(doc, prop_def, root_element)
-      property = prop_def[:name]
-      type = prop_def[:type]
-      if type == String
-        root_element << simple_node(doc, prop_def[:xml_name], property)
+    def add_property_to_xml(doc, root_element, name, value)
+      if value.is_a? String
+        root_element << simple_node(doc, name, value)
       else
         # call #to_xml for each item and append to root
-        [*public_send(property)].compact.each do |item|
+        [*value].compact.each do |item|
           root_element << item.to_xml
         end
       end
     end
 
     # create simple node, fill it with text and append to root
-    def simple_node(doc, name, property)
-      Nokogiri::XML::Element.new(name.to_s, doc).tap do |node|
-        data = public_send(property).to_s
-        node.content = data unless data.empty?
+    def simple_node(doc, name, value)
+      Nokogiri::XML::Element.new(self.class.xml_names[name].to_s, doc).tap do |node|
+        node.content = value unless value.empty?
       end
     end
 
