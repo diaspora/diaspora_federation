@@ -176,7 +176,7 @@ XML
 
           expect(entity).to be_an_instance_of Entities::TestEntity
           expect(entity.test).to eq("asdf")
-          expect(entity.additional_xml_elements).to be_nil
+          expect(entity.additional_xml_elements).to be_empty
         end
       end
 

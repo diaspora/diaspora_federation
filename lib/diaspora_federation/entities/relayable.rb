@@ -51,37 +51,6 @@ module DiasporaFederation
         end
       end
 
-      # Adds signatures to the hash with the keys of the author and the parent
-      # if the signatures are not in the hash yet and if the keys are available.
-      #
-      # @see Entity#to_h
-      # @return [Hash] entity data hash with updated signatures
-      def to_signed_h
-        to_h.tap do |hash|
-          if author_signature.nil?
-            privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, author)
-            raise AuthorPrivateKeyNotFound, "author=#{author} guid=#{guid}" if privkey.nil?
-            hash[:author_signature] = sign_with_key(privkey, hash)
-            logger.info "event=sign status=complete signature=author_signature author=#{author} guid=#{guid}"
-          end
-
-          try_sign_with_parent_author(hash) if parent_author_signature.nil?
-        end
-      end
-
-      # Generates XML and updates signatures
-      # @see Entity#to_xml
-      # @return [Nokogiri::XML::Element] root element containing properties as child elements
-      def to_xml
-        entity_xml.tap do |xml|
-          hash = to_signed_h
-          xml.at_xpath("author_signature").content = hash[:author_signature]
-          xml.at_xpath("parent_author_signature").content = hash[:parent_author_signature]
-
-          add_additional_elements_to(xml) if additional_xml_elements
-        end
-      end
-
       # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
       # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
       def verify_signatures
@@ -95,26 +64,6 @@ module DiasporaFederation
 
       private
 
-      # sign with parent author, if the parent author is local (if the private key is found)
-      # @param [Hash] hash the hash to sign
-      def try_sign_with_parent_author(hash)
-        privkey = DiasporaFederation.callbacks.trigger(
-          :fetch_author_private_key_by_entity_guid, parent_type, parent_guid
-        )
-        unless privkey.nil?
-          hash[:parent_author_signature] = sign_with_key(privkey, hash)
-          logger.info "event=sign status=complete signature=parent_author_signature guid=#{guid}"
-        end
-      end
-
-      # Adds additional unknown elements to the xml
-      # @param [Nokogiri::XML::Element] xml entity xml
-      def add_additional_elements_to(xml)
-        additional_xml_elements.each do |element, value|
-          xml << Nokogiri::XML::Element.new(element, xml.document).tap {|node| node.content = value }
-        end
-      end
-
       # this happens only on downstream federation
       def verify_parent_author_signature
         pubkey = DiasporaFederation.callbacks.trigger(:fetch_author_public_key_by_entity_guid, parent_type, parent_guid)
@@ -123,22 +72,6 @@ module DiasporaFederation
         unless verify_signature(pubkey, parent_author_signature)
           raise SignatureVerificationFailed, "wrong parent_author_signature parent_guid=#{parent_guid}"
         end
-      end
-
-      # Sign the data with the key
-      #
-      # @param [OpenSSL::PKey::RSA] privkey An RSA key
-      # @param [Hash] hash data to sign
-      # @return [String] A Base64 encoded signature of #signable_string with key
-      def sign_with_key(privkey, hash)
-        signature_data_string = if additional_xml_elements
-                                  logger.info "event=sign method=alphabetic guid=#{guid}"
-                                  signature_data(hash.merge(additional_xml_elements))
-                                else
-                                  logger.info "event=sign method=legacy guid=#{guid}"
-                                  legacy_signature_data(hash)
-                                end
-        Base64.strict_encode64(privkey.sign(DIGEST, signature_data_string))
       end
 
       # Check that signature is a correct signature
@@ -152,41 +85,66 @@ module DiasporaFederation
           return false
         end
 
-        valid = verify_legacy_signature(pubkey, signature)
-
-        unless valid
-          logger.info "event=verify_signature method=alphabetic status=retry guid=#{guid}"
-          hash_to_verify = additional_xml_elements ? to_h.merge(additional_xml_elements) : to_h
-          valid = pubkey.verify(DIGEST, Base64.decode64(signature), signature_data(hash_to_verify))
-        end
-
-        logger.info "event=verify_signature status=complete guid=#{guid} valid=#{valid}"
-        valid
-      end
-
-      def verify_legacy_signature(pubkey, signature)
-        if additional_xml_elements
-          logger.info "event=verify_signature method=legacy status=skip guid=#{guid}"
-          false
-        else
-          valid = pubkey.verify(DIGEST, Base64.decode64(signature), legacy_signature_data(to_h))
-          logger.info "event=verify_signature method=legacy guid=#{guid} valid=#{valid}"
-          valid
+        pubkey.verify(DIGEST, Base64.decode64(signature), signature_data).tap do |valid|
+          logger.info "event=verify_signature status=complete guid=#{guid} valid=#{valid}"
         end
       end
 
-      # @param [Hash] hash data to sign
-      # @return [String] signature data string
-      def signature_data(hash)
-        # remove signatures from hash and sort properties alphabetically
-        Hash[hash.reject {|name, _| name =~ /signature/ }.map {|name, value| [name.to_s, value] }.sort].values.join(";")
+      # sign with author key
+      # @raise [AuthorPrivateKeyNotFound] if the author private key is not found
+      # @return [String] A Base64 encoded signature of #signature_data with key
+      def sign_with_author
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, author)
+        raise AuthorPrivateKeyNotFound, "author=#{author} guid=#{guid}" if privkey.nil?
+        sign_with_key(privkey).tap do
+          logger.info "event=sign status=complete signature=author_signature author=#{author} guid=#{guid}"
+        end
       end
 
-      # @param [Hash] hash data to sign
+      # sign with parent author key, if the parent author is local (if the private key is found)
+      # @return [String] A Base64 encoded signature of #signature_data with key
+      def sign_with_parent_author_if_available
+        privkey = DiasporaFederation.callbacks.trigger(
+          :fetch_author_private_key_by_entity_guid, parent_type, parent_guid
+        )
+        if privkey
+          sign_with_key(privkey).tap do
+            logger.info "event=sign status=complete signature=parent_author_signature guid=#{guid}"
+          end
+        end
+      end
+
+      # Sign the data with the key
+      #
+      # @param [OpenSSL::PKey::RSA] privkey An RSA key
+      # @return [String] A Base64 encoded signature of #signature_data with key
+      def sign_with_key(privkey)
+        Base64.strict_encode64(privkey.sign(DIGEST, signature_data))
+      end
+
+      # Sort all XML elements according to the order used for the signatures.
+      # It updates also the signatures with the keys of the author and the parent
+      # if the signatures are not there yet and if the keys are available.
+      #
+      # @return [Hash] sorted xml elements with updated signatures
+      def xml_elements
+        xml_data = super.merge(additional_xml_elements)
+        Hash[signature_order.map {|element| [element, xml_data[element]] }].tap do |xml_elements|
+          xml_elements[:author_signature] = author_signature || sign_with_author
+          xml_elements[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
+        end
+      end
+
+      # the order for signing
+      # @return [Array]
+      def signature_order
+        xml_order.nil? ? self.class::LEGACY_SIGNATURE_ORDER : xml_order.reject {|name| name =~ /signature/ }
+      end
+
       # @return [String] signature data string
-      # @deprecated
-      def legacy_signature_data(hash)
-        self.class::LEGACY_SIGNATURE_ORDER.map {|name| hash[name] }.join(";")
+      def signature_data
+        data = to_h.merge(additional_xml_elements)
+        signature_order.map {|name| data[name] }.join(";")
       end
 
       # Exception raised when creating the author_signature failes, because the private key was not found

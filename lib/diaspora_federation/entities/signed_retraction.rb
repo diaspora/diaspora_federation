@@ -34,7 +34,7 @@ module DiasporaFederation
       # @see Entity#to_xml
       # @return [Nokogiri::XML::Element] root element containing properties as child elements
       def to_xml
-        entity_xml.tap do |xml|
+        super.tap do |xml|
           xml.at_xpath("target_author_signature").content = to_h[:target_author_signature]
         end
       end

@@ -2,11 +2,11 @@ module DiasporaFederation
   describe Entities::Conversation do
     let(:parent) { FactoryGirl.create(:conversation, author: bob) }
     let(:signed_msg1) {
-      msg = FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
+      msg = FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid).send(:xml_elements)
       Entities::Message.new(msg)
     }
     let(:signed_msg2) {
-      msg = FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid).to_signed_h
+      msg = FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid).send(:xml_elements)
       Entities::Message.new(msg)
     }
     let(:data) {

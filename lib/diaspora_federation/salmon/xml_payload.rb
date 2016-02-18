@@ -88,6 +88,7 @@ module DiasporaFederation
         # to build a hash invariable of an Entity definition, in order to support receiving objects
         # from the future versions of Diaspora, where new elements may have been added.
         entity_data = {}
+        xml_order = []
         additional_xml_elements = {}
 
         root_node.element_children.each do |child|
@@ -96,12 +97,14 @@ module DiasporaFederation
 
           if property
             entity_data[property] = parse_element_from_node(klass.class_props[property], xml_name, root_node)
+            xml_order << property
           else
             additional_xml_elements[xml_name] = child.text
+            xml_order << xml_name
           end
         end
 
-        klass.new(entity_data, additional_xml_elements).tap do |entity|
+        klass.new(entity_data, xml_order, additional_xml_elements).tap do |entity|
           entity.verify_signatures if entity.respond_to? :verify_signatures
         end
       end

@@ -7,19 +7,19 @@ module DiasporaFederation
         author:      alice.diaspora_id,
         parent_guid: parent.guid,
         parent_type: parent.entity_type
-      ).to_signed_h
+      ).send(:xml_elements)
     }
 
     let(:xml) {
       <<-XML
 <like>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <positive>#{data[:positive]}</positive>
   <guid>#{data[:guid]}</guid>
+  <target_type>#{parent.entity_type}</target_type>
   <parent_guid>#{parent.guid}</parent_guid>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
-  <positive>#{data[:positive]}</positive>
-  <target_type>#{parent.entity_type}</target_type>
 </like>
 XML
     }

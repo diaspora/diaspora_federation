@@ -35,6 +35,8 @@ module DiasporaFederation
   class Entity
     extend PropertiesDSL
 
+    attr_reader :xml_order
+
     # additional properties from parsed xml
     # @return [Hash] additional xml elements
     attr_reader :additional_xml_elements
@@ -54,7 +56,7 @@ module DiasporaFederation
     # @param [Hash] data entity data
     # @param [Hash] additional_xml_elements additional xml elements
     # @return [Entity] new instance
-    def initialize(data, additional_xml_elements=nil)
+    def initialize(data, xml_order=nil, additional_xml_elements={})
       raise ArgumentError, "expected a Hash" unless data.is_a?(Hash)
       entity_data = self.class.resolv_aliases(data)
       missing_props = self.class.missing_props(entity_data)
@@ -62,7 +64,8 @@ module DiasporaFederation
         raise ArgumentError, "missing required properties: #{missing_props.join(', ')}"
       end
 
-      @additional_xml_elements = nilify(additional_xml_elements)
+      @xml_order = xml_order
+      @additional_xml_elements = additional_xml_elements
 
       self.class.default_values.merge(entity_data).each do |name, value|
         instance_variable_set("@#{name}", nilify(value)) if setable?(name, value)
@@ -88,7 +91,12 @@ module DiasporaFederation
     #
     # @return [Nokogiri::XML::Element] root element containing properties as child elements
     def to_xml
-      entity_xml
+      doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
+      Nokogiri::XML::Element.new(self.class.entity_name, doc).tap do |root_element|
+        xml_elements.each do |name, value|
+          add_property_to_xml(doc, root_element, name, value)
+        end
+      end
     end
 
     # Makes an underscored, lowercase form of the class name
@@ -146,17 +154,6 @@ module DiasporaFederation
       Hash[to_h.map {|name, value| [name, self.class.class_props[name] == String ? value.to_s : value] }]
     end
 
-    # Serialize the Entity into XML elements
-    # @return [Nokogiri::XML::Element] root node
-    def entity_xml
-      doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
-      Nokogiri::XML::Element.new(self.class.entity_name, doc).tap do |root_element|
-        xml_elements.each do |name, value|
-          add_property_to_xml(doc, root_element, name, value)
-        end
-      end
-    end
-
     def add_property_to_xml(doc, root_element, name, value)
       if value.is_a? String
         root_element << simple_node(doc, name, value)
@@ -170,7 +167,8 @@ module DiasporaFederation
 
     # create simple node, fill it with text and append to root
     def simple_node(doc, name, value)
-      Nokogiri::XML::Element.new(self.class.xml_names[name].to_s, doc).tap do |node|
+      xml_name = self.class.xml_names[name]
+      Nokogiri::XML::Element.new(xml_name ? xml_name.to_s : name, doc).tap do |node|
         node.content = value unless value.empty?
       end
     end
