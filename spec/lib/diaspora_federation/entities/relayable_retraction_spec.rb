@@ -1,6 +1,10 @@
 module DiasporaFederation
   describe Entities::RelayableRetraction do
-    let(:data) { FactoryGirl.build(:relayable_retraction_entity, author: alice.diaspora_id).to_h }
+    let(:data) {
+      FactoryGirl.build(:relayable_retraction_entity, author: alice.diaspora_id).send(:xml_elements).tap do |data|
+        data[:target_author_signature] = nil
+      end
+    }
 
     let(:xml) {
       <<-XML
@@ -18,7 +22,7 @@ XML
 
     it_behaves_like "an XML Entity"
 
-    describe "#to_h" do
+    describe "#to_xml" do
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
       let(:hash) { FactoryGirl.attributes_for(:relayable_retraction_entity) }
 
@@ -33,9 +37,9 @@ XML
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
 
-        signed_hash = Entities::RelayableRetraction.new(hash).to_h
+        xml = Entities::RelayableRetraction.new(hash).to_xml
 
-        signature = Base64.decode64(signed_hash[:target_author_signature])
+        signature = Base64.decode64(xml.at_xpath("target_author_signature").text)
         expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
       end
 
@@ -50,16 +54,19 @@ XML
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
 
-        signed_hash = Entities::RelayableRetraction.new(hash).to_h
+        xml = Entities::RelayableRetraction.new(hash).to_xml
 
-        signature = Base64.decode64(signed_hash[:parent_author_signature])
+        signature = Base64.decode64(xml.at_xpath("parent_author_signature").text)
         expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
       end
 
       it "doesn't change signatures if they are already set" do
         hash.merge!(target_author_signature: "aa", parent_author_signature: "bb")
 
-        expect(Entities::RelayableRetraction.new(hash).to_h).to eq(hash)
+        xml = Entities::RelayableRetraction.new(hash).to_xml
+
+        expect(xml.at_xpath("target_author_signature").text).to eq("aa")
+        expect(xml.at_xpath("parent_author_signature").text).to eq("bb")
       end
 
       it "doesn't change signatures if keys weren't supplied" do
@@ -71,8 +78,9 @@ XML
           :fetch_entity_author_id_by_guid, "Comment", hash[:target_guid]
         ).and_return(hash[:author])
 
-        signed_hash = Entities::RelayableRetraction.new(hash).to_h
-        expect(signed_hash[:target_author_signature]).to eq(nil)
+        xml = Entities::RelayableRetraction.new(hash).to_xml
+        expect(xml.at_xpath("target_author_signature").text).to eq("")
+        expect(xml.at_xpath("parent_author_signature").text).to eq("")
       end
     end
 

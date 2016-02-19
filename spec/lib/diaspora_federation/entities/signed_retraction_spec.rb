@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::SignedRetraction do
-    let(:data) { FactoryGirl.build(:signed_retraction_entity, author: alice.diaspora_id).to_h }
+    let(:data) { FactoryGirl.build(:signed_retraction_entity, author: alice.diaspora_id).send(:xml_elements) }
 
     let(:xml) {
       <<-XML
@@ -17,7 +17,7 @@ XML
 
     it_behaves_like "an XML Entity"
 
-    describe "#to_h" do
+    describe "#to_xml" do
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
       let(:hash) { FactoryGirl.attributes_for(:signed_retraction_entity) }
 
@@ -28,18 +28,18 @@ XML
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
 
-        signed_hash = Entities::SignedRetraction.new(hash).to_h
+        xml = Entities::SignedRetraction.new(hash).to_xml
 
-        valid = author_pkey.verify(
-          OpenSSL::Digest::SHA256.new, Base64.decode64(signed_hash[:target_author_signature]), signed_string
-        )
-        expect(valid).to be_truthy
+        signature = Base64.decode64(xml.at_xpath("target_author_signature").text)
+        expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
       end
 
       it "doesn't change signature if it is already set" do
         hash[:target_author_signature] = "aa"
 
-        expect(Entities::SignedRetraction.new(hash).to_h).to eq(hash)
+        xml = Entities::SignedRetraction.new(hash).to_xml
+
+        expect(xml.at_xpath("target_author_signature").text).to eq("aa")
       end
 
       it "doesn't change signature if a key wasn't supplied" do
@@ -47,8 +47,8 @@ XML
           :fetch_private_key_by_diaspora_id, hash[:author]
         ).and_return(nil)
 
-        signed_hash = Entities::SignedRetraction.new(hash).to_h
-        expect(signed_hash[:author_signature]).to eq(nil)
+        xml = Entities::SignedRetraction.new(hash).to_xml
+        expect(xml.at_xpath("target_author_signature").text).to eq("")
       end
     end
 
