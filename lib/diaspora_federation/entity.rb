@@ -99,13 +99,46 @@ module DiasporaFederation
       end
     end
 
+    # Construct a new instance of the given Entity and populate the properties
+    # with the attributes found in the XML.
+    # Works recursively on nested Entities and Arrays thereof.
+    #
+    # @param [Nokogiri::XML::Element] root_node xml nodes
+    # @return [Entity] instance
+    def self.from_xml(root_node)
+      raise ArgumentError, "only Nokogiri::XML::Element allowed" unless root_node.instance_of?(Nokogiri::XML::Element)
+      raise InvalidRootNode, "'#{root_node.name}' can't be parsed by #{name}" unless root_node.name == entity_name
+
+      populate_entity(root_node)
+    end
+
     # Makes an underscored, lowercase form of the class name
+    #
+    # @see .entity_class
+    #
     # @return [String] entity name
     def self.entity_name
       name.rpartition("::").last.tap do |word|
         word.gsub!(/(.)([A-Z])/, '\1_\2')
         word.downcase!
       end
+    end
+
+    # Transform the given String from the lowercase underscored version to a
+    # camelized variant and returns the Class constant.
+    #
+    # @see .entity_name
+    #
+    # @param [String] class_name "snake_case" class name
+    # @return [Class] entity class
+    def self.entity_class(class_name)
+      raise InvalidEntityName, "'#{class_name}' is invalid" unless class_name =~ /^[a-z]*(_[a-z]*)*$/
+      class_name.sub!(/^[a-z]/, &:upcase)
+      class_name.gsub!(/_([a-z])/) { Regexp.last_match[1].upcase }
+
+      raise UnknownEntity, "'#{class_name}' not found" unless Entities.const_defined?(class_name)
+
+      Entities.const_get(class_name)
     end
 
     private
@@ -173,8 +206,99 @@ module DiasporaFederation
       end
     end
 
+    # @param [Nokogiri::XML::Element] root_node xml nodes
+    # @return [Entity] instance
+    def self.populate_entity(root_node)
+      # Use all known properties to build the Entity (entity_data). All additional xml elements
+      # are respected and attached to a hash as string (additional_xml_elements). It is intended
+      # to build a hash invariable of an Entity definition, in order to support receiving objects
+      # from the future versions of Diaspora, where new elements may have been added.
+      entity_data = {}
+      xml_order = []
+      additional_xml_elements = {}
+
+      root_node.element_children.each do |child|
+        xml_name = child.name
+        property = find_property_for_xml_name(xml_name)
+
+        if property
+          entity_data[property] = parse_element_from_node(class_props[property], xml_name, root_node)
+          xml_order << property
+        else
+          additional_xml_elements[xml_name] = child.text
+          xml_order << xml_name
+        end
+      end
+
+      new(entity_data, xml_order, additional_xml_elements).tap do |entity|
+        entity.verify_signatures if entity.respond_to? :verify_signatures
+      end
+    end
+    private_class_method :populate_entity
+
+    # @param [Class] type target type to parse
+    # @param [String] xml_name xml tag to parse
+    # @param [Nokogiri::XML::Element] node XML node to parse
+    # @return [Object] parsed data
+    def self.parse_element_from_node(type, xml_name, node)
+      if type == String
+        parse_string_from_node(xml_name, node)
+      elsif type.instance_of?(Array)
+        parse_array_from_node(type.first, node)
+      elsif type.ancestors.include?(Entity)
+        parse_entity_from_node(type, node)
+      end
+    end
+    private_class_method :parse_element_from_node
+
+    # create simple entry in data hash
+    #
+    # @param [String] name xml tag to parse
+    # @param [Nokogiri::XML::Element] root_node XML root_node to parse
+    # @return [String] data
+    def self.parse_string_from_node(name, root_node)
+      node = root_node.xpath(name.to_s)
+      node.first.text if node.any?
+    end
+    private_class_method :parse_string_from_node
+
+    # create an entry in the data hash for the nested entity
+    #
+    # @param [Class] type target type to parse
+    # @param [Nokogiri::XML::Element] root_node XML node to parse
+    # @return [Entity] parsed child entity
+    def self.parse_entity_from_node(type, root_node)
+      node = root_node.xpath(type.entity_name)
+      type.from_xml(node.first) if node.any?
+    end
+    private_class_method :parse_entity_from_node
+
+    # collect all nested children of that type and create an array in the data hash
+    #
+    # @param [Class] type target type to parse
+    # @param [Nokogiri::XML::Element] root_node XML node to parse
+    # @return [Array<Entity>] array with parsed child entities
+    def self.parse_array_from_node(type, root_node)
+      node = root_node.xpath(type.entity_name)
+      node.map {|child| type.from_xml(child) }
+    end
+    private_class_method :parse_array_from_node
+
     # Raised, if entity is not valid
     class ValidationError < RuntimeError
+    end
+
+    # Raised, if the root node doesn't match the class name
+    class InvalidRootNode < RuntimeError
+    end
+
+    # Raised, if the entity name in the XML is invalid
+    class InvalidEntityName < RuntimeError
+    end
+
+    # Raised, if the entity contained within the XML cannot be mapped to a
+    # defined {Entity} subclass.
+    class UnknownEntity < RuntimeError
     end
   end
 end

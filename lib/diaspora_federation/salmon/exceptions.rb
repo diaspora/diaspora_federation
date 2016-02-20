@@ -40,14 +40,5 @@ module DiasporaFederation
     # Raised, if the parsed Magic Envelope specifies an unhandled encoding.
     class InvalidEncoding < RuntimeError
     end
-
-    # Raised, if the entity name in the XML is invalid
-    class InvalidEntityName < RuntimeError
-    end
-
-    # Raised, if the entity contained within the XML cannot be mapped to a
-    # defined {Entity} subclass.
-    class UnknownEntity < RuntimeError
-    end
   end
 end
