@@ -1,7 +1,5 @@
 module DiasporaFederation
   describe Entities::Relayable do
-    before { skip }
-
     let(:author_serialized_key) {
       <<-KEY
 -----BEGIN RSA PRIVATE KEY-----
@@ -71,12 +69,12 @@ KEY
 <XML>
   <post>
     <comment>
-      <diaspora_handle>alice@pod-a.org</diaspora_handle>
       <guid>e21589b0b41101333b870f77ba60fa73</guid>
       <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
       <author_signature>XU5X1uqTh8SY6JMG9uhEVR5Rg7FURV6lpRwl/HYOu6DJ3Hd9tpA2aSFFibUxxsMgJXKNrrc5SykrrEdTiQoEei+j0QqZf3B5R7r84qgK7M46KazwIpqRPwVl2MdA/0DdQyYJLA/oavNj1nwll9vtR87M7e/C94qG6P+iQTMBQzo=</author_signature>
       <parent_author_signature/>
       <text>this is a very informative comment</text>
+      <diaspora_handle>alice@pod-a.org</diaspora_handle>
     </comment>
   </post>
 </XML>
@@ -88,9 +86,9 @@ XML
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
   <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
+  <text>this is a very informative comment</text>
   <author_signature>SQbLeqsEpFmSl74G1fFJXKQcsq6jp5B2ZjmfEOF/LbBccYP2oZEyEqOq18K3Fa71OYTp6Nddb38hCmHWWHvnGUltGfxKBnQ0WHafJUi40VM4VmeRoU8cac6m+1hslwe5SNmK6oh47EV3mRCXlgGGjLIrw7iEwjKL2g9x1gkNp2s=</author_signature>
   <parent_author_signature/>
-  <text>this is a very informative comment</text>
 </comment>
 XML
     }
@@ -100,10 +98,10 @@ XML
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
   <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
-  <author_signature>cu3CtmtXjqBZDCdXgCOopQlVYGkQZYMZEZgRGs/+d3+C5mMeJ2nQNgM7qoCcmcKEz9iuDvADCxiyBtM0etAbCTzasxR/pbN0/qgNhbmV0vVD5/pqV60VlmOn3SseITlwmd7ftETvq4W5+yz2H/HJjtaHLM0zeSiECjWjqSvzT0Q=</author_signature>
-  <parent_author_signature/>
-  <new_data>foobar</new_data>
   <text>this is a very informative comment</text>
+  <new_data>foobar</new_data>
+  <author_signature>SFYXSvCX/DhTFiOUALp2Nf1kfNkGKXrnoBPikAyhaIogGydVBm+8tIlu1U/vsnpyKO3yfC3JReJ00/UBd4J16VO1IxStntq8NUqbSv4me5A/6kdK9Xg6eYbXrqQGm8fUQ5Xuh2UzeB71p7SVySXX3OZHVe0dvHCxH/lsfSDpEjc=</author_signature>
+  <parent_author_signature/>
 </comment>
 XML
     }
@@ -113,12 +111,12 @@ XML
 <XML>
   <post>
     <comment>
-      <diaspora_handle>alice@pod-a.org</diaspora_handle>
       <guid>e21589b0b41101333b870f77ba60fa73</guid>
       <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
+      <text>this is a very informative comment</text>
+      <diaspora_handle>alice@pod-a.org</diaspora_handle>
       <author_signature>XU5X1uqTh8SY6JMG9uhEVR5Rg7FURV6lpRwl/HYOu6DJ3Hd9tpA2aSFFibUxxsMgJXKNrrc5SykrrEdTiQoEei+j0QqZf3B5R7r84qgK7M46KazwIpqRPwVl2MdA/0DdQyYJLA/oavNj1nwll9vtR87M7e/C94qG6P+iQTMBQzo=</author_signature>
       <parent_author_signature>QqWSdwpb+/dcJUxuKKVe7aiz1NivXzlIdWZ71xyrxnhFxFYd+7EIittyTcp1cVehjg96pwDbn++P/rWyCffqenWu025DHvUfSmQkC93Z0dX6r3OIUlZqwEggtOdbunybiE++F3BVsGt5wC4YbAESB5ZFuhFVhBXh1X+EaZ/qoKo=</parent_author_signature>
-      <text>this is a very informative comment</text>
     </comment>
   </post>
 </XML>
@@ -132,13 +130,13 @@ XML
       <diaspora_handle>alice@pod-a.org</diaspora_handle>
       <guid>e21589b0b41101333b870f77ba60fa73</guid>
       <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
-      <author_signature>SQbLeqsEpFmSl74G1fFJXKQcsq6jp5B2ZjmfEOF/LbBccYP2oZEyEqOq18K3Fa71OYTp6Nddb38hCmHWWHvnGUltGfxKBnQ0WHafJUi40VM4VmeRoU8cac6m+1hslwe5SNmK6oh47EV3mRCXlgGGjLIrw7iEwjKL2g9x1gkNp2s=</author_signature>
-      <parent_author_signature>QqWSdwpb+/dcJUxuKKVe7aiz1NivXzlIdWZ71xyrxnhFxFYd+7EIittyTcp1cVehjg96pwDbn++P/rWyCffqenWu025DHvUfSmQkC93Z0dX6r3OIUlZqwEggtOdbunybiE++F3BVsGt5wC4YbAESB5ZFuhFVhBXh1X+EaZ/qoKo=</parent_author_signature>
       <text>this is a very informative comment</text>
+      <author_signature>SQbLeqsEpFmSl74G1fFJXKQcsq6jp5B2ZjmfEOF/LbBccYP2oZEyEqOq18K3Fa71OYTp6Nddb38hCmHWWHvnGUltGfxKBnQ0WHafJUi40VM4VmeRoU8cac6m+1hslwe5SNmK6oh47EV3mRCXlgGGjLIrw7iEwjKL2g9x1gkNp2s=</author_signature>
+      <parent_author_signature>hWsagsczmZD6d36d6MFdTt3hKAdnRtupSIU6464G2kkMJ+WlExxMgbF6kWR+jVCBTeKipWCYK3Arnj0YkuIZM9d14bJGVMTsW/ZzNfJ69bXZhsyawI8dPnZnLVydo+hU/XmGJBEuh2TOj9Emq6/HCYiWzPTF5qhYAtyJ1oxJ4Yk=</parent_author_signature>
     </comment>
   </post>
 </XML>
-      XML
+XML
     }
     let(:new_signature_comment_xml_bob) {
       <<-XML
@@ -146,11 +144,11 @@ XML
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
   <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
+  <text>this is a very informative comment</text>
   <author_signature>SQbLeqsEpFmSl74G1fFJXKQcsq6jp5B2ZjmfEOF/LbBccYP2oZEyEqOq18K3Fa71OYTp6Nddb38hCmHWWHvnGUltGfxKBnQ0WHafJUi40VM4VmeRoU8cac6m+1hslwe5SNmK6oh47EV3mRCXlgGGjLIrw7iEwjKL2g9x1gkNp2s=</author_signature>
   <parent_author_signature>hWsagsczmZD6d36d6MFdTt3hKAdnRtupSIU6464G2kkMJ+WlExxMgbF6kWR+jVCBTeKipWCYK3Arnj0YkuIZM9d14bJGVMTsW/ZzNfJ69bXZhsyawI8dPnZnLVydo+hU/XmGJBEuh2TOj9Emq6/HCYiWzPTF5qhYAtyJ1oxJ4Yk=</parent_author_signature>
-  <text>this is a very informative comment</text>
 </comment>
-      XML
+XML
     }
     let(:legacy_new_data_comment_xml_bob) {
       <<-XML
@@ -160,14 +158,14 @@ XML
       <diaspora_handle>alice@pod-a.org</diaspora_handle>
       <guid>e21589b0b41101333b870f77ba60fa73</guid>
       <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
-      <author_signature>cu3CtmtXjqBZDCdXgCOopQlVYGkQZYMZEZgRGs/+d3+C5mMeJ2nQNgM7qoCcmcKEz9iuDvADCxiyBtM0etAbCTzasxR/pbN0/qgNhbmV0vVD5/pqV60VlmOn3SseITlwmd7ftETvq4W5+yz2H/HJjtaHLM0zeSiECjWjqSvzT0Q=</author_signature>
-      <parent_author_signature>KXfObxPPMtajzVk9Y7Zv3WmqO6jkOtMUAANz3WvWfu498hXuo8erZwyZpvyn166gDO+R4c0D3oJVj4RPnzIO7KaAZ28wzpZ4M4HiiSK2N3Y3SXmy2zjQxpf5HPnfkB+OWMDN51JohpYIAzKvsEZ9Wnzq7AiziWN3EbqJWRr4M9A=</parent_author_signature>
       <text>this is a very informative comment</text>
       <new_data>foobar</new_data>
+      <author_signature>SFYXSvCX/DhTFiOUALp2Nf1kfNkGKXrnoBPikAyhaIogGydVBm+8tIlu1U/vsnpyKO3yfC3JReJ00/UBd4J16VO1IxStntq8NUqbSv4me5A/6kdK9Xg6eYbXrqQGm8fUQ5Xuh2UzeB71p7SVySXX3OZHVe0dvHCxH/lsfSDpEjc=</author_signature>
+      <parent_author_signature>NxXuEUVeXwUMR77osIbaNlp2oB3bpl8rBEFgQoO6cnoN5ewDbiGADK0x6EhcmJptjwhGVcZiNJNpq7k3/pjJtKaH++3ToCAtcuZoIKwPDsneLnjPhVjE2GXM1TiZKwoHrq41qSp/8Vl5UPbtC6sPiOzIvPKaILXUG8XCiVWuB0M=</parent_author_signature>
     </comment>
   </post>
 </XML>
-      XML
+XML
     }
     let(:new_data_comment_xml_bob) {
       <<-XML
@@ -175,12 +173,12 @@ XML
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
   <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
-  <author_signature>cu3CtmtXjqBZDCdXgCOopQlVYGkQZYMZEZgRGs/+d3+C5mMeJ2nQNgM7qoCcmcKEz9iuDvADCxiyBtM0etAbCTzasxR/pbN0/qgNhbmV0vVD5/pqV60VlmOn3SseITlwmd7ftETvq4W5+yz2H/HJjtaHLM0zeSiECjWjqSvzT0Q=</author_signature>
-  <parent_author_signature>KXfObxPPMtajzVk9Y7Zv3WmqO6jkOtMUAANz3WvWfu498hXuo8erZwyZpvyn166gDO+R4c0D3oJVj4RPnzIO7KaAZ28wzpZ4M4HiiSK2N3Y3SXmy2zjQxpf5HPnfkB+OWMDN51JohpYIAzKvsEZ9Wnzq7AiziWN3EbqJWRr4M9A=</parent_author_signature>
-  <new_data>foobar</new_data>
   <text>this is a very informative comment</text>
+  <new_data>foobar</new_data>
+  <author_signature>SFYXSvCX/DhTFiOUALp2Nf1kfNkGKXrnoBPikAyhaIogGydVBm+8tIlu1U/vsnpyKO3yfC3JReJ00/UBd4J16VO1IxStntq8NUqbSv4me5A/6kdK9Xg6eYbXrqQGm8fUQ5Xuh2UzeB71p7SVySXX3OZHVe0dvHCxH/lsfSDpEjc=</author_signature>
+  <parent_author_signature>NxXuEUVeXwUMR77osIbaNlp2oB3bpl8rBEFgQoO6cnoN5ewDbiGADK0x6EhcmJptjwhGVcZiNJNpq7k3/pjJtKaH++3ToCAtcuZoIKwPDsneLnjPhVjE2GXM1TiZKwoHrq41qSp/8Vl5UPbtC6sPiOzIvPKaILXUG8XCiVWuB0M=</parent_author_signature>
 </comment>
-      XML
+XML
     }
 
     # this was used to create the XMLs above
