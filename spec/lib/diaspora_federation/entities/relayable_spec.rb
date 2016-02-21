@@ -24,15 +24,15 @@ module DiasporaFederation
       end
     end
 
+    def sign_with_key(privkey, signature_data)
+      Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, signature_data))
+    end
+
     def verify_signature(pubkey, signature, signed_string)
       pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
     end
 
     describe "#verify_signatures" do
-      def sign_with_key(privkey, signature_data)
-        Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, signature_data))
-      end
-
       it "doesn't raise anything if correct signatures with legacy-string were passed" do
         hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
         hash[:parent_author_signature] = sign_with_key(parent_pkey, legacy_signature_data)
@@ -283,6 +283,86 @@ XML
         xml = SomeRelayable.new(hash).to_xml
 
         expect(xml.at_xpath("parent_author_signature").text).to eq("")
+      end
+    end
+
+    describe ".from_xml" do
+      context "parsing" do
+        before do
+          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :fetch_public_key_by_diaspora_id, author
+          ).and_return(author_pkey.public_key)
+
+          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :fetch_author_public_key_by_entity_guid, "Parent", parent_guid
+          ).and_return(parent_pkey.public_key)
+
+          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :entity_author_is_local?, "Parent", parent_guid
+          ).and_return(false)
+        end
+
+        let(:new_signature_data) { "#{author};#{guid};#{parent_guid};#{new_property};#{property}" }
+        let(:new_xml) {
+          <<-XML
+<some_relayable>
+  <diaspora_handle>#{author}</diaspora_handle>
+  <guid>#{guid}</guid>
+  <parent_guid>#{parent_guid}</parent_guid>
+  <new_property>#{new_property}</new_property>
+  <property>#{property}</property>
+  <author_signature>#{sign_with_key(author_pkey, new_signature_data)}</author_signature>
+  <parent_author_signature>#{sign_with_key(parent_pkey, new_signature_data)}</parent_author_signature>
+</some_relayable>
+XML
+        }
+
+        it "doesn't drop unknown properties" do
+          entity = SomeRelayable.from_xml(Nokogiri::XML::Document.parse(new_xml).root)
+
+          expect(entity).to be_an_instance_of SomeRelayable
+          expect(entity.property).to eq(property)
+          expect(entity.additional_xml_elements).to eq(
+            "new_property" => new_property
+          )
+        end
+
+        it "hand over the order in the xml to the instance" do
+          entity = SomeRelayable.from_xml(Nokogiri::XML::Document.parse(new_xml).root)
+
+          expect(entity.xml_order).to eq(
+            [:author, :guid, :parent_guid, "new_property", :property, :author_signature, :parent_author_signature]
+          )
+        end
+
+        it "creates Entity with empty 'additional_xml_elements' if the xml has only known properties" do
+          hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
+          hash[:parent_author_signature] = sign_with_key(parent_pkey, legacy_signature_data)
+
+          xml = SomeRelayable.new(hash).to_xml
+
+          entity = SomeRelayable.from_xml(xml)
+
+          expect(entity).to be_an_instance_of SomeRelayable
+          expect(entity.property).to eq(property)
+          expect(entity.additional_xml_elements).to be_empty
+        end
+      end
+
+      context "relayable signature verification feature support" do
+        it "calls signatures verification on relayable unpack" do
+          hash.merge!(author_signature: "aa", parent_author_signature: "bb")
+
+          xml = SomeRelayable.new(hash).to_xml
+
+          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :fetch_public_key_by_diaspora_id, author
+          ).and_return(author_pkey.public_key)
+
+          expect {
+            SomeRelayable.from_xml(xml)
+          }.to raise_error DiasporaFederation::Entities::Relayable::SignatureVerificationFailed
+        end
       end
     end
   end

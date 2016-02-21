@@ -35,12 +35,6 @@ module DiasporaFederation
   class Entity
     extend PropertiesDSL
 
-    attr_reader :xml_order
-
-    # additional properties from parsed xml
-    # @return [Hash] additional xml elements
-    attr_reader :additional_xml_elements
-
     # Initializes the Entity with the given attribute hash and freezes the created
     # instance it returns.
     #
@@ -54,18 +48,14 @@ module DiasporaFederation
     #       {PropertiesDSL#entity}) get discarded silently.
     #
     # @param [Hash] data entity data
-    # @param [Hash] additional_xml_elements additional xml elements
     # @return [Entity] new instance
-    def initialize(data, xml_order=nil, additional_xml_elements={})
+    def initialize(data)
       raise ArgumentError, "expected a Hash" unless data.is_a?(Hash)
       entity_data = self.class.resolv_aliases(data)
       missing_props = self.class.missing_props(entity_data)
       unless missing_props.empty?
         raise ArgumentError, "missing required properties: #{missing_props.join(', ')}"
       end
-
-      @xml_order = xml_order
-      @additional_xml_elements = additional_xml_elements
 
       self.class.default_values.merge(entity_data).each do |name, value|
         instance_variable_set("@#{name}", nilify(value)) if setable?(name, value)
@@ -209,44 +199,25 @@ module DiasporaFederation
     # @param [Nokogiri::XML::Element] root_node xml nodes
     # @return [Entity] instance
     def self.populate_entity(root_node)
-      # Use all known properties to build the Entity (entity_data). All additional xml elements
-      # are respected and attached to a hash as string (additional_xml_elements). It is intended
-      # to build a hash invariable of an Entity definition, in order to support receiving objects
-      # from the future versions of Diaspora, where new elements may have been added.
-      entity_data = {}
-      xml_order = []
-      additional_xml_elements = {}
+      entity_data = Hash[class_props.map {|name, type|
+        [name, parse_element_from_node(name, type, root_node)]
+      }]
 
-      root_node.element_children.each do |child|
-        xml_name = child.name
-        property = find_property_for_xml_name(xml_name)
-
-        if property
-          entity_data[property] = parse_element_from_node(class_props[property], xml_name, root_node)
-          xml_order << property
-        else
-          additional_xml_elements[xml_name] = child.text
-          xml_order << xml_name
-        end
-      end
-
-      new(entity_data, xml_order, additional_xml_elements).tap do |entity|
-        entity.verify_signatures if entity.respond_to? :verify_signatures
-      end
+      new(entity_data)
     end
     private_class_method :populate_entity
 
+    # @param [String] name property name to parse
     # @param [Class] type target type to parse
-    # @param [String] xml_name xml tag to parse
-    # @param [Nokogiri::XML::Element] node XML node to parse
+    # @param [Nokogiri::XML::Element] root_node XML node to parse
     # @return [Object] parsed data
-    def self.parse_element_from_node(type, xml_name, node)
+    def self.parse_element_from_node(name, type, root_node)
       if type == String
-        parse_string_from_node(xml_name, node)
+        parse_string_from_node(name, root_node)
       elsif type.instance_of?(Array)
-        parse_array_from_node(type.first, node)
+        parse_array_from_node(type.first, root_node)
       elsif type.ancestors.include?(Entity)
-        parse_entity_from_node(type, node)
+        parse_entity_from_node(type, root_node)
       end
     end
     private_class_method :parse_element_from_node
@@ -258,6 +229,7 @@ module DiasporaFederation
     # @return [String] data
     def self.parse_string_from_node(name, root_node)
       node = root_node.xpath(name.to_s)
+      node = root_node.xpath(xml_names[name].to_s) if node.empty?
       node.first.text if node.any?
     end
     private_class_method :parse_string_from_node

@@ -168,45 +168,6 @@ XML
           expect(entity.test).to eq("asdf")
           expect(entity.qwer).to eq("qwer")
         end
-
-        it "doesn't drop unknown properties" do
-          xml = <<-XML
-<test_entity>
-  <a_prop_from_newer_diaspora_version>some value</a_prop_from_newer_diaspora_version>
-  <test>asdf</test>
-  <some_random_property>another value</some_random_property>
-</test_entity>
-XML
-
-          entity = Entities::TestEntity.from_xml(Nokogiri::XML::Document.parse(xml).root)
-
-          expect(entity).to be_an_instance_of Entities::TestEntity
-          expect(entity.test).to eq("asdf")
-          expect(entity.additional_xml_elements).to eq(
-            "a_prop_from_newer_diaspora_version" => "some value",
-            "some_random_property"               => "another value"
-          )
-        end
-
-        it "creates Entity with nil 'additional_xml_elements' if the xml has only known properties" do
-          entity = Entities::TestEntity.from_xml(entity_xml)
-
-          expect(entity).to be_an_instance_of Entities::TestEntity
-          expect(entity.test).to eq("asdf")
-          expect(entity.additional_xml_elements).to be_empty
-        end
-      end
-
-      context "relayable signature verification feature support" do
-        it "calls signatures verification on relayable unpack" do
-          entity = FactoryGirl.build(:comment_entity, author: alice.diaspora_id)
-          entity_xml = entity.to_xml
-          entity_xml.at_xpath("author_signature").content = nil
-
-          expect {
-            Entities::Comment.from_xml(entity_xml)
-          }.to raise_error DiasporaFederation::Entities::Relayable::SignatureVerificationFailed
-        end
       end
 
       context "nested entities" do

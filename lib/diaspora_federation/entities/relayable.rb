@@ -10,6 +10,14 @@ module DiasporaFederation
       # digest instance used for signing
       DIGEST = OpenSSL::Digest::SHA256.new
 
+      # order from the parsed xml for signature
+      # @return [Array] order from xml
+      attr_reader :xml_order
+
+      # additional properties from parsed xml
+      # @return [Hash] additional xml elements
+      attr_reader :additional_xml_elements
+
       # on inclusion of this module the required properties for a relayable are added to the object that includes it
       #
       # @!attribute [r] author
@@ -49,6 +57,21 @@ module DiasporaFederation
           property :author_signature, default: nil
           property :parent_author_signature, default: nil
         end
+
+        entity.extend ParseXML
+      end
+
+      # Initializes a new relayable Entity with order and additional xml elements
+      #
+      # @param [Hash] data entity data
+      # @param [Array] xml_order order from xml
+      # @param [Hash] additional_xml_elements additional xml elements
+      # @see DiasporaFederation::Entity#initialize
+      def initialize(data, xml_order=nil, additional_xml_elements={})
+        @xml_order = xml_order
+        @additional_xml_elements = additional_xml_elements
+
+        super(data)
       end
 
       # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
@@ -145,6 +168,37 @@ module DiasporaFederation
       def signature_data
         data = to_h.merge(additional_xml_elements)
         signature_order.map {|name| data[name] }.join(";")
+      end
+
+      # override class methods from {Entity} to parse the xml
+      module ParseXML
+        private
+
+        # @param [Nokogiri::XML::Element] root_node xml nodes
+        # @return [Entity] instance
+        def populate_entity(root_node)
+          # Use all known properties to build the Entity (entity_data). All additional xml elements
+          # are respected and attached to a hash as string (additional_xml_elements). It also remembers
+          # the order of the xml-nodes (xml_order). This is needed to support receiving objects from
+          # the future versions of Diaspora, where new elements may have been added.
+          entity_data = {}
+          additional_xml_elements = {}
+
+          xml_order = root_node.element_children.map do |child|
+            xml_name = child.name
+            property = find_property_for_xml_name(xml_name)
+
+            if property
+              entity_data[property] = parse_element_from_node(xml_name, class_props[property], root_node)
+              property
+            else
+              additional_xml_elements[xml_name] = child.text
+              xml_name
+            end
+          end
+
+          new(entity_data, xml_order, additional_xml_elements).tap(&:verify_signatures)
+        end
       end
 
       # Exception raised when creating the author_signature failes, because the private key was not found
