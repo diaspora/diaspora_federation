@@ -44,7 +44,7 @@ group :test do
   gem "fixture_builder",           "~> 0.4.1"
   gem "factory_girl_rails",        "~> 4.6.0"
   gem "rspec-collection_matchers", "~> 1.1.2"
-  gem "webmock",                   "~> 1.22.6"
+  gem "webmock",                   "~> 1.24.0"
 end
 
 group :development, :test do
