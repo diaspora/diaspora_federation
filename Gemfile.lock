@@ -204,7 +204,7 @@ GEM
       rspec-mocks (~> 3.4.0)
     rspec-collection_matchers (1.1.2)
       rspec-expectations (>= 2.99.0.beta1)
-    rspec-core (3.4.2)
+    rspec-core (3.4.3)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -295,6 +295,7 @@ DEPENDENCIES
   pry-byebug
   pry-debundle
   rspec-collection_matchers (~> 1.1.2)
+  rspec-core (~> 3.4.3)
   rspec-rails (~> 3.4.1)
   rubocop (= 0.37.2)
   simplecov (= 0.11.2)
