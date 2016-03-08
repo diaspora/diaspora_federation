@@ -32,7 +32,7 @@ shared_examples "an Entity subclass" do
   end
 end
 
-shared_examples "an XML Entity" do
+shared_examples "an XML Entity" do |ignored_props=[]|
   let(:instance) { described_class.new(data) }
 
   describe "#to_xml" do
@@ -46,13 +46,13 @@ shared_examples "an XML Entity" do
       packed_xml = DiasporaFederation::Salmon::XmlPayload.pack(instance)
       parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(packed_xml)
 
-      check_entity(instance, parsed_instance)
+      check_entity(instance, parsed_instance, ignored_props)
     end
   end
 
-  def check_entity(entity, parsed_entity)
+  def check_entity(entity, parsed_entity, ignored_props=[])
     entity.class.class_props.each do |name, type|
-      validate_values(entity.send(name), parsed_entity.send(name), type)
+      validate_values(entity.send(name), parsed_entity.send(name), type) unless ignored_props.include?(name)
     end
   end
 

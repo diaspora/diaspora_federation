@@ -14,6 +14,11 @@ module DiasporaFederation
       #   @return [String] the comment text
       property :text
 
+      # @!attribute [r] created_at
+      #   comment entity creation time
+      #   @return [Time] creation time
+      property :created_at, default: -> { Time.now.utc }
+
       # The {Comment} parent is a Post
       # @return [String] parent type
       def parent_type
