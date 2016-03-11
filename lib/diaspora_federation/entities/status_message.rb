@@ -4,17 +4,7 @@ module DiasporaFederation
     #
     # @see Validators::StatusMessageValidator
     class StatusMessage < Entity
-      # @!attribute [r] author
-      #   The diaspora ID of the person who posts the status message
-      #   @see Person#author
-      #   @return [String] diaspora ID
-      property :author, xml_name: :diaspora_handle
-
-      # @!attribute [r] guid
-      #   a random string of at least 16 chars.
-      #   @see Validation::Rule::Guid
-      #   @return [String] status message guid
-      property :guid
+      include Post
 
       # @!attribute [r] raw_message
       #   text of the status message composed by the user
@@ -40,16 +30,6 @@ module DiasporaFederation
       #   shows whether the status message is visible to everyone or only to some aspects
       #   @return [Boolean] is it public
       property :public, default: false
-
-      # @!attribute [r] created_at
-      #   status message entity creation time
-      #   @return [Time] creation time
-      property :created_at, default: -> { Time.now.utc }
-
-      # @!attribute [r] provider_display_name
-      #   a string that describes a means by which a user has posted the status message
-      #   @return [String] provider display name
-      property :provider_display_name, default: nil
     end
   end
 end

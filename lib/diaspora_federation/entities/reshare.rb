@@ -4,6 +4,8 @@ module DiasporaFederation
     #
     # @see Validators::ReshareValidator
     class Reshare < Entity
+      include Post
+
       # @!attribute [r] root_author
       #   The diaspora ID of the person who posted the original post
       #   @see Person#author
@@ -16,34 +18,10 @@ module DiasporaFederation
       #   @return [String] root guid
       property :root_guid
 
-      # @!attribute [r] author
-      #   The diaspora ID of the person who reshares a post
-      #   @see Person#author
-      #   @return [String] diaspora ID
-      property :author, xml_name: :diaspora_handle
-
-      # @!attribute [r] guid
-      #   a random string of at least 16 chars.
-      #   @see Validation::Rule::Guid
-      #   @see StatusMessage#guid
-      #   @return [String] guid
-      property :guid
-
       # @!attribute [r] public
       #   has no meaning at the moment
       #   @return [Boolean] public
       property :public, default: true # always true? (we only reshare public posts)
-
-      # @!attribute [r] created_at
-      #   reshare entity creation time
-      #   @return [Time] creation time
-      property :created_at, default: -> { Time.now.utc }
-
-      # @!attribute [r] provider_display_name
-      #   a string that describes a means by which a user has posted the reshare
-      #   @see StatusMessage#provider_display_name
-      #   @return [String] provider display name
-      property :provider_display_name, default: nil
     end
   end
 end

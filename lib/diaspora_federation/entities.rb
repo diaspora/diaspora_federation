@@ -8,7 +8,11 @@ module DiasporaFederation
   end
 end
 
+# abstract types
+require "diaspora_federation/entities/post"
 require "diaspora_federation/entities/relayable"
+
+# types
 require "diaspora_federation/entities/profile"
 require "diaspora_federation/entities/person"
 require "diaspora_federation/entities/location"

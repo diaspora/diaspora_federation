@@ -17,6 +17,8 @@ module DiasporaFederation
 <status_message>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{data[:guid]}</guid>
+  <created_at>#{data[:created_at]}</created_at>
+  <provider_display_name>#{data[:provider_display_name]}</provider_display_name>
   <raw_message>#{data[:raw_message]}</raw_message>
   <photo>
     <guid>#{photo1.guid}</guid>
@@ -48,8 +50,6 @@ module DiasporaFederation
     <lng>#{location.lng}</lng>
   </location>
   <public>#{data[:public]}</public>
-  <created_at>#{data[:created_at]}</created_at>
-  <provider_display_name>#{data[:provider_display_name]}</provider_display_name>
 </status_message>
       XML
     }
