@@ -13,7 +13,7 @@ module DiasporaFederation
     #
     # GET /.well-known/host-meta
     def host_meta
-      render body: WebfingerController.host_meta_xml, content_type: "application/xrd+xml"
+      render xml: WebfingerController.host_meta_xml, content_type: "application/xrd+xml"
     end
 
     # @deprecated this is the pre RFC 7033 webfinger
@@ -41,7 +41,7 @@ module DiasporaFederation
         render nothing: true, status: 404
       else
         logger.info "webfinger profile request for: #{person_wf.acct_uri}"
-        render body: person_wf.to_xml, content_type: "application/xrd+xml"
+        render xml: person_wf.to_xml, content_type: "application/xrd+xml"
       end
     end
 
