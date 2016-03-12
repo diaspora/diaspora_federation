@@ -119,11 +119,11 @@ module DiasporaFederation
     #
     # @see .entity_name
     #
-    # @param [String] class_name "snake_case" class name
+    # @param [String] entity_name "snake_case" class name
     # @return [Class] entity class
-    def self.entity_class(class_name)
-      raise InvalidEntityName, "'#{class_name}' is invalid" unless class_name =~ /^[a-z]*(_[a-z]*)*$/
-      class_name.sub!(/^[a-z]/, &:upcase)
+    def self.entity_class(entity_name)
+      raise InvalidEntityName, "'#{entity_name}' is invalid" unless entity_name =~ /^[a-z]*(_[a-z]*)*$/
+      class_name = entity_name.sub(/^[a-z]/, &:upcase)
       class_name.gsub!(/_([a-z])/) { Regexp.last_match[1].upcase }
 
       raise UnknownEntity, "'#{class_name}' not found" unless Entities.const_defined?(class_name)

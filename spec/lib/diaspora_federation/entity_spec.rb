@@ -211,6 +211,12 @@ XML
         expect(Entity.entity_class("test_entity")).to eq(Entities::TestEntity)
       end
 
+      it "should not change the input string" do
+        entity_name = "test_entity"
+        Entity.entity_class(entity_name)
+        expect(entity_name).to eq("test_entity")
+      end
+
       it "raises an error when the entity name contains special characters" do
         expect {
           Entity.entity_class("te.st-enti/ty")
