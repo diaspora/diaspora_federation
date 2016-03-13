@@ -5,7 +5,7 @@ require "diaspora_federation/properties_dsl"
 require "diaspora_federation/entity"
 require "diaspora_federation/validators"
 
-require "diaspora_federation/fetcher"
+require "diaspora_federation/http_client"
 
 require "diaspora_federation/entities"
 

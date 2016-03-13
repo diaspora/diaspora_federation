@@ -40,7 +40,7 @@ module DiasporaFederation
 
       def get(url, http_fallback=false)
         logger.info "Fetching #{url} for #{diaspora_id}"
-        response = Fetcher.get(url)
+        response = HttpClient.get(url)
         raise "Failed to fetch #{url}: #{response.status}" unless response.success?
         response.body
       rescue => e

@@ -8,7 +8,7 @@ module DiasporaFederation
       # @param [String] guid guid of the entity to fetch
       def self.fetch_public(author, entity_type, guid)
         url = DiasporaFederation.callbacks.trigger(:fetch_person_url_to, author, "/fetch/#{entity_type}/#{guid}")
-        response = DiasporaFederation::Fetcher.get(url)
+        response = HttpClient.get(url)
         raise "Failed to fetch #{url}: #{response.status}" unless response.success?
 
         magic_env = Nokogiri::XML::Document.parse(response.body).root

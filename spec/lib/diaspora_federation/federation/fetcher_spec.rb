@@ -59,7 +59,7 @@ module DiasporaFederation
       end
 
       it "raises NotFetchable if connection refused" do
-        expect(DiasporaFederation::Fetcher).to receive(:get).with(
+        expect(HttpClient).to receive(:get).with(
           "https://example.org/fetch/post/#{post.guid}"
         ).and_raise(Faraday::ConnectionFailed, "Couldn't connect to server")
 

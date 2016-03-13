@@ -2,11 +2,11 @@ require "faraday"
 require "faraday_middleware/response/follow_redirects"
 
 module DiasporaFederation
-  # A wrapper for {https://github.com/lostisland/faraday Faraday} used for
-  # fetching
+  # A wrapper for {https://github.com/lostisland/faraday Faraday}.
   #
   # @see Discovery::Discovery
-  class Fetcher
+  # @see Federation::Fetcher
+  class HttpClient
     # Perform a GET request
     #
     # @param [String] uri the URI
