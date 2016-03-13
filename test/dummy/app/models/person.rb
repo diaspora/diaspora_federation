@@ -1,6 +1,9 @@
 class Person < ActiveRecord::Base
   include ::Diaspora::Guid
 
+  def private_key; OpenSSL::PKey::RSA.new(serialized_private_key) end
+  def public_key;  OpenSSL::PKey::RSA.new(serialized_public_key) end
+
   def alias_url;     "#{url}people/#{guid}" end
   def hcard_url;     "#{url}hcard/users/#{guid}" end
   def profile_url;   "#{url}u/#{nickname}" end
