@@ -10,7 +10,6 @@ module DiasporaFederation
         # @param [OpenSSL::PKey::RSA] recipient_private_key recipient private key to decrypt the message
         def initialize(slap_xml, recipient_private_key)
           super(slap_xml)
-          raise ArgumentError, "no recipient key provided" unless recipient_private_key.instance_of?(OpenSSL::PKey::RSA)
           @recipient_private_key = recipient_private_key
         end
 

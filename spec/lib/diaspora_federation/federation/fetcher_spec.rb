@@ -15,7 +15,7 @@ module DiasporaFederation
           :fetch_public_key_by_diaspora_id, post.author
         ).and_return(alice.public_key)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :save_entity_after_receive, kind_of(Entities::StatusMessage)
+          :receive_entity, kind_of(Entities::StatusMessage)
         ) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
@@ -39,7 +39,7 @@ module DiasporaFederation
           :fetch_public_key_by_diaspora_id, post.author
         ).and_return(alice.public_key)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :save_entity_after_receive, kind_of(Entities::StatusMessage)
+          :receive_entity, kind_of(Entities::StatusMessage)
         )
 
         Federation::Fetcher.fetch_public(post.author, :post, post.guid)

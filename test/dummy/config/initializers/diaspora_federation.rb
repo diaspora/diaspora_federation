@@ -97,7 +97,7 @@ DiasporaFederation.configure do |config|
       true
     end
 
-    on :save_entity_after_receive do
+    on :receive_entity do
     end
 
     on :fetch_public_entity do |entity_type, guid|

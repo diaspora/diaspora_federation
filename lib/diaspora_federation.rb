@@ -29,7 +29,7 @@ module DiasporaFederation
     fetch_entity_author_id_by_guid
     queue_public_receive
     queue_private_receive
-    save_entity_after_receive
+    receive_entity
     fetch_public_entity
     fetch_person_url_to
     update_pod
@@ -167,9 +167,11 @@ module DiasporaFederation
     #   @param [Boolean] legacy true if it is a legacy salmon slap, false if it is a encrypted magic envelope json
     #   @return [Boolean] true if successful, false if the user was not found
     #
-    # save_entity_after_receive
+    # receive_entity
     #   After the xml was parsed and processed the gem calls this callback to persist the entity
     #   @param [DiasporaFederation::Entity] entity the received entity after processing
+    #   @param [Object] recipient_id identifier for the recipient of private messages or nil for public,
+    #     see {Receiver.receive_private}
     #
     # fetch_public_entity
     #   fetch a public entity from the database

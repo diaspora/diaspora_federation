@@ -13,7 +13,7 @@ module DiasporaFederation
 
         magic_env = Nokogiri::XML::Document.parse(response.body).root
         entity = Salmon::MagicEnvelope.unenvelop(magic_env)
-        DiasporaFederation.callbacks.trigger(:save_entity_after_receive, entity)
+        DiasporaFederation.callbacks.trigger(:receive_entity, entity)
       rescue => e
         raise NotFetchable, "Failed to fetch #{entity_type}:#{guid} from #{author}: #{e.class}: #{e.message}"
       end

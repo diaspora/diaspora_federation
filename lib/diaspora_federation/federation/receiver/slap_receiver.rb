@@ -12,12 +12,12 @@ module DiasporaFederation
           @slap_xml = slap_xml
         end
 
-        # Parse the salmon xml and send it to the +:save_entity_after_receive+ callback
-        def receive!
+        # Parse the salmon xml
+        def parse
           sender_id = slap.author_id
           public_key = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, sender_id)
           raise Salmon::SenderKeyNotFound if public_key.nil?
-          DiasporaFederation.callbacks.trigger(:save_entity_after_receive, slap.entity(public_key))
+          slap.entity(public_key)
         end
       end
     end
