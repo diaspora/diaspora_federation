@@ -15,7 +15,7 @@ XML
 
     it_behaves_like "an Entity subclass"
 
-    it_behaves_like "an XML Entity"
+    it_behaves_like "an XML Entity", [:target_author_signature]
 
     describe "#to_xml" do
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
@@ -61,6 +61,13 @@ XML
         expect(retraction.author).to eq(signed_retraction.author)
         expect(retraction.target_guid).to eq(signed_retraction.target_guid)
         expect(retraction.target_type).to eq(signed_retraction.target_type)
+      end
+    end
+
+    context "parse retraction" do
+      it "parses the xml as a retraction" do
+        retraction = Entities::SignedRetraction.from_xml(Nokogiri::XML::Document.parse(xml).root)
+        expect(retraction).to be_a(Entities::Retraction)
       end
     end
   end
