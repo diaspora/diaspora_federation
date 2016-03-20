@@ -49,8 +49,8 @@ module DiasporaFederation
       # @param [Entity] payload Entity instance
       # @param [String] sender diaspora-ID of the sender
       # @raise [ArgumentError] if either argument is not of the right type
-      def initialize(payload, sender)
-        raise ArgumentError unless payload.is_a?(Entity) && sender.is_a?(String)
+      def initialize(payload, sender=nil)
+        raise ArgumentError unless payload.is_a?(Entity)
 
         @payload = payload
         @sender = sender
@@ -69,7 +69,7 @@ module DiasporaFederation
             xml["me"].data(Base64.urlsafe_encode64(payload_data), type: DATA_TYPE)
             xml["me"].encoding(ENCODING)
             xml["me"].alg(ALGORITHM)
-            xml["me"].sig(Base64.urlsafe_encode64(sign(privkey)), key_id: Base64.urlsafe_encode64(sender))
+            xml["me"].sig(Base64.urlsafe_encode64(sign(privkey)), key_id)
           }
         }
       end
@@ -130,6 +130,10 @@ module DiasporaFederation
       # @return [String] payload data
       def payload_data
         @payload_data ||= XmlPayload.pack(@payload).to_xml.strip
+      end
+
+      def key_id
+        sender ? {key_id: Base64.urlsafe_encode64(sender)} : {}
       end
 
       # Builds the xml root node of the magic envelope.

@@ -87,6 +87,11 @@ module DiasporaFederation
           expect(doc1.xpath("d:diaspora/me:env", ns).to_xml).to eq(doc2.xpath("d:diaspora/me:env", ns).to_xml)
         end
 
+        it "does not add the sender to the magic envelope" do
+          doc = Nokogiri::XML::Document.parse(slap_xml)
+          expect(doc.at_xpath("d:diaspora/me:env/me:sig", ns)["key_id"]).to be_nil
+        end
+
         context "header" do
           subject {
             doc = Nokogiri::XML::Document.parse(slap_xml)
