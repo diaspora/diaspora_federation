@@ -58,13 +58,14 @@ module DiasporaFederation
     #
     # @example Parsing a Salmon Slap
     #   recipient_privkey = however_you_retrieve_the_recipients_private_key()
-    #   slap = EncryptedSlap.from_xml(slap_xml, recipient_privkey)
-    #   author_pubkey = however_you_retrieve_the_authors_public_key(slap.author_id)
-    #
-    #   entity = slap.entity(author_pubkey)
+    #   entity = EncryptedSlap.from_xml(slap_xml, recipient_privkey).payload
     #
     # @deprecated
     class EncryptedSlap < Slap
+      # the author of the slap
+      # @param [String] value the author diaspora id
+      attr_writer :author_id
+
       # the key and iv if it is an encrypted slap
       # @param [Hash] value hash containing the key and iv
       attr_writer :cipher_params
@@ -73,13 +74,13 @@ module DiasporaFederation
       # @param [Nokogiri::XML::Element] value magic envelope xml
       attr_writer :magic_envelope_xml
 
-      # Creates a Slap instance from the data within the given XML string
+      # Creates a {MagicEnvelope} instance from the data within the given XML string
       # containing an encrypted payload.
       #
       # @param [String] slap_xml encrypted Salmon xml
       # @param [OpenSSL::PKey::RSA] privkey recipient private_key for decryption
       #
-      # @return [EncryptedSlap] new Slap instance
+      # @return [MagicEnvelope] magic envelope instance with payload and sender
       #
       # @raise [ArgumentError] if any of the arguments is of the wrong type
       # @raise [MissingHeader] if the +encrypted_header+ element is missing in the XML
@@ -88,15 +89,13 @@ module DiasporaFederation
         raise ArgumentError unless slap_xml.instance_of?(String) && privkey.instance_of?(OpenSSL::PKey::RSA)
         doc = Nokogiri::XML::Document.parse(slap_xml)
 
-        EncryptedSlap.new.tap do |slap|
-          header_elem = doc.at_xpath("d:diaspora/d:encrypted_header", Slap::NS)
-          raise MissingHeader if header_elem.nil?
-          header = header_data(header_elem.content, privkey)
-          slap.author_id = header[:author_id]
-          slap.cipher_params = {key: Base64.decode64(header[:aes_key]), iv: Base64.decode64(header[:iv])}
+        header_elem = doc.at_xpath("d:diaspora/d:encrypted_header", Slap::NS)
+        raise MissingHeader if header_elem.nil?
+        header = header_data(header_elem.content, privkey)
+        sender = header[:author_id]
+        cipher_params = {key: Base64.decode64(header[:aes_key]), iv: Base64.decode64(header[:iv])}
 
-          slap.add_magic_env_from_doc(doc)
-        end
+        MagicEnvelope.unenvelop(magic_env_from_doc(doc), sender, cipher_params)
       end
 
       # Creates an encrypted Salmon Slap.
@@ -129,7 +128,7 @@ module DiasporaFederation
         raise ArgumentError unless pubkey.instance_of?(OpenSSL::PKey::RSA)
 
         Slap.build_xml do |xml|
-          xml.encrypted_header(encrypted_header(author_id, @cipher_params, pubkey))
+          xml.encrypted_header(encrypted_header(@author_id, @cipher_params, pubkey))
 
           xml.parent << @magic_envelope_xml
         end

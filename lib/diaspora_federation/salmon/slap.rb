@@ -21,42 +21,20 @@ module DiasporaFederation
     #   slap_xml = Slap.generate_xml(author_id, author_privkey, entity)
     #
     # @example Parsing a Salmon Slap
-    #   slap = Slap.from_xml(slap_xml)
-    #   author_pubkey = however_you_retrieve_the_authors_public_key(slap.author_id)
-    #
-    #   entity = slap.entity(author_pubkey)
+    #   entity = Slap.from_xml(slap_xml).payload
     #
     # @deprecated
     class Slap
-      # the author of the slap
-      # @overload author_id
-      #   @return [String] the author diaspora id
-      # @overload author_id=
-      #   @param [String] the author diaspora id
-      attr_accessor :author_id
-
       # Namespaces
       NS = {d: Salmon::XMLNS, me: MagicEnvelope::XMLNS}.freeze
 
-      # Returns new instance of the Entity that is contained within the XML of
-      # this Slap.
-      #
-      # The first time this is called, a public key has to be specified to verify
-      # the Magic Envelope signature. On repeated calls, the key may be omitted.
-      #
-      # @see MagicEnvelope.unenvelop
-      #
-      # @return [Entity] entity instance from the XML
-      # @raise [ArgumentError] if the public key is of the wrong type
-      def entity
-        MagicEnvelope.unenvelop(@magic_envelope, author_id, @cipher_params)
-      end
-
       # Parses an unencrypted Salmon XML string and returns a new instance of
-      # {Slap} populated with the XML data.
+      # {MagicEnvelope} with the XML data.
       #
       # @param [String] slap_xml Salmon XML
-      # @return [Slap] new Slap instance
+      #
+      # @return [MagicEnvelope] magic envelope instance with payload and sender
+      #
       # @raise [ArgumentError] if the argument is not a String
       # @raise [MissingAuthor] if the +author_id+ element is missing from the XML
       # @raise [MissingMagicEnvelope] if the +me:env+ element is missing from the XML
@@ -64,13 +42,11 @@ module DiasporaFederation
         raise ArgumentError unless slap_xml.instance_of?(String)
         doc = Nokogiri::XML::Document.parse(slap_xml)
 
-        Slap.new.tap do |slap|
-          author_elem = doc.at_xpath("d:diaspora/d:header/d:author_id", Slap::NS)
-          raise MissingAuthor if author_elem.nil? || author_elem.content.empty?
-          slap.author_id = author_elem.content
+        author_elem = doc.at_xpath("d:diaspora/d:header/d:author_id", Slap::NS)
+        raise MissingAuthor if author_elem.nil? || author_elem.content.empty?
+        sender = author_elem.content
 
-          slap.add_magic_env_from_doc(doc)
-        end
+        MagicEnvelope.unenvelop(magic_env_from_doc(doc), sender)
       end
 
       # Creates an unencrypted Salmon Slap and returns the XML string.
@@ -110,11 +86,12 @@ module DiasporaFederation
       # Parses the magic envelop from the document.
       #
       # @param [Nokogiri::XML::Document] doc Salmon XML Document
-      def add_magic_env_from_doc(doc)
-        @magic_envelope = doc.at_xpath("d:diaspora/me:env", Slap::NS).tap do |env|
+      def self.magic_env_from_doc(doc)
+        doc.at_xpath("d:diaspora/me:env", Slap::NS).tap do |env|
           raise MissingMagicEnvelope if env.nil?
         end
       end
+      private_class_method :magic_env_from_doc
     end
   end
 end

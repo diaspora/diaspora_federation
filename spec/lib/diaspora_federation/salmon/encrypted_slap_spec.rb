@@ -1,26 +1,26 @@
 module DiasporaFederation
   describe Salmon::EncryptedSlap do
-    let(:author_id) { "user_test@diaspora.example.tld" }
+    let(:sender) { "user_test@diaspora.example.tld" }
     let(:privkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
     let(:recipient_key) { OpenSSL::PKey::RSA.generate(1024) } # use small key for speedy specs
-    let(:entity) { Entities::TestEntity.new(test: "qwertzuiop") }
-    let(:slap_xml) { Salmon::EncryptedSlap.prepare(author_id, privkey, entity).generate_xml(recipient_key.public_key) }
+    let(:payload) { Entities::TestEntity.new(test: "qwertzuiop") }
+    let(:slap_xml) { Salmon::EncryptedSlap.prepare(sender, privkey, payload).generate_xml(recipient_key.public_key) }
 
     context "generate" do
       describe ".prepare" do
         context "sanity" do
-          it "raises an error when the author_id is the wrong type" do
-            [1234, true, :symbol, entity, privkey].each do |val|
+          it "raises an error when the sender is the wrong type" do
+            [1234, true, :symbol, payload, privkey].each do |val|
               expect {
-                Salmon::EncryptedSlap.prepare(val, privkey, entity)
+                Salmon::EncryptedSlap.prepare(val, privkey, payload)
               }.to raise_error ArgumentError
             end
           end
 
           it "raises an error when the privkey is the wrong type" do
-            ["asdf", 1234, true, :symbol, entity].each do |val|
+            ["asdf", 1234, true, :symbol, payload].each do |val|
               expect {
-                Salmon::EncryptedSlap.prepare(author_id, val, entity)
+                Salmon::EncryptedSlap.prepare(sender, val, payload)
               }.to raise_error ArgumentError
             end
           end
@@ -28,7 +28,7 @@ module DiasporaFederation
           it "raises an error when the entity is the wrong type" do
             ["asdf", 1234, true, :symbol, privkey].each do |val|
               expect {
-                Salmon::EncryptedSlap.prepare(author_id, privkey, val)
+                Salmon::EncryptedSlap.prepare(sender, privkey, val)
               }.to raise_error ArgumentError
             end
           end
@@ -41,14 +41,14 @@ module DiasporaFederation
         context "sanity" do
           it "accepts correct params" do
             expect {
-              Salmon::EncryptedSlap.prepare(author_id, privkey, entity).generate_xml(recipient_key.public_key)
+              Salmon::EncryptedSlap.prepare(sender, privkey, payload).generate_xml(recipient_key.public_key)
             }.not_to raise_error
           end
 
           it "raises an error when the params are the wrong type" do
-            ["asdf", 1234, true, :symbol, entity].each do |val|
+            ["asdf", 1234, true, :symbol, payload].each do |val|
               expect {
-                Salmon::EncryptedSlap.prepare(author_id, privkey, entity).generate_xml(val)
+                Salmon::EncryptedSlap.prepare(sender, privkey, payload).generate_xml(val)
               }.to raise_error ArgumentError
             end
           end
@@ -62,7 +62,7 @@ module DiasporaFederation
         end
 
         it "can generate xml for two people" do
-          slap = Salmon::EncryptedSlap.prepare(author_id, privkey, entity)
+          slap = Salmon::EncryptedSlap.prepare(sender, privkey, payload)
 
           doc1 = Nokogiri::XML::Document.parse(slap.generate_xml(recipient_key.public_key))
           enc_header1 = doc1.at_xpath("d:diaspora/d:encrypted_header", ns).content
@@ -130,7 +130,7 @@ module DiasporaFederation
             expect(header_doc.xpath("//iv")).to have(1).item
             expect(header_doc.xpath("//aes_key")).to have(1).item
             expect(header_doc.xpath("//author_id")).to have(1).item
-            expect(header_doc.at_xpath("//author_id").content).to eq(author_id)
+            expect(header_doc.at_xpath("//author_id").content).to eq(sender)
           end
         end
       end
@@ -139,13 +139,17 @@ module DiasporaFederation
     describe ".from_xml" do
       context "sanity" do
         it "accepts correct params" do
+          allow(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :fetch_public_key_by_diaspora_id, sender
+          ).and_return(privkey.public_key)
+
           expect {
             Salmon::EncryptedSlap.from_xml(slap_xml, recipient_key)
           }.not_to raise_error
         end
 
         it "raises an error when the params have a wrong type" do
-          [1234, false, :symbol, entity, privkey].each do |val|
+          [1234, false, :symbol, payload, privkey].each do |val|
             expect {
               Salmon::EncryptedSlap.from_xml(val, val)
             }.to raise_error ArgumentError
@@ -174,16 +178,12 @@ XML
           }.to raise_error Salmon::MissingMagicEnvelope
         end
       end
-    end
 
-    context "generated instance" do
-      subject { Salmon::EncryptedSlap.from_xml(slap_xml, recipient_key) }
-
-      it "should have cipher params set" do
-        expect(subject.instance_variable_get(:@cipher_params)).to_not be_nil
+      context "generated instance" do
+        it_behaves_like "a MagicEnvelope instance" do
+          subject { Salmon::EncryptedSlap.from_xml(slap_xml, recipient_key) }
+        end
       end
-
-      it_behaves_like "a Slap instance"
     end
   end
 end

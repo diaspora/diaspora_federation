@@ -7,10 +7,10 @@ module DiasporaFederation
       # @param [Boolean] legacy use old slap parser
       def self.receive_public(data, legacy=false)
         received_message = if legacy
-                             Salmon::Slap.from_xml(data).entity
+                             Salmon::Slap.from_xml(data)
                            else
                              magic_env_xml = Nokogiri::XML::Document.parse(data).root
-                             Salmon::MagicEnvelope.unenvelop(magic_env_xml).payload
+                             Salmon::MagicEnvelope.unenvelop(magic_env_xml)
                            end
         receive(received_message)
       end
@@ -24,16 +24,16 @@ module DiasporaFederation
       def self.receive_private(data, recipient_private_key, recipient_id, legacy=false)
         raise ArgumentError, "no recipient key provided" unless recipient_private_key.instance_of?(OpenSSL::PKey::RSA)
         received_message = if legacy
-                             Salmon::EncryptedSlap.from_xml(data, recipient_private_key).entity
+                             Salmon::EncryptedSlap.from_xml(data, recipient_private_key)
                            else
                              magic_env_xml = Salmon::EncryptedMagicEnvelope.decrypt(data, recipient_private_key)
-                             Salmon::MagicEnvelope.unenvelop(magic_env_xml).payload
+                             Salmon::MagicEnvelope.unenvelop(magic_env_xml)
                            end
         receive(received_message, recipient_id)
       end
 
       def self.receive(received_message, recipient_id=nil)
-        DiasporaFederation.callbacks.trigger(:receive_entity, received_message, recipient_id)
+        DiasporaFederation.callbacks.trigger(:receive_entity, received_message.payload, recipient_id)
       end
       private_class_method :receive
     end

@@ -167,23 +167,10 @@ module DiasporaFederation
         end
       end
 
-      it "returns the original entity" do
-        allow(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, sender
-        ).and_return(privkey.public_key)
-
-        magic_env = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), sender)
-        expect(magic_env.payload).to be_an_instance_of Entities::TestEntity
-        expect(magic_env.payload.test).to eq("asdf")
-      end
-
-      it "returns the original sender" do
-        allow(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, sender
-        ).and_return(privkey.public_key)
-
-        magic_env = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), sender)
-        expect(magic_env.sender).to eq(sender)
+      context "generated instance" do
+        it_behaves_like "a MagicEnvelope instance" do
+          subject { Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), sender) }
+        end
       end
 
       it "decrypts on the fly, when cipher params are present" do
@@ -201,23 +188,10 @@ module DiasporaFederation
       end
 
       context "use key_id from magic envelope" do
-        it "returns the original entity" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, sender
-          ).and_return(privkey.public_key)
-
-          magic_env = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey))
-          expect(magic_env.payload).to be_an_instance_of Entities::TestEntity
-          expect(magic_env.payload.test).to eq("asdf")
-        end
-
-        it "returns the original sender" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, sender
-          ).and_return(privkey.public_key)
-
-          magic_env = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey))
-          expect(magic_env.sender).to eq(sender)
+        context "generated instance" do
+          it_behaves_like "a MagicEnvelope instance" do
+            subject { Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey)) }
+          end
         end
 
         it "raises if the magic envelope has no key_id" do
