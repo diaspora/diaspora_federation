@@ -1,9 +1,9 @@
 module DiasporaFederation
   describe Salmon::MagicEnvelope do
-    let(:sender_id) { FactoryGirl.generate(:diaspora_id) }
+    let(:sender) { FactoryGirl.generate(:diaspora_id) }
     let(:privkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
     let(:payload) { Entities::TestEntity.new(test: "asdf") }
-    let(:envelope) { Salmon::MagicEnvelope.new(payload) }
+    let(:envelope) { Salmon::MagicEnvelope.new(payload, sender) }
 
     def sig_subj(env)
       data = Base64.urlsafe_decode64(env.at_xpath("me:data").content)
@@ -17,14 +17,14 @@ module DiasporaFederation
     context "sanity" do
       it "constructs an instance" do
         expect {
-          Salmon::MagicEnvelope.new(payload)
+          Salmon::MagicEnvelope.new(payload, sender)
         }.not_to raise_error
       end
 
       it "raises an error if the param types are wrong" do
         ["asdf", 1234, :test, false].each do |val|
           expect {
-            Salmon::MagicEnvelope.new(val)
+            Salmon::MagicEnvelope.new(val, val)
           }.to raise_error ArgumentError
         end
       end
@@ -35,18 +35,18 @@ module DiasporaFederation
         it "raises an error if the param types are wrong" do
           ["asdf", 1234, :test, false].each do |val|
             expect {
-              envelope.envelop(val, val)
+              envelope.envelop(val)
             }.to raise_error ArgumentError
           end
         end
       end
 
       it "should be an instance of Nokogiri::XML::Element" do
-        expect(envelope.envelop(privkey, sender_id)).to be_an_instance_of Nokogiri::XML::Element
+        expect(envelope.envelop(privkey)).to be_an_instance_of Nokogiri::XML::Element
       end
 
       it "returns a magic envelope of correct structure" do
-        env_xml = envelope.envelop(privkey, sender_id)
+        env_xml = envelope.envelop(privkey)
         expect(env_xml.name).to eq("env")
 
         control = %w(data encoding alg sig)
@@ -58,20 +58,20 @@ module DiasporaFederation
         expect(control).to be_empty
       end
 
-      it "adds the sender_id to the signature" do
-        key_id = envelope.envelop(privkey, sender_id).at_xpath("me:sig")["key_id"]
+      it "adds the sender to the signature" do
+        key_id = envelope.envelop(privkey).at_xpath("me:sig")["key_id"]
 
-        expect(Base64.urlsafe_decode64(key_id)).to eq(sender_id)
+        expect(Base64.urlsafe_decode64(key_id)).to eq(sender)
       end
 
       it "adds the data_type" do
-        data_type = envelope.envelop(privkey, sender_id).at_xpath("me:data")["type"]
+        data_type = envelope.envelop(privkey).at_xpath("me:data")["type"]
 
         expect(data_type).to eq("application/xml")
       end
 
       it "signs the payload correctly" do
-        env_xml = envelope.envelop(privkey, sender_id)
+        env_xml = envelope.envelop(privkey)
 
         subj = sig_subj(env_xml)
         sig = Base64.urlsafe_decode64(env_xml.at_xpath("me:sig").content)
@@ -87,9 +87,9 @@ module DiasporaFederation
       end
 
       it "actually encrypts the payload" do
-        plain_payload = envelope.instance_variable_get(:@payload)
+        plain_payload = envelope.send(:payload_data)
         params = envelope.encrypt!
-        encrypted_payload = envelope.instance_variable_get(:@payload)
+        encrypted_payload = envelope.send(:payload_data)
 
         cipher = OpenSSL::Cipher.new(Salmon::AES::CIPHER)
         cipher.encrypt
@@ -111,7 +111,7 @@ module DiasporaFederation
 
         it "works with sane input" do
           expect {
-            Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey, sender_id), privkey.public_key)
+            Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), privkey.public_key)
           }.not_to raise_error
         end
 
@@ -132,12 +132,12 @@ module DiasporaFederation
         it "verifies the signature" do
           other_key = OpenSSL::PKey::RSA.generate(512)
           expect {
-            Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey, sender_id), other_key.public_key)
+            Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), other_key.public_key)
           }.to raise_error Salmon::InvalidSignature
         end
 
         it "verifies the encoding" do
-          bad_env = envelope.envelop(privkey, sender_id)
+          bad_env = envelope.envelop(privkey)
           bad_env.at_xpath("me:encoding").content = "invalid_enc"
           re_sign(bad_env, privkey)
           expect {
@@ -146,7 +146,7 @@ module DiasporaFederation
         end
 
         it "verifies the algorithm" do
-          bad_env = envelope.envelop(privkey, sender_id)
+          bad_env = envelope.envelop(privkey)
           bad_env.at_xpath("me:alg").content = "invalid_alg"
           re_sign(bad_env, privkey)
           expect {
@@ -156,7 +156,7 @@ module DiasporaFederation
       end
 
       it "returns the original entity" do
-        entity = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey, sender_id), privkey.public_key)
+        entity = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), privkey.public_key)
         expect(entity).to be_an_instance_of Entities::TestEntity
         expect(entity.test).to eq("asdf")
       end
@@ -164,7 +164,7 @@ module DiasporaFederation
       it "decrypts on the fly, when cipher params are present" do
         params = envelope.encrypt!
 
-        env_xml = envelope.envelop(privkey, sender_id)
+        env_xml = envelope.envelop(privkey)
 
         entity = Salmon::MagicEnvelope.unenvelop(env_xml, privkey.public_key, params)
         expect(entity).to be_an_instance_of Entities::TestEntity
@@ -174,16 +174,16 @@ module DiasporaFederation
       context "use key_id from magic envelope" do
         it "returns the original entity" do
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, sender_id
+            :fetch_public_key_by_diaspora_id, sender
           ).and_return(privkey.public_key)
 
-          entity = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey, sender_id))
+          entity = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey))
           expect(entity).to be_an_instance_of Entities::TestEntity
           expect(entity.test).to eq("asdf")
         end
 
         it "raises if the magic envelope has no key_id" do
-          bad_env = envelope.envelop(privkey, sender_id)
+          bad_env = envelope.envelop(privkey)
 
           bad_env.at_xpath("me:sig").attributes["key_id"].remove
 
@@ -194,11 +194,11 @@ module DiasporaFederation
 
         it "raises if the sender key is not found" do
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, sender_id
+            :fetch_public_key_by_diaspora_id, sender
           ).and_return(nil)
 
           expect {
-            Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey, sender_id))
+            Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey))
           }.to raise_error Salmon::SenderKeyNotFound
         end
       end

@@ -3,7 +3,7 @@ module DiasporaFederation
     let(:sender_id) { FactoryGirl.generate(:diaspora_id) }
     let(:sender_key) { OpenSSL::PKey::RSA.generate(1024) }
     let(:entity) { FactoryGirl.build(:status_message_entity) }
-    let(:data) { Salmon::MagicEnvelope.new(entity).envelop(sender_key, sender_id).to_xml }
+    let(:data) { Salmon::MagicEnvelope.new(entity, sender_id).envelop(sender_key).to_xml }
 
     it "parses the entity if everything is fine" do
       expect(DiasporaFederation.callbacks).to receive(:trigger).with(

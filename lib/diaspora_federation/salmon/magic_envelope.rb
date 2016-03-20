@@ -36,31 +36,40 @@ module DiasporaFederation
       # XML namespace url
       XMLNS = "http://salmon-protocol.org/ns/magic-env".freeze
 
+      # the payload entity of the magic envelope
+      # @return [Entity] payload entity
+      attr_reader :payload
+
+      # the sender of the magic envelope
+      # @return [String] diaspora-ID of the sender
+      attr_reader :sender
+
       # Creates a new instance of MagicEnvelope.
       #
       # @param [Entity] payload Entity instance
+      # @param [String] sender diaspora-ID of the sender
       # @raise [ArgumentError] if either argument is not of the right type
-      def initialize(payload)
-        raise ArgumentError unless payload.is_a?(Entity)
+      def initialize(payload, sender)
+        raise ArgumentError unless payload.is_a?(Entity) && sender.is_a?(String)
 
-        @payload = XmlPayload.pack(payload).to_xml.strip
+        @payload = payload
+        @sender = sender
       end
 
       # Builds the XML structure for the magic envelope, inserts the {ENCODING}
       # encoded data and signs the envelope using {DIGEST}.
       #
       # @param [OpenSSL::PKey::RSA] privkey private key used for signing
-      # @param [String] sender_id diaspora-ID of the sender
       # @return [Nokogiri::XML::Element] XML root node
-      def envelop(privkey, sender_id)
-        raise ArgumentError unless privkey.instance_of?(OpenSSL::PKey::RSA) && sender_id.is_a?(String)
+      def envelop(privkey)
+        raise ArgumentError unless privkey.instance_of?(OpenSSL::PKey::RSA)
 
         build_xml {|xml|
           xml["me"].env("xmlns:me" => XMLNS) {
-            xml["me"].data(Base64.urlsafe_encode64(@payload), type: DATA_TYPE)
+            xml["me"].data(Base64.urlsafe_encode64(payload_data), type: DATA_TYPE)
             xml["me"].encoding(ENCODING)
             xml["me"].alg(ALGORITHM)
-            xml["me"].sig(Base64.urlsafe_encode64(sign(privkey)), key_id: Base64.urlsafe_encode64(sender_id))
+            xml["me"].sig(Base64.urlsafe_encode64(sign(privkey)), key_id: Base64.urlsafe_encode64(sender))
           }
         }
       end
@@ -77,7 +86,7 @@ module DiasporaFederation
       # @return [Hash] AES key and iv. E.g.: { key: "...", iv: "..." }
       def encrypt!
         AES.generate_key_and_iv.tap do |key|
-          @payload = AES.encrypt(@payload, key[:key], key[:iv])
+          @payload_data = AES.encrypt(payload_data, key[:key], key[:iv])
         end
       end
 
@@ -117,6 +126,12 @@ module DiasporaFederation
 
       private
 
+      # the payload data as string
+      # @return [String] payload data
+      def payload_data
+        @payload_data ||= XmlPayload.pack(@payload).to_xml.strip
+      end
+
       # Builds the xml root node of the magic envelope.
       #
       # @yield [xml] Invokes the block with the
@@ -133,7 +148,7 @@ module DiasporaFederation
       # @param [OpenSSL::PKey::RSA] privkey private key used for signing
       # @return [String] the signature
       def sign(privkey)
-        subject = MagicEnvelope.send(:sig_subject, [@payload, DATA_TYPE, ENCODING, ALGORITHM])
+        subject = MagicEnvelope.send(:sig_subject, [payload_data, DATA_TYPE, ENCODING, ALGORITHM])
         privkey.sign(DIGEST, subject)
       end
 

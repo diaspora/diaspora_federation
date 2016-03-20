@@ -1,7 +1,7 @@
 module DiasporaFederation
   describe Federation::Fetcher do
     let(:post) { FactoryGirl.build(:status_message_entity, public: true) }
-    let(:post_magic_env) { Salmon::MagicEnvelope.new(post).envelop(alice.private_key, post.author).to_xml }
+    let(:post_magic_env) { Salmon::MagicEnvelope.new(post, post.author).envelop(alice.private_key).to_xml }
 
     describe ".fetch_public" do
       it "fetches a public post" do

@@ -3,7 +3,7 @@ module DiasporaFederation
     let(:sender_id) { FactoryGirl.generate(:diaspora_id) }
     let(:sender_key) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
     let(:entity) { Entities::TestEntity.new(test: "abcd") }
-    let(:magic_env) { Salmon::MagicEnvelope.new(entity).envelop(sender_key, sender_id) }
+    let(:magic_env) { Salmon::MagicEnvelope.new(entity, sender_id).envelop(sender_key) }
 
     let(:privkey) { OpenSSL::PKey::RSA.generate(1024) } # use small key for speedy specs
 

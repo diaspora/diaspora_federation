@@ -30,7 +30,7 @@ module DiasporaFederation
 
     def create_magic_envelope(entity)
       privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, entity.author)
-      Salmon::MagicEnvelope.new(entity).envelop(privkey, entity.author) if privkey
+      Salmon::MagicEnvelope.new(entity, entity.author).envelop(privkey) if privkey
     end
   end
 end

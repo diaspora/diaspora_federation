@@ -4,7 +4,7 @@ module DiasporaFederation
     let(:sender_key) { OpenSSL::PKey::RSA.generate(1024) }
     let(:recipient_key) { OpenSSL::PKey::RSA.generate(1024) }
     let(:entity) { FactoryGirl.build(:status_message_entity, public: false) }
-    let(:magic_env) { Salmon::MagicEnvelope.new(entity).envelop(sender_key, sender_id) }
+    let(:magic_env) { Salmon::MagicEnvelope.new(entity, sender_id).envelop(sender_key) }
     let(:data) { Salmon::EncryptedMagicEnvelope.encrypt(magic_env, recipient_key.public_key) }
 
     it "parses the entity if everything is fine" do

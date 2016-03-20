@@ -12,7 +12,7 @@ module DiasporaFederation
           :fetch_public_key_by_diaspora_id, sender_id
         ).and_return(sender_key)
 
-        data = Salmon::MagicEnvelope.new(post).envelop(sender_key, sender_id).to_xml
+        data = Salmon::MagicEnvelope.new(post, sender_id).envelop(sender_key).to_xml
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :receive_entity, kind_of(Entities::StatusMessage), nil
@@ -54,7 +54,7 @@ module DiasporaFederation
           :fetch_public_key_by_diaspora_id, sender_id
         ).and_return(sender_key)
 
-        magic_env = Salmon::MagicEnvelope.new(post).envelop(sender_key, sender_id)
+        magic_env = Salmon::MagicEnvelope.new(post, sender_id).envelop(sender_key)
         data = Salmon::EncryptedMagicEnvelope.encrypt(magic_env, recipient_key.public_key)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
@@ -90,7 +90,7 @@ module DiasporaFederation
       end
 
       it "raises when recipient private key is not available" do
-        magic_env = Salmon::MagicEnvelope.new(post).envelop(sender_key, sender_id)
+        magic_env = Salmon::MagicEnvelope.new(post, sender_id).envelop(sender_key)
         data = Salmon::EncryptedMagicEnvelope.encrypt(magic_env, recipient_key.public_key)
 
         expect {
