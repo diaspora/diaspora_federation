@@ -6,8 +6,13 @@ module DiasporaFederation
       # @param [String] data message to receive
       # @param [Boolean] legacy use old slap parser
       def self.receive_public(data, legacy=false)
-        receiver = legacy ? PublicSlapReceiver.new(data) : MagicEnvelopeReceiver.new(data)
-        receive(receiver)
+        received_message = if legacy
+                             Salmon::Slap.from_xml(data).entity
+                           else
+                             magic_env_xml = Nokogiri::XML::Document.parse(data).root
+                             Salmon::MagicEnvelope.unenvelop(magic_env_xml)
+                           end
+        receive(received_message)
       end
 
       # receive a private message
@@ -18,25 +23,19 @@ module DiasporaFederation
       # @param [Boolean] legacy use old slap parser
       def self.receive_private(data, recipient_private_key, recipient_id, legacy=false)
         raise ArgumentError, "no recipient key provided" unless recipient_private_key.instance_of?(OpenSSL::PKey::RSA)
-        receiver = if legacy
-                     PrivateSlapReceiver.new(data, recipient_private_key)
-                   else
-                     EncryptedMagicEnvelopeReceiver.new(data, recipient_private_key)
-                   end
-        receive(receiver, recipient_id)
+        received_message = if legacy
+                             Salmon::EncryptedSlap.from_xml(data, recipient_private_key).entity
+                           else
+                             magic_env_xml = Salmon::EncryptedMagicEnvelope.decrypt(data, recipient_private_key)
+                             Salmon::MagicEnvelope.unenvelop(magic_env_xml)
+                           end
+        receive(received_message, recipient_id)
       end
 
-      def self.receive(receiver, recipient_id=nil)
-        entity = receiver.parse
-        DiasporaFederation.callbacks.trigger(:receive_entity, entity, recipient_id)
+      def self.receive(received_message, recipient_id=nil)
+        DiasporaFederation.callbacks.trigger(:receive_entity, received_message, recipient_id)
       end
       private_class_method :receive
     end
   end
 end
-
-require "diaspora_federation/federation/receiver/slap_receiver"
-require "diaspora_federation/federation/receiver/private_slap_receiver"
-require "diaspora_federation/federation/receiver/public_slap_receiver"
-require "diaspora_federation/federation/receiver/magic_envelope_receiver"
-require "diaspora_federation/federation/receiver/encrypted_magic_envelope_receiver"
