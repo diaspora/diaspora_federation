@@ -46,12 +46,10 @@ module DiasporaFederation
       #
       # @see MagicEnvelope.unenvelop
       #
-      # @param [OpenSSL::PKey::RSA] pubkey public key for validating the signature
       # @return [Entity] entity instance from the XML
       # @raise [ArgumentError] if the public key is of the wrong type
-      def entity(pubkey)
-        raise ArgumentError unless pubkey.instance_of?(OpenSSL::PKey::RSA)
-        MagicEnvelope.unenvelop(@magic_envelope, pubkey, @cipher_params)
+      def entity
+        MagicEnvelope.unenvelop(@magic_envelope, author_id, @cipher_params)
       end
 
       # Parses an unencrypted Salmon XML string and returns a new instance of

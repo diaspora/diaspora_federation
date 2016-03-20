@@ -99,7 +99,7 @@ module DiasporaFederation
       # @see AES#decrypt
       #
       # @param [Nokogiri::XML::Element] magic_env XML root node of a magic envelope
-      # @param [OpenSSL::PKey::RSA] rsa_pubkey public key to verify the signature
+      # @param [String] sender diaspora-ID of the sender or nil
       # @param [Hash] cipher_params hash containing the key and iv for
       #   AES-decrypting previously encrypted data. E.g.: { iv: "...", key: "..." }
       #
@@ -110,11 +110,11 @@ module DiasporaFederation
       # @raise [InvalidSignature] if the signature can't be verified
       # @raise [InvalidEncoding] if the data is wrongly encoded
       # @raise [InvalidAlgorithm] if the algorithm used doesn't match
-      def self.unenvelop(magic_env, rsa_pubkey=nil, cipher_params=nil)
+      def self.unenvelop(magic_env, sender=nil, cipher_params=nil)
         raise ArgumentError unless magic_env.instance_of?(Nokogiri::XML::Element)
 
         raise InvalidEnvelope unless envelope_valid?(magic_env)
-        raise InvalidSignature unless signature_valid?(magic_env, rsa_pubkey)
+        raise InvalidSignature unless signature_valid?(magic_env, sender)
 
         raise InvalidEncoding unless encoding_valid?(magic_env)
         raise InvalidAlgorithm unless algorithm_valid?(magic_env)
@@ -162,15 +162,18 @@ module DiasporaFederation
       private_class_method :envelope_valid?
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
-      # @param [OpenSSL::PKey::RSA] pubkey public key or nil
+      # @param [String] sender diaspora-ID of the sender or nil
       # @return [Boolean]
-      def self.signature_valid?(env, pubkey)
+      def self.signature_valid?(env, sender)
+        sender ||= sender(env)
+
         subject = sig_subject([Base64.urlsafe_decode64(env.at_xpath("me:data").content),
                                env.at_xpath("me:data")["type"],
                                env.at_xpath("me:encoding").content,
                                env.at_xpath("me:alg").content])
 
-        sender_key = pubkey || sender_key(env)
+        sender_key = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, sender)
+        raise SenderKeyNotFound unless sender_key
 
         sig = Base64.urlsafe_decode64(env.at_xpath("me:sig").content)
         sender_key.verify(DIGEST, sig, subject)
@@ -179,17 +182,13 @@ module DiasporaFederation
 
       # reads the +key_id+ from the magic envelope
       # @param [Nokogiri::XML::Element] env magic envelope XML
-      # @return [OpenSSL::PKey::RSA] sender public key
-      def self.sender_key(env)
+      # @return [String] diaspora-ID of the sender
+      def self.sender(env)
         key_id = env.at_xpath("me:sig")["key_id"]
         raise InvalidEnvelope, "no key_id" unless key_id # TODO: move to `envelope_valid?`
-        sender = Base64.urlsafe_decode64(key_id)
-
-        sender_key = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, sender)
-        raise SenderKeyNotFound unless sender_key
-        sender_key
+        Base64.urlsafe_decode64(key_id)
       end
-      private_class_method :sender_key
+      private_class_method :sender
 
       # constructs the signature subject.
       # the given array should consist of the data, data_type (mimetype), encoding

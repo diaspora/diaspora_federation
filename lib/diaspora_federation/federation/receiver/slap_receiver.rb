@@ -14,10 +14,7 @@ module DiasporaFederation
 
         # Parse the salmon xml
         def parse
-          sender_id = slap.author_id
-          public_key = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, sender_id)
-          raise Salmon::SenderKeyNotFound if public_key.nil?
-          slap.entity(public_key)
+          slap.entity
         end
       end
     end
