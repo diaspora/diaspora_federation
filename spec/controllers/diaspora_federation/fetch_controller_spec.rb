@@ -20,13 +20,15 @@ module DiasporaFederation
           :fetch_public_key_by_diaspora_id, alice.diaspora_id
         ).and_return(alice.public_key)
 
-        magic_env = Nokogiri::XML::Document.parse(response.body).root
-        entity = Salmon::MagicEnvelope.unenvelop(magic_env)
+        magic_env_xml = Nokogiri::XML::Document.parse(response.body).root
+        magic_env = Salmon::MagicEnvelope.unenvelop(magic_env_xml)
+        entity = magic_env.payload
 
         expect(entity).to be_a(Entities::StatusMessage)
         expect(entity.guid).to eq(guid)
         expect(entity.author).to eq(alice.diaspora_id)
         expect(entity.raw_message).to eq(post.raw_message)
+        expect(magic_env.sender).to eq(alice.diaspora_id)
       end
 
       it "works with type 'post'" do
@@ -43,13 +45,15 @@ module DiasporaFederation
           :fetch_public_key_by_diaspora_id, alice.diaspora_id
         ).and_return(alice.public_key)
 
-        magic_env = Nokogiri::XML::Document.parse(response.body).root
-        entity = Salmon::MagicEnvelope.unenvelop(magic_env)
+        magic_env_xml = Nokogiri::XML::Document.parse(response.body).root
+        magic_env = Salmon::MagicEnvelope.unenvelop(magic_env_xml)
+        entity = magic_env.payload
 
         expect(entity).to be_a(Entities::StatusMessage)
         expect(entity.guid).to eq(guid)
         expect(entity.author).to eq(alice.diaspora_id)
         expect(entity.raw_message).to eq(post.raw_message)
+        expect(magic_env.sender).to eq(alice.diaspora_id)
       end
 
       it "redirects when the entity is from another pod" do

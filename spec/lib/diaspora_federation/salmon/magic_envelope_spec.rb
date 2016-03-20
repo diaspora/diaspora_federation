@@ -172,9 +172,18 @@ module DiasporaFederation
           :fetch_public_key_by_diaspora_id, sender
         ).and_return(privkey.public_key)
 
-        entity = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), sender)
-        expect(entity).to be_an_instance_of Entities::TestEntity
-        expect(entity.test).to eq("asdf")
+        magic_env = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), sender)
+        expect(magic_env.payload).to be_an_instance_of Entities::TestEntity
+        expect(magic_env.payload.test).to eq("asdf")
+      end
+
+      it "returns the original sender" do
+        allow(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_public_key_by_diaspora_id, sender
+        ).and_return(privkey.public_key)
+
+        magic_env = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), sender)
+        expect(magic_env.sender).to eq(sender)
       end
 
       it "decrypts on the fly, when cipher params are present" do
@@ -182,13 +191,13 @@ module DiasporaFederation
           :fetch_public_key_by_diaspora_id, sender
         ).and_return(privkey.public_key)
 
-        params = envelope.encrypt!
+        env = Salmon::MagicEnvelope.new(payload)
+        params = env.encrypt!
+        env_xml = env.envelop(privkey)
 
-        env_xml = envelope.envelop(privkey)
-
-        entity = Salmon::MagicEnvelope.unenvelop(env_xml, sender, params)
-        expect(entity).to be_an_instance_of Entities::TestEntity
-        expect(entity.test).to eq("asdf")
+        magic_env = Salmon::MagicEnvelope.unenvelop(env_xml, sender, params)
+        expect(magic_env.payload).to be_an_instance_of Entities::TestEntity
+        expect(magic_env.payload.test).to eq("asdf")
       end
 
       context "use key_id from magic envelope" do
@@ -197,9 +206,18 @@ module DiasporaFederation
             :fetch_public_key_by_diaspora_id, sender
           ).and_return(privkey.public_key)
 
-          entity = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey))
-          expect(entity).to be_an_instance_of Entities::TestEntity
-          expect(entity.test).to eq("asdf")
+          magic_env = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey))
+          expect(magic_env.payload).to be_an_instance_of Entities::TestEntity
+          expect(magic_env.payload.test).to eq("asdf")
+        end
+
+        it "returns the original sender" do
+          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :fetch_public_key_by_diaspora_id, sender
+          ).and_return(privkey.public_key)
+
+          magic_env = Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey))
+          expect(magic_env.sender).to eq(sender)
         end
 
         it "raises if the magic envelope has no key_id" do

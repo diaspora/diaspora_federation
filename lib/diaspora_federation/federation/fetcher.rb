@@ -11,9 +11,9 @@ module DiasporaFederation
         response = HttpClient.get(url)
         raise "Failed to fetch #{url}: #{response.status}" unless response.success?
 
-        magic_env = Nokogiri::XML::Document.parse(response.body).root
-        entity = Salmon::MagicEnvelope.unenvelop(magic_env)
-        DiasporaFederation.callbacks.trigger(:receive_entity, entity)
+        magic_env_xml = Nokogiri::XML::Document.parse(response.body).root
+        magic_env = Salmon::MagicEnvelope.unenvelop(magic_env_xml)
+        DiasporaFederation.callbacks.trigger(:receive_entity, magic_env.payload)
       rescue => e
         raise NotFetchable, "Failed to fetch #{entity_type}:#{guid} from #{author}: #{e.class}: #{e.message}"
       end

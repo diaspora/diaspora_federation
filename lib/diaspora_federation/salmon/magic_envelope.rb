@@ -114,6 +114,8 @@ module DiasporaFederation
         raise ArgumentError unless magic_env.instance_of?(Nokogiri::XML::Element)
 
         raise InvalidEnvelope unless envelope_valid?(magic_env)
+
+        sender ||= sender(magic_env)
         raise InvalidSignature unless signature_valid?(magic_env, sender)
 
         raise InvalidEncoding unless encoding_valid?(magic_env)
@@ -121,7 +123,7 @@ module DiasporaFederation
 
         data = read_and_decrypt_data(magic_env, cipher_params)
 
-        XmlPayload.unpack(Nokogiri::XML::Document.parse(data).root)
+        new(XmlPayload.unpack(Nokogiri::XML::Document.parse(data).root), sender)
       end
 
       private
@@ -169,8 +171,6 @@ module DiasporaFederation
       # @param [String] sender diaspora-ID of the sender or nil
       # @return [Boolean]
       def self.signature_valid?(env, sender)
-        sender ||= sender(env)
-
         subject = sig_subject([Base64.urlsafe_decode64(env.at_xpath("me:data").content),
                                env.at_xpath("me:data")["type"],
                                env.at_xpath("me:encoding").content,

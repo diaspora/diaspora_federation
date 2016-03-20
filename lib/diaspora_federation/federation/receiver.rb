@@ -10,7 +10,7 @@ module DiasporaFederation
                              Salmon::Slap.from_xml(data).entity
                            else
                              magic_env_xml = Nokogiri::XML::Document.parse(data).root
-                             Salmon::MagicEnvelope.unenvelop(magic_env_xml)
+                             Salmon::MagicEnvelope.unenvelop(magic_env_xml).payload
                            end
         receive(received_message)
       end
@@ -27,7 +27,7 @@ module DiasporaFederation
                              Salmon::EncryptedSlap.from_xml(data, recipient_private_key).entity
                            else
                              magic_env_xml = Salmon::EncryptedMagicEnvelope.decrypt(data, recipient_private_key)
-                             Salmon::MagicEnvelope.unenvelop(magic_env_xml)
+                             Salmon::MagicEnvelope.unenvelop(magic_env_xml).payload
                            end
         receive(received_message, recipient_id)
       end
