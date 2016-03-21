@@ -14,14 +14,18 @@ module DiasporaFederation
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, post.author
         ).and_return(alice.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :receive_entity, kind_of(Entities::StatusMessage)
-        ) do |_, entity|
-          expect(entity.guid).to eq(post.guid)
-          expect(entity.author).to eq(post.author)
-          expect(entity.raw_message).to eq(post.raw_message)
-          expect(entity.public).to eq("true")
+
+        receiver = double
+        expect(Federation::Receiver::Public).to receive(:new).with(
+          kind_of(Salmon::MagicEnvelope)
+        ) do |magic_env|
+          expect(magic_env.payload.guid).to eq(post.guid)
+          expect(magic_env.payload.author).to eq(post.author)
+          expect(magic_env.payload.raw_message).to eq(post.raw_message)
+          expect(magic_env.payload.public).to eq("true")
+          receiver
         end
+        expect(receiver).to receive(:receive)
 
         Federation::Fetcher.fetch_public(post.author, :post, post.guid)
       end
@@ -38,9 +42,12 @@ module DiasporaFederation
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, post.author
         ).and_return(alice.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :receive_entity, kind_of(Entities::StatusMessage)
-        )
+
+        receiver = double
+        expect(Federation::Receiver::Public).to receive(:new).with(
+          kind_of(Salmon::MagicEnvelope)
+        ).and_return(receiver)
+        expect(receiver).to receive(:receive)
 
         Federation::Fetcher.fetch_public(post.author, :post, post.guid)
       end
