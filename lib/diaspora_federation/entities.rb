@@ -15,20 +15,27 @@ require "diaspora_federation/entities/relayable"
 # types
 require "diaspora_federation/entities/profile"
 require "diaspora_federation/entities/person"
-require "diaspora_federation/entities/location"
-require "diaspora_federation/entities/photo"
-require "diaspora_federation/entities/poll_answer"
-require "diaspora_federation/entities/poll"
-require "diaspora_federation/entities/status_message"
-require "diaspora_federation/entities/request"
+require "diaspora_federation/entities/contact"
+require "diaspora_federation/entities/account_deletion"
+
 require "diaspora_federation/entities/participation"
 require "diaspora_federation/entities/like"
 require "diaspora_federation/entities/comment"
-require "diaspora_federation/entities/account_deletion"
+require "diaspora_federation/entities/poll_answer"
+require "diaspora_federation/entities/poll"
+require "diaspora_federation/entities/poll_participation"
+
+require "diaspora_federation/entities/location"
+require "diaspora_federation/entities/photo"
+require "diaspora_federation/entities/status_message"
+require "diaspora_federation/entities/reshare"
+
 require "diaspora_federation/entities/message"
 require "diaspora_federation/entities/conversation"
-require "diaspora_federation/entities/relayable_retraction"
-require "diaspora_federation/entities/reshare"
+
 require "diaspora_federation/entities/retraction"
+
+# deprecated
+require "diaspora_federation/entities/request"
 require "diaspora_federation/entities/signed_retraction"
-require "diaspora_federation/entities/poll_participation"
+require "diaspora_federation/entities/relayable_retraction"

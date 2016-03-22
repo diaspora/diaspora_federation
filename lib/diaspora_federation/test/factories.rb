@@ -109,6 +109,13 @@ module DiasporaFederation
             recipient { generate(:diaspora_id) }
           end
 
+          factory :contact_entity, class: DiasporaFederation::Entities::Contact do
+            author { generate(:diaspora_id) }
+            recipient { generate(:diaspora_id) }
+            following true
+            sharing true
+          end
+
           factory :comment_entity, class: DiasporaFederation::Entities::Comment, parent: :relayable_entity do
             author { generate(:diaspora_id) }
             guid
