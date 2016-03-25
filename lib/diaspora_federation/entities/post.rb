@@ -22,6 +22,8 @@ module DiasporaFederation
       # @!attribute [r] provider_display_name
       #   a string that describes a means by which a user has posted the post
       #   @return [String] provider display name
+      #
+      # @param [Entity] entity the entity in which it is included
       def self.included(entity)
         entity.class_eval do
           property :author, xml_name: :diaspora_handle

@@ -46,41 +46,65 @@ module DiasporaFederation
     # {Callbacks} instance with defined callbacks
     # @see Callbacks#on
     # @see Callbacks#trigger
+    # @return [Callbacks] callbacks
     attr_reader :callbacks
 
     # the pod url
     #
-    # @example with uri
-    #   config.server_uri = URI("http://localhost:3000/")
-    # @example with configured pod_uri
-    #   config.server_uri = AppConfig.pod_uri
+    # @overload server_uri
+    #   @return [URI] the server uri
+    # @overload server_uri=
+    #   @example with uri
+    #     config.server_uri = URI("http://localhost:3000/")
+    #   @example with configured pod_uri
+    #     config.server_uri = AppConfig.pod_uri
+    #   @param [URI] value the server uri
     attr_accessor :server_uri
 
     # Set the bundle of certificate authorities (CA) certificates
     #
-    # @example
-    #   config.certificate_authorities = AppConfig.environment.certificate_authorities.get
+    # @overload certificate_authorities
+    #   @return [String] path to certificate authorities
+    # @overload certificate_authorities=
+    #   @example
+    #     config.certificate_authorities = AppConfig.environment.certificate_authorities.get
+    #   @param [String] value path to certificate authorities
     attr_accessor :certificate_authorities
 
     # Maximum number of parallel HTTP requests made to other pods (default: +20+)
     #
-    # @example
-    #   config.http_concurrency = AppConfig.settings.typhoeus_concurrency.to_i
+    # @overload http_concurrency
+    #   @return [Integer] max number of parallel requests
+    # @overload http_concurrency=
+    #   @example
+    #     config.http_concurrency = AppConfig.settings.typhoeus_concurrency.to_i
+    #   @param [Integer] value max number of parallel requests
     attr_accessor :http_concurrency
 
     # timeout in seconds for http-requests (default: +30+)
+    #
+    # @overload http_timeout
+    #   @return [Integer] http timeout in seconds
+    # @overload http_timeout=
+    #   @param [Integer] value http timeout in seconds
     attr_accessor :http_timeout
 
     # Turn on extra verbose output when sending stuff. (default: +false+)
     #
-    # @example
-    #   config.http_verbose = AppConfig.settings.typhoeus_verbose?
+    # @overload http_verbose
+    #   @return [Boolean] verbose http output
+    # @overload http_verbose=
+    #   @example
+    #     config.http_verbose = AppConfig.settings.typhoeus_verbose?
+    #   @param [Boolean] value verbose http output
     attr_accessor :http_verbose
 
     # max redirects to follow
+    # @return [Integer] max redirects
     attr_reader :http_redirect_limit
 
     # user agent used for http-requests
+    # @return [String] user agent
     attr_reader :http_user_agent
 
     # configure the federation library
