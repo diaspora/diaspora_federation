@@ -97,7 +97,8 @@ DiasporaFederation.configure do |config|
       true
     end
 
-    on :receive_entity do
+    on :receive_entity do |entity|
+      puts "received entity: #{entity.class}: #{entity.to_h}"
     end
 
     on :fetch_public_entity do |entity_type, guid|
