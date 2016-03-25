@@ -1,17 +1,17 @@
 PATH
   remote: .
   specs:
-    diaspora_federation (0.0.12)
+    diaspora_federation (0.0.13)
       faraday (~> 0.9.0)
       faraday_middleware (~> 0.10.0)
       nokogiri (~> 1.6, >= 1.6.7.2)
       typhoeus (~> 1.0)
       valid (~> 1.0)
-    diaspora_federation-rails (0.0.12)
-      diaspora_federation (= 0.0.12)
+    diaspora_federation-rails (0.0.13)
+      diaspora_federation (= 0.0.13)
       rails (~> 4.2)
-    diaspora_federation-test (0.0.12)
-      diaspora_federation (= 0.0.12)
+    diaspora_federation-test (0.0.13)
+      diaspora_federation (= 0.0.13)
       factory_girl (~> 4.5, >= 4.5.0)
 
 GEM
