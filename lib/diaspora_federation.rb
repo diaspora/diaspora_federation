@@ -1,3 +1,5 @@
+require "diaspora_federation/version"
+
 require "diaspora_federation/logging"
 
 require "diaspora_federation/callbacks"
