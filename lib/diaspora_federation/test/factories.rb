@@ -195,6 +195,13 @@ module DiasporaFederation
             guid
             poll_answer_guid { generate(:guid) }
           end
+
+          factory :related_entity, class:  DiasporaFederation::Entities::RelatedEntity do
+            author { generate(:diaspora_id) }
+            local true
+            public false
+            parent nil
+          end
         end
       end
     end

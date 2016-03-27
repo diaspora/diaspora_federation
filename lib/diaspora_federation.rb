@@ -267,7 +267,7 @@ module DiasporaFederation
     end
   end
 
-  # raised, if the engine is not configured correctly
+  # Raised, if the engine is not configured correctly
   class ConfigurationError < RuntimeError
   end
 end

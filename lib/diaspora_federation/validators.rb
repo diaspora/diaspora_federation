@@ -34,6 +34,8 @@ module DiasporaFederation
   end
 end
 
+require "diaspora_federation/validators/related_entity_validator"
+
 # abstract types
 require "diaspora_federation/validators/relayable_validator"
 

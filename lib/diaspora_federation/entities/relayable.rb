@@ -201,15 +201,15 @@ module DiasporaFederation
         end
       end
 
-      # Exception raised when creating the author_signature failes, because the private key was not found
+      # Raised, if creating the author_signature failes, because the private key was not found
       class AuthorPrivateKeyNotFound < RuntimeError
       end
 
-      # Exception raised when verify_signatures fails to verify signatures (no public key found)
+      # Raised, if verify_signatures fails to verify signatures (no public key found)
       class PublicKeyNotFound < RuntimeError
       end
 
-      # Exception raised when verify_signatures fails to verify signatures (signatures are wrong)
+      # Raised, if verify_signatures fails to verify signatures (signatures are wrong)
       class SignatureVerificationFailed < RuntimeError
       end
     end

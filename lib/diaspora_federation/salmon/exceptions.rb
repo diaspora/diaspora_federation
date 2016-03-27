@@ -15,7 +15,7 @@ module DiasporaFederation
     class MissingHeader < RuntimeError
     end
 
-    # Raised if the decrypted header has an unexpected XML structure
+    # Raised, if the decrypted header has an unexpected XML structure
     # @deprecated
     class InvalidHeader < RuntimeError
     end
