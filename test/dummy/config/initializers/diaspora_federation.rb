@@ -90,6 +90,16 @@ DiasporaFederation.configure do |config|
       Entity.where(entity_type: entity_type, guid: guid).joins(:author).pluck(:diaspora_id).first
     end
 
+    on :fetch_related_entity do |entity_type, guid|
+      entity = Entity.find_by(entity_type: entity_type, guid: guid)
+      if entity
+        DiasporaFederation::Entities::RelatedEntity.new(
+          author: entity.author.diaspora_id,
+          local:  !entity.author.serialized_private_key.nil?
+        )
+      end
+    end
+
     on :queue_public_receive do
     end
 

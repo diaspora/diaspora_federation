@@ -29,6 +29,7 @@ module DiasporaFederation
     fetch_author_public_key_by_entity_guid
     entity_author_is_local?
     fetch_entity_author_id_by_guid
+    fetch_related_entity
     queue_public_receive
     queue_private_receive
     receive_entity
@@ -180,6 +181,12 @@ module DiasporaFederation
     #   @param [String] entity_type (Post, Comment, Like, etc)
     #   @param [String] guid of the entity
     #   @return [String] Diaspora ID of the person
+    #
+    # fetch_related_entity
+    #   Fetches a related entity by a given guid
+    #   @param [String] entity_type (Post, Comment, Like, etc)
+    #   @param [String] guid of the entity
+    #   @return [DiasporaFederation::Entities::RelatedEntity] related entity
     #
     # queue_public_receive
     #   Queue a public salmon xml to process in background
