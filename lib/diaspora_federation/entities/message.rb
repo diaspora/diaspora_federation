@@ -8,6 +8,9 @@ module DiasporaFederation
       # @deprecated
       LEGACY_SIGNATURE_ORDER = %i(guid parent_guid text created_at author conversation_guid).freeze
 
+      # The {Message} parent is a {Conversation}
+      PARENT_TYPE = "Conversation".freeze
+
       include Relayable
 
       # @!attribute [r] text
@@ -29,7 +32,7 @@ module DiasporaFederation
       # The {Message} parent is a {Conversation}
       # @return [String] parent type
       def parent_type
-        "Conversation"
+        PARENT_TYPE
       end
     end
   end

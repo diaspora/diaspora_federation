@@ -1,13 +1,15 @@
 module DiasporaFederation
   describe Entities::Participation do
     let(:parent) { FactoryGirl.create(:post, author: bob) }
+    let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:data) {
       FactoryGirl.build(
         :participation_entity,
         author:      alice.diaspora_id,
         parent_guid: parent.guid,
-        parent_type: parent.entity_type
-      ).send(:xml_elements)
+        parent_type: parent.entity_type,
+        parent:      parent_entity
+      ).send(:xml_elements).merge(parent: parent_entity)
     }
 
     let(:xml) {
@@ -23,7 +25,7 @@ module DiasporaFederation
 XML
     }
 
-    it_behaves_like "an Entity subclass"
+    it_behaves_like "an Entity subclass", [:parent]
 
     it_behaves_like "an XML Entity"
 

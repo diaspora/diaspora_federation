@@ -33,6 +33,14 @@ shared_examples "a relayable validator" do
       let(:property) { :parent_guid }
     end
   end
+
+  describe "#parent" do
+    it_behaves_like "a property with a value validation/restriction" do
+      let(:property) { :parent }
+      let(:wrong_values) { [nil] }
+      let(:correct_values) { [FactoryGirl.build(:related_entity)] }
+    end
+  end
 end
 
 shared_examples "a property with a value validation/restriction" do

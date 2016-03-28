@@ -87,6 +87,7 @@ module DiasporaFederation
 
           factory :relayable_entity, class: DiasporaFederation::Entities::Relayable do
             parent_guid { generate(:guid) }
+            parent { FactoryGirl.build(:related_entity) }
           end
 
           factory :participation_entity,

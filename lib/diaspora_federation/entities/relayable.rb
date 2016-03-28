@@ -10,6 +10,10 @@ module DiasporaFederation
       # digest instance used for signing
       DIGEST = OpenSSL::Digest::SHA256.new
 
+      # parent entity
+      # @return [RelatedEntity] parent entity
+      attr_reader :parent
+
       # order from the parsed xml for signature
       # @return [Array] order from xml
       attr_reader :xml_order
@@ -68,6 +72,7 @@ module DiasporaFederation
       # @param [Hash] additional_xml_elements additional xml elements
       # @see DiasporaFederation::Entity#initialize
       def initialize(data, xml_order=nil, additional_xml_elements={})
+        @parent = data[:parent] if data
         @xml_order = xml_order
         @additional_xml_elements = additional_xml_elements
 
@@ -197,7 +202,17 @@ module DiasporaFederation
             end
           end
 
+          add_parent(entity_data)
           new(entity_data, xml_order, additional_xml_elements).tap(&:verify_signatures)
+        end
+
+        def add_parent(data)
+          data[:parent] = fetch_parent(data)
+        end
+
+        def fetch_parent(data)
+          type = data[:parent_type] || self::PARENT_TYPE
+          DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, data[:parent_guid])
         end
       end
 

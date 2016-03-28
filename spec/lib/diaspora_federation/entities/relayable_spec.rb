@@ -8,6 +8,7 @@ module DiasporaFederation
     let(:author) { FactoryGirl.generate(:diaspora_id) }
     let(:property) { "hello" }
     let(:new_property) { "some text" }
+    let(:parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:hash) { {guid: guid, author: author, parent_guid: parent_guid, property: property} }
 
     let(:legacy_signature_data) { "#{guid};#{author};#{property};#{parent_guid}" }
@@ -15,12 +16,14 @@ module DiasporaFederation
     class SomeRelayable < Entity
       LEGACY_SIGNATURE_ORDER = %i(guid author property parent_guid).freeze
 
+      PARENT_TYPE = "Parent".freeze
+
       include Entities::Relayable
 
       property :property
 
       def parent_type
-        "Parent"
+        PARENT_TYPE
       end
     end
 
@@ -300,6 +303,10 @@ XML
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
             :entity_author_is_local?, "Parent", parent_guid
           ).and_return(false)
+
+          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :fetch_related_entity, "Parent", parent_guid
+          ).and_return(parent)
         end
 
         let(:new_signature_data) { "#{author};#{guid};#{parent_guid};#{new_property};#{property}" }
@@ -358,6 +365,10 @@ XML
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
             :fetch_public_key_by_diaspora_id, author
           ).and_return(author_pkey.public_key)
+
+          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+            :fetch_related_entity, "Parent", parent_guid
+          ).and_return(parent)
 
           expect {
             SomeRelayable.from_xml(xml)

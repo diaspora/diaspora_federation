@@ -9,6 +9,7 @@ module DiasporaFederation
           rule :author, %i(not_empty diaspora_id)
           rule :guid, :guid
           rule :parent_guid, :guid
+          rule :parent, :not_nil
         end
       end
     end

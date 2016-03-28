@@ -8,6 +8,9 @@ module DiasporaFederation
       # @deprecated
       LEGACY_SIGNATURE_ORDER = %i(guid parent_guid text author).freeze
 
+      # The {Comment} parent is a {Post}
+      PARENT_TYPE = "Post".freeze
+
       include Relayable
 
       # @!attribute [r] text
@@ -22,7 +25,7 @@ module DiasporaFederation
       # The {Comment} parent is a Post
       # @return [String] parent type
       def parent_type
-        "Post"
+        PARENT_TYPE
       end
     end
   end

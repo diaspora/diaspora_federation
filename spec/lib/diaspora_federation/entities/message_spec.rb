@@ -1,8 +1,10 @@
 module DiasporaFederation
   describe Entities::Message do
     let(:parent) { FactoryGirl.create(:conversation, author: bob) }
+    let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid).send(:xml_elements)
+      FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
+                 .send(:xml_elements).merge(parent: parent_entity)
     }
 
     let(:xml) {
@@ -20,7 +22,7 @@ module DiasporaFederation
 XML
     }
 
-    it_behaves_like "an Entity subclass"
+    it_behaves_like "an Entity subclass", [:parent]
 
     it_behaves_like "an XML Entity"
 

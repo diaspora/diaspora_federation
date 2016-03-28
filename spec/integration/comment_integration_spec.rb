@@ -60,8 +60,11 @@ KEY
     let(:new_data) { "foobar" }
     let(:text) { "this is a very informative comment" }
 
+    let(:parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:comment) {
-      Entities::Comment.new(author: author, guid: guid, parent_guid: parent_guid, text: text, new_data: new_data)
+      Entities::Comment.new(
+        author: author, guid: guid, parent_guid: parent_guid, text: text, parent: parent, new_data: new_data
+      )
     }
 
     let(:legacy_comment_xml_alice) {
@@ -204,6 +207,9 @@ XML
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_author_private_key_by_entity_guid, "Post", parent_guid
         ).and_return(parent_key)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_related_entity, "Post", parent_guid
+        ).and_return(parent)
 
         xml = Nokogiri::XML::Document.parse(new_data_comment_xml_alice).root
         Salmon::XmlPayload.unpack(xml).to_xml
@@ -221,6 +227,9 @@ XML
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_author_private_key_by_entity_guid, "Post", parent_guid
         ).and_return(parent_key)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_related_entity, "Post", parent_guid
+        ).and_return(parent)
       end
 
       it "relays legacy signatures and xml" do
@@ -253,6 +262,9 @@ XML
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_author_public_key_by_entity_guid, "Post", parent_guid
         ).and_return(parent_key.public_key)
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_related_entity, "Post", parent_guid
+        ).and_return(parent)
       end
 
       it "parses legacy signatures and xml" do

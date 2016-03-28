@@ -1,10 +1,10 @@
-shared_examples "an Entity subclass" do
+shared_examples "an Entity subclass" do |ignored_props=[]|
   it "should be an Entity" do
     expect(described_class).to be < DiasporaFederation::Entity
   end
 
   it "has its properties set" do
-    expect(described_class.class_props.keys).to include(*data.keys)
+    expect(described_class.class_props.keys).to include(*(data.keys - ignored_props))
   end
 
   context "behaviour" do
@@ -26,7 +26,9 @@ shared_examples "an Entity subclass" do
 
     describe "#to_h" do
       it "should resemble the input data" do
-        expect(instance.to_h).to eq(data)
+        hash = instance.to_h
+        ignored_props.each {|key| data.delete(key) }
+        expect(hash).to eq(data)
       end
     end
   end

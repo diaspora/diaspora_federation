@@ -8,6 +8,9 @@ module DiasporaFederation
       # @deprecated
       LEGACY_SIGNATURE_ORDER = %i(guid parent_guid author poll_answer_guid).freeze
 
+      # The {PollParticipation} parent is a {Poll}
+      PARENT_TYPE = "Poll".freeze
+
       include Relayable
 
       # @!attribute [r] poll_answer_guid
@@ -19,7 +22,7 @@ module DiasporaFederation
       # The {PollParticipation} parent is a {Poll}
       # @return [String] parent type
       def parent_type
-        "Poll"
+        PARENT_TYPE
       end
     end
   end
