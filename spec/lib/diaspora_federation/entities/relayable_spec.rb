@@ -8,8 +8,9 @@ module DiasporaFederation
     let(:author) { FactoryGirl.generate(:diaspora_id) }
     let(:property) { "hello" }
     let(:new_property) { "some text" }
-    let(:parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
-    let(:hash) { {guid: guid, author: author, parent_guid: parent_guid, property: property} }
+    let(:local_parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
+    let(:remote_parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id, local: false) }
+    let(:hash) { {guid: guid, author: author, parent_guid: parent_guid, parent: local_parent, property: property} }
 
     let(:legacy_signature_data) { "#{guid};#{author};#{property};#{parent_guid}" }
 
@@ -39,18 +40,14 @@ module DiasporaFederation
       it "doesn't raise anything if correct signatures with legacy-string were passed" do
         hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
         hash[:parent_author_signature] = sign_with_key(parent_pkey, legacy_signature_data)
+        hash[:parent] = remote_parent
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, author
         ).and_return(author_pkey.public_key)
-
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_public_key_by_entity_guid, "Parent", parent_guid
+          :fetch_public_key_by_diaspora_id, remote_parent.author
         ).and_return(parent_pkey.public_key)
-
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Parent", parent_guid
-        ).and_return(false)
 
         expect { SomeRelayable.new(hash).verify_signatures }.not_to raise_error
       end
@@ -79,18 +76,14 @@ module DiasporaFederation
 
       it "raises when no public key for parent author was fetched" do
         hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
+        hash[:parent] = remote_parent
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, author
         ).and_return(author_pkey.public_key)
-
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_public_key_by_entity_guid, "Parent", parent_guid
+          :fetch_public_key_by_diaspora_id, remote_parent.author
         ).and_return(nil)
-
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Parent", parent_guid
-        ).and_return(false)
 
         expect {
           SomeRelayable.new(hash).verify_signatures
@@ -100,18 +93,14 @@ module DiasporaFederation
       it "raises when bad parent author signature was passed" do
         hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
         hash[:parent_author_signature] = nil
+        hash[:parent] = remote_parent
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, author
         ).and_return(author_pkey.public_key)
-
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_public_key_by_entity_guid, "Parent", parent_guid
+          :fetch_public_key_by_diaspora_id, remote_parent.author
         ).and_return(parent_pkey.public_key)
-
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Parent", parent_guid
-        ).and_return(false)
 
         expect {
           SomeRelayable.new(hash).verify_signatures
@@ -121,14 +110,11 @@ module DiasporaFederation
       it "doesn't raise if parent_author_signature isn't set but we're on upstream federation" do
         hash[:author_signature] = sign_with_key(author_pkey, legacy_signature_data)
         hash[:parent_author_signature] = nil
+        hash[:parent] = local_parent
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, author
         ).and_return(author_pkey.public_key)
-
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Parent", parent_guid
-        ).and_return(true)
 
         expect { SomeRelayable.new(hash).verify_signatures }.not_to raise_error
       end
@@ -140,18 +126,14 @@ module DiasporaFederation
 
           hash[:author_signature] = sign_with_key(author_pkey, signature_data)
           hash[:parent_author_signature] = sign_with_key(parent_pkey, signature_data)
+          hash[:parent] = remote_parent
 
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
             :fetch_public_key_by_diaspora_id, author
           ).and_return(author_pkey.public_key)
-
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_author_public_key_by_entity_guid, "Parent", parent_guid
+            :fetch_public_key_by_diaspora_id, remote_parent.author
           ).and_return(parent_pkey.public_key)
-
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :entity_author_is_local?, "Parent", parent_guid
-          ).and_return(false)
 
           expect { SomeRelayable.new(hash, xml_order).verify_signatures }.not_to raise_error
         end
@@ -162,18 +144,14 @@ module DiasporaFederation
 
           hash[:author_signature] = sign_with_key(author_pkey, signature_data_with_new_property)
           hash[:parent_author_signature] = sign_with_key(parent_pkey, signature_data_with_new_property)
+          hash[:parent] = remote_parent
 
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
             :fetch_public_key_by_diaspora_id, author
           ).and_return(author_pkey.public_key)
-
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_author_public_key_by_entity_guid, "Parent", parent_guid
+            :fetch_public_key_by_diaspora_id, remote_parent.author
           ).and_return(parent_pkey.public_key)
-
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :entity_author_is_local?, "Parent", parent_guid
-          ).and_return(false)
 
           expect {
             SomeRelayable.new(hash, xml_order, "new_property" => new_property).verify_signatures
@@ -220,9 +198,8 @@ XML
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, author
         ).and_return(author_pkey)
-
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_private_key_by_entity_guid, "Parent", parent_guid
+          :fetch_private_key_by_diaspora_id, local_parent.author
         ).and_return(parent_pkey)
 
         xml = SomeRelayable.new(hash).to_xml
@@ -238,9 +215,8 @@ XML
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, author
         ).and_return(author_pkey)
-
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_private_key_by_entity_guid, "Parent", parent_guid
+          :fetch_private_key_by_diaspora_id, local_parent.author
         ).and_return(parent_pkey)
 
         xml_order = [:author, :guid, :parent_guid, "new_property", :property]
@@ -278,9 +254,8 @@ XML
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, author
         ).and_return(author_pkey)
-
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_private_key_by_entity_guid, "Parent", parent_guid
+          :fetch_private_key_by_diaspora_id, local_parent.author
         ).and_return(nil)
 
         xml = SomeRelayable.new(hash).to_xml
@@ -290,23 +265,20 @@ XML
     end
 
     describe ".from_xml" do
+      before do
+        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          :fetch_related_entity, "Parent", parent_guid
+        ).and_return(remote_parent)
+      end
+
       context "parsing" do
         before do
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
             :fetch_public_key_by_diaspora_id, author
           ).and_return(author_pkey.public_key)
-
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_author_public_key_by_entity_guid, "Parent", parent_guid
+            :fetch_public_key_by_diaspora_id, remote_parent.author
           ).and_return(parent_pkey.public_key)
-
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :entity_author_is_local?, "Parent", parent_guid
-          ).and_return(false)
-
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_related_entity, "Parent", parent_guid
-          ).and_return(parent)
         end
 
         let(:new_signature_data) { "#{author};#{guid};#{parent_guid};#{new_property};#{property}" }
@@ -365,10 +337,6 @@ XML
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
             :fetch_public_key_by_diaspora_id, author
           ).and_return(author_pkey.public_key)
-
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_related_entity, "Parent", parent_guid
-          ).and_return(parent)
 
           expect {
             SomeRelayable.from_xml(xml)

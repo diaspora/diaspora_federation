@@ -191,7 +191,7 @@ XML
           :fetch_private_key_by_diaspora_id, author
         ).and_return(author_key)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_private_key_by_entity_guid, "Post", parent_guid
+          :fetch_private_key_by_diaspora_id, parent.author
         ).and_return(nil)
 
         comment.to_xml
@@ -202,10 +202,7 @@ XML
           :fetch_public_key_by_diaspora_id, author
         ).and_return(author_key.public_key)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Post", parent_guid
-        ).and_return(true)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_private_key_by_entity_guid, "Post", parent_guid
+          :fetch_private_key_by_diaspora_id, parent.author
         ).and_return(parent_key)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_related_entity, "Post", parent_guid
@@ -222,10 +219,7 @@ XML
           :fetch_public_key_by_diaspora_id, author
         ).and_return(author_key.public_key)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Post", parent_guid
-        ).and_return(true)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_private_key_by_entity_guid, "Post", parent_guid
+          :fetch_private_key_by_diaspora_id, parent.author
         ).and_return(parent_key)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_related_entity, "Post", parent_guid
@@ -252,15 +246,14 @@ XML
     end
 
     context "parsing on every other pod" do
+      let(:parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id, local: false) }
+
       before do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_public_key_by_diaspora_id, author
         ).and_return(author_key.public_key)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :entity_author_is_local?, "Post", parent_guid
-        ).and_return(false)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_author_public_key_by_entity_guid, "Post", parent_guid
+          :fetch_public_key_by_diaspora_id, parent.author
         ).and_return(parent_key.public_key)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_related_entity, "Post", parent_guid

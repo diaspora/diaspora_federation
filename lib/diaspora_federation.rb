@@ -24,10 +24,7 @@ module DiasporaFederation
     fetch_person_for_hcard
     save_person_after_webfinger
     fetch_private_key_by_diaspora_id
-    fetch_author_private_key_by_entity_guid
     fetch_public_key_by_diaspora_id
-    fetch_author_public_key_by_entity_guid
-    entity_author_is_local?
     fetch_entity_author_id_by_guid
     fetch_related_entity
     queue_public_receive
@@ -152,29 +149,10 @@ module DiasporaFederation
     #   @param [String] Diaspora ID of the person
     #   @return [OpenSSL::PKey::RSA] key
     #
-    # fetch_author_private_key_by_entity_guid
-    #   Fetches a private key of the person who authored an entity identified by a given guid
-    #   @param [String] entity_type (Post, Comment, Like, etc)
-    #   @param [String] guid of the entity
-    #   @return [OpenSSL::PKey::RSA] key
-    #
     # fetch_public_key_by_diaspora_id
     #   Fetches a public key of a person by her Diaspora ID from the application
     #   @param [String] Diaspora ID of the person
     #   @return [OpenSSL::PKey::RSA] key
-    #
-    # fetch_author_public_key_by_entity_guid
-    #   Fetches a public key of the person who authored an entity identified by a given guid
-    #   @param [String] entity_type (Post, Comment, Like, etc)
-    #   @param [String] guid of the entity
-    #   @return [OpenSSL::PKey::RSA] key
-    #
-    # entity_author_is_local?
-    #   Reports if the author of the entity identified by a given guid is local on the pod
-    #   where we operate.
-    #   @param [String] entity_type (Post, Comment, Like, etc)
-    #   @param [String] guid of the entity
-    #   @return [Boolean]
     #
     # fetch_entity_author_id_by_guid
     #   Fetches Diaspora ID of the person who authored the entity identified by a given guid
