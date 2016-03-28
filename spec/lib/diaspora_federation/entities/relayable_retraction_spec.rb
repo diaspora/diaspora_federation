@@ -1,8 +1,23 @@
 module DiasporaFederation
   describe Entities::RelayableRetraction do
+    let(:target) { FactoryGirl.create(:comment, author: bob) }
+    let(:target_entity) {
+      FactoryGirl.build(
+        :related_entity,
+        author: bob.diaspora_id,
+        parent: FactoryGirl.build(:related_entity, author: alice.diaspora_id)
+      )
+    }
     let(:data) {
-      FactoryGirl.build(:relayable_retraction_entity, author: alice.diaspora_id).send(:xml_elements).tap do |data|
+      FactoryGirl.build(
+        :relayable_retraction_entity,
+        author:      alice.diaspora_id,
+        target_guid: target.guid,
+        target_type: target.entity_type,
+        target:      target_entity
+      ).send(:xml_elements).tap do |data|
         data[:target_author_signature] = nil
+        data[:target] = target_entity
       end
     }
 
@@ -18,7 +33,7 @@ module DiasporaFederation
 XML
     }
 
-    it_behaves_like "an Entity subclass"
+    it_behaves_like "an Entity subclass", [:target]
 
     it_behaves_like "an XML Entity", %i(parent_author_signature target_author_signature)
 
@@ -27,10 +42,6 @@ XML
       let(:hash) { FactoryGirl.attributes_for(:relayable_retraction_entity) }
 
       it "updates author signature when it was nil and key was supplied" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_entity_author_id_by_guid, hash[:target_type], hash[:target_guid]
-        ).and_return(hash[:author])
-
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, hash[:author]
         ).and_return(author_pkey)
@@ -43,10 +54,9 @@ XML
         expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
       end
 
-      it "updates parent author signature when it was nil, key was supplied and sender is not author of the target" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_entity_author_id_by_guid, hash[:target_type], hash[:target_guid]
-        ).and_return(FactoryGirl.generate(:diaspora_id))
+      it "updates parent author signature when it was nil, key was supplied and sender is author of the parent" do
+        parent = FactoryGirl.build(:related_entity, author: hash[:author])
+        hash[:target] = FactoryGirl.build(:related_entity, author: bob.diaspora_id, parent: parent)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, hash[:author]
@@ -73,10 +83,6 @@ XML
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_private_key_by_diaspora_id, hash[:author]
         ).and_return(nil)
-
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_entity_author_id_by_guid, "Comment", hash[:target_guid]
-        ).and_return(hash[:author])
 
         xml = Entities::RelayableRetraction.new(hash).to_xml
         expect(xml.at_xpath("target_author_signature").text).to eq("")

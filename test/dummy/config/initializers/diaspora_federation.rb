@@ -71,10 +71,6 @@ DiasporaFederation.configure do |config|
       OpenSSL::PKey::RSA.new(key) unless key.nil?
     end
 
-    on :fetch_entity_author_id_by_guid do |entity_type, guid|
-      Entity.where(entity_type: entity_type, guid: guid).joins(:author).pluck(:diaspora_id).first
-    end
-
     on :fetch_related_entity do |entity_type, guid|
       entity = Entity.find_by(entity_type: entity_type, guid: guid)
       if entity

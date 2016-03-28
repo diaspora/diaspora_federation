@@ -155,6 +155,7 @@ module DiasporaFederation
             author { generate(:diaspora_id) }
             target_guid { generate(:guid) }
             target_type "Comment"
+            target { FactoryGirl.build(:related_entity, author: author) }
           end
 
           factory :reshare_entity, class: DiasporaFederation::Entities::Reshare do

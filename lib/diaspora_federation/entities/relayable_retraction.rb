@@ -53,6 +53,19 @@ module DiasporaFederation
       #   @return [String] target author signature
       property :target_author_signature, default: nil
 
+      # target entity
+      # @return [RelatedEntity] target entity
+      attr_reader :target
+
+      # Initializes a new relayable retraction entity
+      #
+      # @param [Hash] data entity data
+      # @see DiasporaFederation::Entity#initialize
+      def initialize(data)
+        @target = data[:target] if data
+        super(data)
+      end
+
       # use only {Retraction} for receive
       # @return [Retraction] instance as normal retraction
       def to_retraction
@@ -64,32 +77,46 @@ module DiasporaFederation
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Retraction] instance
       def self.populate_entity(root_node)
-        super(root_node).to_retraction
+        entity_data = Hash[class_props.map {|name, type|
+          [name, parse_element_from_node(name, type, root_node)]
+        }]
+
+        entity_data[:target] = fetch_target(entity_data[:target_type], entity_data[:target_guid])
+        new(entity_data).to_retraction
       end
       private_class_method :populate_entity
+
+      def self.fetch_target(target_type, target_guid)
+        DiasporaFederation.callbacks.trigger(:fetch_related_entity, target_type, target_guid).tap do |target|
+          raise TargetNotFound unless target
+        end
+      end
+      private_class_method :fetch_target
 
       # It updates also the signatures with the keys of the author and the parent
       # if the signatures are not there yet and if the keys are available.
       #
       # @return [Hash] xml elements with updated signatures
       def xml_elements
-        target_author = DiasporaFederation.callbacks.trigger(:fetch_entity_author_id_by_guid, target_type, target_guid)
         privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, author)
 
         super.tap do |xml_elements|
-          fill_required_signature(target_author, privkey, xml_elements) unless privkey.nil?
+          fill_required_signature(privkey, xml_elements) unless privkey.nil?
         end
       end
 
-      # @param [String] target_author the author of the entity to retract
       # @param [OpenSSL::PKey::RSA] privkey private key of sender
       # @param [Hash] hash hash given for a signing
-      def fill_required_signature(target_author, privkey, hash)
-        if target_author == author && target_author_signature.nil?
+      def fill_required_signature(privkey, hash)
+        if target.author == author && target_author_signature.nil?
           hash[:target_author_signature] = SignedRetraction.sign_with_key(privkey, self)
-        elsif target_author != author && parent_author_signature.nil?
+        elsif target.parent.author == author && parent_author_signature.nil?
           hash[:parent_author_signature] = SignedRetraction.sign_with_key(privkey, self)
         end
+      end
+
+      # Raised, if the target of the {Retraction} was not found.
+      class TargetNotFound < RuntimeError
       end
     end
   end

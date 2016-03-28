@@ -25,7 +25,6 @@ module DiasporaFederation
     save_person_after_webfinger
     fetch_private_key_by_diaspora_id
     fetch_public_key_by_diaspora_id
-    fetch_entity_author_id_by_guid
     fetch_related_entity
     queue_public_receive
     queue_private_receive
@@ -153,12 +152,6 @@ module DiasporaFederation
     #   Fetches a public key of a person by her Diaspora ID from the application
     #   @param [String] Diaspora ID of the person
     #   @return [OpenSSL::PKey::RSA] key
-    #
-    # fetch_entity_author_id_by_guid
-    #   Fetches Diaspora ID of the person who authored the entity identified by a given guid
-    #   @param [String] entity_type (Post, Comment, Like, etc)
-    #   @param [String] guid of the entity
-    #   @return [String] Diaspora ID of the person
     #
     # fetch_related_entity
     #   Fetches a related entity by a given guid

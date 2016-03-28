@@ -27,6 +27,12 @@ FactoryGirl.define do
     after(:create, &:save)
   end
 
+  factory :comment, class: Entity do
+    entity_type "Comment"
+    author { FactoryGirl.build(:person) }
+    after(:create, &:save)
+  end
+
   factory :poll, class: Entity do
     entity_type "Poll"
     author { FactoryGirl.build(:person) }
