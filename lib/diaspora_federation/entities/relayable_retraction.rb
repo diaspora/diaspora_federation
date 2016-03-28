@@ -69,7 +69,7 @@ module DiasporaFederation
       # use only {Retraction} for receive
       # @return [Retraction] instance as normal retraction
       def to_retraction
-        Retraction.new(author: author, target_guid: target_guid, target_type: target_type)
+        Retraction.new(author: author, target_guid: target_guid, target_type: target_type, target: target)
       end
 
       private
@@ -77,21 +77,11 @@ module DiasporaFederation
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Retraction] instance
       def self.populate_entity(root_node)
-        entity_data = Hash[class_props.map {|name, type|
-          [name, parse_element_from_node(name, type, root_node)]
-        }]
-
-        entity_data[:target] = fetch_target(entity_data[:target_type], entity_data[:target_guid])
+        entity_data = entity_data(root_node)
+        entity_data[:target] = Retraction.send(:fetch_target, entity_data[:target_type], entity_data[:target_guid])
         new(entity_data).to_retraction
       end
       private_class_method :populate_entity
-
-      def self.fetch_target(target_type, target_guid)
-        DiasporaFederation.callbacks.trigger(:fetch_related_entity, target_type, target_guid).tap do |target|
-          raise TargetNotFound unless target
-        end
-      end
-      private_class_method :fetch_target
 
       # It updates also the signatures with the keys of the author and the parent
       # if the signatures are not there yet and if the keys are available.
@@ -113,10 +103,6 @@ module DiasporaFederation
         elsif target.parent.author == author && parent_author_signature.nil?
           hash[:parent_author_signature] = SignedRetraction.sign_with_key(privkey, self)
         end
-      end
-
-      # Raised, if the target of the {Retraction} was not found.
-      class TargetNotFound < RuntimeError
       end
     end
   end

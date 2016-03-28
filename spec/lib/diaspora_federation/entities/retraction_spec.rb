@@ -1,6 +1,15 @@
 module DiasporaFederation
   describe Entities::Retraction do
-    let(:data) { FactoryGirl.attributes_for(:retraction_entity) }
+    let(:target) { FactoryGirl.create(:post, author: bob) }
+    let(:target_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
+    let(:data) {
+      FactoryGirl.attributes_for(
+        :retraction_entity,
+        target_guid: target.guid,
+        target_type: target.entity_type,
+        target:      target_entity
+      )
+    }
 
     let(:xml) {
       <<-XML
@@ -12,7 +21,7 @@ module DiasporaFederation
 XML
     }
 
-    it_behaves_like "an Entity subclass"
+    it_behaves_like "an Entity subclass", [:target]
 
     it_behaves_like "an XML Entity"
   end

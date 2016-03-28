@@ -199,13 +199,18 @@ module DiasporaFederation
     # @param [Nokogiri::XML::Element] root_node xml nodes
     # @return [Entity] instance
     def self.populate_entity(root_node)
-      entity_data = Hash[class_props.map {|name, type|
-        [name, parse_element_from_node(name, type, root_node)]
-      }]
-
-      new(entity_data)
+      new(entity_data(root_node))
     end
     private_class_method :populate_entity
+
+    # @param [Nokogiri::XML::Element] root_node xml nodes
+    # @return [Hash] entity data
+    def self.entity_data(root_node)
+      Hash[class_props.map {|name, type|
+        [name, parse_element_from_node(name, type, root_node)]
+      }]
+    end
+    private_class_method :entity_data
 
     # @param [String] name property name to parse
     # @param [Class] type target type to parse

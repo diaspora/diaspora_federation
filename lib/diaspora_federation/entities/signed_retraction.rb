@@ -30,10 +30,23 @@ module DiasporaFederation
       #   @return [String] author signature
       property :target_author_signature, default: nil
 
+      # target entity
+      # @return [RelatedEntity] target entity
+      attr_reader :target
+
+      # Initializes a new signed retraction entity
+      #
+      # @param [Hash] data entity data
+      # @see DiasporaFederation::Entity#initialize
+      def initialize(data)
+        @target = data[:target] if data
+        super(data)
+      end
+
       # use only {Retraction} for receive
       # @return [Retraction] instance as normal retraction
       def to_retraction
-        Retraction.new(author: author, target_guid: target_guid, target_type: target_type)
+        Retraction.new(author: author, target_guid: target_guid, target_type: target_type, target: target)
       end
 
       # Create signature for a retraction
@@ -49,7 +62,9 @@ module DiasporaFederation
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Retraction] instance
       def self.populate_entity(root_node)
-        super(root_node).to_retraction
+        entity_data = entity_data(root_node)
+        entity_data[:target] = Retraction.send(:fetch_target, entity_data[:target_type], entity_data[:target_guid])
+        new(entity_data).to_retraction
       end
       private_class_method :populate_entity
 

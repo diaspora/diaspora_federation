@@ -1,6 +1,16 @@
 module DiasporaFederation
   describe Entities::SignedRetraction do
-    let(:data) { FactoryGirl.build(:signed_retraction_entity, author: alice.diaspora_id).send(:xml_elements) }
+    let(:target) { FactoryGirl.create(:post, author: alice) }
+    let(:target_entity) { FactoryGirl.build(:related_entity, author: alice.diaspora_id) }
+    let(:data) {
+      FactoryGirl.build(
+        :signed_retraction_entity,
+        author:      alice.diaspora_id,
+        target_guid: target.guid,
+        target_type: target.entity_type,
+        target:      target_entity
+      ).send(:xml_elements).merge(target: target_entity)
+    }
 
     let(:xml) {
       <<-XML
@@ -13,7 +23,7 @@ module DiasporaFederation
 XML
     }
 
-    it_behaves_like "an Entity subclass"
+    it_behaves_like "an Entity subclass", [:target]
 
     it_behaves_like "an XML Entity", [:target_author_signature]
 

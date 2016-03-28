@@ -172,12 +172,14 @@ module DiasporaFederation
             author { generate(:diaspora_id) }
             target_guid { generate(:guid) }
             target_type "Post"
+            target { FactoryGirl.build(:related_entity, author: author) }
           end
 
           factory :signed_retraction_entity, class: DiasporaFederation::Entities::SignedRetraction do
             author { generate(:diaspora_id) }
             target_guid { generate(:guid) }
             target_type "Post"
+            target { FactoryGirl.build(:related_entity, author: author) }
           end
 
           factory :poll_answer_entity, class: DiasporaFederation::Entities::PollAnswer do
