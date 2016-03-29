@@ -18,12 +18,6 @@ module DiasporaFederation
       #   @see PollAnswer#guid
       #   @return [String] poll answer guid
       property :poll_answer_guid
-
-      # The {PollParticipation} parent is a {Poll}
-      # @return [String] parent type
-      def parent_type
-        PARENT_TYPE
-      end
     end
   end
 end

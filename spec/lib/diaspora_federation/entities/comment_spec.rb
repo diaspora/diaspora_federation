@@ -43,11 +43,5 @@ XML
         expect(parsed_comment.created_at).to eq(created_at.to_s)
       end
     end
-
-    describe "#parent_type" do
-      it "returns \"Post\" as parent type" do
-        expect(described_class.new(data).parent_type).to eq("Post")
-      end
-    end
   end
 end

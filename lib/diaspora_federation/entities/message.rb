@@ -28,12 +28,6 @@ module DiasporaFederation
       #   @see Conversation#guid
       #   @return [String] conversation guid
       property :conversation_guid
-
-      # The {Message} parent is a {Conversation}
-      # @return [String] parent type
-      def parent_type
-        PARENT_TYPE
-      end
     end
   end
 end

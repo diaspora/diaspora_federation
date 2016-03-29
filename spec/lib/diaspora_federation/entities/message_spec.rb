@@ -27,11 +27,5 @@ XML
     it_behaves_like "an XML Entity"
 
     it_behaves_like "a relayable Entity"
-
-    describe "#parent_type" do
-      it "returns \"Conversation\" as parent type" do
-        expect(described_class.new(data).parent_type).to eq("Conversation")
-      end
-    end
   end
 end
