@@ -17,5 +17,13 @@ module DiasporaFederation
         let(:property) { :target_type }
       end
     end
+
+    describe "#target" do
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :target }
+        let(:wrong_values) { [nil] }
+        let(:correct_values) { [FactoryGirl.build(:related_entity)] }
+      end
+    end
   end
 end

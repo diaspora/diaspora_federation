@@ -92,3 +92,18 @@ shared_examples "a relayable Entity" do
     end
   end
 end
+
+shared_examples "a retraction" do
+  context "receive with no target found" do
+    let(:unknown_guid) { FactoryGirl.generate(:guid) }
+    let(:instance) { described_class.new(data.merge(target_guid: unknown_guid)) }
+
+    it "raises when no target is found" do
+      xml = instance.to_xml
+      expect {
+        described_class.from_xml(xml)
+      }.to raise_error DiasporaFederation::Entities::Retraction::TargetNotFound,
+                       "not found: #{data[:target_type]}:#{unknown_guid}"
+    end
+  end
+end

@@ -24,5 +24,7 @@ XML
     it_behaves_like "an Entity subclass", [:target]
 
     it_behaves_like "an XML Entity"
+
+    it_behaves_like "a retraction"
   end
 end

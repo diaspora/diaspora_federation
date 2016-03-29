@@ -27,6 +27,8 @@ XML
 
     it_behaves_like "an XML Entity", [:target_author_signature]
 
+    it_behaves_like "a retraction"
+
     describe "#to_xml" do
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
       let(:hash) { FactoryGirl.attributes_for(:signed_retraction_entity) }
