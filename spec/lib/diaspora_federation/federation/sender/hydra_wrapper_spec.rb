@@ -69,16 +69,15 @@ module DiasporaFederation
       end
 
       it "calls the update_pod callback for all responses with effective_url and status" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:update_pod, "https://example.org/", 202)
-        expect(DiasporaFederation.callbacks).to receive(:trigger)
-          .with(:update_pod, "http://example.com/", :couldnt_resolve_host)
+        expect_callback(:update_pod, "https://example.org/", 202)
+        expect_callback(:update_pod, "http://example.com/", :couldnt_resolve_host)
 
         hydra_wrapper.send
       end
 
       it "calls the update_pod callback with http status code when there was no error" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:update_pod, "https://example.org/", 202)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:update_pod, "http://example.net/", 404)
+        expect_callback(:update_pod, "https://example.org/", 202)
+        expect_callback(:update_pod, "http://example.net/", 404)
         allow(DiasporaFederation.callbacks).to receive(:trigger)
 
         not_found = Typhoeus::Response.new(

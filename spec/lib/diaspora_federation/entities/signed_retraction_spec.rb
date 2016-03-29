@@ -34,9 +34,7 @@ XML
       let(:hash) { FactoryGirl.attributes_for(:signed_retraction_entity) }
 
       it "updates author signature when it was nil and key was supplied" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key, hash[:author]
-        ).and_return(author_pkey)
+        expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
 
@@ -55,9 +53,7 @@ XML
       end
 
       it "doesn't change signature if a key wasn't supplied" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key, hash[:author]
-        ).and_return(nil)
+        expect_callback(:fetch_private_key, hash[:author]).and_return(nil)
 
         xml = Entities::SignedRetraction.new(hash).to_xml
         expect(xml.at_xpath("target_author_signature").text).to eq("")

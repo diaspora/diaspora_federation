@@ -50,9 +50,7 @@ module DiasporaFederation
     describe ".from_xml" do
       context "sanity" do
         it "accepts salmon xml as param" do
-          allow(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key, sender
-          ).and_return(privkey.public_key)
+          expect_callback(:fetch_public_key, sender).and_return(privkey.public_key)
 
           expect {
             Salmon::Slap.from_xml(slap_xml)

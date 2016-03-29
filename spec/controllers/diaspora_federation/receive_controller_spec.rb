@@ -16,14 +16,14 @@ module DiasporaFederation
         end
 
         it "returns a 202 if queued correctly" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(:queue_public_receive, "<diaspora/>", true)
+          expect_callback(:queue_public_receive, "<diaspora/>", true)
 
           post :public, xml: "<diaspora/>"
           expect(response.code).to eq("202")
         end
 
         it "unescapes the xml before sending it to the callback" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(:queue_public_receive, "<diaspora/>", true)
+          expect_callback(:queue_public_receive, "<diaspora/>", true)
 
           post :public, xml: CGI.escape("<diaspora/>")
         end
@@ -35,7 +35,7 @@ module DiasporaFederation
         end
 
         it "returns a 202 if queued correctly" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(:queue_public_receive, "<me:env/>", false)
+          expect_callback(:queue_public_receive, "<me:env/>", false)
 
           post :public, "<me:env/>"
           expect(response.code).to eq("202")
@@ -46,9 +46,7 @@ module DiasporaFederation
     describe "POST #private" do
       context "legacy salmon slap" do
         it "return a 404 if not queued successfully (unknown user guid)" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :queue_private_receive, "any-guid", "<diaspora/>", true
-          ).and_return(false)
+          expect_callback(:queue_private_receive, "any-guid", "<diaspora/>", true).and_return(false)
 
           post :private, guid: "any-guid", xml: "<diaspora/>"
           expect(response.code).to eq("404")
@@ -66,18 +64,14 @@ module DiasporaFederation
         end
 
         it "returns a 202 if the callback returned true" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :queue_private_receive, "any-guid", "<diaspora/>", true
-          ).and_return(true)
+          expect_callback(:queue_private_receive, "any-guid", "<diaspora/>", true).and_return(true)
 
           post :private, guid: "any-guid", xml: "<diaspora/>"
           expect(response.code).to eq("202")
         end
 
         it "unescapes the xml before sending it to the callback" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :queue_private_receive, "any-guid", "<diaspora/>", true
-          ).and_return(true)
+          expect_callback(:queue_private_receive, "any-guid", "<diaspora/>", true).and_return(true)
 
           post :private, guid: "any-guid", xml: CGI.escape("<diaspora/>")
         end
@@ -89,7 +83,7 @@ module DiasporaFederation
         end
 
         it "return a 404 if not queued successfully (unknown user guid)" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          expect_callback(
             :queue_private_receive, "any-guid", "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}", false
           ).and_return(false)
 
@@ -98,7 +92,7 @@ module DiasporaFederation
         end
 
         it "returns a 202 if the callback returned true" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
+          expect_callback(
             :queue_private_receive, "any-guid", "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}", false
           ).and_return(true)
 

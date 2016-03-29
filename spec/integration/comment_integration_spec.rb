@@ -187,26 +187,16 @@ XML
     # this was used to create the XMLs above
     context "test-data creation" do
       it "creates comment xml" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key, author
-        ).and_return(author_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key, parent.author
-        ).and_return(nil)
+        expect_callback(:fetch_private_key, author).and_return(author_key)
+        expect_callback(:fetch_private_key, parent.author).and_return(nil)
 
         comment.to_xml
       end
 
       it "creates relayed comment xml" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, author
-        ).and_return(author_key.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key, parent.author
-        ).and_return(parent_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_related_entity, "Post", parent_guid
-        ).and_return(parent)
+        expect_callback(:fetch_public_key, author).and_return(author_key.public_key)
+        expect_callback(:fetch_private_key, parent.author).and_return(parent_key)
+        expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
 
         xml = Nokogiri::XML::Document.parse(new_data_comment_xml_alice).root
         Salmon::XmlPayload.unpack(xml).to_xml
@@ -215,15 +205,9 @@ XML
 
     context "relaying on bobs pod" do
       before do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, author
-        ).and_return(author_key.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key, parent.author
-        ).and_return(parent_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_related_entity, "Post", parent_guid
-        ).and_return(parent)
+        expect_callback(:fetch_public_key, author).and_return(author_key.public_key)
+        expect_callback(:fetch_private_key, parent.author).and_return(parent_key)
+        expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
       end
 
       it "relays legacy signatures and xml" do
@@ -249,15 +233,9 @@ XML
       let(:parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id, local: false) }
 
       before do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, author
-        ).and_return(author_key.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, parent.author
-        ).and_return(parent_key.public_key)
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_related_entity, "Post", parent_guid
-        ).and_return(parent)
+        expect_callback(:fetch_public_key, author).and_return(author_key.public_key)
+        expect_callback(:fetch_public_key, parent.author).and_return(parent_key.public_key)
+        expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
       end
 
       it "parses legacy signatures and xml" do

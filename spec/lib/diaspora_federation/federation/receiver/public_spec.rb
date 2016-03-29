@@ -5,7 +5,7 @@ module DiasporaFederation
 
     describe "#receive" do
       it "receives a public post" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(:receive_entity, entity, nil)
+        expect_callback(:receive_entity, entity, nil)
 
         described_class.new(magic_env).receive
       end

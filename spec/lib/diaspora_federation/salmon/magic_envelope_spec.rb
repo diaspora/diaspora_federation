@@ -139,9 +139,7 @@ module DiasporaFederation
           other_sender = FactoryGirl.generate(:diaspora_id)
           other_key = OpenSSL::PKey::RSA.generate(512)
 
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key, other_sender
-          ).and_return(other_key)
+          expect_callback(:fetch_public_key, other_sender).and_return(other_key)
 
           expect {
             Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), other_sender)
@@ -174,9 +172,7 @@ module DiasporaFederation
       end
 
       it "decrypts on the fly, when cipher params are present" do
-        allow(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, sender
-        ).and_return(privkey.public_key)
+        expect_callback(:fetch_public_key, sender).and_return(privkey.public_key)
 
         env = Salmon::MagicEnvelope.new(payload)
         params = env.encrypt!
@@ -205,9 +201,7 @@ module DiasporaFederation
         end
 
         it "raises if the sender key is not found" do
-          expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key, sender
-          ).and_return(nil)
+          expect_callback(:fetch_public_key, sender).and_return(nil)
 
           expect {
             Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey))

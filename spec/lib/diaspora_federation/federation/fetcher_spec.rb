@@ -8,12 +8,9 @@ module DiasporaFederation
         stub_request(:get, "https://example.org/fetch/post/#{post.guid}")
           .to_return(status: 200, body: post_magic_env)
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_person_url_to, post.author, "/fetch/post/#{post.guid}"
-        ).and_return("https://example.org/fetch/post/#{post.guid}")
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, post.author
-        ).and_return(alice.public_key)
+        expect_callback(:fetch_person_url_to, post.author, "/fetch/post/#{post.guid}")
+          .and_return("https://example.org/fetch/post/#{post.guid}")
+        expect_callback(:fetch_public_key, post.author).and_return(alice.public_key)
 
         receiver = double
         expect(Federation::Receiver::Public).to receive(:new).with(
@@ -36,12 +33,9 @@ module DiasporaFederation
         stub_request(:get, "https://example.com/fetch/post/#{post.guid}")
           .to_return(status: 200, body: post_magic_env)
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_person_url_to, post.author, "/fetch/post/#{post.guid}"
-        ).and_return("https://example.org/fetch/post/#{post.guid}")
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, post.author
-        ).and_return(alice.public_key)
+        expect_callback(:fetch_person_url_to, post.author, "/fetch/post/#{post.guid}")
+          .and_return("https://example.org/fetch/post/#{post.guid}")
+        expect_callback(:fetch_public_key, post.author).and_return(alice.public_key)
 
         receiver = double
         expect(Federation::Receiver::Public).to receive(:new).with(
@@ -56,9 +50,8 @@ module DiasporaFederation
         stub_request(:get, "https://example.org/fetch/post/#{post.guid}")
           .to_return(status: 404)
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_person_url_to, post.author, "/fetch/post/#{post.guid}"
-        ).and_return("https://example.org/fetch/post/#{post.guid}")
+        expect_callback(:fetch_person_url_to, post.author, "/fetch/post/#{post.guid}")
+          .and_return("https://example.org/fetch/post/#{post.guid}")
 
         expect {
           Federation::Fetcher.fetch_public(post.author, :post, post.guid)
@@ -70,9 +63,8 @@ module DiasporaFederation
           "https://example.org/fetch/post/#{post.guid}"
         ).and_raise(Faraday::ConnectionFailed, "Couldn't connect to server")
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_person_url_to, post.author, "/fetch/post/#{post.guid}"
-        ).and_return("https://example.org/fetch/post/#{post.guid}")
+        expect_callback(:fetch_person_url_to, post.author, "/fetch/post/#{post.guid}")
+          .and_return("https://example.org/fetch/post/#{post.guid}")
 
         expect {
           Federation::Fetcher.fetch_public(post.author, :post, post.guid)

@@ -7,15 +7,11 @@ module DiasporaFederation
       let(:post) { FactoryGirl.build(:status_message_entity) }
 
       it "parses the entity with magic envelope receiver" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, post.author
-        ).and_return(sender_key)
+        expect_callback(:fetch_public_key, post.author).and_return(sender_key)
 
         data = Salmon::MagicEnvelope.new(post, post.author).envelop(sender_key).to_xml
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :receive_entity, kind_of(Entities::StatusMessage), nil
-        ) do |_, entity|
+        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), nil) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
           expect(entity.raw_message).to eq(post.raw_message)
@@ -26,15 +22,11 @@ module DiasporaFederation
       end
 
       it "parses the entity with legacy slap receiver" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, post.author
-        ).and_return(sender_key)
+        expect_callback(:fetch_public_key, post.author).and_return(sender_key)
 
         data = DiasporaFederation::Salmon::Slap.generate_xml(post.author, sender_key, post)
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :receive_entity, kind_of(Entities::StatusMessage), nil
-        ) do |_, entity|
+        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), nil) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
           expect(entity.raw_message).to eq(post.raw_message)
@@ -49,16 +41,12 @@ module DiasporaFederation
       let(:post) { FactoryGirl.build(:status_message_entity, public: false) }
 
       it "parses the entity with magic envelope receiver" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, post.author
-        ).and_return(sender_key)
+        expect_callback(:fetch_public_key, post.author).and_return(sender_key)
 
         magic_env = Salmon::MagicEnvelope.new(post, post.author).envelop(sender_key)
         data = Salmon::EncryptedMagicEnvelope.encrypt(magic_env, recipient_key.public_key)
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :receive_entity, kind_of(Entities::StatusMessage), 1234
-        ) do |_, entity|
+        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), 1234) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
           expect(entity.raw_message).to eq(post.raw_message)
@@ -69,16 +57,12 @@ module DiasporaFederation
       end
 
       it "parses the entity with legacy slap receiver" do
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key, post.author
-        ).and_return(sender_key)
+        expect_callback(:fetch_public_key, post.author).and_return(sender_key)
 
         data = DiasporaFederation::Salmon::EncryptedSlap.prepare(post.author, sender_key, post)
                                                         .generate_xml(recipient_key)
 
-        expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :receive_entity, kind_of(Entities::StatusMessage), 1234
-        ) do |_, entity|
+        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), 1234) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
           expect(entity.raw_message).to eq(post.raw_message)
