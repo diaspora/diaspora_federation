@@ -60,12 +60,12 @@ DiasporaFederation.configure do |config|
       end
     end
 
-    on :fetch_private_key_by_diaspora_id do |diaspora_id|
+    on :fetch_private_key do |diaspora_id|
       key = Person.where(diaspora_id: diaspora_id).pluck(:serialized_private_key).first
       OpenSSL::PKey::RSA.new(key) unless key.nil?
     end
 
-    on :fetch_public_key_by_diaspora_id do |diaspora_id|
+    on :fetch_public_key do |diaspora_id|
       key = Person.where(diaspora_id: diaspora_id).pluck(:serialized_public_key).first
       key = DiasporaFederation::Discovery::Discovery.new(diaspora_id).fetch_and_save.exported_key if key.nil?
       OpenSSL::PKey::RSA.new(key) unless key.nil?

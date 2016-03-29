@@ -176,7 +176,7 @@ module DiasporaFederation
                                env.at_xpath("me:encoding").content,
                                env.at_xpath("me:alg").content])
 
-        sender_key = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, sender)
+        sender_key = DiasporaFederation.callbacks.trigger(:fetch_public_key, sender)
         raise SenderKeyNotFound unless sender_key
 
         sig = Base64.urlsafe_decode64(env.at_xpath("me:sig").content)

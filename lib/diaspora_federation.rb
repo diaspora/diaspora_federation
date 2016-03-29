@@ -23,8 +23,8 @@ module DiasporaFederation
     fetch_person_for_webfinger
     fetch_person_for_hcard
     save_person_after_webfinger
-    fetch_private_key_by_diaspora_id
-    fetch_public_key_by_diaspora_id
+    fetch_private_key
+    fetch_public_key
     fetch_related_entity
     queue_public_receive
     queue_private_receive
@@ -143,12 +143,12 @@ module DiasporaFederation
     #   so the application saves the person data
     #   @param [DiasporaFederation::Entities::Person] person data
     #
-    # fetch_private_key_by_diaspora_id
+    # fetch_private_key
     #   Fetches a private key of a person by her Diaspora ID from the application
     #   @param [String] Diaspora ID of the person
     #   @return [OpenSSL::PKey::RSA] key
     #
-    # fetch_public_key_by_diaspora_id
+    # fetch_public_key
     #   Fetches a public key of a person by her Diaspora ID from the application
     #   @param [String] Diaspora ID of the person
     #   @return [OpenSSL::PKey::RSA] key

@@ -8,7 +8,7 @@ module DiasporaFederation
 
       it "parses the entity with magic envelope receiver" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, post.author
+          :fetch_public_key, post.author
         ).and_return(sender_key)
 
         data = Salmon::MagicEnvelope.new(post, post.author).envelop(sender_key).to_xml
@@ -27,7 +27,7 @@ module DiasporaFederation
 
       it "parses the entity with legacy slap receiver" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, post.author
+          :fetch_public_key, post.author
         ).and_return(sender_key)
 
         data = DiasporaFederation::Salmon::Slap.generate_xml(post.author, sender_key, post)
@@ -50,7 +50,7 @@ module DiasporaFederation
 
       it "parses the entity with magic envelope receiver" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, post.author
+          :fetch_public_key, post.author
         ).and_return(sender_key)
 
         magic_env = Salmon::MagicEnvelope.new(post, post.author).envelop(sender_key)
@@ -70,7 +70,7 @@ module DiasporaFederation
 
       it "parses the entity with legacy slap receiver" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, post.author
+          :fetch_public_key, post.author
         ).and_return(sender_key)
 
         data = DiasporaFederation::Salmon::EncryptedSlap.prepare(post.author, sender_key, post)

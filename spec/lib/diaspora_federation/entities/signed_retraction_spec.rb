@@ -35,7 +35,7 @@ XML
 
       it "updates author signature when it was nil and key was supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:author]
+          :fetch_private_key, hash[:author]
         ).and_return(author_pkey)
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
@@ -56,7 +56,7 @@ XML
 
       it "doesn't change signature if a key wasn't supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:author]
+          :fetch_private_key, hash[:author]
         ).and_return(nil)
 
         xml = Entities::SignedRetraction.new(hash).to_xml

@@ -11,13 +11,13 @@ module DiasporaFederation
           :fetch_public_entity, "StatusMessage", guid
         ).and_return(post)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, alice.diaspora_id
+          :fetch_private_key, alice.diaspora_id
         ).and_return(alice.private_key)
 
         get :fetch, type: "status_message", guid: guid
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, alice.diaspora_id
+          :fetch_public_key, alice.diaspora_id
         ).and_return(alice.public_key)
 
         magic_env_xml = Nokogiri::XML::Document.parse(response.body).root
@@ -36,13 +36,13 @@ module DiasporaFederation
           :fetch_public_entity, "Post", guid
         ).and_return(post)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, alice.diaspora_id
+          :fetch_private_key, alice.diaspora_id
         ).and_return(alice.private_key)
 
         get :fetch, type: "post", guid: guid
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, alice.diaspora_id
+          :fetch_public_key, alice.diaspora_id
         ).and_return(alice.public_key)
 
         magic_env_xml = Nokogiri::XML::Document.parse(response.body).root
@@ -61,7 +61,7 @@ module DiasporaFederation
           :fetch_public_entity, "Post", guid
         ).and_return(post)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, alice.diaspora_id
+          :fetch_private_key, alice.diaspora_id
         ).and_return(nil)
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
           :fetch_person_url_to, alice.diaspora_id, "/fetch/post/#{guid}"

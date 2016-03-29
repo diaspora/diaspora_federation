@@ -106,7 +106,7 @@ module DiasporaFederation
       context "sanity" do
         before do
           allow(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, sender
+            :fetch_public_key, sender
           ).and_return(privkey.public_key)
         end
 
@@ -140,7 +140,7 @@ module DiasporaFederation
           other_key = OpenSSL::PKey::RSA.generate(512)
 
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, other_sender
+            :fetch_public_key, other_sender
           ).and_return(other_key)
 
           expect {
@@ -175,7 +175,7 @@ module DiasporaFederation
 
       it "decrypts on the fly, when cipher params are present" do
         allow(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, sender
+          :fetch_public_key, sender
         ).and_return(privkey.public_key)
 
         env = Salmon::MagicEnvelope.new(payload)
@@ -206,7 +206,7 @@ module DiasporaFederation
 
         it "raises if the sender key is not found" do
           expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, sender
+            :fetch_public_key, sender
           ).and_return(nil)
 
           expect {

@@ -51,7 +51,7 @@ module DiasporaFederation
       context "sanity" do
         it "accepts salmon xml as param" do
           allow(DiasporaFederation.callbacks).to receive(:trigger).with(
-            :fetch_public_key_by_diaspora_id, sender
+            :fetch_public_key, sender
           ).and_return(privkey.public_key)
 
           expect {

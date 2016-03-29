@@ -79,7 +79,7 @@ module DiasporaFederation
       end
 
       def sign_with_author
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, author)
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, author)
         SignedRetraction.sign_with_key(privkey, self) unless privkey.nil?
       end
     end

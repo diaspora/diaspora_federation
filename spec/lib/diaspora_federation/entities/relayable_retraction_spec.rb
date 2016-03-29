@@ -45,7 +45,7 @@ XML
 
       it "updates author signature when it was nil and key was supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:author]
+          :fetch_private_key, hash[:author]
         ).and_return(author_pkey)
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
@@ -61,7 +61,7 @@ XML
         hash[:target] = FactoryGirl.build(:related_entity, author: bob.diaspora_id, parent: parent)
 
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:author]
+          :fetch_private_key, hash[:author]
         ).and_return(author_pkey)
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
@@ -83,7 +83,7 @@ XML
 
       it "doesn't change signatures if keys weren't supplied" do
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_private_key_by_diaspora_id, hash[:author]
+          :fetch_private_key, hash[:author]
         ).and_return(nil)
 
         xml = Entities::RelayableRetraction.new(hash).to_xml

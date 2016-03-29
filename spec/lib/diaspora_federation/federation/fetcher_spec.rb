@@ -12,7 +12,7 @@ module DiasporaFederation
           :fetch_person_url_to, post.author, "/fetch/post/#{post.guid}"
         ).and_return("https://example.org/fetch/post/#{post.guid}")
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, post.author
+          :fetch_public_key, post.author
         ).and_return(alice.public_key)
 
         receiver = double
@@ -40,7 +40,7 @@ module DiasporaFederation
           :fetch_person_url_to, post.author, "/fetch/post/#{post.guid}"
         ).and_return("https://example.org/fetch/post/#{post.guid}")
         expect(DiasporaFederation.callbacks).to receive(:trigger).with(
-          :fetch_public_key_by_diaspora_id, post.author
+          :fetch_public_key, post.author
         ).and_return(alice.public_key)
 
         receiver = double

@@ -82,7 +82,7 @@ module DiasporaFederation
       # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
       # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
       def verify_signatures
-        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, author)
+        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, author)
         raise PublicKeyNotFound, "author_signature author=#{author} guid=#{guid}" if pubkey.nil?
         raise SignatureVerificationFailed, "wrong author_signature" unless verify_signature(pubkey, author_signature)
 
@@ -93,7 +93,7 @@ module DiasporaFederation
 
       # this happens only on downstream federation
       def verify_parent_author_signature
-        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key_by_diaspora_id, parent.author)
+        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, parent.author)
         raise PublicKeyNotFound, "parent_author_signature parent_author=#{parent.author} guid=#{guid}" if pubkey.nil?
         unless verify_signature(pubkey, parent_author_signature)
           raise SignatureVerificationFailed, "wrong parent_author_signature parent_guid=#{parent_guid}"
@@ -120,7 +120,7 @@ module DiasporaFederation
       # @raise [AuthorPrivateKeyNotFound] if the author private key is not found
       # @return [String] A Base64 encoded signature of #signature_data with key
       def sign_with_author
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, author)
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, author)
         raise AuthorPrivateKeyNotFound, "author=#{author} guid=#{guid}" if privkey.nil?
         sign_with_key(privkey).tap do
           logger.info "event=sign status=complete signature=author_signature author=#{author} guid=#{guid}"
@@ -130,7 +130,7 @@ module DiasporaFederation
       # sign with parent author key, if the parent author is local (if the private key is found)
       # @return [String] A Base64 encoded signature of #signature_data with key
       def sign_with_parent_author_if_available
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key_by_diaspora_id, parent.author)
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, parent.author)
         if privkey
           sign_with_key(privkey).tap do
             logger.info "event=sign status=complete signature=parent_author_signature guid=#{guid}"
