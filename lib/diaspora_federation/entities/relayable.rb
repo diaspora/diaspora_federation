@@ -198,17 +198,21 @@ module DiasporaFederation
             end
           end
 
-          add_parent(entity_data)
+          fetch_parent(entity_data)
           new(entity_data, xml_order, additional_xml_elements).tap(&:verify_signatures)
-        end
-
-        def add_parent(data)
-          data[:parent] = fetch_parent(data)
         end
 
         def fetch_parent(data)
           type = data[:parent_type] || self::PARENT_TYPE
-          DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, data[:parent_guid])
+          guid = data[:parent_guid]
+
+          data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
+
+          unless data[:parent]
+            # fetch and receive parent from remote, if not available locally
+            Federation::Fetcher.fetch_public(data[:author], type, guid)
+            data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
+          end
         end
       end
 
