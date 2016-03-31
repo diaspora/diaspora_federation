@@ -27,7 +27,19 @@ module DiasporaFederation
         end
 
         def sender_valid?
-          sender == entity.author # TODO: handle sender of relayables
+          case entity
+          when Entities::Retraction
+            case entity.target_type
+            when "Comment", "Like", "PollParticipation"
+              sender == entity.target.author || sender == entity.target.parent.author
+            else
+              sender == entity.target.author
+            end
+          when Entities::Relayable
+            sender == entity.author || sender == entity.parent.author
+          else
+            sender == entity.author
+          end
         end
       end
     end
