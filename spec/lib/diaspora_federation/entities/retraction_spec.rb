@@ -26,5 +26,54 @@ XML
     it_behaves_like "an XML Entity"
 
     it_behaves_like "a retraction"
+
+    describe "#sender_valid?" do
+      context "unrelayable target" do
+        it "allows target author" do
+          entity = Entities::Retraction.new(data)
+
+          expect(entity.sender_valid?(bob.diaspora_id)).to be_truthy
+        end
+
+        it "does not allow any random author" do
+          entity = Entities::Retraction.new(data)
+          invalid_author = FactoryGirl.generate(:diaspora_id)
+
+          expect(entity.sender_valid?(invalid_author)).to be_falsey
+        end
+      end
+
+      %w(Comment Like PollParticipation).each do |target_type|
+        context "#{target_type} target" do
+          let(:relayable_target) {
+            FactoryGirl.build(
+              :related_entity,
+              author: bob.diaspora_id,
+              parent: FactoryGirl.build(:related_entity, author: alice.diaspora_id)
+            )
+          }
+          let(:relayable_data) { data.merge(target_type: target_type, target: relayable_target) }
+
+          it "allows target author" do
+            entity = Entities::Retraction.new(relayable_data)
+
+            expect(entity.sender_valid?(bob.diaspora_id)).to be_truthy
+          end
+
+          it "allows target parent author" do
+            entity = Entities::Retraction.new(relayable_data)
+
+            expect(entity.sender_valid?(alice.diaspora_id)).to be_truthy
+          end
+
+          it "does not allow any random author" do
+            entity = Entities::Retraction.new(relayable_data)
+            invalid_author = FactoryGirl.generate(:diaspora_id)
+
+            expect(entity.sender_valid?(invalid_author)).to be_falsey
+          end
+        end
+      end
+    end
   end
 end

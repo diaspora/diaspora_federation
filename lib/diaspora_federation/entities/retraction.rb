@@ -33,6 +33,15 @@ module DiasporaFederation
         super(data)
       end
 
+      def sender_valid?(sender)
+        case target_type
+        when "Comment", "Like", "PollParticipation"
+          sender == target.author || sender == target.parent.author
+        else
+          sender == target.author
+        end
+      end
+
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Retraction] instance
       def self.populate_entity(root_node)

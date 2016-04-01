@@ -323,5 +323,26 @@ XML
         expect(entity.parent).to eq(remote_parent)
       end
     end
+
+    describe "#sender_valid?" do
+      it "allows author" do
+        entity = SomeRelayable.new(hash)
+
+        expect(entity.sender_valid?(author)).to be_truthy
+      end
+
+      it "allows parent author" do
+        entity = SomeRelayable.new(hash)
+
+        expect(entity.sender_valid?(local_parent.author)).to be_truthy
+      end
+
+      it "does not allow any random author" do
+        entity = SomeRelayable.new(hash)
+        invalid_author = FactoryGirl.generate(:diaspora_id)
+
+        expect(entity.sender_valid?(invalid_author)).to be_falsey
+      end
+    end
   end
 end

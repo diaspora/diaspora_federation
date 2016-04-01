@@ -89,6 +89,10 @@ module DiasporaFederation
         verify_parent_author_signature unless parent.local
       end
 
+      def sender_valid?(sender)
+        sender == author || sender == parent.author
+      end
+
       private
 
       # this happens only on downstream federation
