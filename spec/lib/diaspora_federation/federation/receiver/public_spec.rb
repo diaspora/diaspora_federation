@@ -105,6 +105,35 @@ module DiasporaFederation
           end
         end
       end
+
+      context "validates if it is public" do
+        it "allows public entities" do
+          public_post = FactoryGirl.build(:status_message_entity, public: true)
+          magic_env = Salmon::MagicEnvelope.new(public_post, public_post.author)
+
+          expect_callback(:receive_entity, public_post, nil)
+
+          described_class.new(magic_env).receive
+        end
+
+        it "does not allow non-public entities" do
+          private_post = FactoryGirl.build(:status_message_entity, public: false)
+          magic_env = Salmon::MagicEnvelope.new(private_post, private_post.author)
+
+          expect {
+            described_class.new(magic_env).receive
+          }.to raise_error Federation::Receiver::NotPublic
+        end
+
+        it "allows entities without public flag" do
+          profile = FactoryGirl.build(:profile_entity)
+          magic_env = Salmon::MagicEnvelope.new(profile, profile.author)
+
+          expect_callback(:receive_entity, profile, nil)
+
+          described_class.new(magic_env).receive
+        end
+      end
     end
   end
 end

@@ -8,6 +8,10 @@ module DiasporaFederation
       # Raised, if receiving a private message without recipient.
       class RecipientRequired < RuntimeError
       end
+
+      # Raised, if receiving a message with public receiver which is not public but should be.
+      class NotPublic < RuntimeError
+      end
     end
   end
 end
