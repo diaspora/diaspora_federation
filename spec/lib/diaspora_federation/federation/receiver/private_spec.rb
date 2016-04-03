@@ -17,7 +17,7 @@ module DiasporaFederation
 
         expect {
           described_class.new(bad_env, recipient).receive
-        }.to raise_error Federation::Receiver::InvalidSender
+        }.to raise_error Federation::Receiver::InvalidSender, "invalid sender: #{sender}"
       end
 
       it "validates the recipient" do
@@ -51,7 +51,7 @@ module DiasporaFederation
 
           expect {
             described_class.new(bad_env, recipient).receive
-          }.to raise_error Federation::Receiver::InvalidSender
+          }.to raise_error Federation::Receiver::InvalidSender, "invalid sender: #{sender}"
         end
       end
 
@@ -73,7 +73,7 @@ module DiasporaFederation
 
             expect {
               described_class.new(bad_env, recipient).receive
-            }.to raise_error Federation::Receiver::InvalidSender
+            }.to raise_error Federation::Receiver::InvalidSender, "invalid sender: #{sender}"
           end
         end
 
@@ -108,7 +108,7 @@ module DiasporaFederation
 
             expect {
               described_class.new(bad_env, recipient).receive
-            }.to raise_error Federation::Receiver::InvalidSender
+            }.to raise_error Federation::Receiver::InvalidSender, "invalid sender: #{sender}"
           end
         end
       end

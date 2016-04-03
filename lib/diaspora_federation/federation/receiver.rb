@@ -2,6 +2,8 @@ module DiasporaFederation
   module Federation
     # this module is for parse and receive entities.
     module Receiver
+      extend Logging
+
       # receive a public message
       # @param [String] data message to receive
       # @param [Boolean] legacy use old slap parser
@@ -13,6 +15,10 @@ module DiasporaFederation
                       Salmon::MagicEnvelope.unenvelop(magic_env_xml)
                     end
         Public.new(magic_env).receive
+      rescue => e
+        logger.error "failed to receive public message: #{e.class}: #{e.message}"
+        logger.debug "received data:\n#{data}"
+        raise e
       end
 
       # receive a private message
@@ -30,6 +36,10 @@ module DiasporaFederation
                       Salmon::MagicEnvelope.unenvelop(magic_env_xml)
                     end
         Private.new(magic_env, recipient_id).receive
+      rescue => e
+        logger.error "failed to receive private message for #{recipient_id}: #{e.class}: #{e.message}"
+        logger.debug "received data:\n#{data}"
+        raise e
       end
     end
   end

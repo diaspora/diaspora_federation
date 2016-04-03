@@ -3,6 +3,8 @@ module DiasporaFederation
     module Receiver
       # common functionality for receivers
       class AbstractReceiver
+        include Logging
+
         # create a new receiver
         # @param [MagicEnvelope] magic_envelope the received magic envelope
         # @param [Object] recipient_id the identifier of the recipient of a private message
@@ -14,16 +16,25 @@ module DiasporaFederation
 
         # validate and receive the entity
         def receive
-          validate
-          DiasporaFederation.callbacks.trigger(:receive_entity, entity, recipient_id)
+          validate_and_receive
+        rescue => e
+          logger.error "failed to receive #{entity.class}#{":#{entity.guid}" if entity.respond_to?(:guid)}"
+          raise e
         end
 
         private
 
         attr_reader :entity, :sender, :recipient_id
 
+        def validate_and_receive
+          validate
+          DiasporaFederation.callbacks.trigger(:receive_entity, entity, recipient_id)
+          logger.info "successfully received #{entity.class}#{":#{entity.guid}" if entity.respond_to?(:guid)}" \
+                      "from person #{sender}#{" for #{recipient_id}" if recipient_id}"
+        end
+
         def validate
-          raise InvalidSender unless sender_valid?
+          raise InvalidSender, "invalid sender: #{sender}" unless sender_valid?
         end
 
         def sender_valid?

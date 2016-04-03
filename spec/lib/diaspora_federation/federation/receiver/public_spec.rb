@@ -16,7 +16,7 @@ module DiasporaFederation
 
         expect {
           described_class.new(bad_env).receive
-        }.to raise_error Federation::Receiver::InvalidSender
+        }.to raise_error Federation::Receiver::InvalidSender, "invalid sender: #{sender}"
       end
 
       context "with relayable" do
@@ -44,7 +44,7 @@ module DiasporaFederation
 
           expect {
             described_class.new(bad_env).receive
-          }.to raise_error Federation::Receiver::InvalidSender
+          }.to raise_error Federation::Receiver::InvalidSender, "invalid sender: #{sender}"
         end
       end
 
@@ -66,7 +66,7 @@ module DiasporaFederation
 
             expect {
               described_class.new(bad_env).receive
-            }.to raise_error Federation::Receiver::InvalidSender
+            }.to raise_error Federation::Receiver::InvalidSender, "invalid sender: #{sender}"
           end
         end
 
@@ -101,7 +101,7 @@ module DiasporaFederation
 
             expect {
               described_class.new(bad_env).receive
-            }.to raise_error Federation::Receiver::InvalidSender
+            }.to raise_error Federation::Receiver::InvalidSender, "invalid sender: #{sender}"
           end
         end
       end
