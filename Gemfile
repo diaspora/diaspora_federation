@@ -42,7 +42,7 @@ group :test do
 
   # test helpers
   gem "fixture_builder",           "~> 0.4.1"
-  gem "factory_girl_rails",        "~> 4.6.0"
+  gem "factory_girl_rails",        "~> 4.7"
   gem "rspec-collection_matchers", "~> 1.1.2"
   gem "webmock",                   "~> 1.24.0"
 end
