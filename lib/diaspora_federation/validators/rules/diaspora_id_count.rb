@@ -28,7 +28,7 @@ module Validation
         ids = value.split(";")
         return false unless ids.count <= params[:maximum]
         ids.each do |id|
-          return false unless DiasporaId.new.valid_value?(id)
+          return false if DiasporaId::DIASPORA_ID.match(id).nil?
         end
         true
       end

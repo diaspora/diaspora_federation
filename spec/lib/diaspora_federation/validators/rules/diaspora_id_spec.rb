@@ -67,6 +67,14 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to include(:diaspora_id)
     end
 
+    it "fails if the diaspora id contains a _ in the domain-name" do
+      validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@invalid_domain.com"))
+      validator.rule(:diaspora_id, :diaspora_id)
+
+      expect(validator).not_to be_valid
+      expect(validator.errors).to include(:diaspora_id)
+    end
+
     it "fails if the diaspora id contains a special-chars in the username" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user$^%@example.com"))
       validator.rule(:diaspora_id, :diaspora_id)
