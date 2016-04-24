@@ -156,7 +156,7 @@ GEM
       octokit (~> 4.3, >= 4.1.0)
       rugged (~> 0.24, >= 0.23.0)
       thor (~> 0.19.0)
-    pronto-rubocop (0.6.1)
+    pronto-rubocop (0.6.2)
       pronto (~> 0.6.0)
       rubocop (~> 0.38, >= 0.35.0)
     pry (0.10.3)
@@ -292,7 +292,7 @@ DEPENDENCIES
   logging-rails (= 0.5.0)
   nyan-cat-formatter
   pronto (= 0.6.0)
-  pronto-rubocop (= 0.6.1)
+  pronto-rubocop (= 0.6.2)
   pry
   pry-byebug
   pry-debundle
