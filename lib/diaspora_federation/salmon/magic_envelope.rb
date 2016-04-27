@@ -21,6 +21,8 @@ module DiasporaFederation
     #
     # @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-magicsig-01.html
     class MagicEnvelope
+      extend Logging
+
       # encoding used for the payload data
       ENCODING = "base64url".freeze
 
@@ -122,6 +124,8 @@ module DiasporaFederation
         raise InvalidAlgorithm unless algorithm_valid?(magic_env)
 
         data = read_and_decrypt_data(magic_env, cipher_params)
+
+        logger.debug "unenvelop message from #{sender}:\n#{data}"
 
         new(XmlPayload.unpack(Nokogiri::XML::Document.parse(data).root), sender)
       end
