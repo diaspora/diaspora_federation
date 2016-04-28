@@ -17,5 +17,18 @@ module DiasporaFederation
         let(:correct_values) { ["a" * 255] }
       end
     end
+
+    describe "#poll_answers" do
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :poll_answers }
+        let(:wrong_values) { [nil, [FactoryGirl.attributes_for(:poll_answer_entity)]] }
+        let(:correct_values) {
+          [
+            Array.new(2) { FactoryGirl.build(:poll_answer_entity) },
+            Array.new(5) { FactoryGirl.build(:poll_answer_entity) }
+          ]
+        }
+      end
+    end
   end
 end
