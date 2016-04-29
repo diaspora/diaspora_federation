@@ -13,6 +13,14 @@ module DiasporaFederation
       let(:property) { :guid }
     end
 
+    describe "#photos" do
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :photos }
+        let(:wrong_values) { [nil] }
+        let(:correct_values) { [[], [FactoryGirl.build(:photo_entity)]] }
+      end
+    end
+
     it_behaves_like "a boolean validator" do
       let(:property) { :public }
     end

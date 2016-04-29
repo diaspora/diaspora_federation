@@ -1,5 +1,6 @@
 def entity_stub(entity, data={})
-  OpenStruct.new(FactoryGirl.attributes_for(entity).merge(data))
+  OpenStruct.new(FactoryGirl.factory_by_name(entity).build_class.default_values
+                   .merge(FactoryGirl.attributes_for(entity)).merge(data))
 end
 
 ALPHANUMERIC_RANGE = [*"0".."9", *"A".."Z", *"a".."z"].freeze

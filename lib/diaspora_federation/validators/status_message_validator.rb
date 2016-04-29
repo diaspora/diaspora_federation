@@ -8,6 +8,8 @@ module DiasporaFederation
 
       rule :guid, :guid
 
+      rule :photos, :not_nil
+
       rule :public, :boolean
     end
   end

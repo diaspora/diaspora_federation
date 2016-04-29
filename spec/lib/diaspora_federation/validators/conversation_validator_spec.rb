@@ -13,7 +13,15 @@ module DiasporaFederation
       let(:property) { :guid }
     end
 
-    describe "participant_ids" do
+    describe "#messages" do
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :messages }
+        let(:wrong_values) { [nil] }
+        let(:correct_values) { [[], [FactoryGirl.build(:message_entity)]] }
+      end
+    end
+
+    describe "#participant_ids" do
       # must not contain more than 20 participant handles
       it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :participants }
