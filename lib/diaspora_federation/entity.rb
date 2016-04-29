@@ -153,7 +153,7 @@ module DiasporaFederation
     end
 
     def nilify(value)
-      return nil if value.respond_to?(:empty?) && value.empty?
+      return nil if value.respond_to?(:empty?) && value.empty? && !value.instance_of?(Array)
       value
     end
 
@@ -207,8 +207,9 @@ module DiasporaFederation
     # @return [Hash] entity data
     def self.entity_data(root_node)
       Hash[class_props.map {|name, type|
-        [name, parse_element_from_node(name, type, root_node)]
-      }]
+        value = parse_element_from_node(name, type, root_node)
+        [name, value] if value
+      }.compact]
     end
     private_class_method :entity_data
 
@@ -257,7 +258,7 @@ module DiasporaFederation
     # @return [Array<Entity>] array with parsed child entities
     def self.parse_array_from_node(type, root_node)
       node = root_node.xpath(type.entity_name)
-      node.map {|child| type.from_xml(child) }
+      node.map {|child| type.from_xml(child) } unless node.empty?
     end
     private_class_method :parse_array_from_node
 

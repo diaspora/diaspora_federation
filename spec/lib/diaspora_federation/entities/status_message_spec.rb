@@ -57,5 +57,27 @@ module DiasporaFederation
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    context "default values" do
+      let(:minimal_xml) {
+        <<-XML
+<status_message>
+  <author>#{data[:author]}</author>
+  <guid>#{data[:guid]}</guid>
+  <created_at>#{data[:created_at]}</created_at>
+  <raw_message>#{data[:raw_message]}</raw_message>
+</status_message>
+        XML
+      }
+
+      it "uses default values" do
+        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
+        expect(parsed_instance.photos).to eq([])
+        expect(parsed_instance.location).to be_nil
+        expect(parsed_instance.poll).to be_nil
+        expect(parsed_instance.public).to be_falsey
+        expect(parsed_instance.provider_display_name).to be_nil
+      end
+    end
   end
 end

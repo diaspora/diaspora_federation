@@ -35,5 +35,24 @@ XML
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    context "default values" do
+      let(:minimal_xml) {
+        <<-XML
+<conversation>
+  <guid>#{parent.guid}</guid>
+  <subject>#{data[:subject]}</subject>
+  <created_at>#{data[:created_at]}</created_at>
+  <author>#{data[:author]}</author>
+  <participant_handles>#{data[:participants]}</participant_handles>
+</conversation>
+        XML
+      }
+
+      it "allows no nested messages" do
+        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
+        expect(parsed_instance.messages).to eq([])
+      end
+    end
   end
 end

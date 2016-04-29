@@ -20,7 +20,7 @@ module DiasporaFederation
 
       # @!attribute [r] messages
       #   @return [[Entities::Message]] Messages of this conversation
-      entity :messages, [Entities::Message]
+      entity :messages, [Entities::Message], default: []
 
       # @!attribute [r] author
       #   The diaspora ID of the person initiated the conversation.

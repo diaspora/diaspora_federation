@@ -25,5 +25,31 @@ XML
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    context "default values" do
+      let(:minimal_xml) {
+        <<-XML
+<profile>
+  <author>#{data[:author]}</author>
+</profile>
+        XML
+      }
+
+      it "uses default values" do
+        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
+        expect(parsed_instance.first_name).to be_nil
+        expect(parsed_instance.last_name).to be_nil
+        expect(parsed_instance.image_url).to be_nil
+        expect(parsed_instance.image_url_medium).to be_nil
+        expect(parsed_instance.image_url_small).to be_nil
+        expect(parsed_instance.birthday).to be_nil
+        expect(parsed_instance.gender).to be_nil
+        expect(parsed_instance.bio).to be_nil
+        expect(parsed_instance.location).to be_nil
+        expect(parsed_instance.searchable).to be_truthy
+        expect(parsed_instance.nsfw).to be_falsey
+        expect(parsed_instance.tag_string).to be_nil
+      end
+    end
   end
 end
