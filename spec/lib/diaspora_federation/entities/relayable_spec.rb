@@ -297,6 +297,8 @@ XML
 
     context "fetch parent" do
       before do
+        expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
+        expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
         expect_callback(:fetch_private_key, remote_parent.author).and_return(parent_pkey)
       end
@@ -304,9 +306,6 @@ XML
       let(:xml) { SomeRelayable.new(hash).to_xml }
 
       it "fetches the parent from the backend" do
-        expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-        expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
-
         expect_callback(:fetch_related_entity, "Parent", parent_guid).and_return(remote_parent)
         expect(Federation::Fetcher).not_to receive(:fetch_public)
 
@@ -316,24 +315,12 @@ XML
       end
 
       it "fetches the parent from remote if not found on backend" do
-        expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-        expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
-
         expect_callback(:fetch_related_entity, "Parent", parent_guid).and_return(nil, remote_parent)
         expect(Federation::Fetcher).to receive(:fetch_public).with(author, "Parent", parent_guid)
 
         entity = SomeRelayable.from_xml(xml)
 
         expect(entity.parent).to eq(remote_parent)
-      end
-
-      it "raises if the parent can't be fetched from remote" do
-        expect_callback(:fetch_related_entity, "Parent", parent_guid).exactly(2).times.and_return(nil)
-        expect(Federation::Fetcher).to receive(:fetch_public).with(author, "Parent", parent_guid)
-
-        expect {
-          SomeRelayable.from_xml(xml)
-        }.to raise_error DiasporaFederation::Entities::Relayable::ParentNotFound
       end
     end
 

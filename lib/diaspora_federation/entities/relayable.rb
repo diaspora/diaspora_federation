@@ -216,7 +216,6 @@ module DiasporaFederation
             # fetch and receive parent from remote, if not available locally
             Federation::Fetcher.fetch_public(data[:author], type, guid)
             data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
-            raise ParentNotFound unless data[:parent]
           end
         end
       end
@@ -231,10 +230,6 @@ module DiasporaFederation
 
       # Raised, if verify_signatures fails to verify signatures (signatures are wrong)
       class SignatureVerificationFailed < RuntimeError
-      end
-
-      # Raised, if parent was not found and can't be fetched
-      class ParentNotFound < RuntimeError
       end
     end
   end
