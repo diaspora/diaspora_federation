@@ -35,6 +35,12 @@ module DiasporaFederation
 
         described_class.receive_public(data, true)
       end
+
+      it "re-raises errors from receiver" do
+        expect {
+          described_class.receive_public("<xml/>")
+        }.to raise_error DiasporaFederation::Salmon::InvalidEnvelope
+      end
     end
 
     describe ".receive_private" do
@@ -79,6 +85,15 @@ module DiasporaFederation
         expect {
           described_class.receive_private(data, nil, 1234)
         }.to raise_error ArgumentError, "no recipient key provided"
+      end
+
+      it "re-raises errors from receiver" do
+        invalid_magic_env = Nokogiri::XML::Document.parse("<xml/>").root
+        data = Salmon::EncryptedMagicEnvelope.encrypt(invalid_magic_env, recipient_key.public_key)
+
+        expect {
+          described_class.receive_private(data, recipient_key, 1234)
+        }.to raise_error DiasporaFederation::Salmon::InvalidEnvelope
       end
     end
   end
