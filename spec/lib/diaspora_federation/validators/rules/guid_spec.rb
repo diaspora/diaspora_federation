@@ -37,7 +37,8 @@ describe Validation::Rule::Guid do
 
     it "validates a long string with random characters and [-_@.:] (redmatrix)" do
       validator = Validation::Validator.new(
-        OpenStruct.new(guid: "1234567890ABCDefgh_ijkl-mnopqrSTUVwxyz@example.com:3000"))
+        OpenStruct.new(guid: "1234567890ABCDefgh_ijkl-mnopqrSTUVwxyz@example.com:3000")
+      )
       validator.rule(:guid, :guid)
 
       expect(validator).to be_valid
