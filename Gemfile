@@ -61,6 +61,9 @@ group :development, :test do
   gem "spring-commands-rspec"
   gem "spring-watcher-listen"
 
+  # dependency for guard and spring-watcher-listen
+  gem "listen", "< 3.1", require: false # newer not compatible with ruby <= 2.2.2
+
   # GUID generation
   gem "uuid", "~> 2.3.8"
 
