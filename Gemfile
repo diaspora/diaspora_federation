@@ -21,6 +21,15 @@ group :development do
   gem "pronto",         "0.6.0"
   gem "pronto-rubocop", "0.6.2", require: false
 
+  # automatic test runs
+  gem "guard-rspec",   require: false
+  gem "guard-rubocop", require: false
+
+  # preloading environment
+  gem "spring"
+  gem "spring-commands-rspec"
+  gem "spring-watcher-listen"
+
   # debugging
   gem "pry"
   gem "pry-debundle"
@@ -51,18 +60,6 @@ group :development, :test do
   # unit tests
   gem "rspec-core", "~> 3.4.3"
   gem "rspec-rails", "~> 3.4.1"
-
-  # automatic test runs
-  gem "guard-rspec",   require: false
-  gem "guard-rubocop", require: false
-
-  # preloading environment
-  gem "spring"
-  gem "spring-commands-rspec"
-  gem "spring-watcher-listen"
-
-  # dependency for guard and spring-watcher-listen
-  gem "listen", "< 3.1", require: false # newer not compatible with ruby <= 2.2.2
 
   # GUID generation
   gem "uuid", "~> 2.3.8"
