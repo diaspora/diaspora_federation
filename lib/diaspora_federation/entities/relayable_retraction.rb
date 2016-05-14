@@ -72,6 +72,11 @@ module DiasporaFederation
         Retraction.new(author: author, target_guid: target_guid, target_type: target_type, target: target)
       end
 
+      # @return [String] string representation of this object
+      def to_s
+        "RelayableRetraction:#{target_type}:#{target_guid}"
+      end
+
       private
 
       # @param [Nokogiri::XML::Element] root_node xml nodes

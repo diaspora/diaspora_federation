@@ -10,6 +10,7 @@ module DiasporaFederation
 </poll_answer>
 XML
     }
+    let(:string) { "PollAnswer:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
 

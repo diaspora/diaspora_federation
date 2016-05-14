@@ -27,6 +27,7 @@ module DiasporaFederation
 </person>
 XML
     }
+    let(:string) { "Person:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
 

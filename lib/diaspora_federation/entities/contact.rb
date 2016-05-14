@@ -24,6 +24,11 @@ module DiasporaFederation
       # @!attribute [r] sharing
       #   @return [Boolean] if the author is sharing with the person
       property :sharing, default: true
+
+      # @return [String] string representation of this object
+      def to_s
+        "Contact:#{author}:#{recipient}"
+      end
     end
   end
 end

@@ -22,6 +22,7 @@ module DiasporaFederation
 </signed_retraction>
 XML
     }
+    let(:string) { "SignedRetraction:#{data[:target_type]}:#{data[:target_guid]}" }
 
     it_behaves_like "an Entity subclass", [:target]
 

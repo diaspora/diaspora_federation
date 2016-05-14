@@ -23,6 +23,7 @@ module DiasporaFederation
 </poll_participation>
 XML
     }
+    let(:string) { "PollParticipation:#{data[:guid]}:#{parent.guid}" }
 
     it_behaves_like "an Entity subclass", [:parent]
 

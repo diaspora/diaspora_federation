@@ -42,6 +42,11 @@ module DiasporaFederation
         end
       end
 
+      # @return [String] string representation of this object
+      def to_s
+        "Retraction:#{target_type}:#{target_guid}"
+      end
+
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Retraction] instance
       def self.populate_entity(root_node)

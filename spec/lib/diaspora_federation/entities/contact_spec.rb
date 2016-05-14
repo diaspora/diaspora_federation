@@ -12,6 +12,7 @@ module DiasporaFederation
 </contact>
 XML
     }
+    let(:string) { "Contact:#{data[:author]}:#{data[:recipient]}" }
 
     it_behaves_like "an Entity subclass"
 

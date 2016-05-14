@@ -57,6 +57,11 @@ module DiasporaFederation
         Base64.strict_encode64(privkey.sign(Relayable::DIGEST, [ret.target_guid, ret.target_type].join(";")))
       end
 
+      # @return [String] string representation of this object
+      def to_s
+        "SignedRetraction:#{target_type}:#{target_guid}"
+      end
+
       private
 
       # @param [Nokogiri::XML::Element] root_node xml nodes

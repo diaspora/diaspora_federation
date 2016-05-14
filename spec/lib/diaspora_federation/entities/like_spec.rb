@@ -25,6 +25,7 @@ module DiasporaFederation
 </like>
 XML
     }
+    let(:string) { "Like:#{data[:guid]}:Post:#{parent.guid}" }
 
     it_behaves_like "an Entity subclass", [:parent]
 

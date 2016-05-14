@@ -53,6 +53,7 @@ module DiasporaFederation
 </status_message>
       XML
     }
+    let(:string) { "StatusMessage:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
 

@@ -21,6 +21,7 @@ module DiasporaFederation
 </profile>
 XML
     }
+    let(:string) { "Profile:#{data[:author]}" }
 
     it_behaves_like "an Entity subclass"
 

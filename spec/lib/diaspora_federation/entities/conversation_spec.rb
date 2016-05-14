@@ -31,6 +31,7 @@ module DiasporaFederation
 </conversation>
 XML
     }
+    let(:string) { "Conversation:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
 

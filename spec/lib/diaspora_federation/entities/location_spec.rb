@@ -11,6 +11,7 @@ module DiasporaFederation
 </location>
 XML
     }
+    let(:string) { "Location" }
 
     it_behaves_like "an Entity subclass"
 

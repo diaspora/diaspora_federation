@@ -15,6 +15,7 @@ module DiasporaFederation
 </reshare>
 XML
     }
+    let(:string) { "Reshare:#{data[:guid]}:#{data[:root_guid]}" }
 
     it_behaves_like "an Entity subclass"
 

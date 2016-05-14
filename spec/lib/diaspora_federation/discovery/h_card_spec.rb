@@ -107,6 +107,7 @@ module DiasporaFederation
 </html>
 HTML
     }
+    let(:string) { "HCard:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
 

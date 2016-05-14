@@ -32,6 +32,7 @@ module DiasporaFederation
 </relayable_retraction>
 XML
     }
+    let(:string) { "RelayableRetraction:#{data[:target_type]}:#{data[:target_guid]}" }
 
     it_behaves_like "an Entity subclass", [:target]
 

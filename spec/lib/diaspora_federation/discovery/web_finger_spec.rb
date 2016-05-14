@@ -36,6 +36,7 @@ module DiasporaFederation
 </XRD>
 XML
     }
+    let(:string) { "WebFinger:#{data[:acct_uri]}" }
 
     it_behaves_like "an Entity subclass"
 

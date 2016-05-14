@@ -22,6 +22,11 @@ module DiasporaFederation
       #   has no meaning at the moment
       #   @return [Boolean] public
       property :public, default: true # always true? (we only reshare public posts)
+
+      # @return [String] string representation of this object
+      def to_s
+        "#{super}:#{root_guid}"
+      end
     end
   end
 end

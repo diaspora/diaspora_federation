@@ -131,6 +131,11 @@ module DiasporaFederation
       Entities.const_get(class_name)
     end
 
+    # @return [String] string representation of this object
+    def to_s
+      "#{self.class.name.rpartition('::').last}#{":#{guid}" if respond_to?(:guid)}"
+    end
+
     private
 
     def setable?(name, val)

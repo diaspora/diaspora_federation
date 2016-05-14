@@ -18,6 +18,7 @@ module DiasporaFederation
 </photo>
 XML
     }
+    let(:string) { "Photo:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
 

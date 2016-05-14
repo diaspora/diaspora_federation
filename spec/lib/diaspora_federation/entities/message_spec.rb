@@ -21,6 +21,7 @@ module DiasporaFederation
 </message>
 XML
     }
+    let(:string) { "Message:#{data[:guid]}:#{parent.guid}" }
 
     it_behaves_like "an Entity subclass", [:parent]
 

@@ -18,7 +18,7 @@ module DiasporaFederation
         def receive
           validate_and_receive
         rescue => e
-          logger.error "failed to receive #{entity.class}#{":#{entity.guid}" if entity.respond_to?(:guid)}"
+          logger.error "failed to receive #{entity}"
           raise e
         end
 
@@ -29,8 +29,7 @@ module DiasporaFederation
         def validate_and_receive
           validate
           DiasporaFederation.callbacks.trigger(:receive_entity, entity, recipient_id)
-          logger.info "successfully received #{entity.class}#{":#{entity.guid}" if entity.respond_to?(:guid)} " \
-                      "from person #{sender}#{" for #{recipient_id}" if recipient_id}"
+          logger.info "successfully received #{entity} from person #{sender}#{" for #{recipient_id}" if recipient_id}"
         end
 
         def validate

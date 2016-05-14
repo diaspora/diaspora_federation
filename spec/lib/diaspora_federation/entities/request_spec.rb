@@ -10,6 +10,7 @@ module DiasporaFederation
 </request>
 XML
     }
+    let(:string) { "Request:#{data[:author]}:#{data[:recipient]}" }
 
     it_behaves_like "an Entity subclass"
 

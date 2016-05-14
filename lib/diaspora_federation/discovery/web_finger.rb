@@ -175,6 +175,11 @@ module DiasporaFederation
         )
       end
 
+      # @return [String] string representation of this object
+      def to_s
+        "WebFinger:#{acct_uri}"
+      end
+
       private
 
       # Parses the XML string to a Hash and does some rudimentary checking on

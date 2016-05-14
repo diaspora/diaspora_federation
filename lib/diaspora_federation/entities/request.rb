@@ -24,6 +24,11 @@ module DiasporaFederation
         Contact.new(author: author, recipient: recipient)
       end
 
+      # @return [String] string representation of this object
+      def to_s
+        "Request:#{author}:#{recipient}"
+      end
+
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Retraction] instance
       def self.populate_entity(root_node)

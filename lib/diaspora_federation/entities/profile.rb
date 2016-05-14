@@ -55,6 +55,11 @@ module DiasporaFederation
 
       property :nsfw, default: false
       property :tag_string, default: nil
+
+      # @return [String] string representation of this object
+      def to_s
+        "Profile:#{author}"
+      end
     end
   end
 end

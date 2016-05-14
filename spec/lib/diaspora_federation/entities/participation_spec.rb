@@ -24,6 +24,7 @@ module DiasporaFederation
 </participation>
 XML
     }
+    let(:string) { "Participation:#{data[:guid]}:Post:#{parent.guid}" }
 
     it_behaves_like "an Entity subclass", [:parent]
 

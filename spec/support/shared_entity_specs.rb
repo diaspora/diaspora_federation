@@ -31,6 +31,12 @@ shared_examples "an Entity subclass" do |ignored_props=[]|
         expect(hash).to eq(data)
       end
     end
+
+    describe "#to_s" do
+      it "should represent the entity as string" do
+        expect(instance.to_s).to eq(string)
+      end
+    end
   end
 end
 

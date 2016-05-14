@@ -9,6 +9,7 @@ module DiasporaFederation
 </account_deletion>
 XML
     }
+    let(:string) { "AccountDeletion:#{data[:author]}" }
 
     it_behaves_like "an Entity subclass"
 

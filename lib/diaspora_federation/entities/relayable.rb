@@ -93,6 +93,11 @@ module DiasporaFederation
         sender == author || sender == parent.author
       end
 
+      # @return [String] string representation of this object
+      def to_s
+        "#{super}#{":#{parent_type}" if respond_to?(:parent_type)}:#{parent_guid}"
+      end
+
       private
 
       # this happens only on downstream federation

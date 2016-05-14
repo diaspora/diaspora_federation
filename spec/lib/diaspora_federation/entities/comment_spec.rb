@@ -19,6 +19,7 @@ module DiasporaFederation
 </comment>
 XML
     }
+    let(:string) { "Comment:#{data[:guid]}:#{parent.guid}" }
 
     it_behaves_like "an Entity subclass", [:parent]
 
