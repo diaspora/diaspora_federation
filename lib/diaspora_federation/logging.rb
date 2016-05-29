@@ -3,6 +3,12 @@ module DiasporaFederation
   #
   # it uses the logging-gem if available
   module Logging
+    # add +logger+ also as class method when included
+    # @param [Class] klass the class into which the module is included
+    def self.included(klass)
+      klass.extend(self)
+    end
+
     private
 
     # get the logger for this class
