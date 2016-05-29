@@ -21,7 +21,7 @@ module DiasporaFederation
     #
     # @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-magicsig-01.html
     class MagicEnvelope
-      extend Logging
+      include Logging
 
       # encoding used for the payload data
       ENCODING = "base64url".freeze
@@ -135,7 +135,9 @@ module DiasporaFederation
       # the payload data as string
       # @return [String] payload data
       def payload_data
-        @payload_data ||= XmlPayload.pack(@payload).to_xml.strip
+        @payload_data ||= XmlPayload.pack(@payload).to_xml.strip.tap do |data|
+          logger.debug "send payload:\n#{data}"
+        end
       end
 
       def key_id
