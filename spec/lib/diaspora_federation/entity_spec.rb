@@ -251,9 +251,16 @@ XML
         }
       }
 
-      it "gets returned by #to_h" do
+      it "gets returned as Hash by #to_h" do
         entity = Entities::TestNestedEntity.new(nested_data)
-        expect(entity.to_h).to eq(nested_data)
+
+        nested_hash = {
+          asdf:  nested_data[:asdf],
+          test:  nested_data[:test].to_h,
+          multi: nested_data[:multi].map(&:to_h)
+        }
+
+        expect(entity.to_h).to eq(nested_hash)
       end
 
       it "gets xml-ified by #to_xml" do

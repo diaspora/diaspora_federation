@@ -25,10 +25,18 @@ shared_examples "an Entity subclass" do |ignored_props=[]|
     end
 
     describe "#to_h" do
-      it "should resemble the input data" do
-        hash = instance.to_h
-        ignored_props.each {|key| data.delete(key) }
-        expect(hash).to eq(data)
+      it "should return a hash with nested data" do
+        expected_data = Hash[data.reject {|key, _| ignored_props.include?(key) }.map {|key, value|
+          if [String, TrueClass, FalseClass, Fixnum, Time, NilClass].include?(value.class)
+            [key, value]
+          elsif value.instance_of?(Array)
+            [key, value.map(&:to_h)]
+          else
+            [key, value.to_h]
+          end
+        }]
+
+        expect(instance.to_h).to eq(expected_data)
       end
     end
 

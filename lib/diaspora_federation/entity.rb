@@ -65,12 +65,21 @@ module DiasporaFederation
       validate
     end
 
-    # Returns a Hash representing this Entity (attributes => values)
+    # Returns a Hash representing this Entity (attributes => values).
+    # Nested entities are also converted to a Hash.
     # @return [Hash] entity data (mostly equal to the hash used for initialization).
     def to_h
-      self.class.class_props.keys.each_with_object({}) do |prop, hash|
-        hash[prop] = public_send(prop)
-      end
+      Hash[properties.map {|key, value|
+        type = self.class.class_props[key]
+
+        if type == String || value.nil?
+          [key, value]
+        elsif type.instance_of?(Class)
+          [key, value.to_h]
+        elsif type.instance_of?(Array)
+          [key, value.map(&:to_h)]
+        end
+      }]
     end
 
     # Returns the XML representation for this entity constructed out of
@@ -150,7 +159,7 @@ module DiasporaFederation
     end
 
     def setable_nested?(type, val)
-      type.is_a?(Class) && type.ancestors.include?(Entity) && val.is_a?(Entity)
+      type.instance_of?(Class) && type.ancestors.include?(Entity) && val.is_a?(Entity)
     end
 
     def setable_multi?(type, val)
@@ -178,8 +187,15 @@ module DiasporaFederation
       "Failed validation for properties: #{errors.join(' | ')}"
     end
 
+    # @return [Hash] hash with all properties
+    def properties
+      self.class.class_props.keys.each_with_object({}) do |prop, hash|
+        hash[prop] = public_send(prop)
+      end
+    end
+
     def xml_elements
-      Hash[to_h.map {|name, value| [name, self.class.class_props[name] == String ? value.to_s : value] }]
+      Hash[properties.map {|name, value| [name, self.class.class_props[name] == String ? value.to_s : value] }]
     end
 
     def add_property_to_xml(doc, root_element, name, value)
