@@ -34,6 +34,7 @@ module DiasporaFederation
   #   are intended to be immutable data containers, only.
   class Entity
     extend PropertiesDSL
+    include Logging
 
     # Initializes the Entity with the given attribute hash and freezes the created
     # instance it returns.
@@ -50,15 +51,14 @@ module DiasporaFederation
     # @param [Hash] data entity data
     # @return [Entity] new instance
     def initialize(data)
+      logger.debug "create entity #{self.class} with data: #{data}"
       raise ArgumentError, "expected a Hash" unless data.is_a?(Hash)
+
       entity_data = self.class.resolv_aliases(data)
-      missing_props = self.class.missing_props(entity_data)
-      unless missing_props.empty?
-        raise ArgumentError, "missing required properties: #{missing_props.join(', ')}"
-      end
+      validate_missing_props(entity_data)
 
       self.class.default_values.merge(entity_data).each do |name, value|
-        instance_variable_set("@#{name}", nilify(value)) if setable?(name, value)
+        instance_variable_set("@#{name}", instantiate_nested(name, nilify(value))) if setable?(name, value)
       end
 
       freeze
@@ -147,6 +147,11 @@ module DiasporaFederation
 
     private
 
+    def validate_missing_props(entity_data)
+      missing_props = self.class.missing_props(entity_data)
+      raise ArgumentError, "missing required properties: #{missing_props.join(', ')}" unless missing_props.empty?
+    end
+
     def setable?(name, val)
       type = self.class.class_props[name]
       return false if type.nil? # property undefined
@@ -159,16 +164,28 @@ module DiasporaFederation
     end
 
     def setable_nested?(type, val)
-      type.instance_of?(Class) && type.ancestors.include?(Entity) && val.is_a?(Entity)
+      type.instance_of?(Class) && type.ancestors.include?(Entity) && (val.is_a?(Entity) || val.is_a?(Hash))
     end
 
     def setable_multi?(type, val)
-      type.instance_of?(Array) && val.instance_of?(Array) && val.all? {|v| v.instance_of?(type.first) }
+      type.instance_of?(Array) && val.instance_of?(Array) &&
+        (val.all? {|v| v.instance_of?(type.first) } || val.all? {|v| v.instance_of?(Hash) })
     end
 
     def nilify(value)
       return nil if value.respond_to?(:empty?) && value.empty? && !value.instance_of?(Array)
       value
+    end
+
+    def instantiate_nested(name, value)
+      if value.instance_of?(Array)
+        return value unless value.first.instance_of?(Hash)
+        value.map {|hash| self.class.class_props[name].first.new(hash) }
+      elsif value.instance_of?(Hash)
+        self.class.class_props[name].new(value)
+      else
+        value
+      end
     end
 
     def validate

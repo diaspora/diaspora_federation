@@ -250,15 +250,16 @@ XML
           multi: [Entities::OtherEntity.new(asdf: "asdf"), Entities::OtherEntity.new(asdf: "asdf")]
         }
       }
-
-      it "gets returned as Hash by #to_h" do
-        entity = Entities::TestNestedEntity.new(nested_data)
-
-        nested_hash = {
+      let(:nested_hash) {
+        {
           asdf:  nested_data[:asdf],
           test:  nested_data[:test].to_h,
           multi: nested_data[:multi].map(&:to_h)
         }
+      }
+
+      it "gets returned as Hash by #to_h" do
+        entity = Entities::TestNestedEntity.new(nested_data)
 
         expect(entity.to_h).to eq(nested_hash)
       end
@@ -272,6 +273,18 @@ XML
         end
         expect(xml.xpath("test_entity")).to have_exactly(1).items
         expect(xml.xpath("other_entity")).to have_exactly(2).items
+      end
+
+      it "instantiates nested entities if provided as hash" do
+        entity = Entities::TestNestedEntity.new(nested_hash)
+
+        expect(entity.test).to be_instance_of(Entities::TestEntity)
+        expect(entity.test.test).to eq("test")
+
+        expect(entity.multi).to be_instance_of(Array)
+        expect(entity.multi).to have_exactly(2).items
+        expect(entity.multi.first).to be_instance_of(Entities::OtherEntity)
+        expect(entity.multi.first.asdf).to eq("asdf")
       end
     end
 
