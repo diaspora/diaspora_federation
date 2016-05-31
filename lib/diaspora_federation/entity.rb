@@ -36,6 +36,10 @@ module DiasporaFederation
     extend PropertiesDSL
     include Logging
 
+    # Invalid XML characters
+    # @see https://www.w3.org/TR/REC-xml/#charsets "Extensible Markup Language (XML) 1.0"
+    INVALID_XML_REGEX = /[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/
+
     # Initializes the Entity with the given attribute hash and freezes the created
     # instance it returns.
     #
@@ -230,7 +234,7 @@ module DiasporaFederation
     def simple_node(doc, name, value)
       xml_name = self.class.xml_names[name]
       Nokogiri::XML::Element.new(xml_name ? xml_name.to_s : name, doc).tap do |node|
-        node.content = value unless value.empty?
+        node.content = value.gsub(INVALID_XML_REGEX, "\uFFFD") unless value.empty?
       end
     end
 

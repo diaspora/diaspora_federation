@@ -91,6 +91,13 @@ module DiasporaFederation
           expect(%w(test1 test2 test3 test4)).to include(node.name)
         end
       end
+
+      it "replaces invalid XML characters" do
+        entity = Entities::TestEntity.new(test: "asdfasdf asdf💩asdf\nasdf")
+        xml = entity.to_xml.to_xml
+        parsed = Entities::TestEntity.from_xml(Nokogiri::XML::Document.parse(xml).root).test
+        expect(parsed).to eq("asdf�asdf asdf💩asdf\nasdf")
+      end
     end
 
     describe ".from_xml" do
