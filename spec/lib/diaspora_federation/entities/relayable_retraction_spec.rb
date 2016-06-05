@@ -44,7 +44,10 @@ XML
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
       let(:hash) { FactoryGirl.attributes_for(:relayable_retraction_entity) }
 
-      it "updates author signature when it was nil and key was supplied" do
+      it "updates author signature when it was nil and key was supplied and author is not parent author" do
+        parent = FactoryGirl.build(:related_entity, author: bob.diaspora_id)
+        hash[:target] = FactoryGirl.build(:related_entity, author: hash[:author], parent: parent)
+
         expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
 
         signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
@@ -52,6 +55,20 @@ XML
         xml = Entities::RelayableRetraction.new(hash).to_xml
 
         signature = Base64.decode64(xml.at_xpath("target_author_signature").text)
+        expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
+      end
+
+      it "sets parent author signature when author is parent author" do
+        parent = FactoryGirl.build(:related_entity, author: hash[:author])
+        hash[:target] = FactoryGirl.build(:related_entity, author: hash[:author], parent: parent)
+
+        expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
+
+        signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
+
+        xml = Entities::RelayableRetraction.new(hash).to_xml
+
+        signature = Base64.decode64(xml.at_xpath("parent_author_signature").text)
         expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
       end
 

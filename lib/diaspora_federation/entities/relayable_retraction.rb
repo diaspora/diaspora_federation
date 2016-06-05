@@ -95,10 +95,10 @@ module DiasporaFederation
       # @param [OpenSSL::PKey::RSA] privkey private key of sender
       # @param [Hash] hash hash given for a signing
       def fill_required_signature(privkey, hash)
-        if target.author == author && target_author_signature.nil?
-          hash[:target_author_signature] = SignedRetraction.sign_with_key(privkey, self)
-        elsif target.parent.author == author && parent_author_signature.nil?
+        if target.parent.author == author && parent_author_signature.nil?
           hash[:parent_author_signature] = SignedRetraction.sign_with_key(privkey, self)
+        elsif target.author == author && target_author_signature.nil?
+          hash[:target_author_signature] = SignedRetraction.sign_with_key(privkey, self)
         end
       end
     end
