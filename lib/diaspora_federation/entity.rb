@@ -225,7 +225,8 @@ module DiasporaFederation
       else
         # call #to_xml for each item and append to root
         [*value].compact.each do |item|
-          root_element << item.to_xml
+          child = item.to_xml
+          root_element << child if child
         end
       end
     end

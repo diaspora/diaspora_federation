@@ -1,10 +1,10 @@
-shared_examples "an Entity subclass" do |ignored_props=[]|
+shared_examples "an Entity subclass" do
   it "should be an Entity" do
     expect(described_class).to be < DiasporaFederation::Entity
   end
 
   it "has its properties set" do
-    expect(described_class.class_props.keys).to include(*(data.keys - ignored_props))
+    expect(described_class.class_props.keys).to include(*data.keys)
   end
 
   context "behaviour" do
@@ -26,7 +26,7 @@ shared_examples "an Entity subclass" do |ignored_props=[]|
 
     describe "#to_h" do
       it "should return a hash with nested data" do
-        expected_data = Hash[data.reject {|key, _| ignored_props.include?(key) }.map {|key, value|
+        expected_data = Hash[data.map {|key, value|
           if [String, TrueClass, FalseClass, Fixnum, Time, NilClass].include?(value.class)
             [key, value]
           elsif value.instance_of?(Array)
@@ -76,7 +76,7 @@ shared_examples "an XML Entity" do |ignored_props=[]|
     if value.nil?
       expect(parsed_value).to be_nil
     elsif type == String
-      expect(parsed_value).to eq(value.to_s)
+      expect(parsed_value.to_s).to eq(value.to_s)
     elsif type.instance_of?(Array)
       value.each_with_index {|entity, index| check_entity(entity, parsed_value[index]) }
     elsif type.ancestors.include?(DiasporaFederation::Entity)

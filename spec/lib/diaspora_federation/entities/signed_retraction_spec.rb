@@ -24,7 +24,7 @@ XML
     }
     let(:string) { "SignedRetraction:#{data[:target_type]}:#{data[:target_guid]}" }
 
-    it_behaves_like "an Entity subclass", [:target]
+    it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity", [:target_author_signature]
 

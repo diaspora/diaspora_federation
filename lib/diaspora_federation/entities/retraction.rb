@@ -20,18 +20,10 @@ module DiasporaFederation
       #   @return [String] target type
       property :target_type, xml_name: :type
 
-      # target entity
-      # @return [RelatedEntity] target entity
-      attr_reader :target
-
-      # Initializes a new retraction entity
-      #
-      # @param [Hash] data entity data
-      # @see DiasporaFederation::Entity#initialize
-      def initialize(data)
-        @target = data[:target] if data
-        super(data)
-      end
+      # @!attribute [r] target
+      #   target entity
+      #   @return [RelatedEntity] target entity
+      entity :target, Entities::RelatedEntity
 
       def sender_valid?(sender)
         case target_type

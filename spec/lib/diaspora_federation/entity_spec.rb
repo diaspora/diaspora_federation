@@ -282,6 +282,13 @@ XML
         expect(xml.xpath("other_entity")).to have_exactly(2).items
       end
 
+      it "is not added to xml if #to_xml returns nil" do
+        entity = Entities::TestEntityWithRelatedEntity.new(test: "test", parent: FactoryGirl.build(:related_entity))
+        xml = entity.to_xml
+        expect(xml.children).to have_exactly(1).items
+        xml.children.first.name = "test"
+      end
+
       it "instantiates nested entities if provided as hash" do
         entity = Entities::TestNestedEntity.new(nested_hash)
 

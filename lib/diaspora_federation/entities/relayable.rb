@@ -10,10 +10,6 @@ module DiasporaFederation
       # digest instance used for signing
       DIGEST = OpenSSL::Digest::SHA256.new
 
-      # parent entity
-      # @return [RelatedEntity] parent entity
-      attr_reader :parent
-
       # order from the parsed xml for signature
       # @return [Array] order from xml
       attr_reader :xml_order
@@ -49,20 +45,24 @@ module DiasporaFederation
       #   This signature is required only when federation from upstream (parent) post author to
       #   downstream subscribers. This is the case when the parent author has to resend a relayable
       #   received from one of his subscribers to all others.
-      #
       #   @return [String] parent author signature
       #
-      # @param [Entity] entity the entity in which it is included
-      def self.included(entity)
-        entity.class_eval do
+      # @!attribute [r] parent
+      #   meta information about the parent object
+      #   @return [RelatedEntity] parent entity
+      #
+      # @param [Entity] klass the entity in which it is included
+      def self.included(klass)
+        klass.class_eval do
           property :author, xml_name: :diaspora_handle
           property :guid
           property :parent_guid
           property :author_signature, default: nil
           property :parent_author_signature, default: nil
+          entity :parent, Entities::RelatedEntity
         end
 
-        entity.extend ParseXML
+        klass.extend ParseXML
       end
 
       # Initializes a new relayable Entity with order and additional xml elements
@@ -72,7 +72,6 @@ module DiasporaFederation
       # @param [Hash] additional_xml_elements additional xml elements
       # @see DiasporaFederation::Entity#initialize
       def initialize(data, xml_order=nil, additional_xml_elements={})
-        @parent = data[:parent] if data
         @xml_order = xml_order
         @additional_xml_elements = additional_xml_elements
 

@@ -26,7 +26,7 @@ XML
     }
     let(:string) { "Participation:#{data[:guid]}:Post:#{parent.guid}" }
 
-    it_behaves_like "an Entity subclass", [:parent]
+    it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
 

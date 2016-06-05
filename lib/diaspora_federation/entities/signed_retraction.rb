@@ -30,18 +30,10 @@ module DiasporaFederation
       #   @return [String] author signature
       property :target_author_signature, default: nil
 
-      # target entity
-      # @return [RelatedEntity] target entity
-      attr_reader :target
-
-      # Initializes a new signed retraction entity
-      #
-      # @param [Hash] data entity data
-      # @see DiasporaFederation::Entity#initialize
-      def initialize(data)
-        @target = data[:target] if data
-        super(data)
-      end
+      # @!attribute [r] target
+      #   target entity
+      #   @return [RelatedEntity] target entity
+      entity :target, Entities::RelatedEntity
 
       # use only {Retraction} for receive
       # @return [Retraction] instance as normal retraction

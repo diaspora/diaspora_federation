@@ -23,6 +23,11 @@ module DiasporaFederation
       #   if the entity also have a parent (Comment or Like), +nil+ if it has no parent
       #   @return [RelatedEntity] parent entity
       entity :parent, Entities::RelatedEntity, default: nil
+
+      # never add {RelatedEntity} to xml
+      def to_xml
+        nil
+      end
     end
   end
 end

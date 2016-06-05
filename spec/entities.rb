@@ -26,6 +26,11 @@ module DiasporaFederation
       property :qwer, xml_name: :asdf
     end
 
+    class TestEntityWithRelatedEntity < DiasporaFederation::Entity
+      property :test
+      entity :parent, RelatedEntity
+    end
+
     class Entity < DiasporaFederation::Entity
       property :test
     end
