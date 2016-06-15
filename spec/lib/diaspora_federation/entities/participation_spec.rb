@@ -28,8 +28,31 @@ XML
 
     it_behaves_like "an Entity subclass"
 
-    it_behaves_like "an XML Entity"
+    it_behaves_like "an XML Entity", [:parent]
 
     it_behaves_like "a relayable Entity"
+
+    describe "#sender_valid?" do
+      let(:entity) { Entities::Participation.new(data) }
+
+      it "allows the author" do
+        expect(entity.sender_valid?(alice.diaspora_id)).to be_truthy
+      end
+
+      it "does not allow the parent author" do
+        expect(entity.sender_valid?(bob.diaspora_id)).to be_falsey
+      end
+    end
+
+    context "relayable signature verification" do
+      it "does not verify the signature" do
+        data.merge!(author_signature: "aa", parent_author_signature: "bb")
+        xml = Entities::Participation.new(data).to_xml
+
+        expect {
+          Entities::Participation.from_xml(xml)
+        }.not_to raise_error
+      end
+    end
   end
 end

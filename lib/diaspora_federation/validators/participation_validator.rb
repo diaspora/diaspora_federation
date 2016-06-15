@@ -4,8 +4,9 @@ module DiasporaFederation
     class ParticipationValidator < Validation::Validator
       include Validation
 
-      include RelayableValidator
-
+      rule :author, %i(not_empty diaspora_id)
+      rule :guid, :guid
+      rule :parent_guid, :guid
       rule :parent_type, [:not_empty, regular_expression: {regex: /\APost\z/}]
     end
   end
