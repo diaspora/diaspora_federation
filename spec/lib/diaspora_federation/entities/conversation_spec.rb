@@ -35,7 +35,7 @@ XML
 
     it_behaves_like "an Entity subclass"
 
-    it_behaves_like "an XML Entity"
+    it_behaves_like "an XML Entity", %i(parent parent_guid)
 
     context "default values" do
       let(:minimal_xml) {

@@ -4,8 +4,8 @@ module DiasporaFederation
     class MessageValidator < Validation::Validator
       include Validation
 
-      include RelayableValidator
-
+      rule :author, %i(not_empty diaspora_id)
+      rule :guid, :guid
       rule :conversation_guid, :guid
     end
   end

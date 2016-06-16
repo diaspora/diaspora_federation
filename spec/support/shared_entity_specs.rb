@@ -66,21 +66,21 @@ shared_examples "an XML Entity" do |ignored_props=[]|
     end
   end
 
-  def check_entity(entity, parsed_entity, ignored_props=[])
-    entity.class.class_props.each do |name, type|
-      validate_values(entity.send(name), parsed_entity.send(name), type) unless ignored_props.include?(name)
+  def check_entity(entity, parsed_entity, ignored_props)
+    entity.class.class_props.reject {|name| ignored_props.include?(name) }.each do |name, type|
+      validate_values(entity.send(name), parsed_entity.send(name), type, ignored_props)
     end
   end
 
-  def validate_values(value, parsed_value, type)
+  def validate_values(value, parsed_value, type, ignored_props)
     if value.nil?
       expect(parsed_value).to be_nil
     elsif type == String
       expect(parsed_value.to_s).to eq(value.to_s)
     elsif type.instance_of?(Array)
-      value.each_with_index {|entity, index| check_entity(entity, parsed_value[index]) }
+      value.each_with_index {|entity, index| check_entity(entity, parsed_value[index], ignored_props) }
     elsif type.ancestors.include?(DiasporaFederation::Entity)
-      check_entity(value, parsed_value)
+      check_entity(value, parsed_value, ignored_props)
     end
   end
 end
