@@ -30,6 +30,15 @@ module DiasporaFederation
       #   shows whether the status message is visible to everyone or only to some aspects
       #   @return [Boolean] is it public
       property :public, default: false
+
+      private
+
+      def validate
+        super
+        photos.each do |photo|
+          raise ValidationError, "nested photo has different author" if photo.author != author
+        end
+      end
     end
   end
 end
