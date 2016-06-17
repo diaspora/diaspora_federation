@@ -3,11 +3,11 @@ module DiasporaFederation
     let(:parent) { FactoryGirl.create(:conversation, author: bob) }
     let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:signed_msg1) {
-      FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
+      FactoryGirl.build(:message_entity, author: bob.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
                  .send(:xml_elements).merge(parent: parent_entity)
     }
     let(:signed_msg2) {
-      FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
+      FactoryGirl.build(:message_entity, author: bob.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
                  .send(:xml_elements).merge(parent: parent_entity)
     }
     let(:data) {
@@ -53,6 +53,15 @@ XML
       it "allows no nested messages" do
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
         expect(parsed_instance.messages).to eq([])
+      end
+    end
+
+    context "nested entities" do
+      it "validates that nested messages have the same author" do
+        invalid_data = data.merge(author: alice.diaspora_id)
+        expect {
+          Entities::Conversation.new(invalid_data)
+        }.to raise_error Entity::ValidationError, "nested message has different author"
       end
     end
   end

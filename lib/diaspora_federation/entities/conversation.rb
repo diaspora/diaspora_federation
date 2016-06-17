@@ -32,6 +32,15 @@ module DiasporaFederation
       #   The diaspora IDs of the persons participating the conversation separated by ";".
       #   @return [String] participants diaspora IDs
       property :participants, xml_name: :participant_handles
+
+      private
+
+      def validate
+        super
+        messages.each do |message|
+          raise ValidationError, "nested message has different author" if message.author != author
+        end
+      end
     end
   end
 end
