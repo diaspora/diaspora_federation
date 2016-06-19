@@ -32,7 +32,6 @@ group :development do
 
   # debugging
   gem "pry"
-  gem "pry-debundle"
   gem "pry-byebug"
 
   # documentation
