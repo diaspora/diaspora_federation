@@ -22,13 +22,22 @@ module DiasporaFederation
         sender == author
       end
 
-      # Default implementation, don't verify signatures for a {Participation}.
+      # validates that the parent exists and the parent author is local
+      def validate_parent
+        parent = DiasporaFederation.callbacks.trigger(:fetch_related_entity, parent_type, parent_guid)
+        raise ParentNotLocal, "parent: #{parent_type}:#{parent_guid}" unless parent && parent.local
+      end
+
+      # Don't verify signatures for a {Participation}. Validate that the parent is local.
       # @see Entity.populate_entity
-      # @deprecated remove after {Participation} doesn't include {Relayable} anymore
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Entity] instance
       private_class_method def self.populate_entity(root_node)
-        new(entity_data(root_node).merge(parent: nil))
+        new(entity_data(root_node).merge(parent: nil)).tap(&:validate_parent)
+      end
+
+      # Raised, if the parent is not owned by the receiving pod.
+      class ParentNotLocal < RuntimeError
       end
     end
   end
