@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/SuperTux88/yard.git
+  revision: 94426f6f26291075ffcd129a54315cfc88af6fa3
+  branch: fix-PrivateClassMethodHandler
+  specs:
+    yard (0.8.7.6)
+
 PATH
   remote: .
   specs:
@@ -276,7 +283,6 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
-    yard (0.8.7.6)
 
 PLATFORMS
   ruby
@@ -309,7 +315,7 @@ DEPENDENCIES
   sqlite3 (~> 1.3.11)
   uuid (~> 2.3.8)
   webmock (~> 2.0)
-  yard
+  yard!
 
 BUNDLED WITH
    1.12.5

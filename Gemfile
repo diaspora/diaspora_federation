@@ -35,7 +35,7 @@ group :development do
   gem "pry-byebug"
 
   # documentation
-  gem "yard", require: false
+  gem "yard", require: false, github: "SuperTux88/yard", branch: "fix-PrivateClassMethodHandler"
 end
 
 group :test do
