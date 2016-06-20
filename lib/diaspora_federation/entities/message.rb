@@ -55,10 +55,9 @@ module DiasporaFederation
       # @deprecated remove after {Message} doesn't include {Relayable} anymore
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Entity] instance
-      def self.populate_entity(root_node)
+      private_class_method def self.populate_entity(root_node)
         new({parent_guid: nil, parent: nil}.merge(entity_data(root_node)))
       end
-      private_class_method :populate_entity
     end
   end
 end

@@ -187,13 +187,12 @@ module DiasporaFederation
       # @param [String] webfinger_xml WebFinger XML string
       # @return [Hash] data XML data
       # @raise [InvalidData] if the given XML string is invalid or incomplete
-      def self.parse_xml_and_validate(webfinger_xml)
+      private_class_method def self.parse_xml_and_validate(webfinger_xml)
         XrdDocument.xml_data(webfinger_xml).tap do |data|
           valid = data.key?(:subject) && data.key?(:links)
           raise InvalidData, "webfinger xml is incomplete" unless valid
         end
       end
-      private_class_method :parse_xml_and_validate
 
       def add_links_to(doc)
         doc.links << {rel: REL_HCARD, type: "text/html", href: @hcard_url}
@@ -216,33 +215,29 @@ module DiasporaFederation
         ##################################
       end
 
-      def self.find_link(links, rel)
+      private_class_method def self.find_link(links, rel)
         links.find {|l| l[:rel] == rel }
       end
-      private_class_method :find_link
 
-      def self.parse_link(links, rel)
+      private_class_method def self.parse_link(links, rel)
         element = find_link(links, rel)
         element ? element[:href] : nil
       end
-      private_class_method :parse_link
 
-      def self.parse_link_template(links, rel)
+      private_class_method def self.parse_link_template(links, rel)
         element = find_link(links, rel)
         element ? element[:template] : nil
       end
-      private_class_method :parse_link_template
 
       # this method is used to parse the alias_url from the XML.
       # * redmatrix has sometimes no alias, return nil
       # * old pods had quotes around the alias url, this can be removed later
       # * friendica has two aliases and the first is with "acct:": return only an URL starting with http (or https)
-      def self.parse_alias(aliases)
+      private_class_method def self.parse_alias(aliases)
         return nil unless aliases
         # TODO: Old pods had quotes around alias. Remove the +map+ in next line, when all pods use this gem
         aliases.map {|a| a.gsub(/\A"|"\Z/, "") }.find {|a| a.start_with?("http") }
       end
-      private_class_method :parse_alias
     end
   end
 end

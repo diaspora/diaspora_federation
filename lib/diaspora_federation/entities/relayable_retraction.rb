@@ -73,12 +73,11 @@ module DiasporaFederation
 
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Retraction] instance
-      def self.populate_entity(root_node)
+      private_class_method def self.populate_entity(root_node)
         entity_data = entity_data(root_node)
         entity_data[:target] = Retraction.send(:fetch_target, entity_data[:target_type], entity_data[:target_guid])
         new(entity_data).to_retraction
       end
-      private_class_method :populate_entity
 
       # It updates also the signatures with the keys of the author and the parent
       # if the signatures are not there yet and if the keys are available.

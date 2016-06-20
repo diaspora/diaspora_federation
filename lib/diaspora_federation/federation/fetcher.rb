@@ -20,14 +20,13 @@ module DiasporaFederation
         raise NotFetchable, "Failed to fetch #{entity_type}:#{guid} from #{author}: #{e.class}: #{e.message}"
       end
 
-      def self.entity_name(class_name)
+      private_class_method def self.entity_name(class_name)
         return class_name if class_name =~ /^[a-z]*(_[a-z]*)*$/
 
         raise DiasporaFederation::Entity::UnknownEntity, class_name unless Entities.const_defined?(class_name)
 
         class_name.gsub(/(.)([A-Z])/, '\1_\2').downcase
       end
-      private_class_method :entity_name
 
       # Raised, if the entity is not fetchable
       class NotFetchable < RuntimeError

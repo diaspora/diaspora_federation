@@ -86,12 +86,11 @@ module DiasporaFederation
       # Parses the magic envelop from the document.
       #
       # @param [Nokogiri::XML::Document] doc Salmon XML Document
-      def self.magic_env_from_doc(doc)
+      private_class_method def self.magic_env_from_doc(doc)
         doc.at_xpath("d:diaspora/me:env", Slap::NS).tap do |env|
           raise MissingMagicEnvelope if env.nil?
         end
       end
-      private_class_method :magic_env_from_doc
     end
   end
 end

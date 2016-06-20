@@ -132,34 +132,31 @@ module DiasporaFederation
         end
       end
 
-      def self.parse_xrd_document(xrd_doc)
+      private_class_method def self.parse_xrd_document(xrd_doc)
         raise ArgumentError unless xrd_doc.instance_of?(String)
 
         doc = Nokogiri::XML::Document.parse(xrd_doc)
         raise InvalidDocument, "Not an XRD document" if !doc.root || doc.root.name != "XRD"
         doc
       end
-      private_class_method :parse_xrd_document
 
-      def self.parse_aliases_from_xml_doc(doc, data)
+      private_class_method def self.parse_aliases_from_xml_doc(doc, data)
         aliases = []
         doc.xpath("xrd:XRD/xrd:Alias", NS).each do |node|
           aliases << node.content
         end
         data[:aliases] = aliases unless aliases.empty?
       end
-      private_class_method :parse_aliases_from_xml_doc
 
-      def self.parse_properties_from_xml_doc(doc, data)
+      private_class_method def self.parse_properties_from_xml_doc(doc, data)
         properties = {}
         doc.xpath("xrd:XRD/xrd:Property", NS).each do |node|
           properties[node[:type]] = node.children.empty? ? nil : node.content
         end
         data[:properties] = properties unless properties.empty?
       end
-      private_class_method :parse_properties_from_xml_doc
 
-      def self.parse_links_from_xml_doc(doc, data)
+      private_class_method def self.parse_links_from_xml_doc(doc, data)
         links = []
         doc.xpath("xrd:XRD/xrd:Link", NS).each do |node|
           link = {}
@@ -170,7 +167,6 @@ module DiasporaFederation
         end
         data[:links] = links unless links.empty?
       end
-      private_class_method :parse_links_from_xml_doc
     end
   end
 end

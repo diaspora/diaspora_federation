@@ -165,18 +165,17 @@ module DiasporaFederation
       end
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
-      def self.envelope_valid?(env)
+      private_class_method def self.envelope_valid?(env)
         (env.instance_of?(Nokogiri::XML::Element) &&
           env.name == "env" &&
           !env.at_xpath("me:data").content.empty? &&
           !env.at_xpath("me:sig").content.empty?)
       end
-      private_class_method :envelope_valid?
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
       # @param [String] sender diaspora-ID of the sender or nil
       # @return [Boolean]
-      def self.signature_valid?(env, sender)
+      private_class_method def self.signature_valid?(env, sender)
         subject = sig_subject([Base64.urlsafe_decode64(env.at_xpath("me:data").content),
                                env.at_xpath("me:data")["type"],
                                env.at_xpath("me:encoding").content,
@@ -188,51 +187,45 @@ module DiasporaFederation
         sig = Base64.urlsafe_decode64(env.at_xpath("me:sig").content)
         sender_key.verify(DIGEST, sig, subject)
       end
-      private_class_method :signature_valid?
 
       # reads the +key_id+ from the magic envelope
       # @param [Nokogiri::XML::Element] env magic envelope XML
       # @return [String] diaspora-ID of the sender
-      def self.sender(env)
+      private_class_method def self.sender(env)
         key_id = env.at_xpath("me:sig")["key_id"]
         raise InvalidEnvelope, "no key_id" unless key_id # TODO: move to `envelope_valid?`
         Base64.urlsafe_decode64(key_id)
       end
-      private_class_method :sender
 
       # constructs the signature subject.
       # the given array should consist of the data, data_type (mimetype), encoding
       # and the algorithm
       # @param [Array<String>] data_arr
       # @return [String] signature subject
-      def self.sig_subject(data_arr)
+      private_class_method def self.sig_subject(data_arr)
         data_arr.map {|i| Base64.urlsafe_encode64(i) }.join(".")
       end
-      private_class_method :sig_subject
 
       # @param [Nokogiri::XML::Element] magic_env magic envelope XML
       # @return [Boolean]
-      def self.encoding_valid?(magic_env)
+      private_class_method def self.encoding_valid?(magic_env)
         magic_env.at_xpath("me:encoding").content == ENCODING
       end
-      private_class_method :encoding_valid?
 
       # @param [Nokogiri::XML::Element] magic_env magic envelope XML
       # @return [Boolean]
-      def self.algorithm_valid?(magic_env)
+      private_class_method def self.algorithm_valid?(magic_env)
         magic_env.at_xpath("me:alg").content == ALGORITHM
       end
-      private_class_method :algorithm_valid?
 
       # @param [Nokogiri::XML::Element] magic_env magic envelope XML
       # @param [Hash] cipher_params hash containing the key and iv
       # @return [String] data
-      def self.read_and_decrypt_data(magic_env, cipher_params)
+      private_class_method def self.read_and_decrypt_data(magic_env, cipher_params)
         data = Base64.urlsafe_decode64(magic_env.at_xpath("me:data").content)
         data = AES.decrypt(data, cipher_params[:key], cipher_params[:iv]) unless cipher_params.nil?
         data
       end
-      private_class_method :read_and_decrypt_data
     end
   end
 end

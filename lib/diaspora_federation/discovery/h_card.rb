@@ -253,43 +253,37 @@ module DiasporaFederation
       # HTML document.
       # @param [LibXML::XML::Document] doc HTML document
       # @return [Boolean] validation result
-      def self.html_document_complete?(doc)
+      private_class_method def self.html_document_complete?(doc)
         !(doc.at_css(SELECTORS[:fn]).nil? || doc.at_css(SELECTORS[:nickname]).nil? ||
           doc.at_css(SELECTORS[:url]).nil? || doc.at_css(SELECTORS[:photo]).nil?)
       end
-      private_class_method :html_document_complete?
 
-      def self.parse_html_and_validate(html_string)
+      private_class_method def self.parse_html_and_validate(html_string)
         raise ArgumentError, "hcard html is not a string" unless html_string.instance_of?(String)
 
         doc = Nokogiri::HTML::Document.parse(html_string)
         raise InvalidData, "hcard html incomplete" unless html_document_complete?(doc)
         doc
       end
-      private_class_method :parse_html_and_validate
 
-      def self.element_from_doc(doc, selector)
+      private_class_method def self.element_from_doc(doc, selector)
         doc.at_css(SELECTORS[selector])
       end
-      private_class_method :element_from_doc
 
-      def self.content_from_doc(doc, content_selector)
+      private_class_method def self.content_from_doc(doc, content_selector)
         element_from_doc(doc, content_selector).content
       end
-      private_class_method :content_from_doc
 
-      def self.photo_from_doc(doc, photo_selector)
+      private_class_method def self.photo_from_doc(doc, photo_selector)
         element_from_doc(doc, photo_selector)["src"]
       end
-      private_class_method :photo_from_doc
 
       # @deprecated hack for old hcard
       # @todo remove this when all pods have the new generator
-      def self.guid_from_doc(doc)
+      private_class_method def self.guid_from_doc(doc)
         uid_element = element_from_doc(doc, :uid)
         uid_element.content unless uid_element[:class].include? "nickname"
       end
-      private_class_method :guid_from_doc
     end
   end
 end

@@ -140,7 +140,7 @@ module DiasporaFederation
       # @param [String] data base64 encoded, encrypted header data
       # @param [OpenSSL::PKey::RSA] privkey private key for decryption
       # @return [Hash] { iv: "...", aes_key: "...", author_id: "..." }
-      def self.header_data(data, privkey)
+      private_class_method def self.header_data(data, privkey)
         header_elem = decrypt_header(data, privkey)
         raise InvalidHeader unless header_elem.name == "decrypted_header"
 
@@ -150,20 +150,18 @@ module DiasporaFederation
 
         {iv: iv, aes_key: key, author_id: author_id}
       end
-      private_class_method :header_data
 
       # decrypts the xml header
       # @param [String] data base64 encoded, encrypted header data
       # @param [OpenSSL::PKey::RSA] privkey private key for decryption
       # @return [Nokogiri::XML::Element] header xml document
-      def self.decrypt_header(data, privkey)
+      private_class_method def self.decrypt_header(data, privkey)
         cipher_header = JSON.parse(Base64.decode64(data))
         key = JSON.parse(privkey.private_decrypt(Base64.decode64(cipher_header["aes_key"])))
 
         xml = AES.decrypt(cipher_header["ciphertext"], Base64.decode64(key["key"]), Base64.decode64(key["iv"]))
         Nokogiri::XML::Document.parse(xml).root
       end
-      private_class_method :decrypt_header
 
       # encrypt the header xml with an AES cipher and encrypt the cipher params
       # with the recipients public_key

@@ -51,11 +51,10 @@ module DiasporaFederation
       end
 
       # @param [Nokogiri::XML::Element] element
-      def self.xml_wrapped?(element)
+      private_class_method def self.xml_wrapped?(element)
         (element.name == "XML" && !element.at_xpath("post").nil? &&
          !element.at_xpath("post").children.empty?)
       end
-      private_class_method :xml_wrapped?
     end
   end
 end

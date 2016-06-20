@@ -41,19 +41,17 @@ module DiasporaFederation
 
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Retraction] instance
-      def self.populate_entity(root_node)
+      private_class_method def self.populate_entity(root_node)
         entity_data = entity_data(root_node)
         entity_data[:target] = fetch_target(entity_data[:target_type], entity_data[:target_guid])
         new(entity_data)
       end
-      private_class_method :populate_entity
 
-      def self.fetch_target(target_type, target_guid)
+      private_class_method def self.fetch_target(target_type, target_guid)
         DiasporaFederation.callbacks.trigger(:fetch_related_entity, target_type, target_guid).tap do |target|
           raise TargetNotFound, "not found: #{target_type}:#{target_guid}" unless target
         end
       end
-      private_class_method :fetch_target
 
       # Raised, if the target of the {Retraction} was not found.
       class TargetNotFound < RuntimeError

@@ -23,7 +23,7 @@ module DiasporaFederation
       @connection.dup
     end
 
-    def self.create_default_connection
+    private_class_method def self.create_default_connection
       options = {
         request: {timeout: DiasporaFederation.http_timeout},
         ssl:     {ca_file: DiasporaFederation.certificate_authorities}
@@ -36,6 +36,5 @@ module DiasporaFederation
 
       @connection.headers["User-Agent"] = DiasporaFederation.http_user_agent
     end
-    private_class_method :create_default_connection
   end
 end
