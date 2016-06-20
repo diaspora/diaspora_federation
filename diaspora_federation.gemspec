@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.files       = Dir["lib/**/*", "LICENSE", "README.md"] -
                     Dir["lib/diaspora_federation/{engine,rails,test}.rb", "lib/diaspora_federation/test/*"]
 
-  s.required_ruby_version = "~> 2.0"
+  s.required_ruby_version = "~> 2.1"
 
   s.add_dependency "nokogiri", "~> 1.6", ">= 1.6.8"
   s.add_dependency "faraday", "~> 0.9.0"

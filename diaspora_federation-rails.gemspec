@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files       = Dir["app/**/*", "config/routes.rb", "lib/diaspora_federation/{engine,rails}.rb",
                       "LICENSE", "README.md"]
 
-  s.required_ruby_version = "~> 2.0"
+  s.required_ruby_version = "~> 2.1"
 
   s.add_dependency "rails", "~> 4.2"
 
