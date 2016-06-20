@@ -73,7 +73,7 @@ module DiasporaFederation
     # Nested entities are also converted to a Hash.
     # @return [Hash] entity data (mostly equal to the hash used for initialization).
     def to_h
-      Hash[properties.map {|key, value|
+      properties.map {|key, value|
         type = self.class.class_props[key]
 
         if type == String || value.nil?
@@ -83,7 +83,7 @@ module DiasporaFederation
         elsif type.instance_of?(Array)
           [key, value.map(&:to_h)]
         end
-      }]
+      }.to_h
     end
 
     # Returns the XML representation for this entity constructed out of
@@ -216,7 +216,7 @@ module DiasporaFederation
     end
 
     def xml_elements
-      Hash[properties.map {|name, value| [name, self.class.class_props[name] == String ? value.to_s : value] }]
+      properties.map {|name, value| [name, self.class.class_props[name] == String ? value.to_s : value] }.to_h
     end
 
     def add_property_to_xml(doc, root_element, name, value)
@@ -248,10 +248,10 @@ module DiasporaFederation
     # @param [Nokogiri::XML::Element] root_node xml nodes
     # @return [Hash] entity data
     private_class_method def self.entity_data(root_node)
-      Hash[class_props.map {|name, type|
+      class_props.map {|name, type|
         value = parse_element_from_node(name, type, root_node)
         [name, value] if value
-      }.compact]
+      }.compact.to_h
     end
 
     # @param [String] name property name to parse

@@ -36,7 +36,7 @@ module DiasporaFederation
         key = AES.generate_key_and_iv
         encrypted_env = AES.encrypt(magic_env.to_xml, key[:key], key[:iv])
 
-        encoded_key = Hash[key.map {|k, v| [k, Base64.strict_encode64(v)] }]
+        encoded_key = key.map {|k, v| [k, Base64.strict_encode64(v)] }.to_h
         encrypted_key = Base64.strict_encode64(pubkey.public_encrypt(JSON.generate(encoded_key)))
 
         JSON.generate(aes_key: encrypted_key, encrypted_magic_envelope: encrypted_env)
@@ -51,7 +51,7 @@ module DiasporaFederation
         encrypted_json = JSON.parse(encrypted_env)
 
         encoded_key = JSON.parse(privkey.private_decrypt(Base64.decode64(encrypted_json["aes_key"])))
-        key = Hash[encoded_key.map {|k, v| [k, Base64.decode64(v)] }]
+        key = encoded_key.map {|k, v| [k, Base64.decode64(v)] }.to_h
 
         xml = AES.decrypt(encrypted_json["encrypted_magic_envelope"], key["key"], key["iv"])
         Nokogiri::XML::Document.parse(xml).root

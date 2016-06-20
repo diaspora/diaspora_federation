@@ -24,7 +24,7 @@ module DiasporaFederation
       def self.private(sender_id, obj_str, targets)
         hydra = HydraWrapper.new(sender_id, obj_str)
         targets.each {|url, xml| hydra.insert_job(url, xml) }
-        Hash[hydra.send.map {|url| [url, targets[url]] }]
+        hydra.send.map {|url| [url, targets[url]] }.to_h
       end
     end
   end

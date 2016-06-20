@@ -26,7 +26,7 @@ shared_examples "an Entity subclass" do
 
     describe "#to_h" do
       it "should return a hash with nested data" do
-        expected_data = Hash[data.map {|key, value|
+        expected_data = data.map {|key, value|
           if [String, TrueClass, FalseClass, Fixnum, Time, NilClass].include?(value.class)
             [key, value]
           elsif value.instance_of?(Array)
@@ -34,7 +34,7 @@ shared_examples "an Entity subclass" do
           else
             [key, value.to_h]
           end
-        }]
+        }.to_h
 
         expect(instance.to_h).to eq(expected_data)
       end

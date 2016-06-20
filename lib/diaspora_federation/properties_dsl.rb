@@ -58,7 +58,7 @@ module DiasporaFederation
     # @param [Hash] data entity data
     # @return [Hash] hash with resolved aliases
     def resolv_aliases(data)
-      Hash[data.map {|name, value|
+      data.map {|name, value|
         if class_prop_aliases.has_key? name
           prop_name = class_prop_aliases[name]
           raise InvalidData, "only use '#{name}' OR '#{prop_name}'" if data.has_key? prop_name
@@ -66,7 +66,7 @@ module DiasporaFederation
         else
           [name, value]
         end
-      }]
+      }.to_h
     end
 
     # @return [Symbol] alias for the xml-generation/parsing

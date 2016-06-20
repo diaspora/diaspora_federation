@@ -28,7 +28,7 @@ module DiasporaFederation
 
         json = JSON.parse(encrypted)
         aes_key = JSON.parse(privkey.private_decrypt(Base64.decode64(json["aes_key"])))
-        key = Hash[aes_key.map {|k, v| [k, Base64.decode64(v)] }]
+        key = aes_key.map {|k, v| [k, Base64.decode64(v)] }.to_h
 
         xml = Salmon::AES.decrypt(json["encrypted_magic_envelope"], key["key"], key["iv"])
 

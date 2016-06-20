@@ -199,7 +199,7 @@ module DiasporaFederation
       # @param [Hash] hash { key: "...", iv: "..." }
       # @return [Hash] encoded hash: { key: "...", iv: "..." }
       def strict_base64_encode(hash)
-        Hash[hash.map {|k, v| [k, Base64.strict_encode64(v)] }]
+        hash.map {|k, v| [k, Base64.strict_encode64(v)] }.to_h
       end
     end
   end
