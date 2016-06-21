@@ -61,7 +61,7 @@ XML
         invalid_data = data.merge(author: alice.diaspora_id)
         expect {
           Entities::Conversation.new(invalid_data)
-        }.to raise_error Entity::ValidationError, "nested message has different author"
+        }.to raise_error Entity::ValidationError
       end
     end
   end

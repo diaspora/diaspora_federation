@@ -55,9 +55,9 @@ XML
       end
 
       describe "#validate_parent" do
-        let(:xml) {
+        let(:participation) {
           allow(DiasporaFederation.callbacks).to receive(:trigger).and_call_original
-          Entities::Participation.new(data).to_xml
+          Entities::Participation.new(data)
         }
 
         it "succeeds when the parent is local" do
@@ -65,7 +65,7 @@ XML
           expect_callback(:fetch_related_entity, parent.entity_type, parent.guid).and_return(local_parent)
 
           expect {
-            Entities::Participation.from_xml(xml)
+            Entities::Participation.from_xml(participation.to_xml)
           }.not_to raise_error
         end
 
@@ -73,8 +73,8 @@ XML
           expect_callback(:fetch_related_entity, parent.entity_type, parent.guid).and_return(nil)
 
           expect {
-            Entities::Participation.from_xml(xml)
-          }.to raise_error Entities::Participation::ParentNotLocal, "parent: #{parent.entity_type}:#{parent.guid}"
+            Entities::Participation.from_xml(participation.to_xml)
+          }.to raise_error Entities::Participation::ParentNotLocal, "obj=#{participation}"
         end
 
         it "raises ParentNotLocal when the parent is not local" do
@@ -82,8 +82,8 @@ XML
           expect_callback(:fetch_related_entity, parent.entity_type, parent.guid).and_return(remote_parent)
 
           expect {
-            Entities::Participation.from_xml(xml)
-          }.to raise_error Entities::Participation::ParentNotLocal, "parent: #{parent.entity_type}:#{parent.guid}"
+            Entities::Participation.from_xml(participation.to_xml)
+          }.to raise_error Entities::Participation::ParentNotLocal, "obj=#{participation}"
         end
       end
     end

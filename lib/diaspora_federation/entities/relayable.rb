@@ -82,8 +82,10 @@ module DiasporaFederation
       # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
       def verify_signatures
         pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, author)
-        raise PublicKeyNotFound, "author_signature author=#{author} guid=#{guid}" if pubkey.nil?
-        raise SignatureVerificationFailed, "wrong author_signature" unless verify_signature(pubkey, author_signature)
+        raise PublicKeyNotFound, "author_signature author=#{author} obj=#{self}" if pubkey.nil?
+        unless verify_signature(pubkey, author_signature)
+          raise SignatureVerificationFailed, "wrong author_signature for #{self}"
+        end
 
         verify_parent_author_signature unless parent.local
       end
@@ -102,9 +104,9 @@ module DiasporaFederation
       # this happens only on downstream federation
       def verify_parent_author_signature
         pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, parent.author)
-        raise PublicKeyNotFound, "parent_author_signature parent_author=#{parent.author} guid=#{guid}" if pubkey.nil?
+        raise PublicKeyNotFound, "parent_author_signature parent_author=#{parent.author} obj=#{self}" if pubkey.nil?
         unless verify_signature(pubkey, parent_author_signature)
-          raise SignatureVerificationFailed, "wrong parent_author_signature parent_guid=#{parent_guid}"
+          raise SignatureVerificationFailed, "wrong parent_author_signature for #{self}"
         end
       end
 
@@ -120,7 +122,7 @@ module DiasporaFederation
         end
 
         pubkey.verify(DIGEST, Base64.decode64(signature), signature_data).tap do |valid|
-          logger.info "event=verify_signature status=complete guid=#{guid} valid=#{valid}"
+          logger.info "event=verify_signature status=complete obj=#{self} valid=#{valid}"
         end
       end
 
@@ -129,9 +131,9 @@ module DiasporaFederation
       # @return [String] A Base64 encoded signature of #signature_data with key
       def sign_with_author
         privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, author)
-        raise AuthorPrivateKeyNotFound, "author=#{author} guid=#{guid}" if privkey.nil?
+        raise AuthorPrivateKeyNotFound, "author=#{author} obj=#{self}" if privkey.nil?
         sign_with_key(privkey).tap do
-          logger.info "event=sign status=complete signature=author_signature author=#{author} guid=#{guid}"
+          logger.info "event=sign status=complete signature=author_signature author=#{author} obj=#{self}"
         end
       end
 
@@ -141,7 +143,7 @@ module DiasporaFederation
         privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, parent.author)
         if privkey
           sign_with_key(privkey).tap do
-            logger.info "event=sign status=complete signature=parent_author_signature guid=#{guid}"
+            logger.info "event=sign status=complete signature=parent_author_signature obj=#{self}"
           end
         end
       end

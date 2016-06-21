@@ -38,7 +38,7 @@ module DiasporaFederation
       def validate
         super
         messages.each do |message|
-          raise ValidationError, "nested message has different author" if message.author != author
+          raise ValidationError, "nested #{message} has different author: author=#{author}" if message.author != author
         end
       end
     end

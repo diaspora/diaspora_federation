@@ -36,7 +36,9 @@ module DiasporaFederation
       def validate
         super
         photos.each do |photo|
-          raise ValidationError, "nested photo has different author" if photo.author != author
+          if photo.author != author
+            raise ValidationError, "nested #{photo} has different author: author=#{author} obj=#{self}"
+          end
         end
       end
     end

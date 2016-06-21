@@ -54,7 +54,7 @@ XML
         invalid_entity = Entities::Message.new(data.merge(author_signature: "aa"))
         expect {
           invalid_entity.sender_valid?(bob.diaspora_id)
-        }.to raise_error Entities::Relayable::SignatureVerificationFailed, "wrong author_signature"
+        }.to raise_error Entities::Relayable::SignatureVerificationFailed, "obj=#{invalid_entity}"
       end
 
       it "raises NotFetchable if the parent Conversation can not be found" do

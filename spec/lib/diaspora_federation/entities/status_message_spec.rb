@@ -87,7 +87,7 @@ module DiasporaFederation
         invalid_data = data.merge(author: FactoryGirl.generate(:diaspora_id))
         expect {
           Entities::StatusMessage.new(invalid_data)
-        }.to raise_error Entity::ValidationError, "nested photo has different author"
+        }.to raise_error Entity::ValidationError
       end
     end
   end

@@ -38,15 +38,15 @@ module DiasporaFederation
       # @deprecated remove after {Message} doesn't include {Relayable} anymore
       def verify_author_signature
         pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, author)
-        raise PublicKeyNotFound, "author_signature author=#{author} guid=#{guid}" if pubkey.nil?
-        raise SignatureVerificationFailed, "wrong author_signature" unless verify_signature(pubkey, author_signature)
+        raise PublicKeyNotFound, "author_signature author=#{author} obj=#{self}" if pubkey.nil?
+        raise SignatureVerificationFailed, "obj=#{self}" unless verify_signature(pubkey, author_signature)
         true
       end
 
       # @deprecated remove after {Message} doesn't include {Relayable} anymore
       def parent_author
         parent = DiasporaFederation.callbacks.trigger(:fetch_related_entity, "Conversation", conversation_guid)
-        raise Federation::Fetcher::NotFetchable, "Conversation:#{conversation_guid} not found" unless parent
+        raise Federation::Fetcher::NotFetchable, "parent of #{self} not found" unless parent
         parent.author
       end
 
