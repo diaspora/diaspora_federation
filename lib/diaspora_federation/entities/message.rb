@@ -37,9 +37,7 @@ module DiasporaFederation
 
       # @deprecated remove after {Message} doesn't include {Relayable} anymore
       def verify_author_signature
-        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, author)
-        raise PublicKeyNotFound, "author_signature author=#{author} obj=#{self}" if pubkey.nil?
-        raise SignatureVerificationFailed, "obj=#{self}" unless verify_signature(pubkey, author_signature)
+        verify_signature(author, :author_signature)
         true
       end
 

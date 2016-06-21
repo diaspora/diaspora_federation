@@ -51,10 +51,10 @@ XML
       it "does not allow the parent author if the signature is invalid" do
         expect_callback(:fetch_related_entity, "Conversation", entity.conversation_guid).and_return(data[:parent])
         expect_callback(:fetch_public_key, alice.diaspora_id).and_return(alice.private_key)
-        invalid_entity = Entities::Message.new(data.merge(author_signature: "aa"))
+        invalid_msg = Entities::Message.new(data.merge(author_signature: "aa"))
         expect {
-          invalid_entity.sender_valid?(bob.diaspora_id)
-        }.to raise_error Entities::Relayable::SignatureVerificationFailed, "obj=#{invalid_entity}"
+          invalid_msg.sender_valid?(bob.diaspora_id)
+        }.to raise_error Entities::Relayable::SignatureVerificationFailed, "wrong author_signature for #{invalid_msg}"
       end
 
       it "raises NotFetchable if the parent Conversation can not be found" do

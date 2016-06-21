@@ -81,13 +81,10 @@ module DiasporaFederation
       # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
       # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
       def verify_signatures
-        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, author)
-        raise PublicKeyNotFound, "author_signature author=#{author} obj=#{self}" if pubkey.nil?
-        unless verify_signature(pubkey, author_signature)
-          raise SignatureVerificationFailed, "wrong author_signature for #{self}"
-        end
+        verify_signature(author, :author_signature)
 
-        verify_parent_author_signature unless parent.local
+        # this happens only on downstream federation
+        verify_signature(parent.author, :parent_author_signature) unless parent.local
       end
 
       def sender_valid?(sender)
@@ -101,29 +98,22 @@ module DiasporaFederation
 
       private
 
-      # this happens only on downstream federation
-      def verify_parent_author_signature
-        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, parent.author)
-        raise PublicKeyNotFound, "parent_author_signature parent_author=#{parent.author} obj=#{self}" if pubkey.nil?
-        unless verify_signature(pubkey, parent_author_signature)
-          raise SignatureVerificationFailed, "wrong parent_author_signature for #{self}"
-        end
-      end
-
       # Check that signature is a correct signature
       #
-      # @param [OpenSSL::PKey::RSA] pubkey An RSA key
-      # @param [String] signature The signature to be verified.
+      # @param [String] author The author of the signature
+      # @param [String] signature_key The signature to be verified
       # @return [Boolean] signature valid
-      def verify_signature(pubkey, signature)
-        if signature.nil?
-          logger.warn "event=verify_signature status=abort reason=no_signature guid=#{guid}"
-          return false
-        end
+      def verify_signature(author, signature_key)
+        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, author)
+        raise PublicKeyNotFound, "signature=#{signature_key} person=#{author} obj=#{self}" if pubkey.nil?
 
-        pubkey.verify(DIGEST, Base64.decode64(signature), signature_data).tap do |valid|
-          logger.info "event=verify_signature status=complete obj=#{self} valid=#{valid}"
-        end
+        signature = public_send(signature_key)
+        raise SignatureVerificationFailed, "no #{signature_key} for #{self}" if signature.nil?
+
+        valid = pubkey.verify(DIGEST, Base64.decode64(signature), signature_data)
+        raise SignatureVerificationFailed, "wrong #{signature_key} for #{self}" unless valid
+
+        logger.info "event=verify_signature signature=#{signature_key} status=valid obj=#{self}"
       end
 
       # sign with author key
