@@ -44,22 +44,36 @@ XML
     it_behaves_like "an Entity subclass"
 
     context "generation" do
-      it "creates a nice XML document" do
-        wf = Discovery::WebFinger.new(data, aliases: [person.alias_url])
-        expect(wf.to_xml).to eq(xml)
-      end
+      let(:minimal_data) { {acct_uri: acct, hcard_url: person.hcard_url, seed_url: person.url} }
+      let(:additional_data) {
+        {
+          aliases:    [person.alias_url, person.profile_url],
+          properties: {"http://webfinger.example/ns/name" => "Bob Smith"},
+          links:      [
+            {rel: "http://portablecontacts.net/spec/1.0", href: "https://pod.example.tld/poco/trouble"},
+            {
+              rel:  "http://webfinger.net/rel/avatar",
+              type: "image/jpeg",
+              href: "http://localhost:3000/assets/user/default.png"
+            },
+            {rel: "http://openid.net/specs/connect/1.0/issuer", href: "https://pod.example.tld/"}
+          ]
+        }
+      }
 
-      it "creates minimal XML document" do
-        wf = Discovery::WebFinger.new(
-          acct_uri:  acct,
-          hcard_url: person.hcard_url,
-          seed_url:  person.url
-        )
-        expect(wf.to_xml).to eq(minimal_xml)
-      end
+      context "xml" do
+        it "creates a nice XML document" do
+          wf = Discovery::WebFinger.new(data, aliases: [person.alias_url])
+          expect(wf.to_xml).to eq(xml)
+        end
 
-      it "creates XML document with additional data" do
-        xml_with_additional_data = <<-XML
+        it "creates minimal XML document" do
+          wf = Discovery::WebFinger.new(minimal_data)
+          expect(wf.to_xml).to eq(minimal_xml)
+        end
+
+        it "creates XML document with additional data" do
+          xml_with_additional_data = <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
   <Subject>#{acct}</Subject>
@@ -70,27 +84,123 @@ XML
   <Link rel="http://joindiaspora.com/seed_location" type="text/html" href="#{person.url}"/>
   <Link rel="http://portablecontacts.net/spec/1.0" href="https://pod.example.tld/poco/trouble"/>
   <Link rel="http://webfinger.net/rel/avatar" type="image/jpeg" href="http://localhost:3000/assets/user/default.png"/>
+  <Link rel="http://openid.net/specs/connect/1.0/issuer" href="https://pod.example.tld/"/>
 </XRD>
 XML
 
-        wf = Discovery::WebFinger.new(
-          {
-            acct_uri:  acct,
-            hcard_url: person.hcard_url,
-            seed_url:  person.url
-          },
-          aliases:    [person.alias_url, person.profile_url],
-          properties: {"http://webfinger.example/ns/name" => "Bob Smith"},
-          links:      [
-            {rel: "http://portablecontacts.net/spec/1.0", href: "https://pod.example.tld/poco/trouble"},
-            {
-              rel:  "http://webfinger.net/rel/avatar",
-              type: "image/jpeg",
-              href: "http://localhost:3000/assets/user/default.png"
-            }
-          ]
-        )
-        expect(wf.to_xml).to eq(xml_with_additional_data)
+          wf = Discovery::WebFinger.new(minimal_data, additional_data)
+          expect(wf.to_xml).to eq(xml_with_additional_data)
+        end
+      end
+
+      context "json" do
+        it "creates a nice JSON document" do
+          json = <<-JSON
+{
+  "subject": "#{acct}",
+  "aliases": [
+    "#{person.alias_url}"
+  ],
+  "links": [
+    {
+      "rel": "http://microformats.org/profile/hcard",
+      "type": "text/html",
+      "href": "#{person.hcard_url}"
+    },
+    {
+      "rel": "http://joindiaspora.com/seed_location",
+      "type": "text/html",
+      "href": "#{person.url}"
+    },
+    {
+      "rel": "http://webfinger.net/rel/profile-page",
+      "type": "text/html",
+      "href": "#{person.profile_url}"
+    },
+    {
+      "rel": "http://schemas.google.com/g/2010#updates-from",
+      "type": "application/atom+xml",
+      "href": "#{person.atom_url}"
+    },
+    {
+      "rel": "salmon",
+      "href": "#{person.salmon_url}"
+    },
+    {
+      "rel": "http://ostatus.org/schema/1.0/subscribe",
+      "template": "http://somehost:3000/people?q={uri}"
+    }
+  ]
+}
+JSON
+          wf = Discovery::WebFinger.new(data, aliases: [person.alias_url])
+          expect(JSON.pretty_generate(wf.to_json)).to eq(json.strip)
+        end
+
+        it "creates minimal JSON document" do
+          minimal_json = <<-JSON
+{
+  "subject": "#{acct}",
+  "links": [
+    {
+      "rel": "http://microformats.org/profile/hcard",
+      "type": "text/html",
+      "href": "#{person.hcard_url}"
+    },
+    {
+      "rel": "http://joindiaspora.com/seed_location",
+      "type": "text/html",
+      "href": "#{person.url}"
+    }
+  ]
+}
+JSON
+          wf = Discovery::WebFinger.new(minimal_data)
+          expect(JSON.pretty_generate(wf.to_json)).to eq(minimal_json.strip)
+        end
+
+        it "creates JSON document with additional data" do
+          json_with_additional_data = <<-JSON
+{
+  "subject": "#{acct}",
+  "aliases": [
+    "#{person.alias_url}",
+    "#{person.profile_url}"
+  ],
+  "links": [
+    {
+      "rel": "http://microformats.org/profile/hcard",
+      "type": "text/html",
+      "href": "#{person.hcard_url}"
+    },
+    {
+      "rel": "http://joindiaspora.com/seed_location",
+      "type": "text/html",
+      "href": "#{person.url}"
+    },
+    {
+      "rel": "http://portablecontacts.net/spec/1.0",
+      "href": "https://pod.example.tld/poco/trouble"
+    },
+    {
+      "rel": "http://webfinger.net/rel/avatar",
+      "type": "image/jpeg",
+      "href": "http://localhost:3000/assets/user/default.png"
+    },
+    {
+      "rel": "http://openid.net/specs/connect/1.0/issuer",
+      "href": "https://pod.example.tld/"
+    }
+  ],
+  "properties": {
+    "http://webfinger.example/ns/name": "Bob Smith"
+  }
+}
+JSON
+
+          wf = Discovery::WebFinger.new(minimal_data, additional_data)
+          expect(JSON.pretty_generate(wf.to_json)).to eq(json_with_additional_data.strip)
+        end
       end
     end
 

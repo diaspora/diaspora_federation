@@ -45,9 +45,8 @@ XML
       }
     }
 
-    context "generation" do
-      it "creates the xml document" do
-        doc = Discovery::XrdDocument.new
+    let(:doc) {
+      Discovery::XrdDocument.new.tap do |doc|
         doc.expires = data[:expires]
         doc.subject = data[:subject]
 
@@ -62,15 +61,25 @@ XML
         data[:links].each do |h|
           doc.links << h
         end
+      end
+    }
 
+    describe "#to_xml" do
+      it "creates the xml document" do
         expect(doc.to_xml).to eq(xml)
       end
     end
 
-    context "parsing" do
+    describe "#to_json" do
+      it "provides the hash for json" do
+        expect(doc.to_json).to eq(data)
+      end
+    end
+
+    describe ".xml_data" do
       it "reads the xml document" do
-        doc = Discovery::XrdDocument.xml_data(xml)
-        expect(doc).to eq(data)
+        hash = Discovery::XrdDocument.xml_data(xml)
+        expect(hash).to eq(data)
       end
 
       it "raises InvalidDocument if the xml is empty" do
