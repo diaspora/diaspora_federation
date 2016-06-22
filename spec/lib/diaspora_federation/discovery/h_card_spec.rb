@@ -124,7 +124,6 @@ HTML
         expect(hcard.guid).to eq(person.guid)
         expect(hcard.nickname).to eq(person.nickname)
         expect(hcard.full_name).to eq(person.full_name)
-        expect(hcard.url).to eq(person.url)
         expect(hcard.photo_large_url).to eq(photo_large_url)
         expect(hcard.photo_medium_url).to eq(photo_medium_url)
         expect(hcard.photo_small_url).to eq(photo_small_url)
@@ -237,7 +236,6 @@ HTML
 HTML
 
         hcard = Discovery::HCard.from_html(historic_html)
-        expect(hcard.url).to eq(person.url)
         expect(hcard.photo_large_url).to eq(photo_large_url)
         expect(hcard.photo_medium_url).to eq(photo_medium_url)
         expect(hcard.photo_small_url).to eq(photo_small_url)

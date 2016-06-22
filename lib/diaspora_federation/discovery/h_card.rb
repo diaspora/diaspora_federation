@@ -60,7 +60,7 @@ module DiasporaFederation
       #     installations).
       #
       #   @return [String] link to the pod
-      property :url
+      property :url, default: nil
 
       # @!attribute [r] public_key
       #   When a user is created on the pod, the pod MUST generate a pgp keypair
@@ -163,7 +163,6 @@ module DiasporaFederation
           guid:             guid_from_doc(doc),
           nickname:         content_from_doc(doc, :nickname),
           full_name:        content_from_doc(doc, :fn),
-          url:              element_from_doc(doc, :url)["href"],
           photo_large_url:  photo_from_doc(doc, :photo),
           photo_medium_url: photo_from_doc(doc, :photo_medium),
           photo_small_url:  photo_from_doc(doc, :photo_small),
@@ -255,7 +254,7 @@ module DiasporaFederation
       # @return [Boolean] validation result
       private_class_method def self.html_document_complete?(doc)
         !(doc.at_css(SELECTORS[:fn]).nil? || doc.at_css(SELECTORS[:nickname]).nil? ||
-          doc.at_css(SELECTORS[:url]).nil? || doc.at_css(SELECTORS[:photo]).nil?)
+          doc.at_css(SELECTORS[:photo]).nil?)
       end
 
       private_class_method def self.parse_html_and_validate(html_string)
