@@ -19,7 +19,7 @@ module DiasporaFederation
     # When parsing the XML of an incoming Magic Envelope {MagicEnvelope.unenvelop}
     # is used.
     #
-    # @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-magicsig-01.html
+    # @see https://cdn.rawgit.com/salmon-protocol/salmon-protocol/master/draft-panzer-magicsig-01.html
     class MagicEnvelope
       include Logging
 

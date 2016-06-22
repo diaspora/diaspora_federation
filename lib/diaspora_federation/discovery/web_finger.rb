@@ -71,7 +71,7 @@ module DiasporaFederation
       # @!attribute [r] salmon_url
       #   @note could be nil
       #   @return [String] salmon endpoint url
-      #   @see http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-salmon-00.html#SMLR
+      #   @see https://cdn.rawgit.com/salmon-protocol/salmon-protocol/master/draft-panzer-salmon-00.html#SMLR
       #     Panzer draft for Salmon, paragraph 3.3
       property :salmon_url
 
