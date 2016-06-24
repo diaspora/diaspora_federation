@@ -28,3 +28,8 @@ test/dummy/.sass-cache
 test/dummy/test/fixtures/*.y*ml
 
 rspec-persistance.txt
+
+# jekyll
+_site
+.sass-cache
+.jekyll-metadata
