@@ -63,6 +63,21 @@ XML
         expect(wf.public_key).to eq(person.serialized_public_key)
       end
 
+      it "reads minimal xml" do
+        minimal_xml = <<-XML
+<?xml version="1.0" encoding="UTF-8"?>
+<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
+  <Subject>#{acct}</Subject>
+  <Link rel="http://microformats.org/profile/hcard" type="text/html" href="#{person.hcard_url}"/>
+  <Link rel="http://joindiaspora.com/seed_location" type="text/html" href="#{person.url}"/>
+</XRD>
+XML
+        wf = Discovery::WebFinger.from_xml(minimal_xml)
+        expect(wf.acct_uri).to eq(acct)
+        expect(wf.hcard_url).to eq(person.hcard_url)
+        expect(wf.seed_url).to eq(person.url)
+      end
+
       it "is frozen after parsing" do
         wf = Discovery::WebFinger.from_xml(xml)
         expect(wf).to be_frozen

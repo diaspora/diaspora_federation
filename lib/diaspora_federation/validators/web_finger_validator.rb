@@ -12,8 +12,8 @@ module DiasporaFederation
       rule :alias_url, URI: %i(host path)
       rule :hcard_url, [:not_nil, URI: %i(host path)]
       rule :seed_url, %i(not_nil URI)
-      rule :profile_url, [:not_nil, URI: %i(host path)]
-      rule :atom_url, [:not_nil, URI: %i(host path)]
+      rule :profile_url, URI: %i(host path)
+      rule :atom_url, URI: %i(host path)
       rule :salmon_url, URI: %i(host path)
     end
   end

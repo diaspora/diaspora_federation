@@ -10,7 +10,7 @@ module DiasporaFederation
       end
     end
 
-    %i(hcard_url profile_url atom_url).each do |prop|
+    %i(hcard_url).each do |prop|
       describe "##{prop}" do
         it_behaves_like "a url validator without path" do
           let(:property) { prop }
@@ -23,7 +23,7 @@ module DiasporaFederation
     end
 
     # optional urls
-    %i(alias_url salmon_url).each do |prop|
+    %i(alias_url salmon_url profile_url atom_url).each do |prop|
       describe "##{prop}" do
         it_behaves_like "a property with a value validation/restriction" do
           let(:property) { prop }
