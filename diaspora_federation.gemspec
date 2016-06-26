@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = DiasporaFederation::VERSION
   s.authors     = ["Benjamin Neff"]
   s.email       = ["benjamin@coding4.coffee"]
-  s.homepage    = "https://github.com/SuperTux88/diaspora_federation"
+  s.homepage    = "https://github.com/diaspora/diaspora_federation"
   s.summary     = "diaspora* federation library"
   s.description = "This gem provides the functionality for de-/serialization and " \
                   "de-/encryption of Entities in the protocols used for communication " \

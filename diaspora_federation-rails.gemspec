@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = DiasporaFederation::VERSION
   s.authors     = ["Benjamin Neff"]
   s.email       = ["benjamin@coding4.coffee"]
-  s.homepage    = "https://github.com/SuperTux88/diaspora_federation"
+  s.homepage    = "https://github.com/diaspora/diaspora_federation"
   s.summary     = "diaspora* federation rails engine"
   s.description = "A rails engine that adds the diaspora* federation protocol to a rails app"
   s.license     = "AGPL 3.0 - http://www.gnu.org/licenses/agpl-3.0.html"

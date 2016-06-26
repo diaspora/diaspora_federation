@@ -2,17 +2,17 @@
 
 **A library that provides functionalities needed for the diaspora* federation protocol**
 
-**master:** [![Build Status master](https://travis-ci.org/SuperTux88/diaspora_federation.svg?branch=master)](https://travis-ci.org/SuperTux88/diaspora_federation)
-**develop:** [![Build Status develop](https://travis-ci.org/SuperTux88/diaspora_federation.svg?branch=develop)](https://travis-ci.org/SuperTux88/diaspora_federation)
+**master:** [![Build Status master](https://travis-ci.org/diaspora/diaspora_federation.svg?branch=master)](https://travis-ci.org/diaspora/diaspora_federation)
+**develop:** [![Build Status develop](https://travis-ci.org/diaspora/diaspora_federation.svg?branch=develop)](https://travis-ci.org/diaspora/diaspora_federation)
 
-[![Code Climate](https://codeclimate.com/github/SuperTux88/diaspora_federation/badges/gpa.svg)](https://codeclimate.com/github/SuperTux88/diaspora_federation)
-[![Test Coverage](https://codeclimate.com/github/SuperTux88/diaspora_federation/badges/coverage.svg)](https://codeclimate.com/github/SuperTux88/diaspora_federation/coverage)
-[![Dependency Status](https://gemnasium.com/SuperTux88/diaspora_federation.svg)](https://gemnasium.com/SuperTux88/diaspora_federation)
-[![Inline docs](https://inch-ci.org/github/SuperTux88/diaspora_federation.svg?branch=master)](https://inch-ci.org/github/SuperTux88/diaspora_federation)
+[![Code Climate](https://codeclimate.com/github/diaspora/diaspora_federation/badges/gpa.svg)](https://codeclimate.com/github/diaspora/diaspora_federation)
+[![Test Coverage](https://codeclimate.com/github/diaspora/diaspora_federation/badges/coverage.svg)](https://codeclimate.com/github/diaspora/diaspora_federation/coverage)
+[![Dependency Status](https://gemnasium.com/diaspora/diaspora_federation.svg)](https://gemnasium.com/diaspora/diaspora_federation)
+[![Inline docs](https://inch-ci.org/github/diaspora/diaspora_federation.svg?branch=master)](https://inch-ci.org/github/diaspora/diaspora_federation)
 [![Gem Version](https://badge.fury.io/rb/diaspora_federation.svg)](https://badge.fury.io/rb/diaspora_federation)
 
 [Documentation](http://www.rubydoc.info/gems/diaspora_federation/) |
-[Bugtracker](https://github.com/SuperTux88/diaspora_federation/issues)
+[Bugtracker](https://github.com/diaspora/diaspora_federation/issues)
 
 ## Library
 
