@@ -39,7 +39,7 @@ module DiasporaFederation
       # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Entity] instance
       private_class_method def self.populate_entity(root_node)
-        new(entity_data(root_node)).tap(&:fetch_root)
+        super(root_node).tap(&:fetch_root)
       end
     end
   end
