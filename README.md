@@ -1,8 +1,7 @@
 # diaspora* federation library
+### A library that provides functionalities needed for the diaspora\* federation protocol
 
-**A library that provides functionalities needed for the diaspora* federation protocol**
-
-**master:** [![Build Status master](https://travis-ci.org/diaspora/diaspora_federation.svg?branch=master)](https://travis-ci.org/diaspora/diaspora_federation)
+**master:** [![Build Status master](https://travis-ci.org/diaspora/diaspora_federation.svg?branch=master)](https://travis-ci.org/diaspora/diaspora_federation) |
 **develop:** [![Build Status develop](https://travis-ci.org/diaspora/diaspora_federation.svg?branch=develop)](https://travis-ci.org/diaspora/diaspora_federation)
 
 [![Code Climate](https://codeclimate.com/github/diaspora/diaspora_federation/badges/gpa.svg)](https://codeclimate.com/github/diaspora/diaspora_federation)
@@ -14,16 +13,12 @@
 [Documentation](http://www.rubydoc.info/gems/diaspora_federation/) |
 [Bugtracker](https://github.com/diaspora/diaspora_federation/issues)
 
-## Library
+This repository contains two gems:
 
-The ```diaspora_federation``` gem provides the functionality for de-/serialization and de-/encryption of Entities
-in the protocols used for communication among the various installations of Diaspora*
+* `diaspora_federation` provides the functionality for de-/serialization and de-/encryption of Entities in the protocols used for communication among the various installations of diaspora\*.
+* `diaspora_federation-rails` is a rails engine that adds the diaspora\* federation protocol to a rails app.
 
-## Rails Engine
-
-The ```diaspora_federation-rails``` gem is a rails engine that adds the diaspora* federation protocol to a rails app.
-
-### Usage
+## Usage
 
 Add the gem to your ```Gemfile```:
 
@@ -61,22 +56,10 @@ DiasporaFederation.configure do |config|
 end
 ```
 
-## Development
+## Contributing
 
-**!!! This gem is currently under heavy development, so every release can contain breaking changes !!!**
-
-If you want to help, please contact me, help is welcome.
-
-After the first stable release, this repo will be moved to the [diaspora organization](https://github.com/diaspora/).
-
-## Diaspora
-
-A privacy-aware, distributed, open source social network
-
-Links:
-[Project site](https://diasporafoundation.org) |
-[Wiki](https://wiki.diasporafoundation.org)
+See [our contribution guide](/CONTRIBUTING.md) for more information on how to contribute to the diaspora\* federation library.
 
 ## License
 
-This gem is published under the terms of the "GNU Affero General Public License". See the LICENSE file for the exact wording.
+[GNU Affero General Public License](/LICENSE).
