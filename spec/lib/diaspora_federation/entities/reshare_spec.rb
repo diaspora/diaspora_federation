@@ -1,6 +1,7 @@
 module DiasporaFederation
   describe Entities::Reshare do
-    let(:data) { FactoryGirl.attributes_for(:reshare_entity) }
+    let(:root) { FactoryGirl.create(:post, author: bob) }
+    let(:data) { FactoryGirl.attributes_for(:reshare_entity, root_guid: root.guid, root_author: bob.diaspora_id) }
 
     let(:xml) {
       <<-XML
@@ -38,6 +39,15 @@ XML
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
         expect(parsed_instance.public).to be_truthy
         expect(parsed_instance.provider_display_name).to be_nil
+      end
+    end
+
+    context "fetch root" do
+      it "fetches the root post if it is not available already" do
+        expect_callback(:fetch_related_entity, "Post", data[:root_guid]).and_return(nil)
+        expect(Federation::Fetcher).to receive(:fetch_public).with(data[:root_author], "Post", data[:root_guid])
+
+        Entities::Reshare.from_xml(Nokogiri::XML::Document.parse(xml).root)
       end
     end
   end

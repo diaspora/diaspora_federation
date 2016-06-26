@@ -27,6 +27,20 @@ module DiasporaFederation
       def to_s
         "#{super}:#{root_guid}"
       end
+
+      # fetch and receive root post from remote, if not available locally.
+      def fetch_root
+        root = DiasporaFederation.callbacks.trigger(:fetch_related_entity, "Post", root_guid)
+        Federation::Fetcher.fetch_public(root_author, "Post", root_guid) unless root
+      end
+
+      # Fetch root post after parse.
+      # @see Entity.populate_entity
+      # @param [Nokogiri::XML::Element] root_node xml nodes
+      # @return [Entity] instance
+      private_class_method def self.populate_entity(root_node)
+        new(entity_data(root_node)).tap(&:fetch_root)
+      end
     end
   end
 end
