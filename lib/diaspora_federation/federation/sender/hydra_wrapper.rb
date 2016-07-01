@@ -11,12 +11,13 @@ module DiasporaFederation
         # @return [Hash] hydra opts
         def self.hydra_opts
           @hydra_opts ||= {
-            maxredirs: DiasporaFederation.http_redirect_limit,
-            timeout:   DiasporaFederation.http_timeout,
-            method:    :post,
-            verbose:   DiasporaFederation.http_verbose,
-            cainfo:    DiasporaFederation.certificate_authorities,
-            headers:   {
+            maxredirs:    DiasporaFederation.http_redirect_limit,
+            timeout:      DiasporaFederation.http_timeout,
+            method:       :post,
+            verbose:      DiasporaFederation.http_verbose,
+            cainfo:       DiasporaFederation.certificate_authorities,
+            forbid_reuse: true,
+            headers:      {
               "Expect"            => "",
               "Transfer-Encoding" => "",
               "User-Agent"        => DiasporaFederation.http_user_agent
