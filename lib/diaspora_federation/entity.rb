@@ -286,7 +286,7 @@ module DiasporaFederation
     # @return [Entity] parsed child entity
     private_class_method def self.parse_entity_from_node(type, root_node)
       node = root_node.xpath(type.entity_name)
-      type.from_xml(node.first) if node.any?
+      type.from_xml(node.first) if node.any? && node.first.children.any?
     end
 
     # Collect all nested children of that type and create an array in the data hash
@@ -296,7 +296,7 @@ module DiasporaFederation
     # @return [Array<Entity>] array with parsed child entities
     private_class_method def self.parse_array_from_node(type, root_node)
       node = root_node.xpath(type.entity_name)
-      node.map {|child| type.from_xml(child) } unless node.empty?
+      node.select {|child| child.children.any? }.map {|child| type.from_xml(child) } unless node.empty?
     end
 
     # Raised, if entity is not valid

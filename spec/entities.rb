@@ -17,7 +17,7 @@ module DiasporaFederation
 
     class TestNestedEntity < DiasporaFederation::Entity
       property :asdf
-      entity :test, TestEntity
+      entity :test, TestEntity, default: nil
       entity :multi, [OtherEntity]
     end
 

@@ -300,6 +300,22 @@ XML
         expect(entity.multi.first).to be_instance_of(Entities::OtherEntity)
         expect(entity.multi.first.asdf).to eq("asdf")
       end
+
+      it "handles empty xml-element for nested entities" do
+        xml = <<-XML
+<test_nested_entity>
+  <asdf>FDSA</asdf>
+  <test_entity/>
+  <other_entity/>
+</test_nested_entity>
+XML
+
+        entity = Entities::TestNestedEntity.from_xml(Nokogiri::XML::Document.parse(xml).root)
+
+        expect(entity.asdf).to eq("FDSA")
+        expect(entity.test).to be_nil
+        expect(entity.multi).to be_empty
+      end
     end
 
     context "xml_name" do
