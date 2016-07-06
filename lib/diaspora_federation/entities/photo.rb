@@ -40,10 +40,10 @@ module DiasporaFederation
       property :text, default: nil
 
       # @!attribute [r] status_message_guid
-      #   Guid of a status message this message belongs to
+      #   Guid of a status message this photo belongs to
       #   @see StatusMessage#guid
       #   @return [String] guid
-      property :status_message_guid
+      property :status_message_guid, default: nil
 
       # @!attribute [r] height
       #   Photo height
