@@ -44,5 +44,13 @@ module DiasporaFederation
         end
       end
     end
+
+    describe "#text" do
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :text }
+        let(:wrong_values) { ["a" * 65_536] }
+        let(:correct_values) { ["a" * 65_535, nil, ""] }
+      end
+    end
   end
 end
