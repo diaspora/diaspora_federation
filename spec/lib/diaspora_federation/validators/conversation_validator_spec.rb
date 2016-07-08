@@ -13,6 +13,14 @@ module DiasporaFederation
       let(:property) { :guid }
     end
 
+    describe "#subject" do
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:property) { :subject }
+        let(:wrong_values) { [nil, "", "a" * 256] }
+        let(:correct_values) { ["a" * 255] }
+      end
+    end
+
     describe "#messages" do
       it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :messages }

@@ -4,6 +4,12 @@ module DiasporaFederation
     #
     # @see Validators::ConversationValidator
     class Conversation < Entity
+      # @!attribute [r] author
+      #   The diaspora* ID of the person initiated the conversation
+      #   @see Person#author
+      #   @return [String] diaspora* ID
+      property :author, xml_name: :diaspora_handle
+
       # @!attribute [r] guid
       #   A random string of at least 16 chars
       #   @see Validation::Rule::Guid
@@ -18,20 +24,14 @@ module DiasporaFederation
       #   @return [Time] Conversation creation time
       property :created_at, default: -> { Time.now.utc }
 
-      # @!attribute [r] messages
-      #   @return [[Entities::Message]] Messages of this conversation
-      entity :messages, [Entities::Message], default: []
-
-      # @!attribute [r] author
-      #   The diaspora* ID of the person initiated the conversation
-      #   @see Person#author
-      #   @return [String] diaspora* ID
-      property :author, xml_name: :diaspora_handle
-
       # @!attribute [r] participants
       #   The diaspora* IDs of the persons participating the conversation separated by ";"
       #   @return [String] participants diaspora* IDs
       property :participants, xml_name: :participant_handles
+
+      # @!attribute [r] messages
+      #   @return [[Entities::Message]] Messages of this conversation
+      entity :messages, [Entities::Message], default: []
 
       private
 

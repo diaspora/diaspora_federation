@@ -4,13 +4,13 @@ module DiasporaFederation
     class ConversationValidator < Validation::Validator
       include Validation
 
+      rule :author, %i(not_empty diaspora_id)
       rule :guid, :guid
 
-      rule :messages, :not_nil
-
-      rule :author, %i(not_empty diaspora_id)
+      rule :subject, [:not_empty, length: {maximum: 255}]
 
       rule :participants, diaspora_id_count: {maximum: 20}
+      rule :messages, :not_nil
     end
   end
 end

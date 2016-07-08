@@ -22,12 +22,12 @@ module DiasporaFederation
     let(:xml) {
       <<-XML
 <conversation>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{parent.guid}</guid>
   <subject>#{data[:subject]}</subject>
   <created_at>#{data[:created_at]}</created_at>
-#{data[:messages].map {|a| a.to_xml.to_s.indent(2) }.join("\n")}
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <participant_handles>#{data[:participants]}</participant_handles>
+#{data[:messages].map {|a| a.to_xml.to_s.indent(2) }.join("\n")}
 </conversation>
 XML
     }
@@ -41,10 +41,10 @@ XML
       let(:minimal_xml) {
         <<-XML
 <conversation>
+  <author>#{data[:author]}</author>
   <guid>#{parent.guid}</guid>
   <subject>#{data[:subject]}</subject>
   <created_at>#{data[:created_at]}</created_at>
-  <author>#{data[:author]}</author>
   <participant_handles>#{data[:participants]}</participant_handles>
 </conversation>
         XML
