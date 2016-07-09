@@ -48,7 +48,7 @@ module DiasporaFederation
       # @!attribute [r] nickname
       #   The first part of the diaspora* ID
       #   @return [String] nickname
-      property :nickname
+      property :nickname, default: nil
 
       # @!attribute [r] full_name
       #   @return [String] display name of the user
@@ -253,8 +253,7 @@ module DiasporaFederation
       # @param [LibXML::XML::Document] doc HTML document
       # @return [Boolean] validation result
       private_class_method def self.html_document_complete?(doc)
-        !(doc.at_css(SELECTORS[:fn]).nil? || doc.at_css(SELECTORS[:nickname]).nil? ||
-          doc.at_css(SELECTORS[:photo]).nil?)
+        !(doc.at_css(SELECTORS[:fn]).nil? || doc.at_css(SELECTORS[:photo]).nil?)
       end
 
       private_class_method def self.parse_html_and_validate(html_string)
@@ -270,7 +269,7 @@ module DiasporaFederation
       end
 
       private_class_method def self.content_from_doc(doc, content_selector)
-        element_from_doc(doc, content_selector).content
+        element_from_doc(doc, content_selector).try(:content)
       end
 
       private_class_method def self.photo_from_doc(doc, photo_selector)

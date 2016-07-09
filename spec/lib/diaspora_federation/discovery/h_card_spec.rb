@@ -134,6 +134,96 @@ HTML
         expect(hcard.last_name).to eq(person.last_name)
       end
 
+      it "reads minimal hCard" do
+        minimal_html = <<-HTML
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8" />
+    <title>#{person.full_name}</title>
+  </head>
+  <body>
+    <div id="content">
+      <h1>#{person.full_name}</h1>
+      <div id="content_inner" class="entity_profile vcard author">
+        <h2>User profile</h2>
+        <dl class="entity_uid">
+          <dt>Uid</dt>
+          <dd>
+            <span class="uid">#{person.guid}</span>
+          </dd>
+        </dl>
+        <dl class="entity_full_name">
+          <dt>Full_name</dt>
+          <dd>
+            <span class="fn">#{person.full_name}</span>
+          </dd>
+        </dl>
+        <dl class="entity_searchable">
+          <dt>Searchable</dt>
+          <dd>
+            <span class="searchable">#{person.searchable}</span>
+          </dd>
+        </dl>
+        <dl class="entity_key">
+          <dt>Key</dt>
+          <dd>
+            <pre class="key">#{person.serialized_public_key}</pre>
+          </dd>
+        </dl>
+        <dl class="entity_first_name">
+          <dt>First_name</dt>
+          <dd>
+            <span class="given_name">#{person.first_name}</span>
+          </dd>
+        </dl>
+        <dl class="entity_family_name">
+          <dt>Family_name</dt>
+          <dd>
+            <span class="family_name">#{person.last_name}</span>
+          </dd>
+        </dl>
+        <dl class="entity_photo">
+          <dt>Photo</dt>
+          <dd>
+            <img class="photo avatar" width="300" height="300" src="#{photo_large_url}" />
+          </dd>
+        </dl>
+        <dl class="entity_photo_medium">
+          <dt>Photo_medium</dt>
+          <dd>
+            <img class="photo avatar" width="100" height="100" src="#{photo_medium_url}" />
+          </dd>
+        </dl>
+        <dl class="entity_photo_small">
+          <dt>Photo_small</dt>
+          <dd>
+            <img class="photo avatar" width="50" height="50" src="#{photo_small_url}" />
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </body>
+</html>
+HTML
+
+        hcard = Discovery::HCard.from_html(minimal_html)
+        expect(hcard.guid).to eq(person.guid)
+        expect(hcard.full_name).to eq(person.full_name)
+        expect(hcard.photo_large_url).to eq(photo_large_url)
+        expect(hcard.photo_medium_url).to eq(photo_medium_url)
+        expect(hcard.photo_small_url).to eq(photo_small_url)
+        expect(hcard.public_key).to eq(person.serialized_public_key)
+        expect(hcard.searchable).to eq(person.searchable)
+
+        expect(hcard.first_name).to eq(person.first_name)
+        expect(hcard.last_name).to eq(person.last_name)
+
+        expect(hcard.nickname).to be_nil
+        expect(hcard.url).to be_nil
+      end
+
       it "is frozen after parsing" do
         hcard = Discovery::HCard.from_html(html)
         expect(hcard).to be_frozen
