@@ -2,7 +2,7 @@ module Validation
   module Rule
     # GUID validation rule
     #
-    # Valid is a +String+ that is at least 16 chars long and contains only:
+    # Valid is a +String+ that is at least 16 and at most 255 chars long. It contains only:
     # * Letters: a-z
     # * Numbers: 0-9
     # * Special chars: '-', '_', '@', '.' and ':'
@@ -30,7 +30,7 @@ module Validation
 
       # Determines if value is a valid +GUID+
       def valid_value?(value)
-        params[:nilable] && value.nil? || value.is_a?(String) && value.downcase =~ /\A[0-9a-z\-_@.:]{16,}\z/
+        params[:nilable] && value.nil? || value.is_a?(String) && value.downcase =~ /\A[0-9a-z\-_@.:]{16,255}\z/
       end
     end
   end

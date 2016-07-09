@@ -61,6 +61,14 @@ describe Validation::Rule::Guid do
       expect(validator.errors).to include(:guid)
     end
 
+    it "fails if the string is too long" do
+      validator = Validation::Validator.new(OpenStruct.new(guid: "a" * 256))
+      validator.rule(:guid, :guid)
+
+      expect(validator).not_to be_valid
+      expect(validator.errors).to include(:guid)
+    end
+
     it "fails if the string contains invalid chars" do
       validator = Validation::Validator.new(OpenStruct.new(guid: "ghijklmnopqrstuvwxyz++"))
       validator.rule(:guid, :guid)
