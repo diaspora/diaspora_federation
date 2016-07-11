@@ -98,7 +98,7 @@ module DiasporaFederation
           end
 
           factory :status_message_entity, class: DiasporaFederation::Entities::StatusMessage do
-            raw_message "i am a very interesting status update"
+            text "i am a very interesting status update"
             author { generate(:diaspora_id) }
             guid
             public(true)

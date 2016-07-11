@@ -14,7 +14,7 @@ module DiasporaFederation
         expect_callback(:receive_entity, kind_of(Entities::StatusMessage), nil) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
-          expect(entity.raw_message).to eq(post.raw_message)
+          expect(entity.text).to eq(post.text)
           expect(entity.public).to eq("true")
         end
 
@@ -29,7 +29,7 @@ module DiasporaFederation
         expect_callback(:receive_entity, kind_of(Entities::StatusMessage), nil) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
-          expect(entity.raw_message).to eq(post.raw_message)
+          expect(entity.text).to eq(post.text)
           expect(entity.public).to eq("true")
         end
 
@@ -55,7 +55,7 @@ module DiasporaFederation
         expect_callback(:receive_entity, kind_of(Entities::StatusMessage), 1234) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
-          expect(entity.raw_message).to eq(post.raw_message)
+          expect(entity.text).to eq(post.text)
           expect(entity.public).to eq("false")
         end
 
@@ -71,7 +71,7 @@ module DiasporaFederation
         expect_callback(:receive_entity, kind_of(Entities::StatusMessage), 1234) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
-          expect(entity.raw_message).to eq(post.raw_message)
+          expect(entity.text).to eq(post.text)
           expect(entity.public).to eq("false")
         end
 

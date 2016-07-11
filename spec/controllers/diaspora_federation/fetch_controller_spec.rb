@@ -21,7 +21,7 @@ module DiasporaFederation
         expect(entity).to be_a(Entities::StatusMessage)
         expect(entity.guid).to eq(guid)
         expect(entity.author).to eq(alice.diaspora_id)
-        expect(entity.raw_message).to eq(post.raw_message)
+        expect(entity.text).to eq(post.text)
         expect(magic_env.sender).to eq(alice.diaspora_id)
       end
 
@@ -40,7 +40,7 @@ module DiasporaFederation
         expect(entity).to be_a(Entities::StatusMessage)
         expect(entity.guid).to eq(guid)
         expect(entity.author).to eq(alice.diaspora_id)
-        expect(entity.raw_message).to eq(post.raw_message)
+        expect(entity.text).to eq(post.text)
         expect(magic_env.sender).to eq(alice.diaspora_id)
       end
 

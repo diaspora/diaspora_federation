@@ -8,7 +8,7 @@ module DiasporaFederation
 
       rule :guid, :guid
 
-      rule :raw_message, length: {maximum: 65_535}
+      rule :text, length: {maximum: 65_535}
 
       rule :photos, :not_nil
 

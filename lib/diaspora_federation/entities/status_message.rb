@@ -6,10 +6,10 @@ module DiasporaFederation
     class StatusMessage < Entity
       include Post
 
-      # @!attribute [r] raw_message
+      # @!attribute [r] text
       #   Text of the status message composed by the user
       #   @return [String] text of the status message
-      property :raw_message
+      property :text, xml_name: :raw_message
 
       # @!attribute [r] photos
       #   Optional photos attached to the status message

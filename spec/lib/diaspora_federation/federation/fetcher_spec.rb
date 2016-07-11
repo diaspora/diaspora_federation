@@ -18,7 +18,7 @@ module DiasporaFederation
         ) do |magic_env|
           expect(magic_env.payload.guid).to eq(post.guid)
           expect(magic_env.payload.author).to eq(post.author)
-          expect(magic_env.payload.raw_message).to eq(post.raw_message)
+          expect(magic_env.payload.text).to eq(post.text)
           expect(magic_env.payload.public).to eq("true")
           receiver
         end
@@ -41,7 +41,7 @@ module DiasporaFederation
         ) do |magic_env|
           expect(magic_env.payload.guid).to eq(post.guid)
           expect(magic_env.payload.author).to eq(post.author)
-          expect(magic_env.payload.raw_message).to eq(post.raw_message)
+          expect(magic_env.payload.text).to eq(post.text)
           expect(magic_env.payload.public).to eq("true")
           receiver
         end
