@@ -1,10 +1,10 @@
 module Validation
   module Rule
-    # Diaspora ID validation rule
+    # diaspora* ID validation rule
     #
-    # A simple rule to validate the base structure of diaspora IDs.
+    # A simple rule to validate the base structure of diaspora* IDs.
     class DiasporaId
-      # The Regex for a valid diaspora ID
+      # The Regex for a valid diaspora* ID
       DIASPORA_ID = begin
         letter         = "a-zA-Z"
         digit          = "0-9"
@@ -28,12 +28,12 @@ module Validation
         :diaspora_id
       end
 
-      # Determines if value is a valid diaspora ID
+      # Determines if value is a valid diaspora* ID
       def valid_value?(value)
         value.nil? || !DIASPORA_ID.match(value).nil?
       end
 
-      # This rule has no params
+      # This rule has no params.
       # @return [Hash] params
       def params
         {}

@@ -3,7 +3,7 @@ module DiasporaFederation
     # +Slap+ provides class methods to create unencrypted Slap XML from payload
     # data and parse incoming XML into a Slap instance.
     #
-    # A Diaspora*-flavored magic-enveloped XML message looks like the following:
+    # A diaspora* flavored magic-enveloped XML message looks like the following:
     #
     #   <?xml version="1.0" encoding="UTF-8"?>
     #   <diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
@@ -51,7 +51,7 @@ module DiasporaFederation
 
       # Creates an unencrypted Salmon Slap and returns the XML string.
       #
-      # @param [String] author_id Diaspora* handle of the author
+      # @param [String] author_id diaspora* ID of the author
       # @param [OpenSSL::PKey::RSA] privkey sender private_key for signing the magic envelope
       # @param [Entity] entity payload
       # @return [String] Salmon XML string

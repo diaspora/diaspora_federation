@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::Conversation}
+    # This validates a {Entities::Conversation}.
     class ConversationValidator < Validation::Validator
       include Validation
 

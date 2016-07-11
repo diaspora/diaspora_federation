@@ -15,7 +15,7 @@ module Validation
         :birthday
       end
 
-      # Determines if value is a valid birthday date
+      # Determines if value is a valid birthday date.
       def valid_value?(value)
         return true if value.nil? || (value.is_a?(String) && value.empty?)
         return true if value.is_a? Date
@@ -28,7 +28,7 @@ module Validation
         false
       end
 
-      # This rule has no params
+      # This rule has no params.
       # @return [Hash] params
       def params
         {}

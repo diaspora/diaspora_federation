@@ -1,27 +1,27 @@
 module DiasporaFederation
   module Entities
-    # this entity represents a private message exchanged in private conversation
+    # This entity represents a private message exchanged in private conversation.
     #
     # @see Validators::MessageValidator
     class Message < Entity
-      # old signature order
+      # Old signature order
       # @deprecated
       LEGACY_SIGNATURE_ORDER = %i(guid parent_guid text created_at author conversation_guid).freeze
 
       include Relayable
 
       # @!attribute [r] text
-      #   text of the message composed by a user
+      #   Text of the message composed by a user
       #   @return [String] text
       property :text
 
       # @!attribute [r] created_at
-      #   message creation time
+      #   Message creation time
       #   @return [Time] creation time
       property :created_at, default: -> { Time.now.utc }
 
       # @!attribute [r] conversation_guid
-      #   guid of a conversation this message belongs to
+      #   Guid of a conversation this message belongs to
       #   @see Conversation#guid
       #   @return [String] conversation guid
       property :conversation_guid

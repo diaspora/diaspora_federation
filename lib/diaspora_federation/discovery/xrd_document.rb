@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Discovery
     # This class implements basic handling of XRD documents as far as it is
-    # necessary in the context of the protocols used with Diaspora* federation.
+    # necessary in the context of the protocols used with diaspora* federation.
     #
     # @note {http://tools.ietf.org/html/rfc6415 RFC 6415} recommends that servers
     #   should also offer the JRD format in addition to the XRD representation.

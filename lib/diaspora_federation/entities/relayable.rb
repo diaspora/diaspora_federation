@@ -1,32 +1,32 @@
 module DiasporaFederation
   module Entities
-    # this is a module that defines common properties for relayable entities
+    # This is a module that defines common properties for relayable entities
     # which include Like, Comment, Participation, Message, etc. Each relayable
-    # has a parent, identified by guid. Relayables also are signed and signing/verification
+    # has a parent, identified by guid. Relayables are also signed and signing/verification
     # logic is embedded into Salmon XML processing code.
     module Relayable
       include Logging
 
-      # digest instance used for signing
+      # Digest instance used for signing
       DIGEST = OpenSSL::Digest::SHA256.new
 
-      # order from the parsed xml for signature
+      # Order from the parsed xml for signature
       # @return [Array] order from xml
       attr_reader :xml_order
 
-      # additional properties from parsed xml
+      # Additional properties from parsed xml
       # @return [Hash] additional xml elements
       attr_reader :additional_xml_elements
 
-      # on inclusion of this module the required properties for a relayable are added to the object that includes it
+      # On inclusion of this module the required properties for a relayable are added to the object that includes it.
       #
       # @!attribute [r] author
-      #   The diaspora ID of the author.
+      #   The diaspora* ID of the author
       #   @see Person#author
-      #   @return [String] diaspora ID
+      #   @return [String] diaspora* ID
       #
       # @!attribute [r] guid
-      #   a random string of at least 16 chars.
+      #   A random string of at least 16 chars
       #   @see Validation::Rule::Guid
       #   @return [String] comment guid
       #
@@ -35,20 +35,20 @@ module DiasporaFederation
       #   @return [String] parent guid
       #
       # @!attribute [r] author_signature
-      #   Contains a signature of the entity using the private key of the author of a post itself.
+      #   Contains a signature of the entity using the private key of the author of a post itself
       #   The presence of this signature is mandatory. Without it the entity won't be accepted by
       #   a target pod.
       #   @return [String] author signature
       #
       # @!attribute [r] parent_author_signature
       #   Contains a signature of the entity using the private key of the author of a parent post
-      #   This signature is required only when federation from upstream (parent) post author to
+      #   This signature is required only when federating from upstream (parent) post author to
       #   downstream subscribers. This is the case when the parent author has to resend a relayable
-      #   received from one of his subscribers to all others.
+      #   received from one of their subscribers to all others.
       #   @return [String] parent author signature
       #
       # @!attribute [r] parent
-      #   meta information about the parent object
+      #   Meta information about the parent object
       #   @return [RelatedEntity] parent entity
       #
       # @param [Entity] klass the entity in which it is included
@@ -78,12 +78,12 @@ module DiasporaFederation
         super(data)
       end
 
-      # verifies the signatures (+author_signature+ and +parent_author_signature+ if needed)
+      # Verifies the signatures (+author_signature+ and +parent_author_signature+ if needed).
       # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
       def verify_signatures
         verify_signature(author, :author_signature)
 
-        # this happens only on downstream federation
+        # This happens only on downstream federation.
         verify_signature(parent.author, :parent_author_signature) unless parent.local
       end
 
@@ -116,7 +116,7 @@ module DiasporaFederation
         logger.info "event=verify_signature signature=#{signature_key} status=valid obj=#{self}"
       end
 
-      # sign with author key
+      # Sign with author key
       # @raise [AuthorPrivateKeyNotFound] if the author private key is not found
       # @return [String] A Base64 encoded signature of #signature_data with key
       def sign_with_author
@@ -127,7 +127,7 @@ module DiasporaFederation
         end
       end
 
-      # sign with parent author key, if the parent author is local (if the private key is found)
+      # Sign with parent author key, if the parent author is local (if the private key is found)
       # @return [String] A Base64 encoded signature of #signature_data with key
       def sign_with_parent_author_if_available
         privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, parent.author)
@@ -159,7 +159,7 @@ module DiasporaFederation
         end
       end
 
-      # the order for signing
+      # The order for signing
       # @return [Array]
       def signature_order
         xml_order.nil? ? self.class::LEGACY_SIGNATURE_ORDER : xml_order.reject {|name| name =~ /signature/ }
@@ -171,7 +171,7 @@ module DiasporaFederation
         signature_order.map {|name| data[name] }.join(";")
       end
 
-      # override class methods from {Entity} to parse the xml
+      # Override class methods from {Entity} to parse the xml
       module ParseXML
         private
 
@@ -181,7 +181,7 @@ module DiasporaFederation
           # Use all known properties to build the Entity (entity_data). All additional xml elements
           # are respected and attached to a hash as string (additional_xml_elements). It also remembers
           # the order of the xml-nodes (xml_order). This is needed to support receiving objects from
-          # the future versions of Diaspora, where new elements may have been added.
+          # the future versions of diaspora*, where new elements may have been added.
           entity_data = {}
           additional_xml_elements = {}
 
@@ -209,14 +209,14 @@ module DiasporaFederation
           data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
 
           unless data[:parent]
-            # fetch and receive parent from remote, if not available locally
+            # Fetch and receive parent from remote, if not available locally
             Federation::Fetcher.fetch_public(data[:author], type, guid)
             data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
           end
         end
       end
 
-      # Raised, if creating the author_signature failes, because the private key was not found
+      # Raised, if creating the author_signature fails, because the private key was not found
       class AuthorPrivateKeyNotFound < RuntimeError
       end
 

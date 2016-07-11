@@ -6,7 +6,7 @@ module DiasporaFederation
 
     %i(author recipient).each do |prop|
       describe "##{prop}" do
-        it_behaves_like "a diaspora id validator" do
+        it_behaves_like "a diaspora* ID validator" do
           let(:property) { prop }
           let(:mandatory) { true }
         end

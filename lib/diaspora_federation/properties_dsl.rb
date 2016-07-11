@@ -75,7 +75,7 @@ module DiasporaFederation
       @xml_names ||= {}
     end
 
-    # finds a property by +xml_name+ or +name+
+    # Finds a property by +xml_name+ or +name+
     # @param [String] xml_name name of the property from the received xml
     # @return [Hash] the property data
     def find_property_for_xml_name(xml_name)
@@ -114,14 +114,14 @@ module DiasporaFederation
       define_alias(name, opts[:alias]) if opts.has_key? :alias
     end
 
-    # checks if the name is a +Symbol+ or a +String+
+    # Checks if the name is a +Symbol+ or a +String+
     # @param [String, Symbol] name the name to check
     # @return [Boolean]
     def name_valid?(name)
       name.instance_of?(Symbol)
     end
 
-    # checks if the type extends {Entity}
+    # Checks if the type extends {Entity}
     # @param [Class] type the type to check
     # @return [Boolean]
     def type_valid?(type)

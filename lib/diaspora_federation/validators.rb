@@ -9,7 +9,7 @@ require "validation/rule/numeric"
 module Validation
   # This module contains custom validation rules for various data field types.
   # That includes types for which there are no provided rules by the +valid+ gem
-  # or types that are very specific to Diaspora* federation and need special handling.
+  # or types that are very specific to diaspora* federation and need special handling.
   # The rules are used inside the {DiasporaFederation::Validators validator classes}
   # to perform basic sanity-checks on {DiasporaFederation::Entities federation entities}.
   module Rule

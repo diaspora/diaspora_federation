@@ -1,27 +1,27 @@
 module DiasporaFederation
   module Entities
-    # this entity represents a claim of deletion of a previously federated
-    # entity of post type ({Entities::StatusMessage})
+    # This entity represents a claim of deletion of a previously federated
+    # entity of post type. ({Entities::StatusMessage})
     #
     # @see Validators::SignedRetractionValidator
     # @deprecated will be replaced with {Entities::Retraction}
     class SignedRetraction < Entity
       # @!attribute [r] target_guid
-      #   guid of a post to be deleted
+      #   Guid of a post to be deleted
       #   @see Retraction#target_guid
       #   @return [String] target guid
       property :target_guid
 
       # @!attribute [r] target_type
-      #   A string describing the type of the target.
+      #   A string describing the type of the target
       #   @see Retraction#target_type
       #   @return [String] target type
       property :target_type
 
       # @!attribute [r] author
-      #   The diaspora ID of the person who deletes a post
+      #   The diaspora* ID of the person who deletes a post
       #   @see Person#author
-      #   @return [String] diaspora ID
+      #   @return [String] diaspora* ID
       property :author, xml_name: :sender_handle
 
       # @!attribute [r] author_signature
@@ -31,11 +31,11 @@ module DiasporaFederation
       property :target_author_signature, default: nil
 
       # @!attribute [r] target
-      #   target entity
+      #   Target entity
       #   @return [RelatedEntity] target entity
       entity :target, Entities::RelatedEntity
 
-      # use only {Retraction} for receive
+      # Use only {Retraction} for receive
       # @return [Retraction] instance as normal retraction
       def to_retraction
         Retraction.new(author: author, target_guid: target_guid, target_type: target_type, target: target)

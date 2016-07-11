@@ -1,9 +1,9 @@
 require_dependency "diaspora_federation/application_controller"
 
 module DiasporaFederation
-  # this controller generates the hcard
+  # This controller generates the hcard.
   class HCardController < ApplicationController
-    # returns the hcard of the user
+    # Returns the hcard of the user
     #
     # GET /hcard/users/:guid
     def hcard

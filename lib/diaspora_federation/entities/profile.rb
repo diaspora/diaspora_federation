@@ -1,22 +1,22 @@
 module DiasporaFederation
   module Entities
-    # this entity contains all the profile data of a person
+    # This entity contains all the profile data of a person.
     #
     # @see Validators::ProfileValidator
     class Profile < Entity
       # @!attribute [r] author
-      #   The diaspora ID of the person
+      #   The diaspora* ID of the person
       #   @see Person#author
-      #   @return [String] diaspora ID
+      #   @return [String] diaspora* ID
       # @!attribute [r] diaspora_id
       #   Alias for author
       #   @see Profile#author
-      #   @return [String] diaspora ID
+      #   @return [String] diaspora* ID
       property :author, alias: :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] first_name
       #   @deprecated We decided to only use one name field, these should be removed
-      #     in later iterations (will affect older Diaspora* installations).
+      #     in later iterations (will affect older diaspora* installations).
       #   @see #full_name
       #   @see Discovery::HCard#first_name
       #   @return [String] first name
@@ -24,7 +24,7 @@ module DiasporaFederation
 
       # @!attribute [r] last_name
       #   @deprecated We decided to only use one name field, these should be removed
-      #     in later iterations (will affect older Diaspora* installations).
+      #     in later iterations (will affect older diaspora* installations).
       #   @see #full_name
       #   @see Discovery::HCard#last_name
       #   @return [String] last name

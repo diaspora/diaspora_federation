@@ -2,7 +2,7 @@ require "faraday"
 require "faraday_middleware/response/follow_redirects"
 
 module DiasporaFederation
-  # A wrapper for {https://github.com/lostisland/faraday Faraday}.
+  # A wrapper for {https://github.com/lostisland/faraday Faraday}
   #
   # @see Discovery::Discovery
   # @see Federation::Fetcher
@@ -15,7 +15,7 @@ module DiasporaFederation
       connection.get(uri)
     end
 
-    # gets the Faraday connection
+    # Gets the Faraday connection
     #
     # @return [Faraday::Connection] the response
     def self.connection

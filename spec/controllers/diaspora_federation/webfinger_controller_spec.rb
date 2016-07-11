@@ -48,7 +48,7 @@ module DiasporaFederation
         expect(response).to be_success
       end
 
-      it "contains the diaspora id" do
+      it "contains the diaspora* ID" do
         get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
         expect(response.body).to include "<Subject>acct:alice@localhost:3000</Subject>"
       end

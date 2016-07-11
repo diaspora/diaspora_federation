@@ -1,11 +1,11 @@
 module DiasporaFederation
   module Entities
-    # this entity represents a private conversation between users
+    # This entity represents a private conversation between users.
     #
     # @see Validators::ConversationValidator
     class Conversation < Entity
       # @!attribute [r] guid
-      #   a random string of at least 16 chars.
+      #   A random string of at least 16 chars
       #   @see Validation::Rule::Guid
       #   @return [String] conversation guid
       property :guid
@@ -23,14 +23,14 @@ module DiasporaFederation
       entity :messages, [Entities::Message], default: []
 
       # @!attribute [r] author
-      #   The diaspora ID of the person initiated the conversation.
+      #   The diaspora* ID of the person initiated the conversation
       #   @see Person#author
-      #   @return [String] diaspora ID
+      #   @return [String] diaspora* ID
       property :author, xml_name: :diaspora_handle
 
       # @!attribute [r] participants
-      #   The diaspora IDs of the persons participating the conversation separated by ";".
-      #   @return [String] participants diaspora IDs
+      #   The diaspora* IDs of the persons participating the conversation separated by ";"
+      #   @return [String] participants diaspora* IDs
       property :participants, xml_name: :participant_handles
 
       private

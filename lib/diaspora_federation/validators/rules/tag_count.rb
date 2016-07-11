@@ -4,11 +4,11 @@ module Validation
     # Only the "#" characters will be counted.
     # The string can be nil.
     class TagCount
-      # This rule must have a +maximum+ param
+      # This rule must have a +maximum+ param.
       # @return [Hash] params
       attr_reader :params
 
-      # create a new rule for a maximum tag count validation
+      # Creates a new rule for a maximum tag count validation
       # @param [Hash] params
       # @option params [Fixnum] :maximum maximum allowed tag count
       def initialize(params)

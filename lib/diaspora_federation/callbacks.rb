@@ -2,7 +2,7 @@ module DiasporaFederation
   # Callbacks are used to communicate with the application. They are called to
   # fetch data and after data is received.
   class Callbacks
-    # Initializes a new Callbacks object with the event-keys that need to be defined.
+    # Initializes a new Callbacks object with the event-keys that need to be defined
     #
     # @example
     #   Callbacks.new %i(
@@ -16,7 +16,7 @@ module DiasporaFederation
       @handlers = {}
     end
 
-    # defines a callback
+    # Defines a callback
     #
     # @example
     #   callbacks.on :some_event do |arg1|
@@ -33,7 +33,7 @@ module DiasporaFederation
       @handlers[event] = callback
     end
 
-    # triggers a callback
+    # Triggers a callback
     #
     # @example
     #   callbacks.trigger :some_event, "foo"
@@ -47,7 +47,7 @@ module DiasporaFederation
       @handlers[event].call(*args)
     end
 
-    # checks if all callbacks are defined
+    # Checks if all callbacks are defined
     # @return [Boolean]
     def definition_complete?
       missing_handlers.empty?

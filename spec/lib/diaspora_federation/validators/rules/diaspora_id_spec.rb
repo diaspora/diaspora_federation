@@ -11,7 +11,7 @@ describe Validation::Rule::DiasporaId do
   end
 
   context "validation" do
-    it "validates a normal diaspora id" do
+    it "validates a normal diaspora* ID" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@example.com"))
       validator.rule(:diaspora_id, :diaspora_id)
 
@@ -19,7 +19,7 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to be_empty
     end
 
-    it "validates a diaspora id with localhost" do
+    it "validates a diaspora* ID with localhost" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@localhost"))
       validator.rule(:diaspora_id, :diaspora_id)
 
@@ -27,7 +27,7 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to be_empty
     end
 
-    it "validates a diaspora id with port" do
+    it "validates a diaspora* ID with port" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@example.com:3000"))
       validator.rule(:diaspora_id, :diaspora_id)
 
@@ -35,7 +35,7 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to be_empty
     end
 
-    it "validates a diaspora id with IPv4 address" do
+    it "validates a diaspora* ID with IPv4 address" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@123.45.67.89"))
       validator.rule(:diaspora_id, :diaspora_id)
 
@@ -43,7 +43,7 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to be_empty
     end
 
-    it "validates a diaspora id with IPv6 address" do
+    it "validates a diaspora* ID with IPv6 address" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@[2001:1234:5678:90ab:cdef::1]"))
       validator.rule(:diaspora_id, :diaspora_id)
 
@@ -51,7 +51,7 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to be_empty
     end
 
-    it "validates a diaspora id with . and -" do
+    it "validates a diaspora* ID with . and -" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some-fancy.user@example.com"))
       validator.rule(:diaspora_id, :diaspora_id)
 
@@ -59,7 +59,7 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to be_empty
     end
 
-    it "fails if the diaspora id contains a / in the domain-name" do
+    it "fails if the diaspora* ID contains a / in the domain-name" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@example.com/friendica"))
       validator.rule(:diaspora_id, :diaspora_id)
 
@@ -67,7 +67,7 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to include(:diaspora_id)
     end
 
-    it "fails if the diaspora id contains a _ in the domain-name" do
+    it "fails if the diaspora* ID contains a _ in the domain-name" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@invalid_domain.com"))
       validator.rule(:diaspora_id, :diaspora_id)
 
@@ -75,7 +75,7 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to include(:diaspora_id)
     end
 
-    it "fails if the diaspora id contains a special-chars in the username" do
+    it "fails if the diaspora* ID contains a special-chars in the username" do
       validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user$^%@example.com"))
       validator.rule(:diaspora_id, :diaspora_id)
 

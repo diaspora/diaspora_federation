@@ -1,5 +1,5 @@
 module DiasporaFederation
-  # This module contains a Diaspora*-specific implementation of parts of the
+  # This module contains a diaspora*-specific implementation of parts of the
   # {http://www.salmon-protocol.org/ Salmon Protocol}.
   module Salmon
     # XML namespace url

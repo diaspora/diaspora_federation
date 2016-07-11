@@ -1,11 +1,11 @@
 module DiasporaFederation
   module Entities
-    # this entity represents a poll answer and is federated as a part of the Poll entity
+    # This entity represents a poll answer and is federated as a part of the Poll entity.
     #
     # @see Validators::PollAnswerValidator
     class PollAnswer < Entity
       # @!attribute [r] guid
-      #   a random string of at least 16 chars.
+      #   A random string of at least 16 chars
       #   @see Validation::Rule::Guid
       #   @return [String] guid
       property :guid

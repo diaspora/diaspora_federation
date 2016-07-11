@@ -1,19 +1,19 @@
 module DiasporaFederation
   module Entities
-    # this entity represents photo and it is federated as a part of a status message
+    # This entity represents a photo and it is federated as a part of a status message.
     #
     # @see Validators::PhotoValidator
     class Photo < Entity
       # @!attribute [r] guid
-      #   a random string of at least 16 chars.
+      #   A random string of at least 16 chars
       #   @see Validation::Rule::Guid
       #   @return [String] guid
       property :guid
 
       # @!attribute [r] author
-      #   The diaspora ID of the person who uploaded the photo
+      #   The diaspora* ID of the person who uploaded the photo
       #   @see Person#author
-      #   @return [String] author diaspora ID
+      #   @return [String] author diaspora* ID
       property :author, xml_name: :diaspora_handle
 
       # @!attribute [r] public
@@ -22,12 +22,12 @@ module DiasporaFederation
       property :public, default: false
 
       # @!attribute [r] created_at
-      #   photo entity creation time
+      #   Photo entity creation time
       #   @return [Time] creation time
       property :created_at, default: -> { Time.now.utc }
 
       # @!attribute [r] remote_photo_path
-      #   an url of the photo on a remote server
+      #   An url of the photo on a remote server
       #   @return [String] remote photo url
       property :remote_photo_path
 
@@ -40,18 +40,18 @@ module DiasporaFederation
       property :text, default: nil
 
       # @!attribute [r] status_message_guid
-      #   guid of a status message this message belongs to
+      #   Guid of a status message this message belongs to
       #   @see StatusMessage#guid
       #   @return [String] guid
       property :status_message_guid
 
       # @!attribute [r] height
-      #   photo height
+      #   Photo height
       #   @return [String] height
       property :height
 
       # @!attribute [r] width
-      #   photo width
+      #   Photo width
       #   @return [String] width
       property :width
     end

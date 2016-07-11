@@ -1,6 +1,6 @@
 module DiasporaFederation
   # +Entity+ is the base class for all other objects used to encapsulate data
-  # for federation messages in the Diaspora* network.
+  # for federation messages in the diaspora* network.
   # Entity fields are specified using a simple {PropertiesDSL DSL} as part of
   # the class definition.
   #
@@ -231,7 +231,7 @@ module DiasporaFederation
       end
     end
 
-    # create simple node, fill it with text and append to root
+    # Create simple node, fill it with text and append to root
     def simple_node(doc, name, value)
       xml_name = self.class.xml_names[name]
       Nokogiri::XML::Element.new(xml_name ? xml_name.to_s : name, doc).tap do |node|
@@ -268,7 +268,7 @@ module DiasporaFederation
       end
     end
 
-    # create simple entry in data hash
+    # Create simple entry in data hash
     #
     # @param [String] name xml tag to parse
     # @param [Nokogiri::XML::Element] root_node XML root_node to parse
@@ -279,7 +279,7 @@ module DiasporaFederation
       node.first.text if node.any?
     end
 
-    # create an entry in the data hash for the nested entity
+    # Create an entry in the data hash for the nested entity
     #
     # @param [Class] type target type to parse
     # @param [Nokogiri::XML::Element] root_node XML node to parse
@@ -289,7 +289,7 @@ module DiasporaFederation
       type.from_xml(node.first) if node.any?
     end
 
-    # collect all nested children of that type and create an array in the data hash
+    # Collect all nested children of that type and create an array in the data hash
     #
     # @param [Class] type target type to parse
     # @param [Nokogiri::XML::Element] root_node XML node to parse

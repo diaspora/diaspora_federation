@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::StatusMessage}
+    # This validates a {Entities::StatusMessage}.
     class StatusMessageValidator < Validation::Validator
       include Validation
 

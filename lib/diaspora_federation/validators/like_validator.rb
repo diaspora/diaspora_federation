@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::Like}
+    # This validates a {Entities::Like}.
     class LikeValidator < Validation::Validator
       include Validation
 

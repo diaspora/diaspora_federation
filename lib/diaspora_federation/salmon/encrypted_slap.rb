@@ -3,14 +3,14 @@ require "json"
 module DiasporaFederation
   module Salmon
     # +EncryptedSlap+ provides class methods for generating and parsing encrypted
-    # Slaps. (In principle the same as  {Slap}, but with encryption.)
+    # Slaps. (In principle the same as {Slap}, but with encryption.)
     #
     # The basic encryption mechanism used here is based on the knowledge that
     # asymmetrical encryption is slow and symmetrical encryption is fast. Keeping in
     # mind that a message we want to de-/encrypt may greatly vary in length,
     # performance considerations must play a part of this scheme.
     #
-    # A Diaspora*-flavored encrypted magic-enveloped XML message looks like the following:
+    # A diaspora*-flavored encrypted magic-enveloped XML message looks like the following:
     #
     #   <?xml version="1.0" encoding="UTF-8"?>
     #   <diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
@@ -63,7 +63,7 @@ module DiasporaFederation
     # @deprecated
     class EncryptedSlap < Slap
       # the author of the slap
-      # @param [String] value the author diaspora id
+      # @param [String] value the author diaspora* ID
       attr_writer :author_id
 
       # the key and iv if it is an encrypted slap
@@ -100,7 +100,7 @@ module DiasporaFederation
 
       # Creates an encrypted Salmon Slap.
       #
-      # @param [String] author_id Diaspora* handle of the author
+      # @param [String] author_id diaspora* ID of the author
       # @param [OpenSSL::PKey::RSA] privkey sender private key for signing the magic envelope
       # @param [Entity] entity payload
       # @return [EncryptedSlap] encrypted Slap instance
@@ -136,7 +136,7 @@ module DiasporaFederation
 
       private
 
-      # decrypts and reads the data from the encrypted XML header
+      # Decrypts and reads the data from the encrypted XML header
       # @param [String] data base64 encoded, encrypted header data
       # @param [OpenSSL::PKey::RSA] privkey private key for decryption
       # @return [Hash] { iv: "...", aes_key: "...", author_id: "..." }
@@ -151,7 +151,7 @@ module DiasporaFederation
         {iv: iv, aes_key: key, author_id: author_id}
       end
 
-      # decrypts the xml header
+      # Decrypts the xml header
       # @param [String] data base64 encoded, encrypted header data
       # @param [OpenSSL::PKey::RSA] privkey private key for decryption
       # @return [Nokogiri::XML::Element] header xml document
@@ -163,8 +163,8 @@ module DiasporaFederation
         Nokogiri::XML::Document.parse(xml).root
       end
 
-      # encrypt the header xml with an AES cipher and encrypt the cipher params
-      # with the recipients public_key
+      # Encrypt the header xml with an AES cipher and encrypt the cipher params
+      # with the recipients public_key.
       # @param [String] author_id diaspora_handle
       # @param [Hash] envelope_key envelope cipher params
       # @param [OpenSSL::PKey::RSA] pubkey recipient public_key
@@ -182,7 +182,7 @@ module DiasporaFederation
         Base64.strict_encode64(json_header)
       end
 
-      # generate the header xml string, including the author, aes_key and iv
+      # Generate the header xml string, including the author, aes_key and iv
       # @param [String] author_id diaspora_handle of the author
       # @param [Hash] envelope_key { key: "...", iv: "..." } (values in base64)
       # @return [String] header XML string

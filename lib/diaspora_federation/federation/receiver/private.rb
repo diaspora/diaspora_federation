@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Federation
     module Receiver
-      # receiver for private entities
+      # Receiver for private entities
       class Private < AbstractReceiver
         private
 

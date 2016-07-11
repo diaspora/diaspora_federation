@@ -1,11 +1,11 @@
 require_dependency "diaspora_federation/application_controller"
 
 module DiasporaFederation
-  # this controller processes receiving messages
+  # This controller processes receiving messages.
   class ReceiveController < ApplicationController
     before_action :check_for_xml
 
-    # receives public messages
+    # Receives public messages
     #
     # POST /receive/public
     def public
@@ -19,7 +19,7 @@ module DiasporaFederation
       render nothing: true, status: 202
     end
 
-    # receives private messages for a user
+    # Receives private messages for a user
     #
     # POST /receive/users/:guid
     def private
@@ -35,7 +35,7 @@ module DiasporaFederation
 
     private
 
-    # checks the xml parameter for legacy salmon slaps
+    # Checks the xml parameter for legacy salmon slaps
     # @deprecated
     def check_for_xml
       legacy_request = request.content_type.nil? || request.content_type == "application/x-www-form-urlencoded"

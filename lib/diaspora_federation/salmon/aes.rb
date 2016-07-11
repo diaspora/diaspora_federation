@@ -1,18 +1,18 @@
 module DiasporaFederation
   module Salmon
-    # class for AES encryption and decryption
+    # Class for AES encryption and decryption
     class AES
       # OpenSSL aes cipher definition
       CIPHER = "AES-256-CBC".freeze
 
-      # generates a random AES key and initialization vector
+      # Generates a random AES key and initialization vector
       # @return [Hash] { key: "...", iv: "..." }
       def self.generate_key_and_iv
         cipher = OpenSSL::Cipher.new(CIPHER)
         {key: cipher.random_key, iv: cipher.random_iv}
       end
 
-      # encrypts the given data with an AES cipher defined by the given key
+      # Encrypts the given data with an AES cipher defined by the given key
       # and iv and returns the resulting ciphertext base64 strict_encoded.
       # @param [String] data plain input
       # @param [String] key AES key
@@ -34,7 +34,7 @@ module DiasporaFederation
         Base64.strict_encode64(ciphertext)
       end
 
-      # decrypts the given ciphertext with an AES cipher defined by the given key
+      # Decrypts the given ciphertext with an AES cipher defined by the given key
       # and iv. +ciphertext+ is expected to be base64 encoded
       # @param [String] ciphertext input data
       # @param [String] key AES key

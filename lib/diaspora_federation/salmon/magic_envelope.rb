@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Salmon
-    # Represents a Magic Envelope for Diaspora* federation messages.
+    # Represents a Magic Envelope for diaspora* federation messages
     #
     # When generating a Magic Envelope, an instance of this class is created and
     # the contents are specified on initialization. Optionally, the payload can be
@@ -23,26 +23,26 @@ module DiasporaFederation
     class MagicEnvelope
       include Logging
 
-      # encoding used for the payload data
+      # Encoding used for the payload data
       ENCODING = "base64url".freeze
 
-      # algorithm used for signing the payload data
+      # Algorithm used for signing the payload data
       ALGORITHM = "RSA-SHA256".freeze
 
-      # mime type describing the payload data
+      # Mime type describing the payload data
       DATA_TYPE = "application/xml".freeze
 
-      # digest instance used for signing
+      # Digest instance used for signing
       DIGEST = OpenSSL::Digest::SHA256.new
 
       # XML namespace url
       XMLNS = "http://salmon-protocol.org/ns/magic-env".freeze
 
-      # the payload entity of the magic envelope
+      # The payload entity of the magic envelope
       # @return [Entity] payload entity
       attr_reader :payload
 
-      # the sender of the magic envelope
+      # The sender of the magic envelope
       # @return [String] diaspora-ID of the sender
       attr_reader :sender
 
@@ -101,7 +101,7 @@ module DiasporaFederation
       # @see AES#decrypt
       #
       # @param [Nokogiri::XML::Element] magic_env XML root node of a magic envelope
-      # @param [String] sender diaspora-ID of the sender or nil
+      # @param [String] sender diaspora* ID of the sender or nil
       # @param [Hash] cipher_params hash containing the key and iv for
       #   AES-decrypting previously encrypted data. E.g.: { iv: "...", key: "..." }
       #
@@ -132,7 +132,7 @@ module DiasporaFederation
 
       private
 
-      # the payload data as string
+      # The payload data as string
       # @return [String] payload data
       def payload_data
         @payload_data ||= XmlPayload.pack(@payload).to_xml.strip.tap do |data|
@@ -155,7 +155,7 @@ module DiasporaFederation
         }.doc.root
       end
 
-      # create the signature for all fields according to specification
+      # Creates the signature for all fields according to specification
       #
       # @param [OpenSSL::PKey::RSA] privkey private key used for signing
       # @return [String] the signature
@@ -173,7 +173,7 @@ module DiasporaFederation
       end
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
-      # @param [String] sender diaspora-ID of the sender or nil
+      # @param [String] sender diaspora* ID of the sender or nil
       # @return [Boolean]
       private_class_method def self.signature_valid?(env, sender)
         subject = sig_subject([Base64.urlsafe_decode64(env.at_xpath("me:data").content),
@@ -188,18 +188,18 @@ module DiasporaFederation
         sender_key.verify(DIGEST, sig, subject)
       end
 
-      # reads the +key_id+ from the magic envelope
+      # Reads the +key_id+ from the magic envelope.
       # @param [Nokogiri::XML::Element] env magic envelope XML
-      # @return [String] diaspora-ID of the sender
+      # @return [String] diaspora* ID of the sender
       private_class_method def self.sender(env)
         key_id = env.at_xpath("me:sig")["key_id"]
         raise InvalidEnvelope, "no key_id" unless key_id # TODO: move to `envelope_valid?`
         Base64.urlsafe_decode64(key_id)
       end
 
-      # constructs the signature subject.
-      # the given array should consist of the data, data_type (mimetype), encoding
-      # and the algorithm
+      # Constructs the signature subject.
+      # The given array should consist of the data, data_type (mimetype), encoding
+      # and the algorithm.
       # @param [Array<String>] data_arr
       # @return [String] signature subject
       private_class_method def self.sig_subject(data_arr)

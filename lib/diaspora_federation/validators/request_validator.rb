@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::Request}
-    # @deprecated the {Entities::Request} will be replaced with {Entities::Contact}
+    # This validates a {Entities::Request}.
+    # @deprecated The {Entities::Request} will be replaced with {Entities::Contact}.
     class RequestValidator < Validation::Validator
       include Validation
 

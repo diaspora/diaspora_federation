@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Discovery::HCard}
+    # This validates a {Discovery::HCard}.
     #
     # @todo activate guid and public key validation after all pod have it in
     #   the hcard.
@@ -11,7 +11,7 @@ module DiasporaFederation
 
       # rule :guid, :guid
 
-      # the name must not contain a semicolon because of mentions
+      # The name must not contain a semicolon because of mentions.
       # @{<full_name> ; <diaspora_id>}
       rule :full_name, regular_expression: {regex: /\A[^;]{,70}\z/}
       rule :first_name, regular_expression: {regex: /\A[^;]{,32}\z/}

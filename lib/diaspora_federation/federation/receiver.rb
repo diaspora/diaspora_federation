@@ -1,10 +1,10 @@
 module DiasporaFederation
   module Federation
-    # this module is for parse and receive entities.
+    # This module parses and receives entities.
     module Receiver
       extend Logging
 
-      # receive a public message
+      # Receive a public message
       # @param [String] data message to receive
       # @param [Boolean] legacy use old slap parser
       def self.receive_public(data, legacy=false)
@@ -21,7 +21,7 @@ module DiasporaFederation
         raise e
       end
 
-      # receive a private message
+      # Receive a private message
       # @param [String] data message to receive
       # @param [OpenSSL::PKey::RSA] recipient_private_key recipient private key to decrypt the message
       # @param [Object] recipient_id the identifier to persist the entity for the correct user,

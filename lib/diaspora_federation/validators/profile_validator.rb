@@ -1,17 +1,17 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::Profile}
+    # This validates a {Entities::Profile}.
     class ProfileValidator < Validation::Validator
       include Validation
 
       rule :author, :diaspora_id
 
-      # the name must not contain a semicolon because of mentions
+      # The name must not contain a semicolon because of mentions.
       # @{<full_name> ; <diaspora_id>}
       rule :first_name, regular_expression: {regex: /\A[^;]{,32}\z/}
       rule :last_name, regular_expression: {regex: /\A[^;]{,32}\z/}
 
-      # this urls can be relative
+      # These urls can be relative.
       rule :image_url, URI: [:path]
       rule :image_url_medium, URI: [:path]
       rule :image_url_small, URI: [:path]

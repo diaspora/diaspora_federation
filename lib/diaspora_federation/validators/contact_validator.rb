@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::Contact}
+    # This validates a {Entities::Contact}.
     class ContactValidator < Validation::Validator
       include Validation
 
