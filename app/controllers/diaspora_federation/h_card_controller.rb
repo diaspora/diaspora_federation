@@ -13,7 +13,9 @@ module DiasporaFederation
         render nothing: true, status: 404
       else
         logger.info "hcard profile request for: #{person_hcard.nickname}:#{person_hcard.guid}"
+        # rubocop:disable Rails/OutputSafety
         render html: person_hcard.to_html.html_safe
+        # rubocop:enable Rails/OutputSafety
       end
     end
   end

@@ -50,7 +50,7 @@ Style/HashSyntax:
  EnforcedStyle: ruby19_no_mixed_keys
 
 # has_key? and has_value? are far more readable than key? and value?
-Style/DeprecatedHashMethods:
+Style/PreferredHashMethods:
   Enabled: false
 
 # String#% is by far the least verbose and only object oriented variant.
