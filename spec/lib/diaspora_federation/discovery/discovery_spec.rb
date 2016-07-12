@@ -7,7 +7,7 @@ module DiasporaFederation
     let(:default_image) { "http://localhost:3000/assets/user/default.png" }
 
     describe "#intialize" do
-      it "sets diaspora id" do
+      it "sets diaspora* ID" do
         discovery = Discovery::Discovery.new("some_user@example.com")
         expect(discovery.diaspora_id).to eq("some_user@example.com")
       end
@@ -95,7 +95,7 @@ module DiasporaFederation
         expect(person.diaspora_id).to eq(account)
       end
 
-      it "fails if the diaspora id does not match" do
+      it "fails if the diaspora* ID does not match" do
         modified_webfinger = webfinger_xrd.gsub(account, "anonther_user@example.com")
 
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
@@ -106,7 +106,7 @@ module DiasporaFederation
         expect { Discovery::Discovery.new(account).fetch_and_save }.to raise_error Discovery::DiscoveryError
       end
 
-      it "fails if the diaspora id was not found" do
+      it "fails if the diaspora* ID was not found" do
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
         stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")

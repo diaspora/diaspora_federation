@@ -1,9 +1,9 @@
 require_dependency "diaspora_federation/application_controller"
 
 module DiasporaFederation
-  # this controller processes fetch requests
+  # This controller processes fetch requests.
   class FetchController < ApplicationController
-    # returns the fetched entity or a redirect
+    # Returns the fetched entity or a redirect
     #
     # GET /fetch/:type/:guid
     def fetch

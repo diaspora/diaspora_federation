@@ -1,9 +1,9 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Discovery::WebFinger}
+    # This validates a {Discovery::WebFinger}.
     #
-    # @note it does not validate the guid and public key, because it will be
-    #   removed in the webfinger
+    # @note It does not validate the guid and public key, because it will be
+    #   removed in the webfinger.
     class WebFingerValidator < Validation::Validator
       include Validation
 

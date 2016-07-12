@@ -3,7 +3,7 @@ module DiasporaFederation
     let(:entity) { :signed_retraction_entity }
     it_behaves_like "a common validator"
 
-    it_behaves_like "a diaspora id validator" do
+    it_behaves_like "a diaspora* ID validator" do
       let(:property) { :author }
       let(:mandatory) { true }
     end

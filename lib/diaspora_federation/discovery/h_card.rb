@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Discovery
-    # This class provides the means of generating an parsing account data to and
+    # This class provides the means of generating and parsing account data to and
     # from the hCard format.
     # hCard is based on +RFC 2426+ (vCard) which got superseded by +RFC 6350+.
     # There is a draft for a new h-card format specification, that makes use of
@@ -46,7 +46,7 @@ module DiasporaFederation
       property :guid
 
       # @!attribute [r] nickname
-      #   the first part of the diaspora ID
+      #   The first part of the diaspora* ID
       #   @return [String] nickname
       property :nickname
 
@@ -56,7 +56,7 @@ module DiasporaFederation
 
       # @!attribute [r] url
       #   @deprecated should be changed to the profile url. The pod url is in
-      #     the WebFinger (see {WebFinger#seed_url}, will affect older Diaspora*
+      #     the WebFinger (see {WebFinger#seed_url}, will affect older diaspora*
       #     installations).
       #
       #   @return [String] link to the pod
@@ -83,7 +83,7 @@ module DiasporaFederation
 
       # @!attribute [r] first_name
       #   @deprecated We decided to only use one name field, these should be removed
-      #     in later iterations (will affect older Diaspora* installations).
+      #     in later iterations (will affect older diaspora* installations).
       #
       #   @see #full_name
       #   @return [String] first name
@@ -91,7 +91,7 @@ module DiasporaFederation
 
       # @!attribute [r] last_name
       #   @deprecated We decided to only use one name field, these should be removed
-      #     in later iterations (will affect older Diaspora* installations).
+      #     in later iterations (will affect older diaspora* installations).
       #
       #   @see #full_name
       #   @return [String] last name
@@ -100,7 +100,7 @@ module DiasporaFederation
       # @!attribute [r] searchable
       #   @deprecated As this is a simple property, consider move to WebFinger instead
       #     of HCard. vCard has no comparable field for this information, but
-      #     Webfinger may declare arbitrary properties (will affect older Diaspora*
+      #     Webfinger may declare arbitrary properties (will affect older diaspora*
       #     installations).
       #
       #   flag if a user is searchable by name
@@ -152,7 +152,7 @@ module DiasporaFederation
         builder.doc.to_xhtml(indent: 2, indent_text: " ")
       end
 
-      # Creates a new HCard instance from the given HTML string.
+      # Creates a new HCard instance from the given HTML string
       # @param html_string [String] HTML string
       # @return [HCard] HCard instance
       # @raise [InvalidData] if the HTML string is invalid or incomplete
@@ -219,7 +219,7 @@ module DiasporaFederation
         end
       end
 
-      # Calls {HCard#add_property} for a simple text property.
+      # Calls {HCard#add_property} for a simple text property
       # @param container [Nokogiri::XML::Element] parent element
       # @param name [Symbol] property name
       # @param class_name [String] HTML class name

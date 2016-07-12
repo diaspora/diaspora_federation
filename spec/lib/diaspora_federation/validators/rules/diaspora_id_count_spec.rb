@@ -31,7 +31,7 @@ describe Validation::Rule::DiasporaIdCount do
     end
 
     it "fails for less but non ids" do
-      bad_str = "user@example.com;i am a weird diaspora id @@@ ### 12345;shouldnt be reached by a rule"
+      bad_str = "user@example.com;i am a weird diaspora* ID @@@ ### 12345;shouldnt be reached by a rule"
       validator = Validation::Validator.new(OpenStruct.new(ids: bad_str))
       validator.rule(:ids, diaspora_id_count: {maximum: 5})
 

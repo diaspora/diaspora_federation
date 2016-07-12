@@ -4,9 +4,9 @@ module DiasporaFederation
     # another entity).
     class RelatedEntity < Entity
       # @!attribute [r] author
-      #   The diaspora ID of the author.
+      #   The diaspora* ID of the author
       #   @see Person#author
-      #   @return [String] diaspora ID
+      #   @return [String] diaspora* ID
       property :author
 
       # @!attribute [r] local
@@ -15,12 +15,12 @@ module DiasporaFederation
       property :local
 
       # @!attribute [r] public
-      #   shows whether the entity is visible to everyone or only to some aspects
+      #   Shows whether the entity is visible to everyone or only to some aspects
       #   @return [Boolean] is it public
       property :public, default: false
 
       # @!attribute [r] parent
-      #   if the entity also have a parent (Comment or Like), +nil+ if it has no parent
+      #   Parent if the entity also has a parent (Comment or Like) or +nil+ if it has no parent
       #   @return [RelatedEntity] parent entity
       entity :parent, Entities::RelatedEntity, default: nil
 

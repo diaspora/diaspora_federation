@@ -1,5 +1,5 @@
 module DiasporaFederation
-  # Base-Controller for all DiasporaFederation-Controller
+  # Base controller for all DiasporaFederation controllers
   class ApplicationController < ActionController::Base
     before_action :set_locale
 

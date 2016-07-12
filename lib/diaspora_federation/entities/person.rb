@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Entities
-    # this entity contains the base data of a person
+    # This entity contains the base data of a person.
     #
     # @see Validators::PersonValidator
     class Person < Entity
@@ -12,13 +12,13 @@ module DiasporaFederation
       property :guid
 
       # @!attribute [r] author
-      #   The diaspora ID of the person
+      #   The diaspora* ID of the person
       #   @see Validation::Rule::DiasporaId
-      #   @return [String] diaspora ID
+      #   @return [String] diaspora* ID
       # @!attribute [r] diaspora_id
-      #   Alias for author
+      #   alias for author
       #   @see Person#author
-      #   @return [String] diaspora ID
+      #   @return [String] diaspora* ID
       property :author, alias: :diaspora_id, xml_name: :diaspora_handle
 
       # @!attribute [r] url
@@ -27,7 +27,7 @@ module DiasporaFederation
       property :url
 
       # @!attribute [r] profile
-      #   all profile data of the person
+      #   All profile data of the person
       #   @return [Profile] the profile of the person
       entity :profile, Entities::Profile
 

@@ -5,7 +5,7 @@ module DiasporaFederation
   module Test
     # Factories for federation entities
     module Factories
-      # defines the federation entity factories
+      # Defines the federation entity factories
       def self.federation_factories
         FactoryGirl.define do
           initialize_with { new(attributes) }

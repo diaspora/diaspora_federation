@@ -1,18 +1,18 @@
 module DiasporaFederation
   module Entities
-    # this entity represents a contact with another person. A user issues it
-    # when he starts sharing/following with another user.
+    # This entity represents a contact with another person. A user issues it
+    # when they start sharing/following with another user.
     #
     # @see Validators::ContactValidator
     class Contact < Entity
       # @!attribute [r] author
-      #   The diaspora ID of the person who shares his profile
+      #   The diaspora* ID of the person who shares their profile
       #   @see Person#author
       #   @return [String] sender ID
       property :author
 
       # @!attribute [r] recipient
-      #   The diaspora ID of the person who will be shared with
+      #   The diaspora* ID of the person who will be shared with
       #   @see Validation::Rule::DiasporaId
       #   @return [String] recipient ID
       property :recipient

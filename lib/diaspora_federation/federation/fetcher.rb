@@ -1,9 +1,9 @@
 module DiasporaFederation
   module Federation
-    # this module is for fetching entities from other pods
+    # This module is for fetching entities from other pods.
     module Fetcher
-      # fetches a public entity from a remote pod
-      # @param [String] author the diaspora ID of the author of the entity
+      # Fetches a public entity from a remote pod
+      # @param [String] author the diaspora* ID of the author of the entity
       # @param [Symbol, String] entity_type snake_case version of the entity class
       # @param [String] guid guid of the entity to fetch
       def self.fetch_public(author, entity_type, guid)

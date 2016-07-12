@@ -13,7 +13,7 @@ module Validation
         !value.nil?
       end
 
-      # This rule has no params
+      # This rule has no params.
       # @return [Hash] params
       def params
         {}

@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::Reshare}
+    # This validates a {Entities::Reshare}.
     class ReshareValidator < Validation::Validator
       include Validation
 

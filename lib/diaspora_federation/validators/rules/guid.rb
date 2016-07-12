@@ -7,11 +7,11 @@ module Validation
     # * Numbers: 0-9
     # * Special chars: '-', '_', '@', '.' and ':'
     class Guid
-      # This rule can have a +nilable+ param
+      # This rule can have a +nilable+ param.
       # @return [Hash] params
       attr_reader :params
 
-      # create a new rule for guid validation
+      # Creates a new rule for guid validation
       # @param [Hash] params
       # @option params [Boolean] :nilable guid allowed to be nil
       def initialize(params={})

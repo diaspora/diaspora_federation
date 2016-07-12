@@ -1,8 +1,8 @@
 module DiasporaFederation
   # This namespace contains all the entities used to encapsulate data that is
-  # passed around in the Diaspora* network as part of the federation protocol.
+  # passed around in the diaspora* network as part of the federation protocol.
   #
-  # All entities must be defined in this namespace. otherwise the XML
+  # All entities must be defined in this namespace. Otherwise the XML
   # de-serialization will fail.
   module Entities
   end

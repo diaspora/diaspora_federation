@@ -1,11 +1,11 @@
 module DiasporaFederation
   module Federation
     module Receiver
-      # common functionality for receivers
+      # Common functionality for receivers
       class AbstractReceiver
         include Logging
 
-        # create a new receiver
+        # Creates a new receiver
         # @param [MagicEnvelope] magic_envelope the received magic envelope
         # @param [Object] recipient_id the identifier of the recipient of a private message
         def initialize(magic_envelope, recipient_id=nil)
@@ -14,7 +14,7 @@ module DiasporaFederation
           @recipient_id = recipient_id
         end
 
-        # validate and receive the entity
+        # Validates and receives the entity
         def receive
           validate_and_receive
         rescue => e

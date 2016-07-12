@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::Retraction}
+    # This validates a {Entities::Retraction}.
     class RetractionValidator < Validation::Validator
       include Validation
 

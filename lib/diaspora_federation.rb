@@ -48,7 +48,7 @@ module DiasporaFederation
     # @return [Callbacks] callbacks
     attr_reader :callbacks
 
-    # the pod url
+    # The pod url
     #
     # @overload server_uri
     #   @return [URI] the server uri
@@ -80,7 +80,7 @@ module DiasporaFederation
     #   @param [Integer] value max number of parallel requests
     attr_accessor :http_concurrency
 
-    # timeout in seconds for http-requests (default: +30+)
+    # Timeout in seconds for http-requests (default: +30+)
     #
     # @overload http_timeout
     #   @return [Integer] http timeout in seconds
@@ -98,15 +98,15 @@ module DiasporaFederation
     #   @param [Boolean] value verbose http output
     attr_accessor :http_verbose
 
-    # max redirects to follow
+    # Max redirects to follow
     # @return [Integer] max redirects
     attr_reader :http_redirect_limit
 
-    # user agent used for http-requests
+    # User agent used for http-requests
     # @return [String] user agent
     attr_reader :http_user_agent
 
-    # configure the federation library
+    # Configure the federation library
     #
     # @example
     #   DiasporaFederation.configure do |config|
@@ -120,7 +120,7 @@ module DiasporaFederation
       yield self
     end
 
-    # define the callbacks
+    # Define the callbacks
     #
     # In order to communicate with the application which uses the diaspora_federation gem
     # callbacks are introduced. The callbacks are used for getting required data from the
@@ -130,7 +130,7 @@ module DiasporaFederation
     #
     # fetch_person_for_webfinger
     #   Fetches person data from the application to form a WebFinger reply
-    #   @param [String] Diaspora ID of the person
+    #   @param [String] diaspora* ID of the person
     #   @return [DiasporaFederation::Discovery::WebFinger] person webfinger data
     #
     # fetch_person_for_hcard
@@ -144,13 +144,13 @@ module DiasporaFederation
     #   @param [DiasporaFederation::Entities::Person] person data
     #
     # fetch_private_key
-    #   Fetches a private key of a person by her Diaspora ID from the application
-    #   @param [String] Diaspora ID of the person
+    #   Fetches a private key of a person by her diaspora* ID from the application
+    #   @param [String] diaspora* ID of the person
     #   @return [OpenSSL::PKey::RSA] key
     #
     # fetch_public_key
-    #   Fetches a public key of a person by her Diaspora ID from the application
-    #   @param [String] Diaspora ID of the person
+    #   Fetches a public key of a person by her diaspora* ID from the application
+    #   @param [String] diaspora* ID of the person
     #   @return [OpenSSL::PKey::RSA] key
     #
     # fetch_related_entity
@@ -178,12 +178,12 @@ module DiasporaFederation
     #     see {Receiver.receive_private}
     #
     # fetch_public_entity
-    #   fetch a public entity from the database
+    #   Fetch a public entity from the database
     #   @param [String] entity_type (Post, StatusMessage, etc)
     #   @param [String] guid the guid of the entity
     #
     # fetch_person_url_to
-    #   fetch the url to path for a person
+    #   Fetch the url to path for a person
     #   @param [String] diaspora_id
     #   @param [String] path
     #
@@ -206,7 +206,7 @@ module DiasporaFederation
       @callbacks.instance_eval(&block)
     end
 
-    # validates if the engine is configured correctly
+    # Validates if the engine is configured correctly
     #
     # called from after_initialize
     # @raise [ConfigurationError] if the configuration is incomplete or invalid

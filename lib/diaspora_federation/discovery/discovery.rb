@@ -1,19 +1,19 @@
 module DiasporaFederation
   module Discovery
-    # This class contains the logic to fetch all data for the given diaspora ID
+    # This class contains the logic to fetch all data for the given diaspora* ID.
     class Discovery
       include DiasporaFederation::Logging
 
-      # @return [String] the diaspora ID of the account
+      # @return [String] the diaspora* ID of the account
       attr_reader :diaspora_id
 
-      # create a discovery class for the diaspora-id
-      # @param [String] diaspora_id the diaspora id to discover
+      # Creates a discovery class for the diaspora* ID
+      # @param [String] diaspora_id the diaspora* ID to discover
       def initialize(diaspora_id)
         @diaspora_id = clean_diaspora_id(diaspora_id)
       end
 
-      # fetch all metadata for the account and saves it via callback
+      # Fetches all metadata for the account and saves it via callback
       # @return [Person]
       def fetch_and_save
         logger.info "Fetch data for #{diaspora_id}"
@@ -28,9 +28,9 @@ module DiasporaFederation
       private
 
       def validate_diaspora_id
-        # validates if the diaspora ID matches the diaspora ID in the webfinger response
+        # Validates if the diaspora* ID matches the diaspora* ID in the webfinger response
         return if diaspora_id == clean_diaspora_id(webfinger.acct_uri)
-        raise DiscoveryError, "Diaspora ID does not match: Wanted #{diaspora_id} but got" \
+        raise DiscoveryError, "diaspora* ID does not match: Wanted #{diaspora_id} but got" \
                               " #{clean_diaspora_id(webfinger.acct_uri)}"
       end
 
@@ -59,7 +59,7 @@ module DiasporaFederation
       end
 
       def legacy_webfinger_url_from_host_meta
-        # this tries the xrd url with https first, then falls back to http
+        # This tries the xrd url with https first, then falls back to http.
         host_meta = HostMeta.from_xml get(host_meta_url, true)
         host_meta.webfinger_template_url.gsub("{uri}", "acct:#{diaspora_id}")
       end

@@ -1,11 +1,11 @@
 module DiasporaFederation
   module Entities
-    # this entity represents a poll ant it is federated as an optional part of a status message
+    # This entity represents a poll and it is federated as an optional part of a status message.
     #
     # @see Validators::PollValidator
     class Poll < Entity
       # @!attribute [r] guid
-      #   a random string of at least 16 chars.
+      #   A random string of at least 16 chars
       #   @see Validation::Rule::Guid
       #   @return [String] poll guid
       property :guid
@@ -16,7 +16,7 @@ module DiasporaFederation
       property :question
 
       # @!attribute [r] poll_answers
-      #   array of possible answer to the poll
+      #   Array of possible answers for the poll
       #   @return [[Entities::PollAnswer]] poll answers
       entity :poll_answers, [Entities::PollAnswer]
     end

@@ -1,26 +1,26 @@
 module DiasporaFederation
   module Entities
-    # this is a module that defines common properties for a post which
+    # This is a module that defines common properties for a post which
     # include {StatusMessage} and {Reshare}.
     module Post
-      # on inclusion of this module the required properties for a post are added to the object that includes it
+      # On inclusion of this module the required properties for a post are added to the object that includes it.
       #
       # @!attribute [r] author
-      #   The diaspora ID of the person who posts the post
+      #   The diaspora* ID of the person who posts the post
       #   @see Person#author
-      #   @return [String] diaspora ID
+      #   @return [String] diaspora* ID
       #
       # @!attribute [r] guid
-      #   a random string of at least 16 chars.
+      #   A random string of at least 16 chars
       #   @see Validation::Rule::Guid
       #   @return [String] status message guid
       #
       # @!attribute [r] created_at
-      #   post entity creation time
+      #   Post entity creation time
       #   @return [Time] creation time
       #
       # @!attribute [r] provider_display_name
-      #   a string that describes a means by which a user has posted the post
+      #   A string that describes a means by which a user has posted the post
       #   @return [String] provider display name
       #
       # @param [Entity] entity the entity in which it is included

@@ -1,9 +1,7 @@
 module DiasporaFederation
   module Discovery
-    # The WebFinger document used for Diaspora* user discovery is based on an older
-    # draft of the specification you can find in the wiki of the "webfinger" project
-    # on {http://code.google.com/p/webfinger/wiki/WebFingerProtocol Google Code}
-    # (from around 2010).
+    # The WebFinger document used for diaspora* user discovery is based on an
+    # {http://tools.ietf.org/html/draft-jones-appsawg-webfinger older draft of the specification}.
     #
     # In the meantime an actual RFC draft has been in development, which should
     # serve as a base for all future changes of this implementation.
@@ -30,7 +28,6 @@ module DiasporaFederation
     #
     # @see http://tools.ietf.org/html/draft-jones-appsawg-webfinger "WebFinger" -
     #   current draft
-    # @see http://code.google.com/p/webfinger/wiki/CommonLinkRelations
     # @see http://www.iana.org/assignments/link-relations/link-relations.xhtml
     #   official list of IANA link relations
     class WebFinger < Entity
@@ -58,7 +55,7 @@ module DiasporaFederation
       property :profile_url
 
       # @!attribute [r] atom_url
-      #   This atom feed is an Activity Stream of the user's public posts. Diaspora
+      #   This atom feed is an Activity Stream of the user's public posts. diaspora*
       #   pods SHOULD publish an Activity Stream of public posts, but there is
       #   currently no requirement to be able to read Activity Streams.
       #   @see http://activitystrea.ms/ Activity Streams specification
@@ -82,7 +79,7 @@ module DiasporaFederation
       # @!attribute [r] guid
       #   @deprecated Either convert these to +Property+ elements or move to the
       #     +hCard+, which actually has fields for an +UID+ defined in the +vCard+
-      #     specification (will affect older Diaspora* installations).
+      #     specification (will affect older diaspora* installations).
       #
       #   @see HCard#guid
       #   @see Entities::Person#guid
@@ -92,7 +89,7 @@ module DiasporaFederation
       # @!attribute [r] public_key
       #   @deprecated Either convert these to +Property+ elements or move to the
       #     +hCard+, which actually has fields for an +KEY+ defined in the +vCard+
-      #     specification (will affect older Diaspora* installations).
+      #     specification (will affect older diaspora* installations).
       #
       #   @see HCard#public_key
       #
@@ -111,7 +108,7 @@ module DiasporaFederation
 
       # @deprecated This should be a +Property+ or moved to the +hCard+, but +Link+
       #   is inappropriate according to the specification (will affect older
-      #   Diaspora* installations).
+      #   diaspora* installations).
       # +guid+ link relation
       REL_GUID = "http://joindiaspora.com/guid".freeze
 
@@ -130,11 +127,11 @@ module DiasporaFederation
 
       # @deprecated This should be a +Property+ or moved to the +hcard+, but +Link+
       #   is inappropriate according to the specification (will affect older
-      #   Diaspora* installations).
+      #   diaspora* installations).
       # +pubkey+ link relation
       REL_PUBKEY = "diaspora-public-key".freeze
 
-      # Create the XML string from the current WebFinger instance
+      # Creates the XML string from the current WebFinger instance
       # @return [String] XML string
       def to_xml
         doc = XrdDocument.new
@@ -146,7 +143,7 @@ module DiasporaFederation
         doc.to_xml
       end
 
-      # Create a WebFinger instance from the given XML string.
+      # Creates a WebFinger instance from the given XML string
       # @param [String] webfinger_xml WebFinger XML string
       # @return [WebFinger] WebFinger instance
       # @raise [InvalidData] if the given XML string is invalid or incomplete
@@ -229,7 +226,7 @@ module DiasporaFederation
         element ? element[:template] : nil
       end
 
-      # this method is used to parse the alias_url from the XML.
+      # This method is used to parse the alias_url from the XML.
       # * redmatrix has sometimes no alias, return nil
       # * old pods had quotes around the alias url, this can be removed later
       # * friendica has two aliases and the first is with "acct:": return only an URL starting with http (or https)

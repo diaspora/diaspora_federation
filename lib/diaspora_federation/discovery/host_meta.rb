@@ -4,7 +4,7 @@ module DiasporaFederation
     # Generates and parses Host Meta documents.
     #
     # This is a minimal implementation of the standard, only to the degree of what
-    # is used for the purposes of the Diaspora* protocol. (e.g. WebFinger)
+    # is used for the purposes of the diaspora* protocol. (e.g. WebFinger)
     #
     # @example Creating a Host Meta document
     #   doc = HostMeta.from_base_url("https://pod.example.tld/")
@@ -19,7 +19,7 @@ module DiasporaFederation
     class HostMeta
       private_class_method :new
 
-      # create a new host-meta instance
+      # Creates a new host-meta instance
       # @param [String] webfinger_url the webfinger-url
       def initialize(webfinger_url)
         @webfinger_url = webfinger_url

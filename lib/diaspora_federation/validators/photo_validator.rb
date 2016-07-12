@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::Photo}
+    # This validates a {Entities::Photo}.
     class PhotoValidator < Validation::Validator
       include Validation
 

@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Validators
-    # This validates a {Entities::PollParticipation}
+    # This validates a {Entities::PollParticipation}.
     class PollParticipationValidator < Validation::Validator
       include Validation
 

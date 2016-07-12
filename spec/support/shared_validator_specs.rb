@@ -18,7 +18,7 @@ shared_examples "a common validator" do
 end
 
 shared_examples "a relayable validator" do
-  it_behaves_like "a diaspora id validator" do
+  it_behaves_like "a diaspora* ID validator" do
     let(:property) { :author }
     let(:mandatory) { true }
   end
@@ -69,7 +69,7 @@ shared_examples "a property that mustn't be empty" do
   end
 end
 
-shared_examples "a diaspora id validator" do
+shared_examples "a diaspora* ID validator" do
   it "must not be nil or empty if mandatory" do
     [nil, ""].each do |val|
       validator = described_class.new(entity_stub(entity, property => val))
@@ -84,8 +84,8 @@ shared_examples "a diaspora id validator" do
     end
   end
 
-  it "must be a valid diaspora id" do
-    validator = described_class.new(entity_stub(entity, property => "i am a weird diaspora id @@@ ### 12345"))
+  it "must be a valid diaspora* ID" do
+    validator = described_class.new(entity_stub(entity, property => "i am a weird diaspora* ID @@@ ### 12345"))
 
     expect(validator).not_to be_valid
     expect(validator.errors).to include(property)

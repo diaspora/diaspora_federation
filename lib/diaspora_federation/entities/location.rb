@@ -1,6 +1,6 @@
 module DiasporaFederation
   module Entities
-    # this entity is used to specify a location data and used embedded in a status message
+    # This entity is used to specify location data and used embedded in a status message.
     #
     # @see Validators::LocationValidator
     class Location < Entity
