@@ -57,8 +57,8 @@ end
 
 group :development, :test do
   # unit tests
-  gem "rspec-core", "~> 3.4.3"
-  gem "rspec-rails", "~> 3.4.1"
+  gem "rspec-core", "~> 3.5.1"
+  gem "rspec-rails", "~> 3.5.1"
 
   # GUID generation
   gem "uuid", "~> 2.3.8"
