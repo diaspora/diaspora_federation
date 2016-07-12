@@ -295,6 +295,21 @@ XML
       end
     end
 
+    context "parse invalid XML" do
+      it "raises a ValidationError if the parent_guid is missing" do
+        broken_xml = <<-XML
+<some_relayable>
+  <author_signature/>
+  <parent_author_signature/>
+</some_relayable>
+        XML
+
+        expect {
+          SomeRelayable.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)
+        }.to raise_error Entity::ValidationError, "invalid DiasporaFederation::SomeRelayable! missing 'parent_guid'."
+      end
+    end
+
     context "fetch parent" do
       before do
         expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)

@@ -32,5 +32,35 @@ XML
     it_behaves_like "an XML Entity"
 
     it_behaves_like "a relayable Entity"
+
+    context "invalid XML" do
+      it "raises a ValidationError if the parent_type is missing" do
+        broken_xml = <<-XML
+<like>
+  <parent_guid>#{parent.guid}</parent_guid>
+  <author_signature>#{data[:author_signature]}</author_signature>
+  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
+</like>
+XML
+
+        expect {
+          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)
+        }.to raise_error Entity::ValidationError, "invalid DiasporaFederation::Entities::Like! missing 'parent_type'."
+      end
+
+      it "raises a ValidationError if the parent_guid is missing" do
+        broken_xml = <<-XML
+<like>
+  <target_type>#{parent.entity_type}</target_type>
+  <author_signature>#{data[:author_signature]}</author_signature>
+  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
+</like>
+        XML
+
+        expect {
+          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)
+        }.to raise_error Entity::ValidationError, "invalid DiasporaFederation::Entities::Like! missing 'parent_guid'."
+      end
+    end
   end
 end

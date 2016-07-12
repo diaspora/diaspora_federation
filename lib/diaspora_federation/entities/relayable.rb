@@ -203,8 +203,16 @@ module DiasporaFederation
         end
 
         def fetch_parent(data)
-          type = data[:parent_type] || self::PARENT_TYPE
-          guid = data[:parent_guid]
+          type = data.fetch(:parent_type) {
+            if const_defined?(:PARENT_TYPE)
+              self::PARENT_TYPE
+            else
+              raise DiasporaFederation::Entity::ValidationError, "invalid #{self}! missing 'parent_type'."
+            end
+          }
+          guid = data.fetch(:parent_guid) {
+            raise DiasporaFederation::Entity::ValidationError, "invalid #{self}! missing 'parent_guid'."
+          }
 
           data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
 
