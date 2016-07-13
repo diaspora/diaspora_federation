@@ -19,8 +19,7 @@ module DiasporaFederation
       )
     }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <conversation>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{parent.guid}</guid>
@@ -30,7 +29,7 @@ module DiasporaFederation
 #{data[:messages].map {|a| a.to_xml.to_s.indent(2) }.join("\n")}
 </conversation>
 XML
-    }
+
     let(:string) { "Conversation:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
@@ -38,8 +37,8 @@ XML
     it_behaves_like "an XML Entity", %i(parent parent_guid)
 
     context "default values" do
-      let(:minimal_xml) {
-        <<-XML
+      it "allows no nested messages" do
+        minimal_xml = <<-XML
 <conversation>
   <author>#{data[:author]}</author>
   <guid>#{parent.guid}</guid>
@@ -47,10 +46,8 @@ XML
   <created_at>#{data[:created_at]}</created_at>
   <participant_handles>#{data[:participants]}</participant_handles>
 </conversation>
-        XML
-      }
+XML
 
-      it "allows no nested messages" do
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
         expect(parsed_instance.messages).to eq([])
       end

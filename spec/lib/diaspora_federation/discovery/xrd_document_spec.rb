@@ -1,7 +1,6 @@
 module DiasporaFederation
   describe Discovery::XrdDocument do
-    let(:xml) {
-      <<XML
+    let(:xml) { <<-XML }
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
   <Expires>2010-01-30T09:30:00Z</Expires>
@@ -15,7 +14,6 @@ module DiasporaFederation
   <Link rel="copyright" template="http://example.com/copyright?id={uri}"/>
 </XRD>
 XML
-    }
 
     let(:data) {
       {

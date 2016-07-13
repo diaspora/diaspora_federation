@@ -12,8 +12,7 @@ module DiasporaFederation
       ).send(:xml_elements).merge(target: target_entity)
     }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <signed_retraction>
   <target_guid>#{data[:target_guid]}</target_guid>
   <target_type>#{data[:target_type]}</target_type>
@@ -21,7 +20,7 @@ module DiasporaFederation
   <target_author_signature>#{data[:target_author_signature]}</target_author_signature>
 </signed_retraction>
 XML
-    }
+
     let(:string) { "SignedRetraction:#{data[:target_type]}:#{data[:target_guid]}" }
 
     it_behaves_like "an Entity subclass"

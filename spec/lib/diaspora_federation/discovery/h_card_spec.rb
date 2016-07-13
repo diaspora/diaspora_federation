@@ -21,8 +21,7 @@ module DiasporaFederation
       }
     }
 
-    let(:html) {
-      <<-HTML
+    let(:html) { <<-HTML }
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -106,7 +105,7 @@ module DiasporaFederation
   </body>
 </html>
 HTML
-    }
+
     let(:string) { "HCard:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"

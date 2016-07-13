@@ -11,8 +11,7 @@ module DiasporaFederation
       ).send(:xml_elements).merge(parent: parent_entity)
     }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <poll_participation>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
@@ -22,7 +21,7 @@ module DiasporaFederation
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
 </poll_participation>
 XML
-    }
+
     let(:string) { "PollParticipation:#{data[:guid]}:#{parent.guid}" }
 
     it_behaves_like "an Entity subclass"

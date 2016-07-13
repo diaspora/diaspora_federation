@@ -11,15 +11,14 @@ module DiasporaFederation
       )
     }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <retraction>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
   <post_guid>#{data[:target_guid]}</post_guid>
   <type>#{data[:target_type]}</type>
 </retraction>
 XML
-    }
+
     let(:string) { "Retraction:#{data[:target_type]}:#{data[:target_guid]}" }
 
     it_behaves_like "an Entity subclass"

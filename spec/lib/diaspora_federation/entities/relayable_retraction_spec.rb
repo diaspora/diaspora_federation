@@ -21,8 +21,7 @@ module DiasporaFederation
       end
     }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <relayable_retraction>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
   <target_guid>#{data[:target_guid]}</target_guid>
@@ -31,7 +30,7 @@ module DiasporaFederation
   <target_author_signature/>
 </relayable_retraction>
 XML
-    }
+
     let(:string) { "RelayableRetraction:#{data[:target_type]}:#{data[:target_guid]}" }
 
     it_behaves_like "an Entity subclass"

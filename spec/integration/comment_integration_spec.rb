@@ -1,7 +1,6 @@
 module DiasporaFederation
   describe Entities::Relayable do
-    let(:author_serialized_key) {
-      <<-KEY
+    let(:author_serialized_key) { <<-KEY }
 -----BEGIN RSA PRIVATE KEY-----
 MIICXgIBAAKBgQCxTbMp+M5sCUDVi9k1wMxedSwyLQcjBKQa0Qs6Qpnflz0k90hh
 btau0cy9jTK6S3CK2GhERXD6EecDlhZCbnSI9Bwmco5j6NbGPN5ai9tWgiBZzaEr
@@ -18,7 +17,6 @@ nRcJ3dILfGs4FFN630MBAkEA3zMOyNTeNdHrVhZc5b0qw2T6FUJGieDpOWLsff4w
 84yW10oS2CCmqEhbfh4Wu22amglytrATwD9hDzsTNAt8Mg==
 -----END RSA PRIVATE KEY-----
 KEY
-    }
     let(:author_key) { OpenSSL::PKey::RSA.new(author_serialized_key) }
     # -----BEGIN PUBLIC KEY-----
     # MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxTbMp+M5sCUDVi9k1wMxedSwy
@@ -27,8 +25,7 @@ KEY
     # g6zpg1zxGahpmxwqFQIDAQAB
     # -----END PUBLIC KEY-----
 
-    let(:parent_serialized_key) {
-      <<-KEY
+    let(:parent_serialized_key) { <<-KEY }
 -----BEGIN RSA PRIVATE KEY-----
 MIICXgIBAAKBgQDrOvW1UArKoUOg54XWXcTD3jU0zKG3Pm9IeaEzfQtApogQ3+M/
 F9nz0i3q8UhTDEPBQ3hMbqJ/4qfY+wFulxMR58DbqxFx9QcNZISUd0CPx/fJOYMx
@@ -45,7 +42,6 @@ yq359XWooo3N7kmduEKhAkEAppzKLuVtX1XPL4VZBex/M2ewngjkSg964BvxIBwv
 bFzeSqlMpnbEoOJ9hhx6CsP6Y7V19DRRXi0XgwcAjHLz8g==
 -----END RSA PRIVATE KEY-----
 KEY
-    }
     let(:parent_key) { OpenSSL::PKey::RSA.new(parent_serialized_key) }
     # -----BEGIN PUBLIC KEY-----
     # MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDrOvW1UArKoUOg54XWXcTD3jU0
@@ -67,8 +63,7 @@ KEY
       )
     }
 
-    let(:legacy_comment_xml_alice) {
-      <<-XML
+    let(:legacy_comment_xml_alice) { <<-XML }
 <XML>
   <post>
     <comment>
@@ -82,9 +77,7 @@ KEY
   </post>
 </XML>
 XML
-    }
-    let(:new_signature_comment_xml_alice) {
-      <<-XML
+    let(:new_signature_comment_xml_alice) { <<-XML }
 <comment>
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
@@ -94,9 +87,7 @@ XML
   <parent_author_signature/>
 </comment>
 XML
-    }
-    let(:new_data_comment_xml_alice) {
-      <<-XML
+    let(:new_data_comment_xml_alice) { <<-XML }
 <comment>
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
@@ -107,10 +98,8 @@ XML
   <parent_author_signature/>
 </comment>
 XML
-    }
 
-    let(:legacy_comment_xml_bob) {
-      <<-XML
+    let(:legacy_comment_xml_bob) { <<-XML }
 <XML>
   <post>
     <comment>
@@ -124,9 +113,7 @@ XML
   </post>
 </XML>
 XML
-    }
-    let(:legacy_new_signature_comment_xml_bob) {
-      <<-XML
+    let(:legacy_new_signature_comment_xml_bob) { <<-XML }
 <XML>
   <post>
     <comment>
@@ -140,9 +127,7 @@ XML
   </post>
 </XML>
 XML
-    }
-    let(:new_signature_comment_xml_bob) {
-      <<-XML
+    let(:new_signature_comment_xml_bob) { <<-XML }
 <comment>
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
@@ -152,9 +137,7 @@ XML
   <parent_author_signature>hWsagsczmZD6d36d6MFdTt3hKAdnRtupSIU6464G2kkMJ+WlExxMgbF6kWR+jVCBTeKipWCYK3Arnj0YkuIZM9d14bJGVMTsW/ZzNfJ69bXZhsyawI8dPnZnLVydo+hU/XmGJBEuh2TOj9Emq6/HCYiWzPTF5qhYAtyJ1oxJ4Yk=</parent_author_signature>
 </comment>
 XML
-    }
-    let(:legacy_new_data_comment_xml_bob) {
-      <<-XML
+    let(:legacy_new_data_comment_xml_bob) { <<-XML }
 <XML>
   <post>
     <comment>
@@ -169,9 +152,7 @@ XML
   </post>
 </XML>
 XML
-    }
-    let(:new_data_comment_xml_bob) {
-      <<-XML
+    let(:new_data_comment_xml_bob) { <<-XML }
 <comment>
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
@@ -182,7 +163,6 @@ XML
   <parent_author_signature>NxXuEUVeXwUMR77osIbaNlp2oB3bpl8rBEFgQoO6cnoN5ewDbiGADK0x6EhcmJptjwhGVcZiNJNpq7k3/pjJtKaH++3ToCAtcuZoIKwPDsneLnjPhVjE2GXM1TiZKwoHrq41qSp/8Vl5UPbtC6sPiOzIvPKaILXUG8XCiVWuB0M=</parent_author_signature>
 </comment>
 XML
-    }
 
     # this was used to create the XMLs above
     context "test-data creation" do

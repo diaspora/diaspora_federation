@@ -2,8 +2,7 @@ module DiasporaFederation
   describe Salmon::XmlPayload do
     let(:entity) { Entities::TestEntity.new(test: "asdf") }
     let(:payload) { Salmon::XmlPayload.pack(entity) }
-    let(:entity_xml) {
-      <<-XML.strip
+    let(:entity_xml) { <<-XML.strip }
 <XML>
   <post>
     <test_entity>
@@ -12,7 +11,6 @@ module DiasporaFederation
   </post>
 </XML>
 XML
-    }
 
     describe ".pack" do
       it "expects an Entity as param" do

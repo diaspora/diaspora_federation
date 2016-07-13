@@ -2,8 +2,7 @@ module DiasporaFederation
   describe Entities::Photo do
     let(:data) { FactoryGirl.attributes_for(:photo_entity) }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <photo>
   <guid>#{data[:guid]}</guid>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
@@ -17,7 +16,7 @@ module DiasporaFederation
   <width>#{data[:width]}</width>
 </photo>
 XML
-    }
+
     let(:string) { "Photo:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
@@ -25,8 +24,8 @@ XML
     it_behaves_like "an XML Entity"
 
     context "default values" do
-      let(:minimal_xml) {
-        <<-XML
+      it "uses default values" do
+        minimal_xml = <<-XML
 <photo>
   <guid>#{data[:guid]}</guid>
   <author>#{data[:author]}</author>
@@ -37,10 +36,8 @@ XML
   <height>#{data[:height]}</height>
   <width>#{data[:width]}</width>
 </photo>
-        XML
-      }
+XML
 
-      it "uses default values" do
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
         expect(parsed_instance.public).to be_falsey
         expect(parsed_instance.text).to be_nil

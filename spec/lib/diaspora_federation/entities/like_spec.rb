@@ -12,8 +12,7 @@ module DiasporaFederation
       ).send(:xml_elements).merge(parent: parent_entity)
     }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <like>
   <positive>#{data[:positive]}</positive>
   <guid>#{data[:guid]}</guid>
@@ -24,7 +23,7 @@ module DiasporaFederation
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
 </like>
 XML
-    }
+
     let(:string) { "Like:#{data[:guid]}:Post:#{parent.guid}" }
 
     it_behaves_like "an Entity subclass"
@@ -55,7 +54,7 @@ XML
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
 </like>
-        XML
+XML
 
         expect {
           DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)

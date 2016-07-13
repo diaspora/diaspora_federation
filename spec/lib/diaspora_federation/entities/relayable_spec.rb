@@ -234,8 +234,7 @@ XML
         end
 
         let(:new_signature_data) { "#{author};#{guid};#{parent_guid};#{new_property};#{property}" }
-        let(:new_xml) {
-          <<-XML
+        let(:new_xml) { <<-XML }
 <some_relayable>
   <diaspora_handle>#{author}</diaspora_handle>
   <guid>#{guid}</guid>
@@ -246,7 +245,6 @@ XML
   <parent_author_signature>#{sign_with_key(parent_pkey, new_signature_data)}</parent_author_signature>
 </some_relayable>
 XML
-        }
 
         it "doesn't drop unknown properties" do
           entity = SomeRelayable.from_xml(Nokogiri::XML::Document.parse(new_xml).root)
@@ -302,7 +300,7 @@ XML
   <author_signature/>
   <parent_author_signature/>
 </some_relayable>
-        XML
+XML
 
         expect {
           SomeRelayable.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)

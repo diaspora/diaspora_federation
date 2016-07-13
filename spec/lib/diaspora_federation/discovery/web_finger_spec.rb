@@ -19,8 +19,7 @@ module DiasporaFederation
       }
     }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
   <Subject>#{acct}</Subject>
@@ -35,7 +34,7 @@ module DiasporaFederation
   <Link rel="diaspora-public-key" type="RSA" href="#{public_key_base64}"/>
 </XRD>
 XML
-    }
+
     let(:string) { "WebFinger:#{data[:acct_uri]}" }
 
     it_behaves_like "an Entity subclass"

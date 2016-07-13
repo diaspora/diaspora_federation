@@ -2,8 +2,7 @@ module DiasporaFederation
   describe Entities::Person do
     let(:data) { FactoryGirl.attributes_for(:person_entity) }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <person>
   <guid>#{data[:guid]}</guid>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
@@ -26,7 +25,7 @@ module DiasporaFederation
   <exported_key>#{data[:exported_key]}</exported_key>
 </person>
 XML
-    }
+
     let(:string) { "Person:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"

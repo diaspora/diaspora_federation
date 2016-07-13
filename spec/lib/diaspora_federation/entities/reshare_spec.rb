@@ -3,8 +3,7 @@ module DiasporaFederation
     let(:root) { FactoryGirl.create(:post, author: bob) }
     let(:data) { FactoryGirl.attributes_for(:reshare_entity, root_guid: root.guid, root_author: bob.diaspora_id) }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <reshare>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{data[:guid]}</guid>
@@ -15,7 +14,7 @@ module DiasporaFederation
   <public>#{data[:public]}</public>
 </reshare>
 XML
-    }
+
     let(:string) { "Reshare:#{data[:guid]}:#{data[:root_guid]}" }
 
     it_behaves_like "an Entity subclass"
@@ -23,8 +22,8 @@ XML
     it_behaves_like "an XML Entity"
 
     context "default values" do
-      let(:minimal_xml) {
-        <<-XML
+      it "uses default values" do
+        minimal_xml = <<-XML
 <reshare>
   <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
@@ -32,10 +31,8 @@ XML
   <root_diaspora_id>#{data[:root_author]}</root_diaspora_id>
   <root_guid>#{data[:root_guid]}</root_guid>
 </reshare>
-        XML
-      }
+XML
 
-      it "uses default values" do
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
         expect(parsed_instance.public).to be_truthy
         expect(parsed_instance.provider_display_name).to be_nil

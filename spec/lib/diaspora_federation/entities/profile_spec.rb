@@ -2,8 +2,7 @@ module DiasporaFederation
   describe Entities::Profile do
     let(:data) { FactoryGirl.attributes_for(:profile_entity) }
 
-    let(:xml) {
-      <<-XML
+    let(:xml) { <<-XML }
 <profile>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
   <first_name>#{data[:first_name]}</first_name>
@@ -20,7 +19,7 @@ module DiasporaFederation
   <tag_string>#{data[:tag_string]}</tag_string>
 </profile>
 XML
-    }
+
     let(:string) { "Profile:#{data[:author]}" }
 
     it_behaves_like "an Entity subclass"
@@ -28,15 +27,13 @@ XML
     it_behaves_like "an XML Entity"
 
     context "default values" do
-      let(:minimal_xml) {
-        <<-XML
+      it "uses default values" do
+        minimal_xml = <<-XML
 <profile>
   <author>#{data[:author]}</author>
 </profile>
-        XML
-      }
+XML
 
-      it "uses default values" do
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
         expect(parsed_instance.first_name).to be_nil
         expect(parsed_instance.last_name).to be_nil
