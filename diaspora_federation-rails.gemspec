@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.license     = "AGPL 3.0 - http://www.gnu.org/licenses/agpl-3.0.html"
 
   s.files       = Dir["app/**/*", "config/routes.rb", "config/initializers/*",
-                      "lib/diaspora_federation/{engine,rails}.rb", "LICENSE", "README.md"]
+                      "lib/diaspora_federation/{engine,rails}.rb", "LICENSE", "README.md", "Changelog.md"]
 
   s.required_ruby_version = "~> 2.1"
 
