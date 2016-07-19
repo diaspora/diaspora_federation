@@ -82,7 +82,7 @@ GEM
       activerecord (>= 2)
       activesupport (>= 2)
     formatador (0.2.5)
-    fuubar (2.1.0)
+    fuubar (2.1.1)
       rspec (~> 3.0)
       ruby-progressbar (~> 1.4)
     gitlab (3.6.1)
@@ -288,7 +288,7 @@ DEPENDENCIES
   diaspora_federation-test!
   factory_girl_rails (~> 4.7)
   fixture_builder (~> 0.4.1)
-  fuubar (= 2.1.0)
+  fuubar (= 2.1.1)
   guard-rspec
   guard-rubocop
   logging-rails (= 0.5.0)
