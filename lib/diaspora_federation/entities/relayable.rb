@@ -153,7 +153,7 @@ module DiasporaFederation
       # @return [Hash] sorted xml elements with updated signatures
       def xml_elements
         xml_data = super.merge(additional_xml_elements)
-        signature_order.map {|element| [element, xml_data[element]] }.to_h.tap do |xml_elements|
+        signature_order.map {|element| [element, xml_data[element] || ""] }.to_h.tap do |xml_elements|
           xml_elements[:author_signature] = author_signature || sign_with_author
           xml_elements[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
         end

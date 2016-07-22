@@ -174,6 +174,15 @@ XML
         expect(xml.to_s.strip).to eq(expected_xml.strip)
       end
 
+      it "adds missing properties from xml_order to xml" do
+        hash.merge!(author_signature: "aa", parent_author_signature: "bb")
+        xml_order = [:author, :guid, :parent_guid, :property, "new_property"]
+
+        xml = SomeRelayable.new(hash, xml_order).to_xml
+
+        expect(xml.at_xpath("new_property").text).to be_empty
+      end
+
       it "computes correct signatures for the entity" do
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
         expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
