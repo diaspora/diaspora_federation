@@ -162,7 +162,12 @@ module DiasporaFederation
       # The order for signing
       # @return [Array]
       def signature_order
-        xml_order.nil? ? self.class::LEGACY_SIGNATURE_ORDER : xml_order.reject {|name| name =~ /signature/ }
+        if xml_order
+          prop_names = self.class.class_props.keys.map(&:to_s)
+          xml_order.reject {|name| name =~ /signature/ }.map {|name| prop_names.include?(name) ? name.to_sym : name }
+        else
+          self.class::LEGACY_SIGNATURE_ORDER
+        end
       end
 
       # @return [String] signature data string

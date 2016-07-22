@@ -146,12 +146,7 @@ module DiasporaFederation
     end
 
     describe "#to_xml" do
-      it "adds new unknown xml elements to the xml again" do
-        hash.merge!(author_signature: "aa", parent_author_signature: "bb")
-        xml_order = [:author, :guid, :parent_guid, :property, "new_property"]
-        xml = SomeRelayable.new(hash, xml_order, "new_property" => new_property).to_xml
-
-        expected_xml = <<-XML
+      let(:expected_xml) { <<-XML }
 <some_relayable>
   <diaspora_handle>#{author}</diaspora_handle>
   <guid>#{guid}</guid>
@@ -162,6 +157,19 @@ module DiasporaFederation
   <parent_author_signature>bb</parent_author_signature>
 </some_relayable>
 XML
+
+      it "adds new unknown xml elements to the xml again" do
+        hash.merge!(author_signature: "aa", parent_author_signature: "bb")
+        xml_order = [:author, :guid, :parent_guid, :property, "new_property"]
+        xml = SomeRelayable.new(hash, xml_order, "new_property" => new_property).to_xml
+
+        expect(xml.to_s.strip).to eq(expected_xml.strip)
+      end
+
+      it "converts strings in xml_order to symbol if needed" do
+        hash.merge!(author_signature: "aa", parent_author_signature: "bb")
+        xml_order = %w(author guid parent_guid property new_property)
+        xml = SomeRelayable.new(hash, xml_order, "new_property" => new_property).to_xml
 
         expect(xml.to_s.strip).to eq(expected_xml.strip)
       end
