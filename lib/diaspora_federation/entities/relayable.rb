@@ -72,7 +72,7 @@ module DiasporaFederation
       # @param [Hash] additional_xml_elements additional xml elements
       # @see DiasporaFederation::Entity#initialize
       def initialize(data, xml_order=nil, additional_xml_elements={})
-        @xml_order = xml_order
+        @xml_order = xml_order.try(:reject) {|name| name =~ /signature/ }
         @additional_xml_elements = additional_xml_elements
 
         super(data)
@@ -164,7 +164,7 @@ module DiasporaFederation
       def signature_order
         if xml_order
           prop_names = self.class.class_props.keys.map(&:to_s)
-          xml_order.reject {|name| name =~ /signature/ }.map {|name| prop_names.include?(name) ? name.to_sym : name }
+          xml_order.map {|name| prop_names.include?(name) ? name.to_sym : name }
         else
           self.class::LEGACY_SIGNATURE_ORDER
         end

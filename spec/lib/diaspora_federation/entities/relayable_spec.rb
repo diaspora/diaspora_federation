@@ -183,6 +183,13 @@ XML
         expect(xml.at_xpath("new_property").text).to be_empty
       end
 
+      it "filters signatures from order" do
+        xml_order = [:author, :guid, :parent_guid, :property, "new_property", :author_signature]
+
+        expect(SomeRelayable.new(hash, xml_order).xml_order)
+          .to eq([:author, :guid, :parent_guid, :property, "new_property"])
+      end
+
       it "computes correct signatures for the entity" do
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
         expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
@@ -273,12 +280,10 @@ XML
           )
         end
 
-        it "hand over the order in the xml to the instance" do
+        it "hand over the order in the xml to the instance without signatures" do
           entity = SomeRelayable.from_xml(Nokogiri::XML::Document.parse(new_xml).root)
 
-          expect(entity.xml_order).to eq(
-            [:author, :guid, :parent_guid, "new_property", :property, :author_signature, :parent_author_signature]
-          )
+          expect(entity.xml_order).to eq([:author, :guid, :parent_guid, "new_property", :property])
         end
 
         it "creates Entity with empty 'additional_xml_elements' if the xml has only known properties" do
