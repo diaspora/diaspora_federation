@@ -1,3 +1,9 @@
+# 0.1.3
+
+## Refactor
+
+* Improve handling of `xml_order` in relayables [36a787d](https://github.com/diaspora/diaspora_federation/commit/36a787dd87f9770e16fbc1bbc0a6c0d6f059e727) [ba129aa](https://github.com/diaspora/diaspora_federation/commit/ba129aafa38f978f69565d39b7a881a245b03bab) [41de99b](https://github.com/diaspora/diaspora_federation/commit/41de99bd5e4ed2779d574183a58f9ac9550c658a)
+
 # 0.1.2
 
 ## Refactor
