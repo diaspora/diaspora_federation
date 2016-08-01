@@ -110,11 +110,6 @@ module DiasporaFederation
           ).and_return(privkey.public_key)
         end
 
-        def re_sign(env, key)
-          new_sig = Base64.urlsafe_encode64(key.sign(OpenSSL::Digest::SHA256.new, sig_subj(env)))
-          env.at_xpath("me:sig").content = new_sig
-        end
-
         it "works with sane input" do
           expect {
             Salmon::MagicEnvelope.unenvelop(envelope.envelop(privkey), sender)
@@ -135,6 +130,14 @@ module DiasporaFederation
           }.to raise_error Salmon::InvalidEnvelope
         end
 
+        it "raises if missing signature" do
+          bad_env = envelope.envelop(privkey)
+          bad_env.at_xpath("me:sig").remove
+          expect {
+            Salmon::MagicEnvelope.unenvelop(bad_env, sender)
+          }.to raise_error Salmon::InvalidEnvelope, "missing me:sig"
+        end
+
         it "verifies the signature" do
           other_sender = FactoryGirl.generate(:diaspora_id)
           other_key = OpenSSL::PKey::RSA.generate(512)
@@ -146,22 +149,60 @@ module DiasporaFederation
           }.to raise_error Salmon::InvalidSignature
         end
 
+        it "raises if missing data" do
+          bad_env = envelope.envelop(privkey)
+          bad_env.at_xpath("me:data").remove
+          expect {
+            Salmon::MagicEnvelope.unenvelop(bad_env, sender)
+          }.to raise_error Salmon::InvalidEnvelope, "missing me:data"
+        end
+
+        it "raises if missing encoding" do
+          bad_env = envelope.envelop(privkey)
+          bad_env.at_xpath("me:encoding").remove
+          expect {
+            Salmon::MagicEnvelope.unenvelop(bad_env, sender)
+          }.to raise_error Salmon::InvalidEncoding, "missing encoding"
+        end
+
         it "verifies the encoding" do
           bad_env = envelope.envelop(privkey)
           bad_env.at_xpath("me:encoding").content = "invalid_enc"
-          re_sign(bad_env, privkey)
           expect {
             Salmon::MagicEnvelope.unenvelop(bad_env, sender)
-          }.to raise_error Salmon::InvalidEncoding
+          }.to raise_error Salmon::InvalidEncoding, "invalid encoding: invalid_enc"
+        end
+
+        it "raises if missing algorithm" do
+          bad_env = envelope.envelop(privkey)
+          bad_env.at_xpath("me:alg").remove
+          expect {
+            Salmon::MagicEnvelope.unenvelop(bad_env, sender)
+          }.to raise_error Salmon::InvalidAlgorithm, "missing algorithm"
         end
 
         it "verifies the algorithm" do
           bad_env = envelope.envelop(privkey)
           bad_env.at_xpath("me:alg").content = "invalid_alg"
-          re_sign(bad_env, privkey)
           expect {
             Salmon::MagicEnvelope.unenvelop(bad_env, sender)
-          }.to raise_error Salmon::InvalidAlgorithm
+          }.to raise_error Salmon::InvalidAlgorithm, "invalid algorithm: invalid_alg"
+        end
+
+        it "raises if missing data type" do
+          bad_env = envelope.envelop(privkey)
+          bad_env.at_xpath("me:data").attributes["type"].remove
+          expect {
+            Salmon::MagicEnvelope.unenvelop(bad_env, sender)
+          }.to raise_error Salmon::InvalidDataType, "missing data type"
+        end
+
+        it "verifies the data type" do
+          bad_env = envelope.envelop(privkey)
+          bad_env.at_xpath("me:data")["type"] = "invalid_type"
+          expect {
+            Salmon::MagicEnvelope.unenvelop(bad_env, sender)
+          }.to raise_error Salmon::InvalidDataType, "invalid data type: invalid_type"
         end
       end
 

@@ -33,6 +33,10 @@ module DiasporaFederation
     class InvalidSignature < RuntimeError
     end
 
+    # Raised, if the parsed Magic Envelope specifies an unhandled data type.
+    class InvalidDataType < RuntimeError
+    end
+
     # Raised, if the parsed Magic Envelope specifies an unhandled algorithm.
     class InvalidAlgorithm < RuntimeError
     end

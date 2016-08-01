@@ -110,18 +110,19 @@ module DiasporaFederation
       # @raise [ArgumentError] if any of the arguments is of invalid type
       # @raise [InvalidEnvelope] if the envelope XML structure is malformed
       # @raise [InvalidSignature] if the signature can't be verified
-      # @raise [InvalidEncoding] if the data is wrongly encoded
-      # @raise [InvalidAlgorithm] if the algorithm used doesn't match
+      # @raise [InvalidDataType] if the data is missing or unsupported
+      # @raise [InvalidEncoding] if the data is wrongly encoded or encoding is missing
+      # @raise [InvalidAlgorithm] if the algorithm is missing or doesn't match
       def self.unenvelop(magic_env, sender=nil, cipher_params=nil)
         raise ArgumentError unless magic_env.instance_of?(Nokogiri::XML::Element)
 
-        raise InvalidEnvelope unless envelope_valid?(magic_env)
+        validate_envelope(magic_env)
+        validate_type(magic_env)
+        validate_encoding(magic_env)
+        validate_algorithm(magic_env)
 
         sender ||= sender(magic_env)
         raise InvalidSignature unless signature_valid?(magic_env, sender)
-
-        raise InvalidEncoding unless encoding_valid?(magic_env)
-        raise InvalidAlgorithm unless algorithm_valid?(magic_env)
 
         data = read_and_decrypt_data(magic_env, cipher_params)
 
@@ -165,11 +166,20 @@ module DiasporaFederation
       end
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
-      private_class_method def self.envelope_valid?(env)
-        (env.instance_of?(Nokogiri::XML::Element) &&
-          env.name == "env" &&
-          !env.at_xpath("me:data").content.empty? &&
-          !env.at_xpath("me:sig").content.empty?)
+      # @raise [InvalidEnvelope] if the envelope XML structure is malformed
+      private_class_method def self.validate_envelope(env)
+        raise InvalidEnvelope unless env.instance_of?(Nokogiri::XML::Element) && env.name == "env"
+        validate_element(env, "me:data")
+        validate_element(env, "me:sig")
+      end
+
+      # @param [Nokogiri::XML::Element] env magic envelope XML
+      # @param [String] xpath the element to validate
+      # @raise [InvalidEnvelope] if the element is missing or empty
+      private_class_method def self.validate_element(env, xpath)
+        element = env.at_xpath(xpath)
+        raise InvalidEnvelope, "missing #{xpath}" unless element
+        raise InvalidEnvelope, "empty #{xpath}" if element.content.empty?
       end
 
       # @param [Nokogiri::XML::Element] env magic envelope XML
@@ -207,15 +217,27 @@ module DiasporaFederation
       end
 
       # @param [Nokogiri::XML::Element] magic_env magic envelope XML
-      # @return [Boolean]
-      private_class_method def self.encoding_valid?(magic_env)
-        magic_env.at_xpath("me:encoding").content == ENCODING
+      # @raise [InvalidDataType] if the data is missing or unsupported
+      private_class_method def self.validate_type(magic_env)
+        type = magic_env.at_xpath("me:data")["type"]
+        raise InvalidDataType, "missing data type" if type.nil?
+        raise InvalidDataType, "invalid data type: #{type}" unless type == DATA_TYPE
       end
 
       # @param [Nokogiri::XML::Element] magic_env magic envelope XML
-      # @return [Boolean]
-      private_class_method def self.algorithm_valid?(magic_env)
-        magic_env.at_xpath("me:alg").content == ALGORITHM
+      # @raise [InvalidEncoding] if the data is wrongly encoded or encoding is missing
+      private_class_method def self.validate_encoding(magic_env)
+        enc = magic_env.at_xpath("me:encoding")
+        raise InvalidEncoding, "missing encoding" unless enc
+        raise InvalidEncoding, "invalid encoding: #{enc.content}" unless enc.content == ENCODING
+      end
+
+      # @param [Nokogiri::XML::Element] magic_env magic envelope XML
+      # @raise [InvalidAlgorithm] if the algorithm is missing or doesn't match
+      private_class_method def self.validate_algorithm(magic_env)
+        alg = magic_env.at_xpath("me:alg")
+        raise InvalidAlgorithm, "missing algorithm" unless alg
+        raise InvalidAlgorithm, "invalid algorithm: #{alg.content}" unless alg.content == ALGORITHM
       end
 
       # @param [Nokogiri::XML::Element] magic_env magic envelope XML
