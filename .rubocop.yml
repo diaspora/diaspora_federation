@@ -24,6 +24,12 @@ Metrics/ClassLength:
 Metrics/ModuleLength:
   Max: 1500
 
+# Raise AbcSize from 15 to 20
+Metrics/AbcSize:
+  Max: 20
+  Exclude:
+    - "lib/diaspora_federation/test/factories.rb"
+
 # No space makes the method definition shorter and differentiates
 # from a regular assignment.
 Style/SpaceAroundEqualsInParameterDefault:
@@ -152,10 +158,6 @@ Metrics/CyclomaticComplexity:
   Max: 10
 Metrics/PerceivedComplexity:
   Max: 10
-Metrics/AbcSize:
-  Max: 20
-  Exclude:
-    - "lib/diaspora_federation/test/factories.rb"
 
 Rails/TimeZone:
   Exclude:
@@ -170,3 +172,6 @@ Style/EmptyLineBetweenDefs:
 
 Style/NumericPredicate:
   EnforcedStyle: comparison
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
