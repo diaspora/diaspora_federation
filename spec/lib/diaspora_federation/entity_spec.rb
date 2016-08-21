@@ -15,7 +15,7 @@ module DiasporaFederation
       it "checks for required properties" do
         expect {
           Entities::TestDefaultEntity.new({})
-        }.to raise_error ArgumentError, "missing required properties: test1, test2"
+        }.to raise_error Entity::ValidationError, "missing required properties: test1, test2"
       end
 
       context "defaults" do

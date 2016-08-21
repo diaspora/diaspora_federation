@@ -153,7 +153,7 @@ module DiasporaFederation
 
     def validate_missing_props(entity_data)
       missing_props = self.class.missing_props(entity_data)
-      raise ArgumentError, "missing required properties: #{missing_props.join(', ')}" unless missing_props.empty?
+      raise ValidationError, "missing required properties: #{missing_props.join(', ')}" unless missing_props.empty?
     end
 
     def setable?(name, val)

@@ -12,7 +12,7 @@ shared_examples "an Entity subclass" do
 
     describe "initialize" do
       it "must not create blank instances" do
-        expect { described_class.new({}) }.to raise_error ArgumentError
+        expect { described_class.new({}) }.to raise_error DiasporaFederation::Entity::ValidationError
       end
 
       it "fails if nil was given" do
