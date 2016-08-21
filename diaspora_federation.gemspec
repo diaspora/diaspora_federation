@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = "This gem provides the functionality for de-/serialization and " \
                   "de-/encryption of Entities in the protocols used for communication " \
                   "among the various installations of Diaspora*"
-  s.license     = "AGPL 3.0 - http://www.gnu.org/licenses/agpl-3.0.html"
+  s.license     = "AGPL-3.0"
 
   s.files       = Dir["lib/**/*", "LICENSE", "README.md", "Changelog.md"] -
                     Dir["lib/diaspora_federation/{engine,rails,test}.rb", "lib/diaspora_federation/test/*"]

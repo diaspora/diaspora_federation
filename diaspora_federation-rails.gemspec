@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/diaspora/diaspora_federation"
   s.summary     = "diaspora* federation rails engine"
   s.description = "A rails engine that adds the diaspora* federation protocol to a rails app"
-  s.license     = "AGPL 3.0 - http://www.gnu.org/licenses/agpl-3.0.html"
+  s.license     = "AGPL-3.0"
 
   s.files       = Dir["app/**/*", "config/routes.rb", "config/initializers/*",
                       "lib/diaspora_federation/{engine,rails}.rb", "LICENSE", "README.md", "Changelog.md"]

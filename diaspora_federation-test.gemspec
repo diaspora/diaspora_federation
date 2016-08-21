@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "diaspora* federation test utils"
   s.description = "This gem provides some supplimentary code (factory definitions), that"\
                   "helps to build tests for users of the diaspora_federation gem."
-  s.license     = "AGPL 3.0 - http://www.gnu.org/licenses/agpl-3.0.html"
+  s.license     = "AGPL-3.0"
 
   s.files       = Dir["lib/diaspora_federation/test.rb", "lib/diaspora_federation/test/*"]
 
