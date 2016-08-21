@@ -1,3 +1,10 @@
+# 0.1.4
+
+## Refactor
+
+* Improve magic envelope validation [90d12e7](https://github.com/diaspora/diaspora_federation/commit/90d12e71d00bd4874c09f81cde968360111933f9)
+* Raise ValidationError if properties are missing [4295237](https://github.com/diaspora/diaspora_federation/commit/4295237e9e6e8e0ff23a5d8d732654b865f44944)
+
 # 0.1.3
 
 ## Refactor
