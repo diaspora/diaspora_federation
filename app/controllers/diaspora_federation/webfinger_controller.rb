@@ -38,7 +38,7 @@ module DiasporaFederation
       person_wf = find_person_webfinger(params[:q]) if params[:q]
 
       if person_wf.nil?
-        render nothing: true, status: 404
+        head :not_found
       else
         logger.info "webfinger profile request for: #{person_wf.acct_uri}"
         render xml: person_wf.to_xml, content_type: "application/xrd+xml"

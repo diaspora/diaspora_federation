@@ -17,7 +17,7 @@ module DiasporaFederation
                                                            entity.author, "/fetch/#{params[:type]}/#{params[:guid]}")
         end
       else
-        render nothing: true, status: 404
+        head :not_found
       end
     end
 

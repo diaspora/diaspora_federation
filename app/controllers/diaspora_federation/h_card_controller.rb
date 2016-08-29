@@ -10,7 +10,7 @@ module DiasporaFederation
       person_hcard = DiasporaFederation.callbacks.trigger(:fetch_person_for_hcard, params[:guid])
 
       if person_hcard.nil?
-        render nothing: true, status: 404
+        head :not_found
       else
         logger.info "hcard profile request for: #{person_hcard.nickname}:#{person_hcard.guid}"
         # rubocop:disable Rails/OutputSafety

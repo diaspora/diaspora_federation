@@ -16,7 +16,7 @@ module DiasporaFederation
 
       DiasporaFederation.callbacks.trigger(:queue_public_receive, data, legacy)
 
-      render nothing: true, status: 202
+      head :accepted
     end
 
     # Receives private messages for a user
@@ -30,7 +30,7 @@ module DiasporaFederation
 
       success = DiasporaFederation.callbacks.trigger(:queue_private_receive, params[:guid], data, legacy)
 
-      render nothing: true, status: success ? 202 : 404
+      head success ? :accepted : :not_found
     end
 
     private
@@ -39,7 +39,7 @@ module DiasporaFederation
     # @deprecated
     def check_for_xml
       legacy_request = request.content_type.nil? || request.content_type == "application/x-www-form-urlencoded"
-      render nothing: true, status: 422 if params[:xml].nil? && legacy_request
+      head :unprocessable_entity if params[:xml].nil? && legacy_request
     end
 
     def data_for_public_message(legacy)
