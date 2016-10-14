@@ -131,10 +131,10 @@ module DiasporaFederation
       # @return [String] A Base64 encoded signature of #signature_data with key
       def sign_with_parent_author_if_available
         privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, parent.author)
-        if privkey
-          sign_with_key(privkey).tap do
-            logger.info "event=sign status=complete signature=parent_author_signature obj=#{self}"
-          end
+        return unless privkey
+
+        sign_with_key(privkey).tap do
+          logger.info "event=sign status=complete signature=parent_author_signature obj=#{self}"
         end
       end
 
@@ -209,11 +209,9 @@ module DiasporaFederation
 
         def fetch_parent(data)
           type = data.fetch(:parent_type) {
-            if const_defined?(:PARENT_TYPE)
-              self::PARENT_TYPE
-            else
-              raise DiasporaFederation::Entity::ValidationError, "invalid #{self}! missing 'parent_type'."
-            end
+            break self::PARENT_TYPE if const_defined?(:PARENT_TYPE)
+
+            raise DiasporaFederation::Entity::ValidationError, "invalid #{self}! missing 'parent_type'."
           }
           guid = data.fetch(:parent_guid) {
             raise DiasporaFederation::Entity::ValidationError, "invalid #{self}! missing 'parent_guid'."
@@ -221,11 +219,11 @@ module DiasporaFederation
 
           data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
 
-          unless data[:parent]
-            # Fetch and receive parent from remote, if not available locally
-            Federation::Fetcher.fetch_public(data[:author], type, guid)
-            data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
-          end
+          return if data[:parent]
+
+          # Fetch and receive parent from remote, if not available locally
+          Federation::Fetcher.fetch_public(data[:author], type, guid)
+          data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
         end
       end
 

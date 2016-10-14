@@ -12,10 +12,10 @@ module DiasporaFederation
 
       it "generates a different key and iv every time" do
         key_and_iv = Salmon::AES.generate_key_and_iv
-        key_and_iv_2 = Salmon::AES.generate_key_and_iv
+        key_and_iv2 = Salmon::AES.generate_key_and_iv
 
-        expect(key_and_iv[:key]).not_to eq(key_and_iv_2[:key])
-        expect(key_and_iv[:iv]).not_to eq(key_and_iv_2[:iv])
+        expect(key_and_iv[:key]).not_to eq(key_and_iv2[:key])
+        expect(key_and_iv[:iv]).not_to eq(key_and_iv2[:iv])
       end
     end
 

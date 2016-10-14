@@ -232,8 +232,8 @@ module DiasporaFederation
     private
 
     def validate_http_config
-      configuration_error "http_concurrency: please configure a number" unless @http_concurrency.is_a?(Fixnum)
-      configuration_error "http_timeout: please configure a number" unless @http_timeout.is_a?(Fixnum)
+      configuration_error "http_concurrency: please configure a number" unless @http_concurrency.is_a?(Integer)
+      configuration_error "http_timeout: please configure a number" unless @http_timeout.is_a?(Integer)
 
       return unless !@http_verbose.is_a?(TrueClass) && !@http_verbose.is_a?(FalseClass)
       configuration_error "http_verbose: please configure a boolean"

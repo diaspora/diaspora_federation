@@ -9,9 +9,9 @@ module Validation
 
       # Creates a new rule for a maximum diaspora* ID count validation
       # @param [Hash] params
-      # @option params [Fixnum] :maximum maximum allowed id count
+      # @option params [Integer] :maximum maximum allowed id count
       def initialize(params)
-        unless params.include?(:maximum) && params[:maximum].is_a?(Fixnum)
+        unless params.include?(:maximum) && params[:maximum].is_a?(Integer)
           raise ArgumentError, "A number has to be specified for :maximum"
         end
 

@@ -44,13 +44,13 @@ module DiasporaFederation
         raise "Failed to fetch #{url}: #{response.status}" unless response.success?
         response.body
       rescue => e
-        if http_fallback && url.start_with?("https://")
-          logger.warn "Retry with http: #{url} for #{diaspora_id}: #{e.class}: #{e.message}"
-          url.sub!("https://", "http://")
-          retry
-        else
+        unless http_fallback && url.start_with?("https://")
           raise DiscoveryError, "Failed to fetch #{url} for #{diaspora_id}: #{e.class}: #{e.message}"
         end
+
+        logger.warn "Retry with http: #{url} for #{diaspora_id}: #{e.class}: #{e.message}"
+        url.sub!("https://", "http://")
+        retry
       end
 
       def host_meta_url

@@ -159,6 +159,14 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Max: 10
 
+Metric/BlockLength:
+  Exclude:
+    - "Rakefile"
+    - "**/*.rake"
+    - "spec/**/*.rb"
+    - "test/dummy/config/**/*.rb"
+    - "lib/diaspora_federation/test/factories.rb"
+
 Rails/TimeZone:
   Exclude:
     - "spec/lib/**/*"
@@ -174,4 +182,7 @@ Style/NumericPredicate:
   EnforcedStyle: comparison
 
 Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Rails/HttpPositionalArguments:
   Enabled: false

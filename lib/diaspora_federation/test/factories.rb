@@ -194,13 +194,13 @@ module DiasporaFederation
           end
 
           factory :poll_participation_entity,
-                  class:  DiasporaFederation::Entities::PollParticipation, parent: :relayable_entity do
+                  class: DiasporaFederation::Entities::PollParticipation, parent: :relayable_entity do
             author { generate(:diaspora_id) }
             guid
             poll_answer_guid { generate(:guid) }
           end
 
-          factory :related_entity, class:  DiasporaFederation::Entities::RelatedEntity do
+          factory :related_entity, class: DiasporaFederation::Entities::RelatedEntity do
             author { generate(:diaspora_id) }
             local true
             public false
