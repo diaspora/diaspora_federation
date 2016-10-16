@@ -11,7 +11,7 @@ module DiasporaFederation
 
         data = Salmon::MagicEnvelope.new(post, post.author).envelop(sender_key).to_xml
 
-        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), nil) do |_, entity|
+        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), post.author, nil) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
           expect(entity.text).to eq(post.text)
@@ -26,7 +26,7 @@ module DiasporaFederation
 
         data = DiasporaFederation::Salmon::Slap.generate_xml(post.author, sender_key, post)
 
-        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), nil) do |_, entity|
+        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), post.author, nil) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
           expect(entity.text).to eq(post.text)
@@ -52,7 +52,7 @@ module DiasporaFederation
         magic_env = Salmon::MagicEnvelope.new(post, post.author).envelop(sender_key)
         data = Salmon::EncryptedMagicEnvelope.encrypt(magic_env, recipient_key.public_key)
 
-        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), 1234) do |_, entity|
+        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), post.author, 1234) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
           expect(entity.text).to eq(post.text)
@@ -68,7 +68,7 @@ module DiasporaFederation
         data = DiasporaFederation::Salmon::EncryptedSlap.prepare(post.author, sender_key, post)
                                                         .generate_xml(recipient_key)
 
-        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), 1234) do |_, entity|
+        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), post.author, 1234) do |_, entity|
           expect(entity.guid).to eq(post.guid)
           expect(entity.author).to eq(post.author)
           expect(entity.text).to eq(post.text)

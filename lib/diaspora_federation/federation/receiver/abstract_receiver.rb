@@ -28,7 +28,7 @@ module DiasporaFederation
 
         def validate_and_receive
           validate
-          DiasporaFederation.callbacks.trigger(:receive_entity, entity, recipient_id)
+          DiasporaFederation.callbacks.trigger(:receive_entity, entity, sender, recipient_id)
           logger.info "successfully received #{entity} from person #{sender}#{" for #{recipient_id}" if recipient_id}"
         end
 

@@ -6,7 +6,7 @@ module DiasporaFederation
 
     describe "#receive" do
       it "receives a private post" do
-        expect_callback(:receive_entity, post, recipient)
+        expect_callback(:receive_entity, post, post.author, recipient)
 
         described_class.new(magic_env, recipient).receive
       end
@@ -32,7 +32,7 @@ module DiasporaFederation
         it "receives a comment from the author" do
           magic_env = Salmon::MagicEnvelope.new(comment, comment.author)
 
-          expect_callback(:receive_entity, comment, recipient)
+          expect_callback(:receive_entity, comment, comment.author, recipient)
 
           described_class.new(magic_env, recipient).receive
         end
@@ -40,7 +40,7 @@ module DiasporaFederation
         it "receives a comment from the parent author" do
           magic_env = Salmon::MagicEnvelope.new(comment, comment.parent.author)
 
-          expect_callback(:receive_entity, comment, recipient)
+          expect_callback(:receive_entity, comment, comment.parent.author, recipient)
 
           described_class.new(magic_env, recipient).receive
         end
@@ -62,7 +62,7 @@ module DiasporaFederation
           it "retracts a post from the author" do
             magic_env = Salmon::MagicEnvelope.new(retraction, retraction.target.author)
 
-            expect_callback(:receive_entity, retraction, recipient)
+            expect_callback(:receive_entity, retraction, retraction.author, recipient)
 
             described_class.new(magic_env, recipient).receive
           end
@@ -89,7 +89,7 @@ module DiasporaFederation
           it "retracts a comment from the author" do
             magic_env = Salmon::MagicEnvelope.new(retraction, retraction.target.author)
 
-            expect_callback(:receive_entity, retraction, recipient)
+            expect_callback(:receive_entity, retraction, retraction.target.author, recipient)
 
             described_class.new(magic_env, recipient).receive
           end
@@ -97,7 +97,7 @@ module DiasporaFederation
           it "retracts a comment from the parent author" do
             magic_env = Salmon::MagicEnvelope.new(retraction, retraction.target.parent.author)
 
-            expect_callback(:receive_entity, retraction, recipient)
+            expect_callback(:receive_entity, retraction, retraction.target.parent.author, recipient)
 
             described_class.new(magic_env, recipient).receive
           end

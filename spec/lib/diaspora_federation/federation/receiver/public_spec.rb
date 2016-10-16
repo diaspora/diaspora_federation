@@ -5,7 +5,7 @@ module DiasporaFederation
 
     describe "#receive" do
       it "receives a public post" do
-        expect_callback(:receive_entity, post, nil)
+        expect_callback(:receive_entity, post, post.author, nil)
 
         described_class.new(magic_env).receive
       end
@@ -25,7 +25,7 @@ module DiasporaFederation
         it "receives a comment from the author" do
           magic_env = Salmon::MagicEnvelope.new(comment, comment.author)
 
-          expect_callback(:receive_entity, comment, nil)
+          expect_callback(:receive_entity, comment, comment.author, nil)
 
           described_class.new(magic_env).receive
         end
@@ -33,7 +33,7 @@ module DiasporaFederation
         it "receives a comment from the author parent" do
           magic_env = Salmon::MagicEnvelope.new(comment, comment.parent.author)
 
-          expect_callback(:receive_entity, comment, nil)
+          expect_callback(:receive_entity, comment, comment.parent.author, nil)
 
           described_class.new(magic_env).receive
         end
@@ -53,9 +53,9 @@ module DiasporaFederation
           let(:retraction) { FactoryGirl.build(:retraction_entity, target_type: "Post") }
 
           it "retracts a post from the author" do
-            magic_env = Salmon::MagicEnvelope.new(retraction, retraction.target.author)
+            magic_env = Salmon::MagicEnvelope.new(retraction, retraction.author)
 
-            expect_callback(:receive_entity, retraction, nil)
+            expect_callback(:receive_entity, retraction, retraction.author, nil)
 
             described_class.new(magic_env).receive
           end
@@ -82,7 +82,7 @@ module DiasporaFederation
           it "retracts a comment from the author" do
             magic_env = Salmon::MagicEnvelope.new(retraction, retraction.target.author)
 
-            expect_callback(:receive_entity, retraction, nil)
+            expect_callback(:receive_entity, retraction, retraction.target.author, nil)
 
             described_class.new(magic_env).receive
           end
@@ -90,7 +90,7 @@ module DiasporaFederation
           it "retracts a comment from the parent author" do
             magic_env = Salmon::MagicEnvelope.new(retraction, retraction.target.parent.author)
 
-            expect_callback(:receive_entity, retraction, nil)
+            expect_callback(:receive_entity, retraction, retraction.target.parent.author, nil)
 
             described_class.new(magic_env).receive
           end
@@ -111,7 +111,7 @@ module DiasporaFederation
           public_post = FactoryGirl.build(:status_message_entity, public: true)
           magic_env = Salmon::MagicEnvelope.new(public_post, public_post.author)
 
-          expect_callback(:receive_entity, public_post, nil)
+          expect_callback(:receive_entity, public_post, public_post.author, nil)
 
           described_class.new(magic_env).receive
         end
@@ -129,7 +129,7 @@ module DiasporaFederation
           profile = FactoryGirl.build(:profile_entity)
           magic_env = Salmon::MagicEnvelope.new(profile, profile.author)
 
-          expect_callback(:receive_entity, profile, nil)
+          expect_callback(:receive_entity, profile, profile.author, nil)
 
           described_class.new(magic_env).receive
         end
