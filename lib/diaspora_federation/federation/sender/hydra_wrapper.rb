@@ -11,13 +11,14 @@ module DiasporaFederation
         # @return [Hash] hydra opts
         def self.hydra_opts
           @hydra_opts ||= {
-            maxredirs:    DiasporaFederation.http_redirect_limit,
-            timeout:      DiasporaFederation.http_timeout,
-            method:       :post,
-            verbose:      DiasporaFederation.http_verbose,
-            cainfo:       DiasporaFederation.certificate_authorities,
-            forbid_reuse: true,
-            headers:      {
+            followlocation: true,
+            maxredirs:      DiasporaFederation.http_redirect_limit,
+            timeout:        DiasporaFederation.http_timeout,
+            method:         :post,
+            verbose:        DiasporaFederation.http_verbose,
+            cainfo:         DiasporaFederation.certificate_authorities,
+            forbid_reuse:   true,
+            headers:        {
               "Expect"            => "",
               "Transfer-Encoding" => "",
               "User-Agent"        => DiasporaFederation.http_user_agent
@@ -62,9 +63,7 @@ module DiasporaFederation
         # @param [Typhoeus::Request] request
         def prepare_request(request)
           request.on_complete do |response|
-            DiasporaFederation.callbacks.trigger(:update_pod, pod_url(response.effective_url), status(response))
-
-            success = response.success?
+            success = validate_response_and_update_pod(request, response)
             log_line = "success=#{success} sender=#{@sender_id} obj=#{@obj_str} url=#{response.effective_url} " \
                        "message=#{response.return_code} code=#{response.response_code} time=#{response.total_time}"
             if success
@@ -77,15 +76,20 @@ module DiasporaFederation
           end
         end
 
-        # Get the pod root-url from the send-url
-        # @param [String] url
-        # @return [String] pod root-url
-        def pod_url(url)
-          URI.parse(url).tap {|uri| uri.path = "/" }.to_s
+        def validate_response_and_update_pod(request, response)
+          url = URI.parse(request.url)
+          effective_url = URI.parse(response.effective_url)
+          same_host = url.host == effective_url.host
+
+          (response.success? && same_host).tap do |success|
+            pod_url = (success ? effective_url : url).tap {|uri| uri.path = "/" }.to_s
+            status = same_host ? status_from_response(response) : :redirected_to_other_hostname
+            DiasporaFederation.callbacks.trigger(:update_pod, pod_url, status)
+          end
         end
 
-        def status(res)
-          res.return_code == :ok ? res.response_code : res.return_code
+        def status_from_response(response)
+          response.return_code == :ok ? response.response_code : response.return_code
         end
       end
     end

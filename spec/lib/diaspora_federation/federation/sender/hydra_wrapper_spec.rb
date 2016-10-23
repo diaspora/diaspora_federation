@@ -92,6 +92,18 @@ module DiasporaFederation
 
         hydra_wrapper.send
       end
+
+      it "fails if redirected to other hostname" do
+        expect_callback(:update_pod, "https://example.org/", 202)
+        expect_callback(:update_pod, "http://example.com/", :couldnt_resolve_host)
+        expect_callback(:update_pod, "http://example.net/", :redirected_to_other_hostname)
+
+        url3 = "http://example.net/receive/public"
+        Typhoeus.stub(url3).and_return(response)
+        hydra_wrapper.insert_job(url3, xml)
+
+        expect(hydra_wrapper.send).to eq([url2, url3])
+      end
     end
   end
 end
