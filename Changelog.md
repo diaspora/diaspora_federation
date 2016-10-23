@@ -1,3 +1,14 @@
+# 0.1.5
+
+## Refactor
+
+* Use `head` method instead of `:nothing` option [44f6527](https://github.com/diaspora/diaspora_federation/commit/44f6527d64489c212c0f6b050ad343ea0e53e964)
+* Add `sender` parameter to `:receive_entity` callback [fb60f83](https://github.com/diaspora/diaspora_federation/commit/fb60f8392698f49b9291f3461e7a68ec84def9e2)
+
+## Bug fixes
+
+* HydraWrapper: Validate hostname after redirect [d18e623](https://github.com/diaspora/diaspora_federation/commit/d18e623082ac620a89e0542ceb97a9f2501c16bf)
+
 # 0.1.4
 
 ## Refactor
