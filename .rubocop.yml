@@ -183,6 +183,3 @@ Style/NumericPredicate:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
-
-Rails/HttpPositionalArguments:
-  Enabled: false

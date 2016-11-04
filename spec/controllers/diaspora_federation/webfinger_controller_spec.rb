@@ -38,30 +38,30 @@ module DiasporaFederation
 
     describe "GET #legacy_webfinger" do
       it "succeeds when the person exists", fixture: true do
-        get :legacy_webfinger, "q" => "alice@localhost:3000"
+        get :legacy_webfinger, params: {q: "alice@localhost:3000"}
         expect(response).to be_success
         save_fixture(response.body, "legacy-webfinger")
       end
 
       it "succeeds with 'acct:' in the query when the person exists" do
-        get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
+        get :legacy_webfinger, params: {q: "acct:alice@localhost:3000"}
         expect(response).to be_success
       end
 
       it "contains the diaspora* ID" do
-        get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
+        get :legacy_webfinger, params: {q: "acct:alice@localhost:3000"}
         expect(response.body).to include "<Subject>acct:alice@localhost:3000</Subject>"
       end
 
       it "404s when the person does not exist" do
-        get :legacy_webfinger, "q" => "me@mydiaspora.pod.com"
+        get :legacy_webfinger, params: {q: "me@mydiaspora.pod.com"}
         expect(response).to be_not_found
       end
 
       it "calls the fetch_person_for_webfinger callback" do
         expect_callback(:fetch_person_for_webfinger, "alice@localhost:3000").and_call_original
 
-        get :legacy_webfinger, "q" => "acct:alice@localhost:3000"
+        get :legacy_webfinger, params: {q: "acct:alice@localhost:3000"}
       end
     end
   end

@@ -79,3 +79,11 @@ Logging::Rails.configure do |config|
   Logging.logger[ActiveRecord::Base].level = :debug
   Logging.logger["XMLLogger"].level = :debug
 end
+
+module ActiveSupport
+  module Dependencies
+    def self.logger=(_)
+      # This was remove in rails 5: https://github.com/rails/rails/commit/798dc5a92537ba4202a1a8e127a5ebdae87bc78d
+    end
+  end
+end

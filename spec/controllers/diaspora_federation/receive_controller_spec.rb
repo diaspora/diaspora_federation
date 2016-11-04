@@ -18,26 +18,27 @@ module DiasporaFederation
         it "returns a 202 if queued correctly" do
           expect_callback(:queue_public_receive, "<diaspora/>", true)
 
-          post :public, xml: "<diaspora/>"
+          post :public, params: {xml: "<diaspora/>"}
           expect(response.code).to eq("202")
         end
 
         it "unescapes the xml before sending it to the callback" do
           expect_callback(:queue_public_receive, "<diaspora/>", true)
 
-          post :public, xml: CGI.escape("<diaspora/>")
+          post :public, params: {xml: CGI.escape("<diaspora/>")}
         end
       end
 
       context "magic envelope" do
         before do
+          Mime::Type.register("application/magic-envelope+xml", :magic_envelope)
           @request.env["CONTENT_TYPE"] = "application/magic-envelope+xml"
         end
 
         it "returns a 202 if queued correctly" do
           expect_callback(:queue_public_receive, "<me:env/>", false)
 
-          post :public, "<me:env/>"
+          post :public, body: "<me:env/>"
           expect(response.code).to eq("202")
         end
       end
@@ -48,32 +49,32 @@ module DiasporaFederation
         it "return a 404 if not queued successfully (unknown user guid)" do
           expect_callback(:queue_private_receive, "any-guid", "<diaspora/>", true).and_return(false)
 
-          post :private, guid: "any-guid", xml: "<diaspora/>"
+          post :private, params: {guid: "any-guid", xml: "<diaspora/>"}
           expect(response.code).to eq("404")
         end
 
         it "returns a 422 if no xml is passed" do
-          post :private, guid: "any-guid"
+          post :private, params: {guid: "any-guid"}
           expect(response.code).to eq("422")
         end
 
         it "returns a 422 if no xml is passed with content-type application/x-www-form-urlencoded" do
           @request.env["CONTENT_TYPE"] = "application/x-www-form-urlencoded"
-          post :private, guid: "any-guid"
+          post :private, params: {guid: "any-guid"}
           expect(response.code).to eq("422")
         end
 
         it "returns a 202 if the callback returned true" do
           expect_callback(:queue_private_receive, "any-guid", "<diaspora/>", true).and_return(true)
 
-          post :private, guid: "any-guid", xml: "<diaspora/>"
+          post :private, params: {guid: "any-guid", xml: "<diaspora/>"}
           expect(response.code).to eq("202")
         end
 
         it "unescapes the xml before sending it to the callback" do
           expect_callback(:queue_private_receive, "any-guid", "<diaspora/>", true).and_return(true)
 
-          post :private, guid: "any-guid", xml: CGI.escape("<diaspora/>")
+          post :private, params: {guid: "any-guid", xml: CGI.escape("<diaspora/>")}
         end
       end
 
@@ -87,7 +88,9 @@ module DiasporaFederation
             :queue_private_receive, "any-guid", "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}", false
           ).and_return(false)
 
-          post :private, "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}", guid: "any-guid"
+          post :private,
+               body:   "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
+               params: {guid: "any-guid"}
           expect(response.code).to eq("404")
         end
 
@@ -96,7 +99,9 @@ module DiasporaFederation
             :queue_private_receive, "any-guid", "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}", false
           ).and_return(true)
 
-          post :private, "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}", guid: "any-guid"
+          post :private,
+               body:   "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
+               params: {guid: "any-guid"}
           expect(response.code).to eq("202")
         end
       end
