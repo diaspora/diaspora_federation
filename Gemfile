@@ -49,7 +49,7 @@ group :test do
   gem "codeclimate-test-reporter",           require: false
 
   # test helpers
-  gem "fixture_builder", git: "https://github.com/rdy/fixture_builder.git", tag: "v0.5.0-rc1"
+  gem "fixture_builder",           "0.5.0.pre.RC1"
   gem "factory_girl_rails",        "~> 4.7"
   gem "rspec-collection_matchers", "~> 1.1.2"
   gem "webmock",                   "~> 2.0"
