@@ -3,6 +3,7 @@ language: ruby
 rvm:
   - 2.3.1
   - 2.2.5
+  - 2.1
 
 sudo: false
 cache:
@@ -13,7 +14,7 @@ branches:
     - 'master'
     - 'develop'
 
-before_install: gem install bundler
+before_install: test/scripts/prepare-travis.sh
 bundler_args: "--deployment --without development --jobs=3 --retry=3"
 
-script: bundle exec rake --trace
+script: test/scripts/travis.sh
