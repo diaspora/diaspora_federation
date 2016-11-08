@@ -66,6 +66,8 @@ RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/test/fixtures"
   config.global_fixtures = :all
 
+  config.filter_run_excluding rails4: true if Rails::VERSION::MAJOR == 5
+
   # whitelist codeclimate.com so test coverage can be reported
   config.after(:suite) do
     WebMock.disable_net_connect!(allow: "codeclimate.com")

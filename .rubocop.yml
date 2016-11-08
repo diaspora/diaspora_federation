@@ -183,3 +183,7 @@ Style/NumericPredicate:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Rails/HttpPositionalArguments:
+  Exclude:
+    - "spec/controllers/diaspora_federation/fixtures_rails4_spec.rb"

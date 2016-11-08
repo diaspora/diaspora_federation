@@ -8,7 +8,7 @@ module DiasporaFederation
         WebfingerController.instance_variable_set(:@host_meta_xml, nil) # clear cache
       end
 
-      it "succeeds", fixture: true do
+      it "succeeds", fixture: true, fixture4: true do
         get :host_meta
         expect(response).to be_success
         save_fixture(response.body, "host-meta")
