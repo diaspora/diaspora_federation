@@ -29,28 +29,32 @@ Logging::Rails.configure do |config|
   # Configure an appender that will write log events to STDOUT. A colorized
   # pattern layout is used to format the log events into strings before
   # writing.
-  Logging.appenders.stdout(
-    "stdout",
-    auto_flushing: true,
-    layout:        Logging.layouts.pattern(
-      pattern:      pattern,
-      color_scheme: "bright"
+  if config.log_to.include? "stdout"
+    Logging.appenders.stdout(
+      "stdout",
+      auto_flushing: true,
+      layout:        Logging.layouts.pattern(
+        pattern:      pattern,
+        color_scheme: "bright"
+      )
     )
-  ) if config.log_to.include? "stdout"
+  end
 
   # Configure an appender that will write log events to a file. The file will
   # be rolled on a daily basis, and the past 7 rolled files will be kept.
   # Older files will be deleted. The default pattern layout is used when
   # formatting log events into strings.
-  Logging.appenders.rolling_file(
-    "file",
-    filename:      config.paths["log"].first,
-    keep:          7,
-    age:           "daily",
-    truncate:      false,
-    auto_flushing: true,
-    layout:        layout
-  ) if config.log_to.include? "file"
+  if config.log_to.include? "file"
+    Logging.appenders.rolling_file(
+      "file",
+      filename:      config.paths["log"].first,
+      keep:          7,
+      age:           "daily",
+      truncate:      false,
+      auto_flushing: true,
+      layout:        layout
+    )
+  end
 
   # Setup the root logger with the Rails log level and the desired set of
   # appenders. The list of appenders to use should be set in the environment

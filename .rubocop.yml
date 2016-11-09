@@ -159,7 +159,7 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Max: 10
 
-Metric/BlockLength:
+Metrics/BlockLength:
   Exclude:
     - "Rakefile"
     - "**/*.rake"
