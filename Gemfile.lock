@@ -59,8 +59,8 @@ GEM
     ast (2.3.0)
     builder (3.2.2)
     byebug (9.0.6)
-    codeclimate-test-reporter (0.6.0)
-      simplecov (>= 0.7.1, < 1.0.0)
+    codeclimate-test-reporter (1.0.3)
+      simplecov
     coderay (1.1.1)
     concurrent-ruby (1.0.2)
     crack (0.4.3)
@@ -289,7 +289,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  codeclimate-test-reporter
+  codeclimate-test-reporter (~> 1.0.0)
   diaspora_federation!
   diaspora_federation-rails!
   diaspora_federation-test!

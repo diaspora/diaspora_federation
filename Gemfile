@@ -44,9 +44,9 @@ group :test do
   gem "nyan-cat-formatter", require: false
 
   # test coverage
-  gem "simplecov",                 "0.12.0", require: false
-  gem "simplecov-rcov",            "0.2.3",  require: false
-  gem "codeclimate-test-reporter",           require: false
+  gem "simplecov",                 "0.12.0",   require: false
+  gem "simplecov-rcov",            "0.2.3",    require: false
+  gem "codeclimate-test-reporter", "~> 1.0.0", require: false
 
   # test helpers
   gem "fixture_builder",           "0.5.0.pre.RC1"

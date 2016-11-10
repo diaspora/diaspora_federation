@@ -10,9 +10,6 @@ unless ENV["NO_COVERAGE"] == "true"
     add_filter "spec"
     add_filter "test"
   end
-
-  require "codeclimate-test-reporter"
-  CodeClimate::TestReporter.start
 end
 
 ENV["RAILS_ENV"] ||= "test"
