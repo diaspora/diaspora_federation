@@ -9,7 +9,7 @@ PATH
       valid (~> 1.0)
     diaspora_federation-rails (0.1.5)
       diaspora_federation (= 0.1.5)
-      rails (>= 4.2)
+      rails (>= 4.2, < 6)
     diaspora_federation-test (0.1.5)
       diaspora_federation (= 0.1.5)
       factory_girl (~> 4.7)
