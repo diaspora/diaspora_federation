@@ -172,7 +172,7 @@ module DiasporaFederation
 
       # @return [String] signature data string
       def signature_data
-        data = to_h.merge(additional_xml_elements)
+        data = unfold.merge(additional_xml_elements)
         signature_order.map {|name| data[name] }.join(";")
       end
 

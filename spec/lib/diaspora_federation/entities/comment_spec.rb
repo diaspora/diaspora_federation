@@ -34,7 +34,7 @@ XML
 
       it "parses the created_at from the xml if it is included and correctly signed" do
         created_at = Time.now.utc - 1.minute
-        comment_data = FactoryGirl.build(:comment_entity, author: alice.diaspora_id, parent_guid: parent.guid).to_h
+        comment_data = FactoryGirl.attributes_for(:comment_entity, author: alice.diaspora_id, parent_guid: parent.guid)
         comment_data[:created_at] = created_at
         comment_data[:parent] = parent_entity
         comment = described_class.new(comment_data, %i(author guid parent_guid text created_at))
