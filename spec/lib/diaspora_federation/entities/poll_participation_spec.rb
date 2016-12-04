@@ -8,7 +8,7 @@ module DiasporaFederation
         author:      alice.diaspora_id,
         parent_guid: parent.guid,
         parent:      parent_entity
-      ).send(:xml_elements).merge(parent: parent_entity)
+      ).send(:normalized_properties).merge(parent: parent_entity)
     }
 
     let(:xml) { <<-XML }

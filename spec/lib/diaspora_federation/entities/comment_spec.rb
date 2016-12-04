@@ -4,7 +4,7 @@ module DiasporaFederation
     let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:data) {
       FactoryGirl.build(:comment_entity, author: alice.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
-                 .send(:xml_elements).merge(created_at: Time.now.utc, parent: parent_entity)
+                 .send(:normalized_properties).merge(created_at: Time.now.utc, parent: parent_entity)
     }
 
     let(:xml) { <<-XML }

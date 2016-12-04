@@ -79,7 +79,7 @@ module DiasporaFederation
     def to_xml
       doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
       Nokogiri::XML::Element.new(self.class.entity_name, doc).tap do |root_element|
-        xml_elements.each do |name, value|
+        normalized_properties.each do |name, value|
           add_property_to_xml(doc, root_element, name, value)
         end
       end
@@ -217,7 +217,7 @@ module DiasporaFederation
       end
     end
 
-    def xml_elements
+    def normalized_properties
       properties.map {|name, value| [name, self.class.class_props[name] == String ? value.to_s : value] }.to_h
     end
 

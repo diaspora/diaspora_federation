@@ -9,7 +9,7 @@ module DiasporaFederation
         parent_guid: parent.guid,
         parent_type: parent.entity_type,
         parent:      parent_entity
-      ).send(:xml_elements).merge(parent: parent_entity)
+      ).send(:normalized_properties).merge(parent: parent_entity)
     }
 
     let(:xml) { <<-XML }
