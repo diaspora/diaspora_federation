@@ -85,6 +85,10 @@ module DiasporaFederation
       end
     end
 
+    def to_json
+      normalized_properties.merge!(entity_class: self.class.entity_name).to_json
+    end
+
     # Construct a new instance of the given Entity and populate the properties
     # with the attributes found in the XML.
     # Works recursively on nested Entities and Arrays thereof.
