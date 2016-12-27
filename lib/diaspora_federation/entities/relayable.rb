@@ -151,11 +151,11 @@ module DiasporaFederation
       # if the signatures are not there yet and if the keys are available.
       #
       # @return [Hash] sorted xml elements with updated signatures
-      def xml_elements
-        xml_data = super.merge(additional_xml_elements)
-        signature_order.map {|element| [element, xml_data[element] || ""] }.to_h.tap do |xml_elements|
-          xml_elements[:author_signature] = author_signature || sign_with_author
-          xml_elements[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
+      def enriched_properties
+        data = super.merge(additional_xml_elements)
+        signature_order.map {|element| [element, data[element] || ""] }.to_h.tap do |hash|
+          hash[:author_signature] = author_signature || sign_with_author
+          hash[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
         end
       end
 
@@ -172,7 +172,7 @@ module DiasporaFederation
 
       # @return [String] signature data string
       def signature_data
-        data = to_h.merge(additional_xml_elements)
+        data = normalized_properties.merge(additional_xml_elements)
         signature_order.map {|name| data[name] }.join(";")
       end
 

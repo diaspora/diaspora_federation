@@ -68,9 +68,9 @@ module DiasporaFederation
       # if the signatures are not there yet and if the keys are available.
       #
       # @return [Hash] xml elements with updated signatures
-      def xml_elements
-        super.tap do |xml_elements|
-          xml_elements[:target_author_signature] = target_author_signature || sign_with_author.to_s
+      def enriched_properties
+        super.tap do |hash|
+          hash[:target_author_signature] = target_author_signature || sign_with_author.to_s
         end
       end
 

@@ -83,11 +83,11 @@ module DiasporaFederation
       # if the signatures are not there yet and if the keys are available.
       #
       # @return [Hash] xml elements with updated signatures
-      def xml_elements
+      def enriched_properties
         privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, author)
 
-        super.tap do |xml_elements|
-          fill_required_signature(privkey, xml_elements) unless privkey.nil?
+        super.tap do |hash|
+          fill_required_signature(privkey, hash) unless privkey.nil?
         end
       end
 
