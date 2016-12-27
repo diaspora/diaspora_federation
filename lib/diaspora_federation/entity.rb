@@ -69,23 +69,6 @@ module DiasporaFederation
       validate
     end
 
-    # Returns a Hash representing this Entity (attributes => values).
-    # Nested entities are also converted to a Hash.
-    # @return [Hash] entity data (mostly equal to the hash used for initialization).
-    def to_h
-      properties.map {|key, value|
-        type = self.class.class_props[key]
-
-        if type == String || value.nil?
-          [key, value]
-        elsif type.instance_of?(Class)
-          [key, value.to_h]
-        elsif type.instance_of?(Array)
-          [key, value.map(&:to_h)]
-        end
-      }.to_h
-    end
-
     # Returns the XML representation for this entity constructed out of
     # {http://www.rubydoc.info/gems/nokogiri/Nokogiri/XML/Element Nokogiri::XML::Element}s
     #
@@ -96,10 +79,14 @@ module DiasporaFederation
     def to_xml
       doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
       Nokogiri::XML::Element.new(self.class.entity_name, doc).tap do |root_element|
-        xml_elements.each do |name, value|
+        normalized_properties.each do |name, value|
           add_property_to_xml(doc, root_element, name, value)
         end
       end
+    end
+
+    def to_json
+      normalized_properties.merge!(entity_class: self.class.entity_name).to_json
     end
 
     # Construct a new instance of the given Entity and populate the properties
@@ -147,6 +134,25 @@ module DiasporaFederation
     # @return [String] string representation of this object
     def to_s
       "#{self.class.name.rpartition('::').last}#{":#{guid}" if respond_to?(:guid)}"
+    end
+
+    protected
+
+    # Returns a Hash representing this Entity (attributes => values).
+    # Nested entities are also converted to a Hash.
+    # @return [Hash] entity data (mostly equal to the hash used for initialization).
+    def unfold
+      properties.map {|key, value|
+        type = self.class.class_props[key]
+
+        if type == String || value.nil?
+          [key, value]
+        elsif type.instance_of?(Class)
+          [key, value.unfold]
+        elsif type.instance_of?(Array)
+          [key, value.map(&:unfold)]
+        end
+      }.to_h
     end
 
     private
@@ -215,7 +221,7 @@ module DiasporaFederation
       end
     end
 
-    def xml_elements
+    def normalized_properties
       properties.map {|name, value| [name, self.class.class_props[name] == String ? value.to_s : value] }.to_h
     end
 

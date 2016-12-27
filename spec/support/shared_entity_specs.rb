@@ -24,19 +24,19 @@ shared_examples "an Entity subclass" do
       end
     end
 
-    describe "#to_h" do
+    describe "#unfold" do
       it "should return a hash with nested data" do
         expected_data = data.map {|key, value|
           if [String, TrueClass, FalseClass, Integer, Time, NilClass].any? {|c| value.is_a? c }
             [key, value]
           elsif value.instance_of?(Array)
-            [key, value.map(&:to_h)]
+            [key, value.map {|element| element.send(:unfold) }]
           else
-            [key, value.to_h]
+            [key, value.send(:unfold)]
           end
         }.to_h
 
-        expect(instance.to_h).to eq(expected_data)
+        expect(instance.send(:unfold)).to eq(expected_data)
       end
     end
 

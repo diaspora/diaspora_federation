@@ -9,7 +9,7 @@ module DiasporaFederation
         target_guid: target.guid,
         target_type: target.entity_type,
         target:      target_entity
-      ).send(:xml_elements).merge(target: target_entity)
+      ).send(:normalized_properties).merge(target: target_entity)
     }
 
     let(:xml) { <<-XML }
