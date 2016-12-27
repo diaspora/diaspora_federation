@@ -7,17 +7,17 @@ module DiasporaFederation
       # @!attribute [r] address
       #   A string describing your location, e.g. a city name, a street name, etc
       #   @return [String] address
-      property :address
+      property :address, :string
 
       # @!attribute [r] lat
       #   Geographical latitude of your location
       #   @return [String] latitude
-      property :lat
+      property :lat, :string
 
       # @!attribute [r] lng
       #   Geographical longitude of your location
       #   @return [String] longitude
-      property :lng
+      property :lng, :string
     end
   end
 end

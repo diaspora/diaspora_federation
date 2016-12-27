@@ -17,14 +17,14 @@ module DiasporaFederation
 <status_message>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{data[:guid]}</guid>
-  <created_at>#{data[:created_at]}</created_at>
+  <created_at>#{data[:created_at].utc.iso8601}</created_at>
   <provider_display_name>#{data[:provider_display_name]}</provider_display_name>
   <raw_message>#{data[:text]}</raw_message>
   <photo>
     <guid>#{photo1.guid}</guid>
     <diaspora_handle>#{photo1.author}</diaspora_handle>
     <public>#{photo1.public}</public>
-    <created_at>#{photo1.created_at}</created_at>
+    <created_at>#{photo1.created_at.utc.iso8601}</created_at>
     <remote_photo_path>#{photo1.remote_photo_path}</remote_photo_path>
     <remote_photo_name>#{photo1.remote_photo_name}</remote_photo_name>
     <text>#{photo1.text}</text>
@@ -36,7 +36,7 @@ module DiasporaFederation
     <guid>#{photo2.guid}</guid>
     <diaspora_handle>#{photo2.author}</diaspora_handle>
     <public>#{photo2.public}</public>
-    <created_at>#{photo2.created_at}</created_at>
+    <created_at>#{photo2.created_at.utc.iso8601}</created_at>
     <remote_photo_path>#{photo2.remote_photo_path}</remote_photo_path>
     <remote_photo_name>#{photo2.remote_photo_name}</remote_photo_name>
     <text>#{photo2.text}</text>

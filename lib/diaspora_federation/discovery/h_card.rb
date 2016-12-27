@@ -43,16 +43,16 @@ module DiasporaFederation
       # @!attribute [r] guid
       #   @see Entities::Person#guid
       #   @return [String] guid
-      property :guid
+      property :guid, :string
 
       # @!attribute [r] nickname
       #   The first part of the diaspora* ID
       #   @return [String] nickname
-      property :nickname, default: nil
+      property :nickname, :string, default: nil
 
       # @!attribute [r] full_name
       #   @return [String] display name of the user
-      property :full_name
+      property :full_name, :string
 
       # @!attribute [r] url
       #   @deprecated should be changed to the profile url. The pod url is in
@@ -60,7 +60,7 @@ module DiasporaFederation
       #     installations).
       #
       #   @return [String] link to the pod
-      property :url, default: nil
+      property :url, :string, default: nil
 
       # @!attribute [r] public_key
       #   When a user is created on the pod, the pod MUST generate a pgp keypair
@@ -69,17 +69,17 @@ module DiasporaFederation
       #   "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
       #
       #   @return [String] public key
-      property :public_key
+      property :public_key, :string
 
       # @!attribute [r] photo_large_url
       #   @return [String] url to the big avatar (300x300)
-      property :photo_large_url
+      property :photo_large_url, :string
       # @!attribute [r] photo_medium_url
       #   @return [String] url to the medium avatar (100x100)
-      property :photo_medium_url
+      property :photo_medium_url, :string
       # @!attribute [r] photo_small_url
       #   @return [String] url to the small avatar (50x50)
-      property :photo_small_url
+      property :photo_small_url, :string
 
       # @!attribute [r] first_name
       #   @deprecated We decided to only use one name field, these should be removed
@@ -87,7 +87,7 @@ module DiasporaFederation
       #
       #   @see #full_name
       #   @return [String] first name
-      property :first_name
+      property :first_name, :string
 
       # @!attribute [r] last_name
       #   @deprecated We decided to only use one name field, these should be removed
@@ -95,7 +95,7 @@ module DiasporaFederation
       #
       #   @see #full_name
       #   @return [String] last name
-      property :last_name
+      property :last_name, :string
 
       # @!attribute [r] searchable
       #   @deprecated As this is a simple property, consider move to WebFinger instead
@@ -105,7 +105,7 @@ module DiasporaFederation
       #
       #   flag if a user is searchable by name
       #   @return [Boolean] searchable flag
-      property :searchable
+      property :searchable, :boolean
 
       # CSS selectors for finding all the hCard fields
       SELECTORS = {

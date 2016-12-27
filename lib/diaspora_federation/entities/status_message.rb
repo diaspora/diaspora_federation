@@ -9,7 +9,7 @@ module DiasporaFederation
       # @!attribute [r] text
       #   Text of the status message composed by the user
       #   @return [String] text of the status message
-      property :text, xml_name: :raw_message
+      property :text, :string, xml_name: :raw_message
 
       # @!attribute [r] photos
       #   Optional photos attached to the status message
@@ -29,7 +29,7 @@ module DiasporaFederation
       # @!attribute [r] public
       #   Shows whether the status message is visible to everyone or only to some aspects
       #   @return [Boolean] is it public
-      property :public, default: false
+      property :public, :boolean, default: false
 
       private
 

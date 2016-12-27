@@ -15,12 +15,12 @@ module DiasporaFederation
 
       # @!attribute [r] text
       #   @return [String] the comment text
-      property :text
+      property :text, :string
 
       # @!attribute [r] created_at
       #   Comment entity creation time
       #   @return [Time] creation time
-      property :created_at, default: -> { Time.now.utc }
+      property :created_at, :timestamp, default: -> { Time.now.utc }
     end
   end
 end

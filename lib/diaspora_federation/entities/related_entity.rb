@@ -7,17 +7,17 @@ module DiasporaFederation
       #   The diaspora* ID of the author
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :author
+      property :author, :string
 
       # @!attribute [r] local
       #   +true+ if the owner of the entity is local on the pod
       #   @return [Boolean] is it a like or a dislike
-      property :local
+      property :local, :boolean
 
       # @!attribute [r] public
       #   Shows whether the entity is visible to everyone or only to some aspects
       #   @return [Boolean] is it public
-      property :public, default: false
+      property :public, :boolean, default: false
 
       # @!attribute [r] parent
       #   Parent if the entity also has a parent (Comment or Like) or +nil+ if it has no parent

@@ -38,6 +38,14 @@ def expect_callback(*opts)
   expect(DiasporaFederation.callbacks).to receive(:trigger).with(*opts)
 end
 
+def add_signatures(entity)
+  properties = entity.send(:enriched_properties)
+  entity.to_h.tap do |hash|
+    hash[:author_signature] = properties[:author_signature]
+    hash[:parent_author_signature] = properties[:parent_author_signature]
+  end
+end
+
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 fixture_builder_file = "#{File.dirname(__FILE__)}/support/fixture_builder.rb"

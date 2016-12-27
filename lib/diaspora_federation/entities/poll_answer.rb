@@ -8,12 +8,12 @@ module DiasporaFederation
       #   A random string of at least 16 chars
       #   @see Validation::Rule::Guid
       #   @return [String] guid
-      property :guid
+      property :guid, :string
 
       # @!attribute [r] answer
       #   Text of the answer
       #   @return [String] answer
-      property :answer
+      property :answer, :string
     end
   end
 end

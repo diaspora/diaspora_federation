@@ -18,12 +18,15 @@ module DiasporaFederation
 
     # Define a generic (string-type) property
     # @param [Symbol] name property name
+    # @param [Symbol] type property type
     # @param [Hash] opts further options
     # @option opts [Object, #call] :default a default value, making the
     #   property optional
     # @option opts [Symbol] :xml_name another name used for xml generation
-    def property(name, opts={})
-      define_property name, String, opts
+    def property(name, type, opts={})
+      raise InvalidType unless property_type_valid?(type)
+
+      define_property name, type, opts
     end
 
     # Define a property that should contain another Entity or an array of
@@ -35,7 +38,7 @@ module DiasporaFederation
     # @option opts [Object, #call] :default a default value, making the
     #   property optional
     def entity(name, type, opts={})
-      raise InvalidType unless type_valid?(type)
+      raise InvalidType unless entity_type_valid?(type)
 
       define_property name, type, opts
     end
@@ -86,9 +89,11 @@ module DiasporaFederation
 
     # @deprecated
     def determine_xml_name(name, type, opts={})
-      raise ArgumentError, "xml_name is not supported for nested entities" if type != String && opts.has_key?(:xml_name)
+      if !type.instance_of?(Symbol) && opts.has_key?(:xml_name)
+        raise ArgumentError, "xml_name is not supported for nested entities"
+      end
 
-      if type == String
+      if type.instance_of?(Symbol)
         if opts.has_key? :xml_name
           raise InvalidName, "invalid xml_name" unless name_valid?(opts[:xml_name])
           opts[:xml_name]
@@ -121,10 +126,14 @@ module DiasporaFederation
       name.instance_of?(Symbol)
     end
 
+    def property_type_valid?(type)
+      %i(string integer boolean timestamp).include?(type)
+    end
+
     # Checks if the type extends {Entity}
     # @param [Class] type the type to check
     # @return [Boolean]
-    def type_valid?(type)
+    def entity_type_valid?(type)
       [type].flatten.all? {|type|
         type.respond_to?(:ancestors) && type.ancestors.include?(Entity)
       }

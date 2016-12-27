@@ -35,24 +35,24 @@ module DiasporaFederation
       #   The Subject element should contain the webfinger address that was asked
       #   for. If it does not, then this webfinger profile MUST be ignored.
       #   @return [String]
-      property :acct_uri
+      property :acct_uri, :string
 
       # @!attribute [r] alias_url
       #   @note could be nil
       #   @return [String] link to the users profile
-      property :alias_url
+      property :alias_url, :string
 
       # @!attribute [r] hcard_url
       #   @return [String] link to the +hCard+
-      property :hcard_url
+      property :hcard_url, :string
 
       # @!attribute [r] seed_url
       #   @return [String] link to the pod
-      property :seed_url
+      property :seed_url, :string
 
       # @!attribute [r] profile_url
       #   @return [String] link to the users profile
-      property :profile_url
+      property :profile_url, :string
 
       # @!attribute [r] atom_url
       #   This atom feed is an Activity Stream of the user's public posts. diaspora*
@@ -63,18 +63,18 @@ module DiasporaFederation
       #   Note that this feed MAY also be made available through the PubSubHubbub
       #   mechanism by supplying a <link rel="hub"> in the atom feed itself.
       #   @return [String] atom feed url
-      property :atom_url
+      property :atom_url, :string
 
       # @!attribute [r] salmon_url
       #   @note could be nil
       #   @return [String] salmon endpoint url
       #   @see https://cdn.rawgit.com/salmon-protocol/salmon-protocol/master/draft-panzer-salmon-00.html#SMLR
       #     Panzer draft for Salmon, paragraph 3.3
-      property :salmon_url
+      property :salmon_url, :string
 
       # @!attribute [r] subscribe_url
       #   This url is used to find another user on the home-pod of the user in the webfinger.
-      property :subscribe_url
+      property :subscribe_url, :string
 
       # @!attribute [r] guid
       #   @deprecated Either convert these to +Property+ elements or move to the
@@ -84,7 +84,7 @@ module DiasporaFederation
       #   @see HCard#guid
       #   @see Entities::Person#guid
       #   @return [String] guid
-      property :guid
+      property :guid, :string
 
       # @!attribute [r] public_key
       #   @deprecated Either convert these to +Property+ elements or move to the
@@ -98,7 +98,7 @@ module DiasporaFederation
       #   DER-encoded PKCS#1 key beginning with the text
       #   "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
       #   @return [String] public key
-      property :public_key
+      property :public_key, :string
 
       # +hcard_url+ link relation
       REL_HCARD = "http://microformats.org/profile/hcard".freeze

@@ -7,7 +7,7 @@ module DiasporaFederation
   <guid>#{data[:guid]}</guid>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
   <public>#{data[:public]}</public>
-  <created_at>#{data[:created_at]}</created_at>
+  <created_at>#{data[:created_at].utc.iso8601}</created_at>
   <remote_photo_path>#{data[:remote_photo_path]}</remote_photo_path>
   <remote_photo_name>#{data[:remote_photo_name]}</remote_photo_name>
   <text>#{data[:text]}</text>

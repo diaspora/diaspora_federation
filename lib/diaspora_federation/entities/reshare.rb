@@ -10,18 +10,18 @@ module DiasporaFederation
       #   The diaspora* ID of the person who posted the original post
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :root_author, xml_name: :root_diaspora_id
+      property :root_author, :string, xml_name: :root_diaspora_id
 
       # @!attribute [r] root_guid
       #   Guid of the original post
       #   @see StatusMessage#guid
       #   @return [String] root guid
-      property :root_guid
+      property :root_guid, :string
 
       # @!attribute [r] public
       #   Has no meaning at the moment
       #   @return [Boolean] public
-      property :public, default: true # always true? (we only reshare public posts)
+      property :public, :boolean, default: true # always true? (we only reshare public posts)
 
       # @return [String] string representation of this object
       def to_s

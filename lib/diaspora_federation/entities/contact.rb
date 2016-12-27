@@ -9,21 +9,21 @@ module DiasporaFederation
       #   The diaspora* ID of the person who shares their profile
       #   @see Person#author
       #   @return [String] sender ID
-      property :author
+      property :author, :string
 
       # @!attribute [r] recipient
       #   The diaspora* ID of the person who will be shared with
       #   @see Validation::Rule::DiasporaId
       #   @return [String] recipient ID
-      property :recipient
+      property :recipient, :string
 
       # @!attribute [r] following
       #   @return [Boolean] if the author is following the person
-      property :following, default: true
+      property :following, :boolean, default: true
 
       # @!attribute [r] sharing
       #   @return [Boolean] if the author is sharing with the person
-      property :sharing, default: true
+      property :sharing, :boolean, default: true
 
       # @return [String] string representation of this object
       def to_s

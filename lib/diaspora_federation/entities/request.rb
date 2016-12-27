@@ -10,13 +10,13 @@ module DiasporaFederation
       #   The diaspora* ID of the person who share their profile
       #   @see Person#author
       #   @return [String] sender ID
-      property :author, xml_name: :sender_handle
+      property :author, :string, xml_name: :sender_handle
 
       # @!attribute [r] recipient
       #   The diaspora* ID of the person who will be shared with
       #   @see Validation::Rule::DiasporaId
       #   @return [String] recipient ID
-      property :recipient, xml_name: :recipient_handle
+      property :recipient, :string, xml_name: :recipient_handle
 
       # Use only {Contact} for receive
       # @return [Contact] instance as contact

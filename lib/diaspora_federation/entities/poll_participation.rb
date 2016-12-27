@@ -17,7 +17,7 @@ module DiasporaFederation
       #   Guid of the answer selected by the user
       #   @see PollAnswer#guid
       #   @return [String] poll answer guid
-      property :poll_answer_guid
+      property :poll_answer_guid, :string
     end
   end
 end

@@ -24,25 +24,25 @@ module DiasporaFederation
       #   This signature is mandatory only when federating from an upstream author to the subscribers.
       #   @see Relayable#parent_author_signature
       #   @return [String] parent author signature
-      property :parent_author_signature, default: nil
+      property :parent_author_signature, :string, default: nil
 
       # @!attribute [r] target_guid
       #   Guid of a relayable to be deleted
       #   @see Comment#guid
       #   @return [String] target guid
-      property :target_guid
+      property :target_guid, :string
 
       # @!attribute [r] target_type
       #   A string describing a type of the target
       #   @see Retraction#target_type
       #   @return [String] target type
-      property :target_type
+      property :target_type, :string
 
       # @!attribute [r] author
       #   The diaspora* ID of the person who deletes a relayable
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :author, xml_name: :sender_handle
+      property :author, :string, xml_name: :sender_handle
 
       # @!attribute [r] target_author_signature
       #   Contains a signature of the entity using the private key of the
@@ -51,7 +51,7 @@ module DiasporaFederation
       #   author is done.
       #   @see Relayable#author_signature
       #   @return [String] target author signature
-      property :target_author_signature, default: nil
+      property :target_author_signature, :string, default: nil
 
       # @!attribute [r] target
       #   Target entity

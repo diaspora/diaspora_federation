@@ -75,12 +75,20 @@ shared_examples "an XML Entity" do |ignored_props=[]|
   def validate_values(value, parsed_value, type, ignored_props)
     if value.nil?
       expect(parsed_value).to be_nil
-    elsif type == String
-      expect(parsed_value.to_s).to eq(value.to_s)
+    elsif type.instance_of?(Symbol)
+      validate_property(value, parsed_value)
     elsif type.instance_of?(Array)
       value.each_with_index {|entity, index| check_entity(entity, parsed_value[index], ignored_props) }
     elsif type.ancestors.include?(DiasporaFederation::Entity)
       check_entity(value, parsed_value, ignored_props)
+    end
+  end
+
+  def validate_property(value, parsed_value)
+    if value.is_a?(Time)
+      expect(parsed_value).to eq(value.change(usec: 0))
+    else
+      expect(parsed_value).to eq(value)
     end
   end
 end

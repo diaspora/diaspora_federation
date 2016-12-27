@@ -21,7 +21,7 @@ module DiasporaFederation
 
       include Entities::Relayable
 
-      property :property
+      property :property, :string
 
       def parent_type
         PARENT_TYPE

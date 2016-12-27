@@ -54,11 +54,11 @@ module DiasporaFederation
       # @param [Entity] klass the entity in which it is included
       def self.included(klass)
         klass.class_eval do
-          property :author, xml_name: :diaspora_handle
-          property :guid
-          property :parent_guid
-          property :author_signature, default: nil
-          property :parent_author_signature, default: nil
+          property :author, :string, xml_name: :diaspora_handle
+          property :guid, :string
+          property :parent_guid, :string
+          property :author_signature, :string, default: nil
+          property :parent_author_signature, :string, default: nil
           entity :parent, Entities::RelatedEntity
         end
 

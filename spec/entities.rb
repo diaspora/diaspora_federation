@@ -1,38 +1,38 @@
 module DiasporaFederation
   module Entities
     class TestEntity < DiasporaFederation::Entity
-      property :test
+      property :test, :string
     end
 
     class TestDefaultEntity < DiasporaFederation::Entity
-      property :test1
-      property :test2
-      property :test3, default: true
-      property :test4, default: -> { true }
+      property :test1, :string
+      property :test2, :string
+      property :test3, :boolean, default: true
+      property :test4, :boolean, default: -> { true }
     end
 
     class OtherEntity < DiasporaFederation::Entity
-      property :asdf
+      property :asdf, :string
     end
 
     class TestNestedEntity < DiasporaFederation::Entity
-      property :asdf
+      property :asdf, :string
       entity :test, TestEntity, default: nil
       entity :multi, [OtherEntity]
     end
 
     class TestEntityWithXmlName < DiasporaFederation::Entity
-      property :test
-      property :qwer, xml_name: :asdf
+      property :test, :string
+      property :qwer, :string, xml_name: :asdf
     end
 
     class TestEntityWithRelatedEntity < DiasporaFederation::Entity
-      property :test
+      property :test, :string
       entity :parent, RelatedEntity
     end
 
     class Entity < DiasporaFederation::Entity
-      property :test
+      property :test, :string
     end
   end
 
