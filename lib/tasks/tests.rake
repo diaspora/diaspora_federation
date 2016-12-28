@@ -1,6 +1,6 @@
 if defined?(RSpec)
   namespace :spec do
-    task prepare_db: %w(db:create db:test:load)
+    task prepare_db: %w(db:create db:environment:set db:test:load)
     task :prepare_fixtures do
       ENV["NO_COVERAGE"] = "true"
       Rake::Task["spec:generate_fixtures"].invoke
