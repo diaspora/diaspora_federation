@@ -54,11 +54,11 @@ module DiasporaFederation
       # @param [Entity] klass the entity in which it is included
       def self.included(klass)
         klass.class_eval do
-          property :author, xml_name: :diaspora_handle
-          property :guid
-          property :parent_guid
-          property :author_signature, default: nil
-          property :parent_author_signature, default: nil
+          property :author, :string, xml_name: :diaspora_handle
+          property :guid, :string
+          property :parent_guid, :string
+          property :author_signature, :string, default: nil
+          property :parent_author_signature, :string, default: nil
           entity :parent, Entities::RelatedEntity
         end
 
@@ -146,17 +146,24 @@ module DiasporaFederation
         Base64.strict_encode64(privkey.sign(DIGEST, signature_data))
       end
 
-      # Sort all XML elements according to the order used for the signatures.
-      # It updates also the signatures with the keys of the author and the parent
+      # Update the signatures with the keys of the author and the parent
       # if the signatures are not there yet and if the keys are available.
       #
-      # @return [Hash] sorted xml elements with updated signatures
-      def xml_elements
-        xml_data = super.merge(additional_xml_elements)
-        signature_order.map {|element| [element, xml_data[element] || ""] }.to_h.tap do |xml_elements|
-          xml_elements[:author_signature] = author_signature || sign_with_author
-          xml_elements[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
+      # @return [Hash] properties with updated signatures
+      def enriched_properties
+        super.merge(additional_xml_elements).tap do |hash|
+          hash[:author_signature] = author_signature || sign_with_author
+          hash[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
         end
+      end
+
+      # Sort all XML elements according to the order used for the signatures.
+      #
+      # @return [Hash] sorted xml elements
+      def xml_elements
+        data = super
+        order = signature_order + %i(author_signature parent_author_signature)
+        order.map {|element| [element, data[element] || ""] }.to_h
       end
 
       # The order for signing
@@ -172,7 +179,7 @@ module DiasporaFederation
 
       # @return [String] signature data string
       def signature_data
-        data = to_h.merge(additional_xml_elements)
+        data = normalized_properties.merge(additional_xml_elements)
         signature_order.map {|name| data[name] }.join(";")
       end
 

@@ -12,7 +12,7 @@ module DiasporaFederation
       #   Alias for author
       #   @see AccountDeletion#author
       #   @return [String] diaspora* ID
-      property :author, alias: :diaspora_id, xml_name: :diaspora_handle
+      property :author, :string, alias: :diaspora_id, xml_name: :diaspora_handle
 
       # @return [String] string representation of this object
       def to_s

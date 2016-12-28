@@ -26,10 +26,10 @@ module DiasporaFederation
       # @param [Entity] entity the entity in which it is included
       def self.included(entity)
         entity.class_eval do
-          property :author, xml_name: :diaspora_handle
-          property :guid
-          property :created_at, default: -> { Time.now.utc }
-          property :provider_display_name, default: nil
+          property :author, :string, xml_name: :diaspora_handle
+          property :guid, :string
+          property :created_at, :timestamp, default: -> { Time.now.utc }
+          property :provider_display_name, :string, default: nil
         end
       end
     end

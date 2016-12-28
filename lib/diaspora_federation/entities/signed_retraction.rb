@@ -10,25 +10,25 @@ module DiasporaFederation
       #   Guid of a post to be deleted
       #   @see Retraction#target_guid
       #   @return [String] target guid
-      property :target_guid
+      property :target_guid, :string
 
       # @!attribute [r] target_type
       #   A string describing the type of the target
       #   @see Retraction#target_type
       #   @return [String] target type
-      property :target_type
+      property :target_type, :string
 
       # @!attribute [r] author
       #   The diaspora* ID of the person who deletes a post
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :author, xml_name: :sender_handle
+      property :author, :string, xml_name: :sender_handle
 
       # @!attribute [r] author_signature
       #   Contains a signature of the entity using the private key of the author of a post
       #   This signature is mandatory.
       #   @return [String] author signature
-      property :target_author_signature, default: nil
+      property :target_author_signature, :string, default: nil
 
       # @!attribute [r] target
       #   Target entity
@@ -68,9 +68,9 @@ module DiasporaFederation
       # if the signatures are not there yet and if the keys are available.
       #
       # @return [Hash] xml elements with updated signatures
-      def xml_elements
-        super.tap do |xml_elements|
-          xml_elements[:target_author_signature] = target_author_signature || sign_with_author.to_s
+      def enriched_properties
+        super.tap do |hash|
+          hash[:target_author_signature] = target_author_signature || sign_with_author.to_s
         end
       end
 

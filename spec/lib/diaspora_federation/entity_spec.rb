@@ -175,6 +175,23 @@ XML
           expect(entity.test).to eq("asdf")
           expect(entity.qwer).to eq("qwer")
         end
+
+        it "parses the string to the correct type" do
+          xml = <<-XML.strip
+<test_default_entity>
+  <test1>asdf</test1>
+  <test2>qwer</qwer2>
+  <test3>true</qwer3>
+</test_default_entity>
+XML
+
+          entity = Entities::TestDefaultEntity.from_xml(Nokogiri::XML::Document.parse(xml).root)
+
+          expect(entity).to be_an_instance_of Entities::TestDefaultEntity
+          expect(entity.test1).to eq("asdf")
+          expect(entity.test2).to eq("qwer")
+          expect(entity.test3).to eq(true)
+        end
       end
 
       context "nested entities" do

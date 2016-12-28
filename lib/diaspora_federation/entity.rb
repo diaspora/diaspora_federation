@@ -76,7 +76,7 @@ module DiasporaFederation
       properties.map {|key, value|
         type = self.class.class_props[key]
 
-        if type == String || value.nil?
+        if type.instance_of?(Symbol) || value.nil?
           [key, value]
         elsif type.instance_of?(Class)
           [key, value.to_h]
@@ -160,11 +160,15 @@ module DiasporaFederation
       type = self.class.class_props[name]
       return false if type.nil? # property undefined
 
-      setable_string?(type, val) || setable_nested?(type, val) || setable_multi?(type, val)
+      setable_property?(type, val) || setable_nested?(type, val) || setable_multi?(type, val)
+    end
+
+    def setable_property?(type, val)
+      setable_string?(type, val) || type == :timestamp && val.is_a?(Time)
     end
 
     def setable_string?(type, val)
-      type == String && val.respond_to?(:to_s)
+      %i(string integer boolean).include?(type) && val.respond_to?(:to_s)
     end
 
     def setable_nested?(type, val)
@@ -215,8 +219,29 @@ module DiasporaFederation
       end
     end
 
+    def normalized_properties
+      properties.map {|name, value| [name, normalize_property(name, value)] }.to_h
+    end
+
+    def normalize_property(name, value)
+      case self.class.class_props[name]
+      when :string, :integer, :boolean
+        value.to_s
+      when :timestamp
+        value.nil? ? "" : value.utc.iso8601
+      else
+        value
+      end
+    end
+
+    # default: nothing to enrich
+    def enriched_properties
+      normalized_properties
+    end
+
+    # default: no special order
     def xml_elements
-      properties.map {|name, value| [name, self.class.class_props[name] == String ? value.to_s : value] }.to_h
+      enriched_properties
     end
 
     def add_property_to_xml(doc, root_element, name, value)
@@ -255,12 +280,12 @@ module DiasporaFederation
     end
 
     # @param [String] name property name to parse
-    # @param [Class] type target type to parse
+    # @param [Class, Symbol] type target type to parse
     # @param [Nokogiri::XML::Element] root_node XML node to parse
     # @return [Object] parsed data
     private_class_method def self.parse_element_from_node(name, type, root_node)
-      if type == String
-        parse_string_from_node(name, root_node)
+      if type.instance_of?(Symbol)
+        parse_string_from_node(name, type, root_node)
       elsif type.instance_of?(Array)
         parse_array_from_node(type.first, root_node)
       elsif type.ancestors.include?(Entity)
@@ -271,12 +296,34 @@ module DiasporaFederation
     # Create simple entry in data hash
     #
     # @param [String] name xml tag to parse
+    # @param [Class, Symbol] type target type to parse
     # @param [Nokogiri::XML::Element] root_node XML root_node to parse
     # @return [String] data
-    private_class_method def self.parse_string_from_node(name, root_node)
+    private_class_method def self.parse_string_from_node(name, type, root_node)
       node = root_node.xpath(name.to_s)
       node = root_node.xpath(xml_names[name].to_s) if node.empty?
-      node.first.text if node.any?
+      parse_property(type, node.first.text) if node.any?
+    end
+
+    # @param [Symbol] type target type to parse
+    # @param [String] text data as string
+    # @return [String, Boolean, Integer, Time] data
+    private_class_method def self.parse_property(type, text)
+      case type
+      when :timestamp
+        begin
+          Time.parse(text).utc
+        rescue
+          nil
+        end
+      when :integer
+        text.to_i if text =~ /^\d+$/
+      when :boolean
+        return true if text =~ /(true|t|yes|y|1)$/i
+        false if text =~ /(false|f|no|n|0)$/i
+      else
+        text
+      end
     end
 
     # Create an entry in the data hash for the nested entity

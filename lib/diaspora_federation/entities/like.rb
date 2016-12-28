@@ -14,14 +14,14 @@ module DiasporaFederation
       #   If +true+ set a like, if +false+, set a dislike (dislikes are currently not
       #   implemented in the diaspora* frontend).
       #   @return [Boolean] is it a like or a dislike
-      property :positive
+      property :positive, :boolean
 
       # @!attribute [r] parent_type
       #   A string describing the type of the parent
       #   Can be "Post" or "Comment" (Comments are currently not implemented in the
       #   diaspora* frontend).
       #   @return [String] parent type
-      property :parent_type, xml_name: :target_type
+      property :parent_type, :string, xml_name: :target_type
     end
   end
 end

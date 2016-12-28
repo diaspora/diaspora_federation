@@ -3,12 +3,14 @@ module DiasporaFederation
     let(:parent) { FactoryGirl.create(:conversation, author: bob) }
     let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:signed_msg1) {
-      FactoryGirl.build(:message_entity, author: bob.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
-                 .send(:xml_elements).merge(parent: parent_entity)
+      add_signatures(
+        FactoryGirl.build(:message_entity, author: bob.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
+      )
     }
     let(:signed_msg2) {
-      FactoryGirl.build(:message_entity, author: bob.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
-                 .send(:xml_elements).merge(parent: parent_entity)
+      add_signatures(
+        FactoryGirl.build(:message_entity, author: bob.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
+      )
     }
     let(:data) {
       FactoryGirl.attributes_for(:conversation_entity).merge!(
@@ -24,7 +26,7 @@ module DiasporaFederation
   <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{parent.guid}</guid>
   <subject>#{data[:subject]}</subject>
-  <created_at>#{data[:created_at]}</created_at>
+  <created_at>#{data[:created_at].utc.iso8601}</created_at>
   <participant_handles>#{data[:participants]}</participant_handles>
 #{data[:messages].map {|a| a.to_xml.to_s.indent(2) }.join("\n")}
 </conversation>

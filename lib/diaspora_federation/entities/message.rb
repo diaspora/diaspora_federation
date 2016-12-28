@@ -13,18 +13,18 @@ module DiasporaFederation
       # @!attribute [r] text
       #   Text of the message composed by a user
       #   @return [String] text
-      property :text
+      property :text, :string
 
       # @!attribute [r] created_at
       #   Message creation time
       #   @return [Time] creation time
-      property :created_at, default: -> { Time.now.utc }
+      property :created_at, :timestamp, default: -> { Time.now.utc }
 
       # @!attribute [r] conversation_guid
       #   Guid of a conversation this message belongs to
       #   @see Conversation#guid
       #   @return [String] conversation guid
-      property :conversation_guid
+      property :conversation_guid, :string
 
       # It is only valid to receive a {Message} from the author itself,
       # or from the author of the parent {Conversation} if the author signature is valid.
@@ -46,6 +46,16 @@ module DiasporaFederation
         parent = DiasporaFederation.callbacks.trigger(:fetch_related_entity, "Conversation", conversation_guid)
         raise Federation::Fetcher::NotFetchable, "parent of #{self} not found" unless parent
         parent.author
+      end
+
+      # old timestamp format, because this signature is only used from old pods which also relay with old format
+      # @deprecated remove after {Message} doesn't include {Relayable} anymore
+      def normalize_property(name, value)
+        if name == :created_at
+          value.to_s
+        else
+          super
+        end
       end
 
       # Default implementation, don't verify signatures for a {Message}.

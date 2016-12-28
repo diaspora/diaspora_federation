@@ -14,7 +14,7 @@ module DiasporaFederation
       #   A string describing a type of the target to subscribe on
       #   Currently only "Post" is supported.
       #   @return [String] parent type
-      property :parent_type, xml_name: :target_type
+      property :parent_type, :string, xml_name: :target_type
 
       # It is only valid to receive a {Participation} from the author themself.
       # @deprecated remove after {Participation} doesn't include {Relayable} anymore

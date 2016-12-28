@@ -3,12 +3,14 @@ module DiasporaFederation
     let(:parent) { FactoryGirl.create(:poll, author: bob) }
     let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      FactoryGirl.build(
-        :poll_participation_entity,
-        author:      alice.diaspora_id,
-        parent_guid: parent.guid,
-        parent:      parent_entity
-      ).send(:xml_elements).merge(parent: parent_entity)
+      add_signatures(
+        FactoryGirl.build(
+          :poll_participation_entity,
+          author:      alice.diaspora_id,
+          parent_guid: parent.guid,
+          parent:      parent_entity
+        )
+      )
     }
 
     let(:xml) { <<-XML }

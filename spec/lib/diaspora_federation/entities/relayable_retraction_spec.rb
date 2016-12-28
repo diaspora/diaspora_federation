@@ -15,7 +15,7 @@ module DiasporaFederation
         target_guid: target.guid,
         target_type: target.entity_type,
         target:      target_entity
-      ).send(:xml_elements).tap do |data|
+      ).send(:enriched_properties).tap do |data|
         data[:target_author_signature] = nil
         data[:target] = target_entity
       end

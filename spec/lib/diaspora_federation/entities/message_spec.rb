@@ -3,8 +3,9 @@ module DiasporaFederation
     let(:parent) { FactoryGirl.create(:conversation, author: bob) }
     let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
-                 .send(:xml_elements).merge(parent: parent_entity)
+      add_signatures(
+        FactoryGirl.build(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
+      )
     }
 
     let(:xml) { <<-XML }
@@ -36,19 +37,19 @@ XML
       end
 
       it "allows parent author if the signature is valid" do
-        expect_callback(:fetch_related_entity, "Conversation", entity.conversation_guid).and_return(data[:parent])
+        expect_callback(:fetch_related_entity, "Conversation", entity.conversation_guid).and_return(parent_entity)
         expect_callback(:fetch_public_key, alice.diaspora_id).and_return(alice.private_key)
         expect(entity.sender_valid?(bob.diaspora_id)).to be_truthy
       end
 
       it "does not allow any other person" do
-        expect_callback(:fetch_related_entity, "Conversation", entity.conversation_guid).and_return(data[:parent])
+        expect_callback(:fetch_related_entity, "Conversation", entity.conversation_guid).and_return(parent_entity)
         invalid_sender = FactoryGirl.generate(:diaspora_id)
         expect(entity.sender_valid?(invalid_sender)).to be_falsey
       end
 
       it "does not allow the parent author if the signature is invalid" do
-        expect_callback(:fetch_related_entity, "Conversation", entity.conversation_guid).and_return(data[:parent])
+        expect_callback(:fetch_related_entity, "Conversation", entity.conversation_guid).and_return(parent_entity)
         expect_callback(:fetch_public_key, alice.diaspora_id).and_return(alice.private_key)
         invalid_msg = Entities::Message.new(data.merge(author_signature: "aa"))
         expect {
