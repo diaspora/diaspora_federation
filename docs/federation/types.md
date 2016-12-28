@@ -75,9 +75,9 @@ Example: `Alice Smith`
 
 ## Timestamp
 
-An [ISO 8601][iso8601] time and date with timezone.
+An [ISO 8601][iso8601] time and date with timezone (in UTC and accurate to seconds).
 
-Example: `2016-02-19T02:13:41.863Z`
+Example: `2016-02-19T02:13:41Z`
 
 ## Date
 
