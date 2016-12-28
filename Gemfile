@@ -17,9 +17,9 @@ end
 
 group :development do
   # code style
-  gem "rubocop",        "0.45.0"
   gem "pronto",         "0.7.1"
   gem "pronto-rubocop", "0.7.0", require: false
+  gem "rubocop",        "0.46.0"
 
   # automatic test runs
   gem "guard-rspec",   require: false
@@ -44,13 +44,13 @@ group :test do
   gem "nyan-cat-formatter", require: false
 
   # test coverage
+  gem "codeclimate-test-reporter", "~> 1.0.0", require: false
   gem "simplecov",                 "0.12.0",   require: false
   gem "simplecov-rcov",            "0.2.3",    require: false
-  gem "codeclimate-test-reporter", "~> 1.0.0", require: false
 
   # test helpers
-  gem "fixture_builder",           "0.5.0"
   gem "factory_girl_rails",        "~> 4.7"
+  gem "fixture_builder",           "0.5.0"
   gem "rspec-collection_matchers", "~> 1.1.2"
   gem "webmock",                   "~> 2.0"
 end
