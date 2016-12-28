@@ -18,6 +18,12 @@ See also: [Relayable][relayable]
 | `author_signature`        | [Signature][signature]       | The signature from the author of the comment.   |
 | `parent_author_signature` | [Signature][signature]       | The signature from the parent entity author.    |
 
+## Optional Properties
+
+| Property             | Type (Length) | Description                                   |
+| -------------------- | ------------- | --------------------------------------------- |
+| `thread_parent_guid` | [GUID][guid]  | The GUID of the parent comment in the thread. |
+
 ## Examples
 
 ### From author
