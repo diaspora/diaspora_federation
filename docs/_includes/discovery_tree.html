@@ -1,0 +1,4 @@
+<ul class="{{ include.ulclasses | default: "nav nav-pills nav-stacked" }}">
+  <li class="{% include active_class.html url="/discovery/webfinger.html" %}"><a href="{{ site.baseurl }}/discovery/webfinger.html">WebFinger</a></li>
+  <li class="{% include active_class.html url="/discovery/hcard.html" %}"><a href="{{ site.baseurl }}/discovery/hcard.html">hCard</a></li>
+</ul>

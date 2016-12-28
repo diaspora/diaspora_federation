@@ -1,0 +1,79 @@
+---
+---
+
+@import "_pygments.scss";
+@import "_webfonts.scss";
+
+.container-fluid {
+  max-width: 1200px;
+}
+
+body {
+  font-family: "Fira Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding-bottom: 70px;
+  padding-top: 20px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.sidebar {
+  .nav-header {
+    margin-left: 15px;
+    margin-top: 25px;
+  }
+}
+
+.docbody {
+  h1:first-child {
+    margin-top: 0;
+  }
+
+  h2 {
+    border-top: 1px solid #e7e7e7;
+    margin-top: 30px;
+    padding-top: 25px;
+  }
+
+  pre {
+    max-height: 300px;
+
+    code {
+      font-family: "Fira Mono", monospace, monospace;
+      overflow: auto;
+      white-space: pre;
+      word-wrap: normal;
+    }
+  }
+
+  /**
+   * Based on the Twitter Bootstrap .table styles. See
+   * https://github.com/twbs/bootstrap/blob/master/less/tables.less
+   */
+  table {
+    margin-bottom: 20px;
+    max-width: 100%;
+    width: 100%;
+
+    thead tr th {
+      border-bottom: 2px solid #ddd;
+      line-height: 1.42857143;
+      padding: 8px;
+      vertical-align: bottom;
+    }
+
+    tbody tr {
+      td {
+        border-top: 1px solid #ddd;
+        line-height: 1.42857143;
+        padding: 8px;
+        vertical-align: top;
+      }
+
+      &:nth-of-type(2n+1) {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+}

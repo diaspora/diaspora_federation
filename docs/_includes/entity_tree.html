@@ -1,0 +1,5 @@
+<ul class="{{ include.ulclasses | default: "nav nav-pills nav-stacked" }}">
+  {% for entity in site.entities %}
+    <li class="{% include active_class.html url=entity.url %}"><a href="{{ site.baseurl }}{{ entity.url }}">{{ entity.title }}</a></li>
+  {% endfor %}
+</ul>

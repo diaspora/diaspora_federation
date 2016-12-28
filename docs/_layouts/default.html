@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ site.baseurl }}/assets/images/favicon.ico" />
+
+    {% capture page_title %}
+      {% if page.title %}
+        {{ page.title }} - diaspora* federation protocol
+      {% else %}
+        diaspora* federation protocol
+      {% endif %}
+    {% endcapture %}
+    <title>{{ page_title | strip }}</title>
+
+    <link href="{{ site.baseurl }}/assets/vendor/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ site.baseurl }}/assets/css/main.css" rel="stylesheet">
+
+    <script src="{{ site.baseurl }}/assets/vendor/js/jquery-2.2.0.min.js"></script>
+    <script src="{{ site.baseurl }}/assets/vendor/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      {% include top_navbar.html %}
+
+      <div class="row">
+        <div class="col-sm-3 hidden-xs">
+          <nav class="sidebar">
+            <ul class="nav nav-pills nav-stacked">
+              <li class="{% include active_class.html url="/" %}"><a href="{{ site.baseurl }}/index.html">Overview</a></li>
+            </ul>
+
+            <h4 class="nav-header">Discovery</h4>
+            {% include discovery_tree.html %}
+
+            <h4 class="nav-header">Federation</h4>
+            {% include federation_tree.html %}
+
+            <h4 class="nav-header">Entities</h4>
+            {% include entity_tree.html %}
+          </nav>
+        </div>
+        <div class="col-sm-9 docbody">
+          {% if page.title %}
+            <h1>{{ page.title }}</h1>
+          {% endif %}
+
+          {{ content }}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

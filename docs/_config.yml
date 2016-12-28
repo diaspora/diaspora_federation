@@ -1,0 +1,26 @@
+url: "https://diaspora.github.io" # the base hostname & protocol
+baseurl: "/diaspora_federation" # the subpath
+contribute_url: "https://github.com/diaspora/diaspora_federation/blob/develop/CONTRIBUTING.md"
+
+exclude:
+  - .*
+  - LICENSE
+
+sass:
+  sass_dir: assets/css
+  style: nested
+  deploy_style: nested
+
+collections:
+  entities:
+    output: true
+
+kramdown:
+  toc_levels: 2..2
+
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: "default"

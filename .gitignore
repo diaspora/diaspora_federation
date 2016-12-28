@@ -31,6 +31,6 @@ test/dummy/test/fixtures/*.y*ml
 rspec-persistance.txt
 
 # jekyll
-_site
-.sass-cache
-.jekyll-metadata
+docs/_site
+docs/.sass-cache
+docs/.jekyll-metadata
