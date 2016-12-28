@@ -1,3 +1,15 @@
+# 0.1.6
+
+## Feature
+
+* Add rails 5 support [82ea57e](https://github.com/diaspora/diaspora_federation/commit/82ea57ef34fe25d2ffbd6067171d73802735043b)
+
+## Refactor
+
+* Add property types [#43](https://github.com/diaspora/diaspora_federation/pull/43)
+* Change timestamp format to ISO 8601 [#43](https://github.com/diaspora/diaspora_federation/pull/43)
+* Move protocol documentation to master branch [a15d285](https://github.com/diaspora/diaspora_federation/commit/a15d285a6e778a04c5e0c2f9428be099d6abddce)
+
 # 0.1.5
 
 ## Refactor
