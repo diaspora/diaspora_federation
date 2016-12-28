@@ -110,7 +110,7 @@ GEM
     guard-rubocop (1.2.0)
       guard (~> 2.0)
       rubocop (~> 0.20)
-    hashdiff (0.3.0)
+    hashdiff (0.3.2)
     httparty (0.13.7)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
@@ -278,7 +278,7 @@ GEM
     uuid (2.3.8)
       macaddr (~> 1.0)
     valid (1.2.0)
-    webmock (2.1.0)
+    webmock (2.3.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
