@@ -30,6 +30,8 @@ test/dummy/test/fixtures/*.y*ml
 
 rspec-persistance.txt
 
+.rake_tasks
+
 # jekyll
 docs/_site
 docs/.sass-cache
