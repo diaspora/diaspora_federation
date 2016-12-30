@@ -1,4 +1,5 @@
 ---
+title:
 ---
 
 {% include warning_box.html
