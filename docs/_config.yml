@@ -20,4 +20,4 @@ defaults:
       path: ""
     values:
       layout: "default"
-      title:
+      title: ""
