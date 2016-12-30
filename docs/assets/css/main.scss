@@ -3,6 +3,7 @@
 
 @import "_pygments.scss";
 @import "_webfonts.scss";
+@import "theme.scss";
 
 .container-fluid {
   max-width: 1200px;
@@ -31,7 +32,7 @@ body {
   }
 
   h2 {
-    border-top: 1px solid #e7e7e7;
+    border-top: 1px solid #0f0f0f;
     margin-top: 30px;
     padding-top: 25px;
   }
@@ -57,7 +58,7 @@ body {
     width: 100%;
 
     thead tr th {
-      border-bottom: 2px solid #ddd;
+      border-bottom: 2px solid #474747;
       line-height: 1.42857143;
       padding: 8px;
       vertical-align: bottom;
@@ -65,14 +66,14 @@ body {
 
     tbody tr {
       td {
-        border-top: 1px solid #ddd;
+        border-top: 1px solid #474747;
         line-height: 1.42857143;
         padding: 8px;
         vertical-align: top;
       }
 
       &:nth-of-type(2n+1) {
-        background-color: #f9f9f9;
+        background-color: #222;
       }
     }
   }

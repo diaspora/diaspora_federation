@@ -1,0 +1,78 @@
+body {
+  color: #bfbfbf;
+  background-color: #181818;
+}
+
+.navbar-default {
+  background-color: #0f0f0f;
+  border-color: #222;
+
+  .navbar-nav > {
+    .active,
+    .open {
+      > a {
+        &,
+        &:focus,
+        &:hover {
+          color: #fff;
+          background-color: #555;
+        }
+      }
+
+      .dropdown-menu > {
+        .active > a {
+          &,
+          &:focus,
+          &:hover {
+            color: #fff;
+            background-color: #555;
+          }
+        }
+
+        li > a {
+          &:focus,
+          &:hover {
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    li > a {
+      &:focus,
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.nav > li > a {
+  &:focus,
+  &:hover {
+    color: #fff;
+    background-color: #555;
+  }
+}
+
+code, pre {
+  color: #bfbfbf;
+  background-color: #181818;
+  border: 1px solid #474747;
+}
+pre code {
+  border: 0;
+}
+
+.panel {
+  background-color: #181818;
+}
+.panel-warning {
+  border-color: #645a1b;
+
+  > .panel-heading {
+    color: #cebc4a;
+    background-color: #645a1b;
+    border-color: #141205;
+  }
+}
