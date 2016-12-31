@@ -85,6 +85,12 @@ An [ISO 8601][iso8601] date.
 
 Example: `2016-02-19`
 
+## Timezone
+
+A timezone in the form `Area/Location` as used in the [Time Zone Database][tz].
+
+Example: `Europe/Berlin`
+
 ## Signature
 
 Signature with the private RSA key using the RSA-SHA256 algorithm and base64-encoded.
@@ -98,3 +104,4 @@ Example:
 [entities]: {{ site.baseurl }}/entities/
 [commonmark]: http://spec.commonmark.org/
 [iso8601]: https://www.w3.org/TR/NOTE-datetime
+[tz]: https://www.iana.org/time-zones
