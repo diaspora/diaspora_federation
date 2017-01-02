@@ -28,6 +28,10 @@ require "diaspora_federation/entities/poll"
 require "diaspora_federation/entities/poll_participation"
 
 require "diaspora_federation/entities/location"
+
+require "diaspora_federation/entities/event"
+require "diaspora_federation/entities/event_participation"
+
 require "diaspora_federation/entities/photo"
 require "diaspora_federation/entities/status_message"
 require "diaspora_federation/entities/reshare"

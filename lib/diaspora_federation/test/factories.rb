@@ -200,6 +200,24 @@ module DiasporaFederation
             poll_answer_guid { generate(:guid) }
           end
 
+          factory :event_entity, class: DiasporaFederation::Entities::Event do
+            author { generate(:diaspora_id) }
+            guid
+            summary "Cool event"
+            description "You need to see this!"
+            start { Time.now.utc.change(min: 0).change(sec: 0).change(usec: 0) - 1.hour }
+            add_attribute(:end) { Time.now.utc.change(min: 0).change(sec: 0).change(usec: 0) + 1.hour }
+            all_day false
+            timezone "Europe/Berlin"
+          end
+
+          factory :event_participation_entity,
+                  class: DiasporaFederation::Entities::EventParticipation, parent: :relayable_entity do
+            author { generate(:diaspora_id) }
+            guid
+            status "accepted"
+          end
+
           factory :related_entity, class: DiasporaFederation::Entities::RelatedEntity do
             author { generate(:diaspora_id) }
             local true

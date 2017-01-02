@@ -9,6 +9,7 @@ module DiasporaFederation
         photos:                [photo1, photo2],
         location:              location,
         poll:                  nil,
+        event:                 nil,
         provider_display_name: "something"
       )
     }

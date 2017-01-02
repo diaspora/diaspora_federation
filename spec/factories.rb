@@ -39,6 +39,12 @@ FactoryGirl.define do
     after(:create, &:save)
   end
 
+  factory :event, class: Entity do
+    entity_type "Event"
+    author { FactoryGirl.build(:person) }
+    after(:create, &:save)
+  end
+
   factory :conversation, class: Entity do
     entity_type "Conversation"
     author { FactoryGirl.build(:person) }
