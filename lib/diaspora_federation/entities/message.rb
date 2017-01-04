@@ -33,6 +33,11 @@ module DiasporaFederation
         sender == author || (sender == parent_author && verify_author_signature)
       end
 
+      # @deprecated remove after {Message} doesn't include {Relayable} anymore
+      def to_h
+        super.tap {|hash| hash[:created_at] = created_at.utc.iso8601 }
+      end
+
       private
 
       # @deprecated remove after {Message} doesn't include {Relayable} anymore

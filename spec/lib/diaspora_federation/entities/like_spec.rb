@@ -3,15 +3,13 @@ module DiasporaFederation
     let(:parent) { FactoryGirl.create(:post, author: bob) }
     let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      add_signatures(
-        FactoryGirl.build(
-          :like_entity,
-          author:      alice.diaspora_id,
-          parent_guid: parent.guid,
-          parent_type: parent.entity_type,
-          parent:      parent_entity
-        )
-      )
+      FactoryGirl.attributes_for(
+        :like_entity,
+        author:      alice.diaspora_id,
+        parent_guid: parent.guid,
+        parent_type: parent.entity_type,
+        parent:      parent_entity
+      ).tap {|hash| add_signatures(hash) }
     }
 
     let(:xml) { <<-XML }

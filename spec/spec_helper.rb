@@ -38,12 +38,10 @@ def expect_callback(*opts)
   expect(DiasporaFederation.callbacks).to receive(:trigger).with(*opts)
 end
 
-def add_signatures(entity)
-  properties = entity.send(:enriched_properties)
-  entity.to_h.tap do |hash|
-    hash[:author_signature] = properties[:author_signature]
-    hash[:parent_author_signature] = properties[:parent_author_signature]
-  end
+def add_signatures(hash, klass=described_class)
+  properties = klass.new(hash).send(:enriched_properties)
+  hash[:author_signature] = properties[:author_signature]
+  hash[:parent_author_signature] = properties[:parent_author_signature]
 end
 
 # Requires supporting files with custom matchers and macros, etc,

@@ -3,9 +3,14 @@ module DiasporaFederation
     let(:parent) { FactoryGirl.create(:post, author: bob) }
     let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      add_signatures(
-        FactoryGirl.build(:comment_entity, author: alice.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
-      )
+      FactoryGirl
+        .attributes_for(
+          :comment_entity,
+          author:      alice.diaspora_id,
+          parent_guid: parent.guid,
+          parent:      parent_entity,
+          created_at:  Time.now.utc
+        ).tap {|hash| add_signatures(hash) }
     }
 
     let(:xml) { <<-XML }
@@ -35,7 +40,7 @@ XML
 
       it "parses the created_at from the xml if it is included and correctly signed" do
         created_at = Time.now.utc.change(usec: 0) - 1.minute
-        comment_data = FactoryGirl.build(:comment_entity, author: alice.diaspora_id, parent_guid: parent.guid).to_h
+        comment_data = FactoryGirl.attributes_for(:comment_entity, author: alice.diaspora_id, parent_guid: parent.guid)
         comment_data[:created_at] = created_at
         comment_data[:parent] = parent_entity
         comment = described_class.new(comment_data, %i(author guid parent_guid text created_at))

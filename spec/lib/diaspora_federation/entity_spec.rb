@@ -68,7 +68,7 @@ module DiasporaFederation
     describe "#to_h" do
       it "returns a hash of the internal data" do
         entity = Entities::TestDefaultEntity.new(data)
-        expect(entity.to_h).to eq(data)
+        expect(entity.to_h).to eq(data.transform_values(&:to_s))
       end
     end
 
