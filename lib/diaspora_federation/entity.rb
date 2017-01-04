@@ -319,8 +319,8 @@ module DiasporaFederation
       when :integer
         text.to_i if text =~ /^\d+$/
       when :boolean
-        return true if text =~ /(true|t|yes|y|1)$/i
-        false if text =~ /(false|f|no|n|0)$/i
+        return true if text =~ /^(true|t|yes|y|1)$/i
+        false if text =~ /^(false|f|no|n|0)$/i
       else
         text
       end
