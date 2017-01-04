@@ -192,6 +192,20 @@ XML
           expect(entity.test2).to eq("qwer")
           expect(entity.test3).to eq(true)
         end
+
+        it "parses boolean fields with false value" do
+          xml = <<-XML.strip
+<test_default_entity>
+  <test1>qwer</test1>
+  <test2>qwer</test2>
+  <test3>false</test3>
+</test_default_entity>
+XML
+
+          entity = Entities::TestDefaultEntity.from_xml(Nokogiri::XML::Document.parse(xml).root)
+          expect(entity).to be_an_instance_of Entities::TestDefaultEntity
+          expect(entity.test3).to eq(false)
+        end
       end
 
       context "nested entities" do

@@ -275,7 +275,7 @@ module DiasporaFederation
     private_class_method def self.entity_data(root_node)
       class_props.map {|name, type|
         value = parse_element_from_node(name, type, root_node)
-        [name, value] if value
+        [name, value] unless value.nil?
       }.compact.to_h
     end
 
