@@ -135,8 +135,8 @@ module DiasporaFederation
     # @param [String] entity_name "snake_case" class name
     # @return [Class] entity class
     def self.entity_class(entity_name)
-      raise InvalidEntityName, "'#{entity_name}' is invalid" unless entity_name =~ /^[a-z]*(_[a-z]*)*$/
-      class_name = entity_name.sub(/^[a-z]/, &:upcase)
+      raise InvalidEntityName, "'#{entity_name}' is invalid" unless entity_name =~ /\A[a-z]*(_[a-z]*)*\z/
+      class_name = entity_name.sub(/\A[a-z]/, &:upcase)
       class_name.gsub!(/_([a-z])/) { Regexp.last_match[1].upcase }
 
       raise UnknownEntity, "'#{class_name}' not found" unless Entities.const_defined?(class_name)
@@ -317,10 +317,10 @@ module DiasporaFederation
           nil
         end
       when :integer
-        text.to_i if text =~ /^\d+$/
+        text.to_i if text =~ /\A\d+\z/
       when :boolean
-        return true if text =~ /^(true|t|yes|y|1)$/i
-        false if text =~ /^(false|f|no|n|0)$/i
+        return true if text =~ /\A(true|t|yes|y|1)\z/i
+        false if text =~ /\A(false|f|no|n|0)\z/i
       else
         text
       end

@@ -21,7 +21,7 @@ module DiasporaFederation
       end
 
       private_class_method def self.entity_name(class_name)
-        return class_name if class_name =~ /^[a-z]*(_[a-z]*)*$/
+        return class_name if class_name =~ /\A[a-z]*(_[a-z]*)*\z/
 
         raise DiasporaFederation::Entity::UnknownEntity, class_name unless Entities.const_defined?(class_name)
 

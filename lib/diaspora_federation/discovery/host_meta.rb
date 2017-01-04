@@ -76,7 +76,7 @@ module DiasporaFederation
       # @param [String] url validation subject
       # @return [Boolean] validation result
       private_class_method def self.webfinger_url_valid?(url)
-        !url.nil? && url.instance_of?(String) && url =~ %r{^https?:\/\/.*\/.*\{uri\}.*}i
+        !url.nil? && url.instance_of?(String) && url =~ %r{\Ahttps?:\/\/.*\/.*\{uri\}.*}i
       end
 
       # Gets the webfinger url from an XRD data structure
