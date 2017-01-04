@@ -34,6 +34,10 @@ module DiasporaFederation
     class Entity < DiasporaFederation::Entity
       property :test, :string
     end
+
+    class TestEntityWithBoolean < DiasporaFederation::Entity
+      property :test, :boolean
+    end
   end
 
   module Validators

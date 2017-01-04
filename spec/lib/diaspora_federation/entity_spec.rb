@@ -195,16 +195,28 @@ XML
 
         it "parses boolean fields with false value" do
           xml = <<-XML.strip
-<test_default_entity>
-  <test1>qwer</test1>
-  <test2>qwer</test2>
-  <test3>false</test3>
-</test_default_entity>
+<test_entity_with_boolean>
+  <test>false</test>
+</test_entity_with_boolean>
 XML
 
-          entity = Entities::TestDefaultEntity.from_xml(Nokogiri::XML::Document.parse(xml).root)
-          expect(entity).to be_an_instance_of Entities::TestDefaultEntity
-          expect(entity.test3).to eq(false)
+          entity = Entities::TestEntityWithBoolean.from_xml(Nokogiri::XML::Document.parse(xml).root)
+          expect(entity).to be_an_instance_of Entities::TestEntityWithBoolean
+          expect(entity.test).to eq(false)
+        end
+
+        it "parses boolean fields with a randomly matching pattern as erroneous" do
+          %w(ttFFFtt yesFFDSFSDy noDFDSFFDFn fXf LLyes).each do |weird_value|
+            xml = <<-XML.strip
+<test_entity_with_boolean>
+  <test>#{weird_value}</test>
+</test_entity_with_boolean>
+XML
+
+            expect {
+              Entities::TestEntityWithBoolean.from_xml(Nokogiri::XML::Document.parse(xml).root)
+            }.to raise_error Entity::ValidationError, "missing required properties: test"
+          end
         end
       end
 
