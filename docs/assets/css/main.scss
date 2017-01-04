@@ -1,9 +1,9 @@
 ---
 ---
 
-@import "_pygments.scss";
-@import "_webfonts.scss";
-@import "theme.scss";
+@import "pygments";
+@import "webfonts";
+@import "theme";
 
 .container-fluid {
   max-width: 1200px;
