@@ -11,7 +11,7 @@
 [![Gem Version](https://badge.fury.io/rb/diaspora_federation.svg)](https://badge.fury.io/rb/diaspora_federation)
 
 [Gem Documentation](http://www.rubydoc.info/gems/diaspora_federation/) |
-[Protocol Documentation](http://diaspora.github.io/diaspora_federation/) |
+[Protocol Documentation](https://diaspora.github.io/diaspora_federation/) |
 [Bugtracker](https://github.com/diaspora/diaspora_federation/issues)
 
 This repository contains two gems:
