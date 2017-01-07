@@ -73,7 +73,7 @@ module DiasporaFederation
     # Nested entities are also converted to a Hash.
     # @return [Hash] entity data (mostly equal to the hash used for initialization).
     def to_h
-      properties.map {|key, value|
+      enriched_properties.map {|key, value|
         type = self.class.class_props[key]
 
         if type.instance_of?(Symbol) || value.nil?
@@ -302,13 +302,13 @@ module DiasporaFederation
     private_class_method def self.parse_string_from_node(name, type, root_node)
       node = root_node.xpath(name.to_s)
       node = root_node.xpath(xml_names[name].to_s) if node.empty?
-      parse_property(type, node.first.text) if node.any?
+      parse_string(type, node.first.text) if node.any?
     end
 
     # @param [Symbol] type target type to parse
     # @param [String] text data as string
     # @return [String, Boolean, Integer, Time] data
-    private_class_method def self.parse_property(type, text)
+    private_class_method def self.parse_string(type, text)
       case type
       when :timestamp
         begin

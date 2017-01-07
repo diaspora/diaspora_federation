@@ -3,14 +3,20 @@ module DiasporaFederation
     let(:parent) { FactoryGirl.create(:conversation, author: bob) }
     let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
     let(:signed_msg1) {
-      add_signatures(
-        FactoryGirl.build(:message_entity, author: bob.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
-      )
+      FactoryGirl.attributes_for(
+        :message_entity,
+        author:      bob.diaspora_id,
+        parent_guid: parent.guid,
+        parent:      parent_entity
+      ).tap {|hash| add_signatures(hash, Entities::Message) }
     }
     let(:signed_msg2) {
-      add_signatures(
-        FactoryGirl.build(:message_entity, author: bob.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
-      )
+      FactoryGirl.attributes_for(
+        :message_entity,
+        author:      bob.diaspora_id,
+        parent_guid: parent.guid,
+        parent:      parent_entity
+      ).tap {|hash| add_signatures(hash, Entities::Message) }
     }
     let(:data) {
       FactoryGirl.attributes_for(:conversation_entity).merge!(

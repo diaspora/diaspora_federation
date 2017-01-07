@@ -16,7 +16,7 @@ module DiasporaFederation
         target_type: target.entity_type,
         target:      target_entity
       ).send(:enriched_properties).tap do |data|
-        data[:target_author_signature] = nil
+        data[:target_author_signature] = ""
         data[:target] = target_entity
       end
     }

@@ -31,7 +31,7 @@ module DiasporaFederation
             nickname "some_name"
             full_name "my name"
             first_name "my name"
-            last_name nil
+            last_name ""
             url "http://localhost:3000/"
             public_key
             photo_large_url "/assets/user/default.png"
@@ -53,7 +53,7 @@ module DiasporaFederation
           factory :profile_entity, class: DiasporaFederation::Entities::Profile do
             author { generate(:diaspora_id) }
             first_name "my name"
-            last_name nil
+            last_name ""
             image_url "/assets/user/default.png"
             image_url_medium "/assets/user/default.png"
             image_url_small "/assets/user/default.png"
