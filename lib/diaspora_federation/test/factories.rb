@@ -55,7 +55,7 @@ module DiasporaFederation
       Fabricator(:profile_entity, class_name: DiasporaFederation::Entities::Profile) do
         author { Fabricate.sequence(:diaspora_id) }
         first_name "my name"
-        last_name ""
+        last_name nil
         image_url "/assets/user/default.png"
         image_url_medium "/assets/user/default.png"
         image_url_small "/assets/user/default.png"
