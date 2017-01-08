@@ -173,7 +173,7 @@ GEM
     pry-byebug (3.4.2)
       byebug (~> 9.0)
       pry (~> 0.10)
-    public_suffix (2.0.4)
+    public_suffix (2.0.5)
     rack (2.0.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -278,7 +278,7 @@ GEM
     uuid (2.3.8)
       macaddr (~> 1.0)
     valid (1.2.0)
-    webmock (2.3.1)
+    webmock (2.3.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
