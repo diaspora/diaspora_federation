@@ -1,3 +1,17 @@
+# 0.1.7
+
+## Feature
+
+* Add event entities [#44](https://github.com/diaspora/diaspora_federation/pull/44)
+
+## Refactor
+
+* Add generated signatures of relayables to `#to_h` [#48](https://github.com/diaspora/diaspora_federation/pull/48)
+
+## Bug fixes
+
+* Fix parsing of false value [9a7fd27](https://github.com/diaspora/diaspora_federation/commit/9a7fd278b528c809b3a8c53b86c5fa8d6efaf8aa)
+
 # 0.1.6
 
 ## Feature
