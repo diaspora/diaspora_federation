@@ -26,6 +26,11 @@ module DiasporaFederation
       #   @return [Entities::Poll] poll
       entity :poll, Entities::Poll, default: nil
 
+      # @!attribute [r] event
+      #   Optional event attached to the status message
+      #   @return [Entities::Event] event
+      entity :event, Entities::Event, default: nil
+
       # @!attribute [r] public
       #   Shows whether the status message is visible to everyone or only to some aspects
       #   @return [Boolean] is it public

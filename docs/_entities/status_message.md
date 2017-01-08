@@ -22,6 +22,7 @@ This entity represents a reshare of a status message. It inherits from [Post][po
 | `location`              | [Location][location]   | The Location information of the status message.                                                                         |
 | `photo`                 | [Photo][photo]s        | The attached Photos of the status message, the `status_message_guid` and the `author` need to match the status message. |
 | `poll`                  | [Poll][poll]           | The attached Poll of the status message.                                                                                |
+| `event`                 | [Event][event]         | The attached Event of the status message.                                                                               |
 
 ## Examples
 
@@ -183,3 +184,4 @@ This entity represents a reshare of a status message. It inherits from [Post][po
 [location]: {{ site.baseurl }}/entities/location.html
 [photo]: {{ site.baseurl }}/entities/photo.html
 [poll]: {{ site.baseurl }}/entities/poll.html
+[event]: {{ site.baseurl }}/entities/event.html
