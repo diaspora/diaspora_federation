@@ -38,6 +38,14 @@ module DiasporaFederation
     class TestEntityWithBoolean < DiasporaFederation::Entity
       property :test, :boolean
     end
+
+    class TestEntityWithInteger < DiasporaFederation::Entity
+      property :test, :integer
+    end
+
+    class TestEntityWithTimestamp < DiasporaFederation::Entity
+      property :test, :timestamp
+    end
   end
 
   module Validators

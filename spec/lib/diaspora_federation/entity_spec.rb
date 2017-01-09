@@ -218,6 +218,34 @@ XML
             }.to raise_error Entity::ValidationError, "missing required properties: test"
           end
         end
+
+        it "parses integer fields with a randomly matching pattern as erroneous" do
+          %w(1,2,3 foobar two).each do |weird_value|
+            xml = <<-XML.strip
+<test_entity_with_integer>
+  <test>#{weird_value}</test>
+</test_entity_with_integer>
+XML
+
+            expect {
+              Entities::TestEntityWithInteger.from_xml(Nokogiri::XML::Document.parse(xml).root)
+            }.to raise_error Entity::ValidationError, "missing required properties: test"
+          end
+        end
+
+        it "parses timestamp fields with a randomly matching pattern as erroneous" do
+          %w(foobar yesterday now 1.2.foo).each do |weird_value|
+            xml = <<-XML.strip
+<test_entity_with_timestamp>
+  <test>#{weird_value}</test>
+</test_entity_with_timestamp>
+XML
+
+            expect {
+              Entities::TestEntityWithTimestamp.from_xml(Nokogiri::XML::Document.parse(xml).root)
+            }.to raise_error Entity::ValidationError, "missing required properties: test"
+          end
+        end
       end
 
       context "nested entities" do
