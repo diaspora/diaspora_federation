@@ -34,7 +34,7 @@ diaspora\* wraps the Salmon [Magic Envelope][magicsig] into a simple JSON struct
 | `key` | The base64 encoded AES key. |
 | `iv`  | The base64 encoded AES iv.  |
 
-Both `key` and `id` have to be suitable for AES-256-CBC.
+Both `key` and `iv` have to be suitable for AES-256-CBC.
 
 ## Additional information and specifications
 
