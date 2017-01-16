@@ -17,5 +17,14 @@ This document specifies the future protocol for diaspora. diaspora\* release 0.6
 [entities][entities] with this protocol, but still sends entities with an older protocol. Starting with diaspora\*
 release X this protocol is fully supported.
 
+## Implementations
+
+An implementation of this protocol is available as a Ruby Gem under the AGPL [on Github][github]. This is the library used by the diaspora* project.
+
+The [Friendica][friendica] project also has [its implementation in PHP][phpimplementation].
+
 [communication]: https://wiki.diasporafoundation.org/How_we_communicate
 [entities]: {{ site.baseurl }}/entities/
+[github]: https://github.com/diaspora/diaspora_federation
+[friendica]: https://github.com/friendica/friendica
+[phpimplementation]: https://github.com/friendica/friendica/blob/master/include/diaspora.php
