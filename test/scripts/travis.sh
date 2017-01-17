@@ -9,5 +9,7 @@ if [[ ${TRAVIS_RUBY_VERSION} == "2.1" ]]; then
 else
   # ruby >= 2.2
   bundle exec rake --trace
+  test_exit_code=$?
   bundle exec codeclimate-test-reporter
+  exit $test_exit_code
 fi
