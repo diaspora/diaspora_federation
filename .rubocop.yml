@@ -171,6 +171,10 @@ Rails/TimeZone:
   Exclude:
     - "spec/lib/**/*"
 
+Rails/Delegate:
+  Exclude:
+    - "lib/**/*"
+
 Style/SingleLineMethods:
   Exclude:
     - "test/dummy/app/models/*"
@@ -181,13 +185,17 @@ Style/EmptyLineBetweenDefs:
 Style/NumericPredicate:
   EnforcedStyle: comparison
 
+### backward compatibility
+
+# only with ruby >= 2.3
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Rails/Delegate:
-  Exclude:
-    - "lib/**/*"
+# only with ruby >= 2.4
+Performance/RegexpMatch:
+  Enabled: false
 
+# for rails 4 and ruby < 2.2.2
 Rails/HttpPositionalArguments:
   Exclude:
     - "spec/controllers/diaspora_federation/fixtures_rails4_spec.rb"
