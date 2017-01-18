@@ -19,7 +19,7 @@ group :development do
   # code style
   gem "pronto",         "0.7.1"
   gem "pronto-rubocop", "0.7.0", require: false
-  gem "rubocop",        "0.47.0"
+  gem "rubocop",        "0.47.1"
 
   # automatic test runs
   gem "guard-rspec",   require: false
