@@ -78,7 +78,7 @@ GEM
       railties (>= 3.0.0)
     faraday (0.11.0)
       multipart-post (>= 1.2, < 3)
-    faraday_middleware (0.11.0)
+    faraday_middleware (0.11.0.1)
       faraday (>= 0.7.4, < 1.0)
     ffi (1.9.17)
     fixture_builder (0.5.0)
@@ -321,4 +321,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.13.7
+   1.14.2
