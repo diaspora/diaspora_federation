@@ -60,9 +60,6 @@ group :development, :test do
   gem "rspec-core", "~> 3.5.1"
   gem "rspec-rails", "~> 3.5.1"
 
-  # GUID generation
-  gem "uuid", "~> 2.3.8"
-
   # test database
   gem "sqlite3", "~> 1.3.11"
 end

@@ -1,5 +1,6 @@
 require "diaspora_federation"
 require "factory_girl"
+require "uuid"
 
 module DiasporaFederation
   module Test
