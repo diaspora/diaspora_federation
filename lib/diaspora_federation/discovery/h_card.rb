@@ -269,7 +269,8 @@ module DiasporaFederation
       end
 
       private_class_method def self.content_from_doc(doc, content_selector)
-        element_from_doc(doc, content_selector).try(:content)
+        element = element_from_doc(doc, content_selector)
+        element.content if element
       end
 
       private_class_method def self.photo_from_doc(doc, photo_selector)
