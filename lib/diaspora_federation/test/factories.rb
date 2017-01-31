@@ -41,6 +41,13 @@ module DiasporaFederation
             searchable true
           end
 
+          factory :account_migration_entity, class: DiasporaFederation::Entities::AccountMigration do
+            author { generate(:diaspora_id) }
+            profile {
+              FactoryGirl.build(:profile_entity)
+            }
+          end
+
           factory :person_entity, class: DiasporaFederation::Entities::Person do
             guid
             author { generate(:diaspora_id) }

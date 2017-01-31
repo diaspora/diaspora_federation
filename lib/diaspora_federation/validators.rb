@@ -41,6 +41,7 @@ require "diaspora_federation/validators/relayable_validator"
 
 # types
 require "diaspora_federation/validators/account_deletion_validator"
+require "diaspora_federation/validators/account_migration_validator"
 require "diaspora_federation/validators/comment_validator"
 require "diaspora_federation/validators/contact_validator"
 require "diaspora_federation/validators/conversation_validator"

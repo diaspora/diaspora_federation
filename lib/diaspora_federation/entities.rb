@@ -20,6 +20,7 @@ require "diaspora_federation/entities/profile"
 require "diaspora_federation/entities/person"
 require "diaspora_federation/entities/contact"
 require "diaspora_federation/entities/account_deletion"
+require "diaspora_federation/entities/account_migration"
 
 require "diaspora_federation/entities/participation"
 require "diaspora_federation/entities/like"
