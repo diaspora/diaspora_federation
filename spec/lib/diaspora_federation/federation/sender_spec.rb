@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Federation::Sender do
-    let(:sender_id) { FactoryGirl.generate(:diaspora_id) }
+    let(:sender_id) { Fabricate.sequence(:diaspora_id) }
     let(:obj_str) { "status_message@guid" }
     let(:hydra_wrapper) { double }
 

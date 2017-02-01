@@ -19,7 +19,7 @@ require "rspec/rails"
 require "webmock/rspec"
 require "rspec/json_expectations"
 
-# load factory girl factories
+# load factories
 require "factories"
 
 # load test entities
@@ -74,7 +74,6 @@ RSpec.configure do |config|
     expect_config.syntax = :expect
   end
 
-  config.include FactoryGirl::Syntax::Methods
   config.use_transactional_fixtures = true
 
   # load fixtures

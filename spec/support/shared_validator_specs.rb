@@ -1,6 +1,6 @@
 def entity_stub(entity, data={})
-  OpenStruct.new(FactoryGirl.factory_by_name(entity).build_class.default_values
-                   .merge(FactoryGirl.attributes_for(entity)).merge(data))
+  OpenStruct.new(Fabricate.schematic(entity).options[:class_name].default_values
+                   .merge(Fabricate.attributes_for(entity)).merge(data))
 end
 
 ALPHANUMERIC_RANGE = [*"0".."9", *"A".."Z", *"a".."z"].freeze
@@ -39,7 +39,7 @@ shared_examples "a relayable validator" do
     it_behaves_like "a property with a value validation/restriction" do
       let(:property) { :parent }
       let(:wrong_values) { [nil] }
-      let(:correct_values) { [FactoryGirl.build(:related_entity)] }
+      let(:correct_values) { [Fabricate(:related_entity)] }
     end
   end
 end

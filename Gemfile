@@ -49,7 +49,6 @@ group :test do
   gem "simplecov-rcov",            "0.2.3",    require: false
 
   # test helpers
-  gem "factory_girl_rails",        "~> 4.7"
   gem "fixture_builder",           "0.5.0"
   gem "json-schema-rspec", "0.0.4"
   gem "rspec-collection_matchers", "~> 1.1.2"

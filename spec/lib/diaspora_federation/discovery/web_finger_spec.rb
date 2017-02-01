@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Discovery::WebFinger do
-    let(:person) { FactoryGirl.create(:person) }
+    let(:person) { Fabricate(:person) }
     let(:acct) { "acct:#{person.diaspora_id}" }
     let(:public_key_base64) { Base64.strict_encode64(person.serialized_public_key) }
 

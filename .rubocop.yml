@@ -15,8 +15,6 @@ Metrics/LineLength:
 # the code easier to read (by naming things), but can also clutter the class
 Metrics/MethodLength:
   Max: 20
-  Exclude:
-    - "lib/diaspora_federation/test/factories.rb"
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
 Metrics/ClassLength:
@@ -27,8 +25,6 @@ Metrics/ModuleLength:
 # Raise AbcSize from 15 to 20
 Metrics/AbcSize:
   Max: 20
-  Exclude:
-    - "lib/diaspora_federation/test/factories.rb"
 
 # No space makes the method definition shorter and differentiates
 # from a regular assignment.
@@ -165,7 +161,6 @@ Metrics/BlockLength:
     - "**/*.rake"
     - "spec/**/*.rb"
     - "test/dummy/config/**/*.rb"
-    - "lib/diaspora_federation/test/factories.rb"
 
 Rails/TimeZone:
   Exclude:

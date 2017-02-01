@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
   s.required_ruby_version = "~> 2.1"
 
   s.add_dependency "diaspora_federation", DiasporaFederation::VERSION
-  s.add_dependency "factory_girl", "~> 4.7"
+  s.add_dependency "fabrication", "~> 2.16.0"
   s.add_dependency "uuid", "~> 2.3.8"
 end

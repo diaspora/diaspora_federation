@@ -25,7 +25,7 @@ module DiasporaFederation
       it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :messages }
         let(:wrong_values) { [nil] }
-        let(:correct_values) { [[], [FactoryGirl.build(:message_entity)]] }
+        let(:correct_values) { [[], [Fabricate(:message_entity)]] }
       end
     end
 
@@ -33,8 +33,8 @@ module DiasporaFederation
       # must not contain more than 20 participant handles
       it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :participants }
-        let(:wrong_values) { [Array.new(21) { FactoryGirl.generate(:diaspora_id) }.join(";")] }
-        let(:correct_values) { [Array.new(20) { FactoryGirl.generate(:diaspora_id) }.join(";")] }
+        let(:wrong_values) { [Array.new(21) { Fabricate.sequence(:diaspora_id) }.join(";")] }
+        let(:correct_values) { [Array.new(20) { Fabricate.sequence(:diaspora_id) }.join(";")] }
       end
     end
   end

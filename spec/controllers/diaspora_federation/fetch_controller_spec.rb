@@ -3,7 +3,7 @@ module DiasporaFederation
     routes { DiasporaFederation::Engine.routes }
 
     let(:guid) { "12345678901234567890" }
-    let(:post) { FactoryGirl.build(:status_message_entity, guid: guid, author: alice.diaspora_id) }
+    let(:post) { Fabricate(:status_message_entity, guid: guid, author: alice.diaspora_id) }
 
     describe "GET #fetch" do
       it "returns the magic-envelope with the status message" do

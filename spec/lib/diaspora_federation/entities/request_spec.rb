@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Request do
-    let(:data) { FactoryGirl.attributes_for(:request_entity) }
+    let(:data) { Fabricate.attributes_for(:request_entity) }
 
     let(:xml) { <<-XML }
 <request>
@@ -17,7 +17,7 @@ XML
 
     describe "#to_contact" do
       it "copies the attributes to a Contact" do
-        request = FactoryGirl.build(:request_entity)
+        request = Fabricate(:request_entity)
         contact = request.to_contact
 
         expect(contact).to be_a(Entities::Contact)

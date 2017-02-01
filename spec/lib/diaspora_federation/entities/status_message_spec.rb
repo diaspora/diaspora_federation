@@ -1,10 +1,10 @@
 module DiasporaFederation
   describe Entities::StatusMessage do
-    let(:photo1) { FactoryGirl.build(:photo_entity, author: alice.diaspora_id) }
-    let(:photo2) { FactoryGirl.build(:photo_entity, author: alice.diaspora_id) }
-    let(:location) { FactoryGirl.build(:location_entity) }
+    let(:photo1) { Fabricate(:photo_entity, author: alice.diaspora_id) }
+    let(:photo2) { Fabricate(:photo_entity, author: alice.diaspora_id) }
+    let(:location) { Fabricate(:location_entity) }
     let(:data) {
-      FactoryGirl.attributes_for(:status_message_entity).merge(
+      Fabricate.attributes_for(:status_message_entity).merge(
         author:                alice.diaspora_id,
         photos:                [photo1, photo2],
         location:              location,
@@ -140,7 +140,7 @@ XML
 
     context "nested entities" do
       it "validates that nested photos have the same author" do
-        invalid_data = data.merge(author: FactoryGirl.generate(:diaspora_id))
+        invalid_data = data.merge(author: Fabricate.sequence(:diaspora_id))
         expect {
           Entities::StatusMessage.new(invalid_data)
         }.to raise_error Entity::ValidationError

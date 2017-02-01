@@ -1,7 +1,7 @@
 module DiasporaFederation
   describe Entities::Reshare do
-    let(:root) { FactoryGirl.create(:post, author: bob) }
-    let(:data) { FactoryGirl.attributes_for(:reshare_entity, root_guid: root.guid, root_author: bob.diaspora_id) }
+    let(:root) { Fabricate(:post, author: bob) }
+    let(:data) { Fabricate.attributes_for(:reshare_entity, root_guid: root.guid, root_author: bob.diaspora_id) }
 
     let(:xml) { <<-XML }
 <reshare>

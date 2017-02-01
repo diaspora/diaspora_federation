@@ -417,7 +417,7 @@ JSON
       end
 
       it "is not added to xml if #to_xml returns nil" do
-        entity = Entities::TestEntityWithRelatedEntity.new(test: "test", parent: FactoryGirl.build(:related_entity))
+        entity = Entities::TestEntityWithRelatedEntity.new(test: "test", parent: Fabricate(:related_entity))
         xml = entity.to_xml
         expect(xml.children).to have_exactly(1).items
         xml.children.first.name = "test"

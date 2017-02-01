@@ -94,7 +94,7 @@ DiasporaFederation.configure do |config|
 
     on :fetch_public_entity do |entity_type, guid|
       type = DiasporaFederation::Entities.const_get(entity_type).entity_name
-      FactoryGirl.build("#{type}_entity", guid: guid)
+      Fabricate("#{type}_entity", guid: guid)
     end
 
     on :fetch_person_url_to do |diaspora_id, path|

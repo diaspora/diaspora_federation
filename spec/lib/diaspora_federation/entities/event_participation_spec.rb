@@ -1,9 +1,9 @@
 module DiasporaFederation
   describe Entities::EventParticipation do
-    let(:parent) { FactoryGirl.create(:event, author: bob) }
-    let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
+    let(:parent) { Fabricate(:event, author: bob) }
+    let(:parent_entity) { Fabricate(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      FactoryGirl.attributes_for(
+      Fabricate.attributes_for(
         :event_participation_entity,
         author:      alice.diaspora_id,
         parent_guid: parent.guid,

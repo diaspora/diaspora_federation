@@ -1,9 +1,9 @@
 module DiasporaFederation
   describe Entities::SignedRetraction do
-    let(:target) { FactoryGirl.create(:post, author: alice) }
-    let(:target_entity) { FactoryGirl.build(:related_entity, author: alice.diaspora_id) }
+    let(:target) { Fabricate(:post, author: alice) }
+    let(:target_entity) { Fabricate(:related_entity, author: alice.diaspora_id) }
     let(:data) {
-      FactoryGirl.build(
+      Fabricate(
         :signed_retraction_entity,
         author:      alice.diaspora_id,
         target_guid: target.guid,
@@ -31,7 +31,7 @@ XML
 
     describe "#to_xml" do
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
-      let(:hash) { FactoryGirl.attributes_for(:signed_retraction_entity) }
+      let(:hash) { Fabricate.attributes_for(:signed_retraction_entity) }
 
       it "updates author signature when it was nil and key was supplied" do
         expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
@@ -62,7 +62,7 @@ XML
 
     describe "#to_retraction" do
       it "copies the attributes to a Retraction" do
-        signed_retraction = FactoryGirl.build(:signed_retraction_entity)
+        signed_retraction = Fabricate(:signed_retraction_entity)
         retraction = signed_retraction.to_retraction
 
         expect(retraction).to be_a(Entities::Retraction)

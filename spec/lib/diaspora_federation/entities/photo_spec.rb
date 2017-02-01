@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Photo do
-    let(:data) { FactoryGirl.attributes_for(:photo_entity) }
+    let(:data) { Fabricate.attributes_for(:photo_entity) }
 
     let(:xml) { <<-XML }
 <photo>

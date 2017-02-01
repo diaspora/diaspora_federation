@@ -1,9 +1,9 @@
 module DiasporaFederation
   describe Entities::Conversation do
-    let(:parent) { FactoryGirl.create(:conversation, author: bob) }
-    let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
+    let(:parent) { Fabricate(:conversation, author: bob) }
+    let(:parent_entity) { Fabricate(:related_entity, author: bob.diaspora_id) }
     let(:signed_msg1) {
-      FactoryGirl.attributes_for(
+      Fabricate.attributes_for(
         :message_entity,
         author:      bob.diaspora_id,
         parent_guid: parent.guid,
@@ -11,7 +11,7 @@ module DiasporaFederation
       ).tap {|hash| add_signatures(hash, Entities::Message) }
     }
     let(:signed_msg2) {
-      FactoryGirl.attributes_for(
+      Fabricate.attributes_for(
         :message_entity,
         author:      bob.diaspora_id,
         parent_guid: parent.guid,
@@ -19,11 +19,11 @@ module DiasporaFederation
       ).tap {|hash| add_signatures(hash, Entities::Message) }
     }
     let(:data) {
-      FactoryGirl.attributes_for(:conversation_entity).merge!(
+      Fabricate.attributes_for(:conversation_entity).merge!(
         messages:     [Entities::Message.new(signed_msg1), Entities::Message.new(signed_msg2)],
         author:       bob.diaspora_id,
         guid:         parent.guid,
-        participants: "#{bob.diaspora_id};#{FactoryGirl.generate(:diaspora_id)}"
+        participants: "#{bob.diaspora_id};#{Fabricate.sequence(:diaspora_id)}"
       )
     }
 

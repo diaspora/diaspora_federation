@@ -121,7 +121,7 @@ end
 
 shared_examples "a retraction" do
   context "receive with no target found" do
-    let(:unknown_guid) { FactoryGirl.generate(:guid) }
+    let(:unknown_guid) { Fabricate.sequence(:guid) }
     let(:instance) { described_class.new(data.merge(target_guid: unknown_guid)) }
 
     it "raises when no target is found" do

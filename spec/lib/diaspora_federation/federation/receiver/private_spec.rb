@@ -1,7 +1,7 @@
 module DiasporaFederation
   describe Federation::Receiver::Private do
     let(:recipient) { 42 }
-    let(:post) { FactoryGirl.build(:status_message_entity, public: false) }
+    let(:post) { Fabricate(:status_message_entity, public: false) }
     let(:magic_env) { Salmon::MagicEnvelope.new(post, post.author) }
 
     describe "#receive" do
@@ -12,7 +12,7 @@ module DiasporaFederation
       end
 
       it "validates the sender" do
-        sender = FactoryGirl.generate(:diaspora_id)
+        sender = Fabricate.sequence(:diaspora_id)
         bad_env = Salmon::MagicEnvelope.new(post, sender)
 
         expect {
@@ -27,7 +27,7 @@ module DiasporaFederation
       end
 
       context "with relayable" do
-        let(:comment) { FactoryGirl.build(:comment_entity, parent: FactoryGirl.build(:related_entity, public: false)) }
+        let(:comment) { Fabricate(:comment_entity, parent: Fabricate(:related_entity, public: false)) }
 
         it "receives a comment from the author" do
           magic_env = Salmon::MagicEnvelope.new(comment, comment.author)
@@ -46,7 +46,7 @@ module DiasporaFederation
         end
 
         it "validates the sender" do
-          sender = FactoryGirl.generate(:diaspora_id)
+          sender = Fabricate.sequence(:diaspora_id)
           bad_env = Salmon::MagicEnvelope.new(comment, sender)
 
           expect {
@@ -57,7 +57,7 @@ module DiasporaFederation
 
       context "with retraction" do
         context "for a post" do
-          let(:retraction) { FactoryGirl.build(:retraction_entity, target_type: "Post") }
+          let(:retraction) { Fabricate(:retraction_entity, target_type: "Post") }
 
           it "retracts a post from the author" do
             magic_env = Salmon::MagicEnvelope.new(retraction, retraction.target.author)
@@ -68,7 +68,7 @@ module DiasporaFederation
           end
 
           it "validates the sender" do
-            sender = FactoryGirl.generate(:diaspora_id)
+            sender = Fabricate.sequence(:diaspora_id)
             bad_env = Salmon::MagicEnvelope.new(retraction, sender)
 
             expect {
@@ -79,10 +79,10 @@ module DiasporaFederation
 
         context "for a comment" do
           let(:retraction) {
-            FactoryGirl.build(
+            Fabricate(
               :retraction_entity,
               target_type: "Comment",
-              target:      FactoryGirl.build(:related_entity, parent: FactoryGirl.build(:related_entity))
+              target:      Fabricate(:related_entity, parent: Fabricate(:related_entity))
             )
           }
 
@@ -103,7 +103,7 @@ module DiasporaFederation
           end
 
           it "validates the sender" do
-            sender = FactoryGirl.generate(:diaspora_id)
+            sender = Fabricate.sequence(:diaspora_id)
             bad_env = Salmon::MagicEnvelope.new(retraction, sender)
 
             expect {

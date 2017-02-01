@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::PollAnswer do
-    let(:data) { FactoryGirl.attributes_for(:poll_answer_entity) }
+    let(:data) { Fabricate.attributes_for(:poll_answer_entity) }
 
     let(:xml) { <<-XML }
 <poll_answer>

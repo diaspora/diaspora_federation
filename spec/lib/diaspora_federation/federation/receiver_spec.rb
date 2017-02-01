@@ -4,7 +4,7 @@ module DiasporaFederation
     let(:recipient_key) { OpenSSL::PKey::RSA.generate(1024) }
 
     describe ".receive_public" do
-      let(:post) { FactoryGirl.build(:status_message_entity) }
+      let(:post) { Fabricate(:status_message_entity) }
 
       it "parses the entity with magic envelope receiver" do
         expect_callback(:fetch_public_key, post.author).and_return(sender_key)
@@ -44,7 +44,7 @@ module DiasporaFederation
     end
 
     describe ".receive_private" do
-      let(:post) { FactoryGirl.build(:status_message_entity, public: false) }
+      let(:post) { Fabricate(:status_message_entity, public: false) }
 
       it "parses the entity with magic envelope receiver" do
         expect_callback(:fetch_public_key, post.author).and_return(sender_key)

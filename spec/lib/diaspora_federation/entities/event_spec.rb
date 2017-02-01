@@ -1,8 +1,8 @@
 module DiasporaFederation
   describe Entities::Event do
-    let(:location) { FactoryGirl.build(:location_entity) }
+    let(:location) { Fabricate(:location_entity) }
     let(:data) {
-      FactoryGirl.attributes_for(:event_entity).merge(author: alice.diaspora_id, location: location)
+      Fabricate.attributes_for(:event_entity).merge(author: alice.diaspora_id, location: location)
     }
 
     let(:xml) { <<-XML }

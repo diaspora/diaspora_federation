@@ -1,9 +1,9 @@
 module DiasporaFederation
   describe Entities::Participation do
-    let(:parent) { FactoryGirl.create(:post, author: bob) }
-    let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
+    let(:parent) { Fabricate(:post, author: bob) }
+    let(:parent_entity) { Fabricate(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      FactoryGirl.attributes_for(
+      Fabricate.attributes_for(
         :participation_entity,
         author:      alice.diaspora_id,
         parent_guid: parent.guid,
@@ -84,7 +84,7 @@ JSON
         }
 
         it "succeeds when the parent is local" do
-          local_parent = FactoryGirl.build(:related_entity, local: true)
+          local_parent = Fabricate(:related_entity, local: true)
           expect_callback(:fetch_related_entity, parent.entity_type, parent.guid).and_return(local_parent)
 
           expect {
@@ -101,7 +101,7 @@ JSON
         end
 
         it "raises ParentNotLocal when the parent is not local" do
-          remote_parent = FactoryGirl.build(:related_entity, local: false)
+          remote_parent = Fabricate(:related_entity, local: false)
           expect_callback(:fetch_related_entity, parent.entity_type, parent.guid).and_return(remote_parent)
 
           expect {

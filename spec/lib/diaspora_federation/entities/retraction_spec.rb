@@ -1,9 +1,9 @@
 module DiasporaFederation
   describe Entities::Retraction do
-    let(:target) { FactoryGirl.create(:post, author: bob) }
-    let(:target_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
+    let(:target) { Fabricate(:post, author: bob) }
+    let(:target_entity) { Fabricate(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      FactoryGirl.attributes_for(
+      Fabricate.attributes_for(
         :retraction_entity,
         target_guid: target.guid,
         target_type: target.entity_type,
@@ -37,7 +37,7 @@ XML
 
         it "does not allow any random author" do
           entity = Entities::Retraction.new(data)
-          invalid_author = FactoryGirl.generate(:diaspora_id)
+          invalid_author = Fabricate.sequence(:diaspora_id)
 
           expect(entity.sender_valid?(invalid_author)).to be_falsey
         end
@@ -46,10 +46,10 @@ XML
       %w(Comment Like PollParticipation).each do |target_type|
         context "#{target_type} target" do
           let(:relayable_target) {
-            FactoryGirl.build(
+            Fabricate(
               :related_entity,
               author: bob.diaspora_id,
-              parent: FactoryGirl.build(:related_entity, author: alice.diaspora_id)
+              parent: Fabricate(:related_entity, author: alice.diaspora_id)
             )
           }
           let(:relayable_data) { data.merge(target_type: target_type, target: relayable_target) }
@@ -68,7 +68,7 @@ XML
 
           it "does not allow any random author" do
             entity = Entities::Retraction.new(relayable_data)
-            invalid_author = FactoryGirl.generate(:diaspora_id)
+            invalid_author = Fabricate.sequence(:diaspora_id)
 
             expect(entity.sender_valid?(invalid_author)).to be_falsey
           end

@@ -3,9 +3,8 @@ module DiasporaFederation
     let(:new_diaspora_id) { alice.diaspora_id }
     let(:new_author_pkey) { alice.private_key }
     let(:hash) {
-      FactoryGirl.attributes_for(
-        :account_migration_entity,
-        profile: FactoryGirl.build(:profile_entity, author: new_diaspora_id)
+      Fabricate.attributes_for(:account_deletion_entity).merge(
+        profile: Fabricate(:profile_entity, author: new_diaspora_id)
       )
     }
     let(:data) {

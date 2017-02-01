@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Person do
-    let(:data) { FactoryGirl.attributes_for(:person_entity) }
+    let(:data) { Fabricate.attributes_for(:person_entity) }
 
     let(:xml) { <<-XML }
 <person>

@@ -21,11 +21,11 @@ module DiasporaFederation
     describe "#poll_answers" do
       it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :poll_answers }
-        let(:wrong_values) { [nil, [FactoryGirl.attributes_for(:poll_answer_entity)]] }
+        let(:wrong_values) { [nil, [Fabricate.attributes_for(:poll_answer_entity)]] }
         let(:correct_values) {
           [
-            Array.new(2) { FactoryGirl.build(:poll_answer_entity) },
-            Array.new(5) { FactoryGirl.build(:poll_answer_entity) }
+            Array.new(2) { Fabricate(:poll_answer_entity) },
+            Array.new(5) { Fabricate(:poll_answer_entity) }
           ]
         }
       end
