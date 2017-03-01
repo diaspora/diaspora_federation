@@ -42,4 +42,4 @@ parent entity. The same entity-type can be nested multiple times (e.g. `poll_ans
 [entities]: {{ site.baseurl }}/entities/
 [magicsig]: {{ site.baseurl }}/federation/magicsig.html
 [types]: {{ site.baseurl }}/federation/types.html
-[relayables]: {{ site.baseurl }}/federation/relayables.html
+[relayables]: {{ site.baseurl }}/federation/relayable.html
