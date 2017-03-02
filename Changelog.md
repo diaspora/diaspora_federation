@@ -1,3 +1,13 @@
+# 0.1.8
+
+## Feature
+
+* Add ruby 2.4 support
+
+## Documentation
+
+* Various improvements in the protocol documentation
+
 # 0.1.7
 
 ## Feature
