@@ -15,11 +15,28 @@ module DiasporaFederation
 </reshare>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "entity_type": "reshare",
+  "entity_data": {
+    "author": "#{data[:author]}",
+    "guid": "#{data[:guid]}",
+    "created_at": "#{data[:created_at].utc.iso8601}",
+    "provider_display_name": "#{data[:provider_display_name]}",
+    "root_author": "#{data[:root_author]}",
+    "root_guid": "#{data[:root_guid]}",
+    "public": #{data[:public]}
+  }
+}
+JSON
+
     let(:string) { "Reshare:#{data[:guid]}:#{data[:root_guid]}" }
 
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    it_behaves_like "a JSON Entity"
 
     context "default values" do
       it "uses default values" do

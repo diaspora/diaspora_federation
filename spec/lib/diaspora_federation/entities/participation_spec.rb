@@ -23,11 +23,33 @@ module DiasporaFederation
 </participation>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "entity_type": "participation",
+  "entity_data": {
+    "author": "#{data[:author]}",
+    "guid": "#{data[:guid]}",
+    "parent_guid": "#{parent.guid}",
+    "author_signature": "#{data[:author_signature]}",
+    "parent_author_signature": "#{data[:parent_author_signature]}",
+    "parent_type": "#{parent.entity_type}"
+  },
+  "property_order": [
+    "guid",
+    "parent_type",
+    "parent_guid",
+    "author"
+  ]
+}
+JSON
+
     let(:string) { "Participation:#{data[:guid]}:Post:#{parent.guid}" }
 
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity", [:parent]
+
+    it_behaves_like "a JSON Entity"
 
     it_behaves_like "a relayable Entity"
 

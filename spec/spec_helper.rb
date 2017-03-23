@@ -17,6 +17,7 @@ require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "envi
 
 require "rspec/rails"
 require "webmock/rspec"
+require "rspec/json_expectations"
 
 # load factory girl factories
 require "factories"
@@ -52,6 +53,9 @@ support_files.each {|f| require f }
 require fixture_builder_file
 
 RSpec.configure do |config|
+  config.include JSON::SchemaMatchers
+  config.json_schemas[:entity_schema] = "lib/diaspora_federation/schemas/federation_entities.json"
+
   config.example_status_persistence_file_path = "spec/rspec-persistance.txt"
 
   config.infer_spec_type_from_file_location!

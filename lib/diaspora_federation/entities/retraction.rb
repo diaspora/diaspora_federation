@@ -39,12 +39,11 @@ module DiasporaFederation
         "Retraction:#{target_type}:#{target_guid}"
       end
 
-      # @param [Nokogiri::XML::Element] root_node xml nodes
+      # @see Entity.from_hash
       # @return [Retraction] instance
-      private_class_method def self.populate_entity(root_node)
-        entity_data = entity_data(root_node)
-        entity_data[:target] = fetch_target(entity_data[:target_type], entity_data[:target_guid])
-        new(entity_data)
+      def self.from_hash(hash)
+        hash[:target] = fetch_target(hash[:target_type], hash[:target_guid])
+        new(hash)
       end
 
       private_class_method def self.fetch_target(target_type, target_guid)

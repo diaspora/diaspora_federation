@@ -9,10 +9,22 @@ module DiasporaFederation
 </poll_answer>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "entity_type": "poll_answer",
+  "entity_data": {
+    "guid": "#{data[:guid]}",
+    "answer": "#{data[:answer]}"
+  }
+}
+JSON
+
     let(:string) { "PollAnswer:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    it_behaves_like "a JSON Entity"
   end
 end

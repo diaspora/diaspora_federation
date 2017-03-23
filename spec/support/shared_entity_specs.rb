@@ -1,3 +1,17 @@
+def entity_hash_from(hash)
+  hash.transform_values {|value|
+    if [String, TrueClass, FalseClass, Integer, NilClass].any? {|c| value.is_a? c }
+      value
+    elsif value.is_a? Time
+      value.iso8601
+    elsif value.instance_of?(Array)
+      value.map(&:to_h)
+    else
+      value.to_h
+    end
+  }
+end
+
 shared_examples "an Entity subclass" do
   it "should be an Entity" do
     expect(described_class).to be < DiasporaFederation::Entity
@@ -26,21 +40,7 @@ shared_examples "an Entity subclass" do
 
     describe "#to_h" do
       it "should return a hash with nested data" do
-        expected_data = data.transform_values {|value|
-          if [String, TrueClass, FalseClass, Integer].any? {|c| value.is_a? c }
-            value.to_s
-          elsif value.nil?
-            nil
-          elsif value.is_a? Time
-            value.iso8601
-          elsif value.instance_of?(Array)
-            value.map(&:to_h)
-          else
-            value.to_h
-          end
-        }
-
-        expect(instance.to_h).to eq(expected_data)
+        expect(instance.to_h).to eq(entity_hash_from(data))
       end
     end
 
@@ -131,5 +131,60 @@ shared_examples "a retraction" do
       }.to raise_error DiasporaFederation::Entities::Retraction::TargetNotFound,
                        "not found: #{data[:target_type]}:#{unknown_guid}"
     end
+  end
+end
+
+shared_examples "a JSON Entity" do
+  describe "#to_json" do
+    it "#to_json output matches JSON schema" do
+      json = described_class.new(data).to_json
+      expect(json.to_json).to match_json_schema(:entity_schema)
+    end
+
+    let(:to_json_output) { described_class.new(data).to_json.to_json }
+
+    it "contains described_class property matching the entity class (underscored)" do
+      expect(to_json_output).to include_json(entity_type: described_class.entity_name)
+    end
+
+    it "contains JSON properties for each of the entity properties with the entity_data property" do
+      entity_data = entity_hash_from(data)
+      entity_data.delete(:parent)
+      nested_elements = entity_data.select {|_key, value| value.is_a?(Array) || value.is_a?(Hash) }
+      entity_data.reject! {|_key, value| value.is_a?(Array) || value.is_a?(Hash) }
+
+      expect(to_json_output).to include_json(entity_data: entity_data)
+      nested_elements.each {|key, value|
+        type = described_class.class_props[key]
+        if value.is_a?(Array)
+          data = value.map {|element|
+            {
+              entity_type: type.first.entity_name,
+              entity_data: element
+            }
+          }
+          expect(to_json_output).to include_json(entity_data: {key => data})
+        else
+          expect(to_json_output).to include_json(
+            entity_data: {
+              key => {
+                entity_type: type.entity_name,
+                entity_data: value
+              }
+            }
+          )
+        end
+      }
+    end
+
+    it "produces correct JSON" do
+      entity_json = JSON.pretty_generate(described_class.new(data).to_json)
+      expect(entity_json).to eq(json.strip)
+    end
+  end
+
+  it ".from_json(entity_json).to_json should match entity.to_json" do
+    entity_json = described_class.new(data).to_json.to_json
+    expect(described_class.from_json(JSON.parse(entity_json)).to_json.to_json).to eq(entity_json)
   end
 end

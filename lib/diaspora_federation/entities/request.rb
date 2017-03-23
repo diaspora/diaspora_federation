@@ -29,10 +29,9 @@ module DiasporaFederation
         "Request:#{author}:#{recipient}"
       end
 
-      # @param [Nokogiri::XML::Element] root_node xml nodes
       # @return [Retraction] instance
-      private_class_method def self.populate_entity(root_node)
-        super(root_node).to_contact
+      def self.from_hash(hash)
+        super.to_contact
       end
     end
   end

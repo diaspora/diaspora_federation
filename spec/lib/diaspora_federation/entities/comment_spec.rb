@@ -24,11 +24,34 @@ module DiasporaFederation
 </comment>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "entity_type": "comment",
+  "entity_data": {
+    "author": "#{data[:author]}",
+    "guid": "#{data[:guid]}",
+    "parent_guid": "#{parent.guid}",
+    "author_signature": "#{data[:author_signature]}",
+    "parent_author_signature": "#{data[:parent_author_signature]}",
+    "text": "#{data[:text]}",
+    "created_at": "#{data[:created_at].iso8601}"
+  },
+  "property_order": [
+    "guid",
+    "parent_guid",
+    "text",
+    "author"
+  ]
+}
+JSON
+
     let(:string) { "Comment:#{data[:guid]}:#{parent.guid}" }
 
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity", [:created_at]
+
+    it_behaves_like "a JSON Entity"
 
     it_behaves_like "a relayable Entity"
 

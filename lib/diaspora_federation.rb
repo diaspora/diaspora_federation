@@ -10,6 +10,7 @@ require "diaspora_federation/validators"
 require "diaspora_federation/http_client"
 
 require "diaspora_federation/entities"
+require "diaspora_federation/parsers"
 
 require "diaspora_federation/discovery"
 require "diaspora_federation/salmon"

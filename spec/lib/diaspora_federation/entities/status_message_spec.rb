@@ -54,11 +54,69 @@ module DiasporaFederation
 </status_message>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "entity_type": "status_message",
+  "entity_data": {
+    "author": "#{data[:author]}",
+    "guid": "#{data[:guid]}",
+    "created_at": "#{data[:created_at].utc.iso8601}",
+    "provider_display_name": "#{data[:provider_display_name]}",
+    "text": "#{data[:text]}",
+    "photos": [
+      {
+        "entity_type": "photo",
+        "entity_data": {
+          "guid": "#{photo1.guid}",
+          "author": "#{photo1.author}",
+          "public": #{photo1.public},
+          "created_at": "#{photo1.created_at.utc.iso8601}",
+          "remote_photo_path": "#{photo1.remote_photo_path}",
+          "remote_photo_name": "#{photo1.remote_photo_name}",
+          "text": "#{photo1.text}",
+          "status_message_guid": "#{photo1.status_message_guid}",
+          "height": #{photo1.height},
+          "width": #{photo1.width}
+        }
+      },
+      {
+        "entity_type": "photo",
+        "entity_data": {
+          "guid": "#{photo2.guid}",
+          "author": "#{photo2.author}",
+          "public": #{photo2.public},
+          "created_at": "#{photo2.created_at.utc.iso8601}",
+          "remote_photo_path": "#{photo2.remote_photo_path}",
+          "remote_photo_name": "#{photo2.remote_photo_name}",
+          "text": "#{photo2.text}",
+          "status_message_guid": "#{photo2.status_message_guid}",
+          "height": #{photo2.height},
+          "width": #{photo2.width}
+        }
+      }
+    ],
+    "location": {
+      "entity_type": "location",
+      "entity_data": {
+        "address": "#{location.address}",
+        "lat": "#{location.lat}",
+        "lng": "#{location.lng}"
+      }
+    },
+    "poll": null,
+    "event": null,
+    "public": #{data[:public]}
+  }
+}
+JSON
+
     let(:string) { "StatusMessage:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    it_behaves_like "a JSON Entity"
 
     context "default values" do
       it "uses default values" do

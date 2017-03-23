@@ -22,6 +22,14 @@ module DiasporaFederation
         sender == author
       end
 
+      # hackaround hacky from_hash override
+      # @deprecated remove after {Participation} doesn't include {Relayable} anymore
+      def enriched_properties
+        super.tap {|hash|
+          hash.delete(:parent) if hash[:parent].nil?
+        }
+      end
+
       # Validates that the parent exists and the parent author is local
       def validate_parent
         parent = DiasporaFederation.callbacks.trigger(:fetch_related_entity, parent_type, parent_guid)
@@ -29,11 +37,21 @@ module DiasporaFederation
       end
 
       # Don't verify signatures for a {Participation}. Validate that the parent is local.
-      # @see Entity.populate_entity
-      # @param [Nokogiri::XML::Element] root_node xml nodes
+      # @see Entity.from_hash
+      # @param [Hash] hash entity initialization hash
       # @return [Entity] instance
-      private_class_method def self.populate_entity(root_node)
-        new(entity_data(root_node).merge(parent: nil)).tap(&:validate_parent)
+      def self.from_hash(hash)
+        new(hash.merge(parent: nil)).tap(&:validate_parent)
+      end
+
+      # @deprecated remove after {Participation} doesn't include {Relayable} anymore
+      private_class_method def self.xml_parser_class
+        DiasporaFederation::Parsers::XmlParser
+      end
+
+      # @deprecated remove after {Participation} doesn't include {Relayable} anymore
+      private_class_method def self.json_parser_class
+        DiasporaFederation::Parsers::JsonParser
       end
 
       # Raised, if the parent is not owned by the receiving pod.
