@@ -248,7 +248,7 @@ XML
 
         expect(entity.author).to eq(author)
         expect(entity.text).to eq(text)
-        expect(entity.additional_xml_elements["new_data"]).to eq(new_data)
+        expect(entity.additional_data["new_data"]).to eq(new_data)
       end
 
       it "parses new xml with additional data" do
@@ -257,7 +257,7 @@ XML
 
         expect(entity.author).to eq(author)
         expect(entity.text).to eq(text)
-        expect(entity.additional_xml_elements["new_data"]).to eq(new_data)
+        expect(entity.additional_data["new_data"]).to eq(new_data)
       end
     end
   end

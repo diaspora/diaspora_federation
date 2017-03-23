@@ -10,10 +10,23 @@ module DiasporaFederation
 </location>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "entity_type": "location",
+  "entity_data": {
+    "address": "#{data[:address]}",
+    "lat": "#{data[:lat]}",
+    "lng": "#{data[:lng]}"
+  }
+}
+JSON
+
     let(:string) { "Location" }
 
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    it_behaves_like "a JSON Entity"
   end
 end

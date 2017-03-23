@@ -17,11 +17,31 @@ module DiasporaFederation
 </photo>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "entity_type": "photo",
+  "entity_data": {
+    "guid": "#{data[:guid]}",
+    "author": "#{data[:author]}",
+    "public": #{data[:public]},
+    "created_at": "#{data[:created_at].utc.iso8601}",
+    "remote_photo_path": "#{data[:remote_photo_path]}",
+    "remote_photo_name": "#{data[:remote_photo_name]}",
+    "text": "#{data[:text]}",
+    "status_message_guid": "#{data[:status_message_guid]}",
+    "height": #{data[:height]},
+    "width": #{data[:width]}
+  }
+}
+JSON
+
     let(:string) { "Photo:#{data[:guid]}" }
 
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    it_behaves_like "a JSON Entity"
 
     context "default values" do
       it "uses default values" do

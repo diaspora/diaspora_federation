@@ -7,6 +7,7 @@ PATH
       nokogiri (~> 1.6, >= 1.6.8)
       typhoeus (~> 1.0)
       valid (~> 1.0)
+    diaspora_federation-json_schema (0.1.8)
     diaspora_federation-rails (0.1.8)
       diaspora_federation (= 0.1.8)
       rails (>= 4.2, < 6)
@@ -117,6 +118,11 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (0.8.1)
     json (1.8.6)
+    json-schema (2.7.0)
+      addressable (>= 2.4)
+    json-schema-rspec (0.0.4)
+      json-schema (~> 2.5)
+      rspec
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -217,6 +223,7 @@ GEM
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
+    rspec-json_expectations (2.1.0)
     rspec-mocks (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
@@ -294,6 +301,7 @@ PLATFORMS
 DEPENDENCIES
   codeclimate-test-reporter (~> 1.0.0)
   diaspora_federation!
+  diaspora_federation-json_schema!
   diaspora_federation-rails!
   diaspora_federation-test!
   factory_girl_rails (~> 4.7)
@@ -301,6 +309,7 @@ DEPENDENCIES
   fuubar (= 2.2.0)
   guard-rspec
   guard-rubocop
+  json-schema-rspec (= 0.0.4)
   logging-rails (= 0.5.0)
   nyan-cat-formatter
   pronto (= 0.8.1)
@@ -309,6 +318,7 @@ DEPENDENCIES
   pry-byebug
   rspec-collection_matchers (~> 1.1.2)
   rspec-core (~> 3.5.1)
+  rspec-json_expectations (~> 2.1)
   rspec-rails (~> 3.5.1)
   rubocop (= 0.47.1)
   simplecov (= 0.13.0)
@@ -321,4 +331,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.14.5
+   1.14.6

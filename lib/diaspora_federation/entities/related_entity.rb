@@ -28,6 +28,10 @@ module DiasporaFederation
       def to_xml
         nil
       end
+
+      def to_json
+        nil
+      end
     end
   end
 end

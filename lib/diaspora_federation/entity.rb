@@ -109,10 +109,21 @@ module DiasporaFederation
     # @param [Nokogiri::XML::Element] root_node xml nodes
     # @return [Entity] instance
     def self.from_xml(root_node)
-      raise ArgumentError, "only Nokogiri::XML::Element allowed" unless root_node.instance_of?(Nokogiri::XML::Element)
-      raise InvalidRootNode, "'#{root_node.name}' can't be parsed by #{name}" unless root_node.name == entity_name
+      from_hash(*xml_parser_class.new(self).parse(root_node))
+    end
 
-      populate_entity(root_node)
+    private_class_method def self.xml_parser_class
+      DiasporaFederation::Parsers::XmlParser
+    end
+
+    # Creates an instance of self by parsing a hash in the format of JSON serialized object (which usually means
+    # data from a parsed JSON input).
+    def self.from_json(json_hash)
+      from_hash(*json_parser_class.new(self).parse(json_hash))
+    end
+
+    private_class_method def self.json_parser_class
+      DiasporaFederation::Parsers::JsonParser
     end
 
     # Makes an underscored, lowercase form of the class name
@@ -147,6 +158,33 @@ module DiasporaFederation
     # @return [String] string representation of this object
     def to_s
       "#{self.class.name.rpartition('::').last}#{":#{guid}" if respond_to?(:guid)}"
+    end
+
+    # Renders entity to a hash representation of the entity JSON format
+    # @return [Hash] Returns a hash that is equal by structure to the entity in JSON format
+    def to_json
+      {
+        entity_type: self.class.entity_name,
+        entity_data: json_data
+      }
+    end
+
+    # Creates an instance of self, filling it with data from a provided hash of properties.
+    #
+    # The hash format is described as following:<br>
+    # 1) Properties of the hash are representation of the entity's class properties<br>
+    # 2) Keys of the hash must be of Symbol type<br>
+    # 3) Possible values of the hash properties depend on the types of the entity's class properties<br>
+    # 4) Basic properties, such as booleans, strings, integers and timestamps are represented by values of respective
+    # formats<br>
+    # 5) Nested hashes and arrays of hashes are allowed to represent nested entities. Nested hashes follow the same
+    # format as the parent hash.<br>
+    # 6) Besides, the nested entities can be passed in the hash as already instantiated objects of the respective type.
+    #
+    # @param [Hash] properties_hash A hash of the expected format
+    # @return [Entity] an instance
+    def self.from_hash(properties_hash)
+      new(properties_hash)
     end
 
     private
@@ -225,7 +263,7 @@ module DiasporaFederation
 
     def normalize_property(name, value)
       case self.class.class_props[name]
-      when :string, :integer, :boolean
+      when :string
         value.to_s
       when :timestamp
         value.nil? ? "" : value.utc.iso8601
@@ -245,8 +283,8 @@ module DiasporaFederation
     end
 
     def add_property_to_xml(doc, root_element, name, value)
-      if value.is_a? String
-        root_element << simple_node(doc, name, value)
+      if [String, TrueClass, FalseClass, Integer].any? {|c| value.is_a? c }
+        root_element << simple_node(doc, name, value.to_s)
       else
         # call #to_xml for each item and append to root
         [*value].compact.each do |item|
@@ -264,94 +302,27 @@ module DiasporaFederation
       end
     end
 
-    # @param [Nokogiri::XML::Element] root_node xml nodes
-    # @return [Entity] instance
-    private_class_method def self.populate_entity(root_node)
-      new(entity_data(root_node))
-    end
+    # Generates a hash with entity properties which is put to the "entity_data"
+    # field of a JSON serialized object.
+    # @return [Hash] object properties in JSON format
+    def json_data
+      enriched_properties.map {|key, value|
+        type = self.class.class_props[key]
 
-    # @param [Nokogiri::XML::Element] root_node xml nodes
-    # @return [Hash] entity data
-    private_class_method def self.entity_data(root_node)
-      class_props.map {|name, type|
-        value = parse_element_from_node(name, type, root_node)
-        [name, value] unless value.nil?
-      }.compact.to_h
-    end
-
-    # @param [String] name property name to parse
-    # @param [Class, Symbol] type target type to parse
-    # @param [Nokogiri::XML::Element] root_node XML node to parse
-    # @return [Object] parsed data
-    private_class_method def self.parse_element_from_node(name, type, root_node)
-      if type.instance_of?(Symbol)
-        parse_string_from_node(name, type, root_node)
-      elsif type.instance_of?(Array)
-        parse_array_from_node(type.first, root_node)
-      elsif type.ancestors.include?(Entity)
-        parse_entity_from_node(type, root_node)
-      end
-    end
-
-    # Create simple entry in data hash
-    #
-    # @param [String] name xml tag to parse
-    # @param [Class, Symbol] type target type to parse
-    # @param [Nokogiri::XML::Element] root_node XML root_node to parse
-    # @return [String] data
-    private_class_method def self.parse_string_from_node(name, type, root_node)
-      node = root_node.xpath(name.to_s)
-      node = root_node.xpath(xml_names[name].to_s) if node.empty?
-      parse_string(type, node.first.text) if node.any?
-    end
-
-    # @param [Symbol] type target type to parse
-    # @param [String] text data as string
-    # @return [String, Boolean, Integer, Time] data
-    private_class_method def self.parse_string(type, text)
-      case type
-      when :timestamp
-        begin
-          Time.parse(text).utc
-        rescue
-          nil
+        if !value.nil? && type.instance_of?(Class) && value.respond_to?(:to_json)
+          entity_data = value.to_json
+          [key, entity_data] unless entity_data.nil?
+        elsif type.instance_of?(Array)
+          entity_data = value.nil? ? nil : value.map(&:to_json)
+          [key, entity_data] unless entity_data.nil?
+        else
+          [key, value]
         end
-      when :integer
-        text.to_i if text =~ /\A\d+\z/
-      when :boolean
-        return true if text =~ /\A(true|t|yes|y|1)\z/i
-        false if text =~ /\A(false|f|no|n|0)\z/i
-      else
-        text
-      end
-    end
-
-    # Create an entry in the data hash for the nested entity
-    #
-    # @param [Class] type target type to parse
-    # @param [Nokogiri::XML::Element] root_node XML node to parse
-    # @return [Entity] parsed child entity
-    private_class_method def self.parse_entity_from_node(type, root_node)
-      node = root_node.xpath(type.entity_name)
-      type.from_xml(node.first) if node.any? && node.first.children.any?
-    end
-
-    # Collect all nested children of that type and create an array in the data hash
-    #
-    # @param [Class] type target type to parse
-    # @param [Nokogiri::XML::Element] root_node XML node to parse
-    # @return [Array<Entity>] array with parsed child entities
-    private_class_method def self.parse_array_from_node(type, root_node)
-      node = root_node.xpath(type.entity_name)
-      node.select {|child| child.children.any? }.map {|child| type.from_xml(child) } unless node.empty?
+      }.compact.to_h
     end
 
     # Raised, if entity is not valid
     class ValidationError < RuntimeError
-    end
-
-    # Raised, if the root node doesn't match the class name
-    class InvalidRootNode < RuntimeError
     end
 
     # Raised, if the entity name in the XML is invalid

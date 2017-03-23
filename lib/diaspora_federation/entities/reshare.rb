@@ -35,11 +35,10 @@ module DiasporaFederation
       end
 
       # Fetch root post after parse
-      # @see Entity.populate_entity
-      # @param [Nokogiri::XML::Element] root_node xml nodes
+      # @see Entity.from_hash
       # @return [Entity] instance
-      private_class_method def self.populate_entity(root_node)
-        super(root_node).tap(&:fetch_root)
+      def self.from_hash(hash)
+        super.tap(&:fetch_root)
       end
     end
   end

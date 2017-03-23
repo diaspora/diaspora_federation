@@ -46,6 +46,30 @@ module DiasporaFederation
     class TestEntityWithTimestamp < DiasporaFederation::Entity
       property :test, :timestamp
     end
+
+    class TestComplexEntity < DiasporaFederation::Entity
+      property :test1, :string
+      property :test2, :boolean
+      property :test3, :string
+      property :test4, :integer
+      property :test5, :timestamp
+      entity :test6, TestEntity
+      entity :multi, [OtherEntity]
+    end
+
+    class SomeRelayable < DiasporaFederation::Entity
+      LEGACY_SIGNATURE_ORDER = %i(guid author property parent_guid).freeze
+
+      PARENT_TYPE = "Parent".freeze
+
+      include Entities::Relayable
+
+      property :property, :string
+
+      def parent_type
+        PARENT_TYPE
+      end
+    end
   end
 
   module Validators

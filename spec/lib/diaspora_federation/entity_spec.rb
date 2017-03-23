@@ -68,7 +68,11 @@ module DiasporaFederation
     describe "#to_h" do
       it "returns a hash of the internal data" do
         entity = Entities::TestDefaultEntity.new(data)
-        expect(entity.to_h).to eq(data.transform_values(&:to_s))
+        expect(entity.to_h).to eq(
+          data.map {|key, value|
+            [key, entity.class.class_props[key] == :string ? value.to_s : value]
+          }.to_h
+        )
       end
     end
 
@@ -104,34 +108,6 @@ module DiasporaFederation
       let(:entity) { Entities::TestEntity.new(test: "asdf") }
       let(:entity_xml) { entity.to_xml }
 
-      context "sanity" do
-        it "expects an Nokogiri::XML::Element as param" do
-          expect {
-            Entities::TestEntity.from_xml(entity_xml)
-          }.not_to raise_error
-        end
-
-        it "raises and error when the param is not an Nokogiri::XML::Element" do
-          ["asdf", 1234, true, :test, entity].each do |val|
-            expect {
-              Entity.from_xml(val)
-            }.to raise_error ArgumentError, "only Nokogiri::XML::Element allowed"
-          end
-        end
-
-        it "raises an error when the entity class doesn't match the root node" do
-          xml = <<-XML
-<unknown_entity>
-  <test>asdf</test>
-</unknown_entity>
-XML
-
-          expect {
-            Entity.from_xml(Nokogiri::XML::Document.parse(xml).root)
-          }.to raise_error Entity::InvalidRootNode, "'unknown_entity' can't be parsed by DiasporaFederation::Entity"
-        end
-      end
-
       context "returned object" do
         subject { Entities::TestEntity.from_xml(entity_xml) }
 
@@ -145,126 +121,213 @@ XML
         end
       end
 
-      context "parsing" do
-        it "uses xml_name for parsing" do
-          xml = <<-XML.strip
-<test_entity_with_xml_name>
-  <test>asdf</test>
-  <asdf>qwer</asdf>
-</test_entity_with_xml_name>
-XML
-
-          entity = Entities::TestEntityWithXmlName.from_xml(Nokogiri::XML::Document.parse(xml).root)
-
-          expect(entity).to be_an_instance_of Entities::TestEntityWithXmlName
-          expect(entity.test).to eq("asdf")
-          expect(entity.qwer).to eq("qwer")
-        end
-
-        it "allows name for parsing even when property has a xml_name" do
-          xml = <<-XML.strip
-<test_entity_with_xml_name>
-  <test>asdf</test>
-  <qwer>qwer</qwer>
-</test_entity_with_xml_name>
-XML
-
-          entity = Entities::TestEntityWithXmlName.from_xml(Nokogiri::XML::Document.parse(xml).root)
-
-          expect(entity).to be_an_instance_of Entities::TestEntityWithXmlName
-          expect(entity.test).to eq("asdf")
-          expect(entity.qwer).to eq("qwer")
-        end
-
-        it "parses the string to the correct type" do
-          xml = <<-XML.strip
+      it "calls .from_hash with the hash representation of provided XML" do
+        expect(Entities::TestDefaultEntity).to receive(:from_hash).with(
+          test1: "asdf",
+          test2: "qwer",
+          test3: true
+        )
+        Entities::TestDefaultEntity.from_xml(Nokogiri::XML::Document.parse(<<-XML).root)
 <test_default_entity>
   <test1>asdf</test1>
   <test2>qwer</qwer2>
   <test3>true</qwer3>
 </test_default_entity>
 XML
-
-          entity = Entities::TestDefaultEntity.from_xml(Nokogiri::XML::Document.parse(xml).root)
-
-          expect(entity).to be_an_instance_of Entities::TestDefaultEntity
-          expect(entity.test1).to eq("asdf")
-          expect(entity.test2).to eq("qwer")
-          expect(entity.test3).to eq(true)
-        end
-
-        it "parses boolean fields with false value" do
-          xml = <<-XML.strip
-<test_entity_with_boolean>
-  <test>false</test>
-</test_entity_with_boolean>
-XML
-
-          entity = Entities::TestEntityWithBoolean.from_xml(Nokogiri::XML::Document.parse(xml).root)
-          expect(entity).to be_an_instance_of Entities::TestEntityWithBoolean
-          expect(entity.test).to eq(false)
-        end
-
-        it "parses boolean fields with a randomly matching pattern as erroneous" do
-          %w(ttFFFtt yesFFDSFSDy noDFDSFFDFn fXf LLyes).each do |weird_value|
-            xml = <<-XML.strip
-<test_entity_with_boolean>
-  <test>#{weird_value}</test>
-</test_entity_with_boolean>
-XML
-
-            expect {
-              Entities::TestEntityWithBoolean.from_xml(Nokogiri::XML::Document.parse(xml).root)
-            }.to raise_error Entity::ValidationError, "missing required properties: test"
-          end
-        end
-
-        it "parses integer fields with a randomly matching pattern as erroneous" do
-          %w(1,2,3 foobar two).each do |weird_value|
-            xml = <<-XML.strip
-<test_entity_with_integer>
-  <test>#{weird_value}</test>
-</test_entity_with_integer>
-XML
-
-            expect {
-              Entities::TestEntityWithInteger.from_xml(Nokogiri::XML::Document.parse(xml).root)
-            }.to raise_error Entity::ValidationError, "missing required properties: test"
-          end
-        end
-
-        it "parses timestamp fields with a randomly matching pattern as erroneous" do
-          %w(foobar yesterday now 1.2.foo).each do |weird_value|
-            xml = <<-XML.strip
-<test_entity_with_timestamp>
-  <test>#{weird_value}</test>
-</test_entity_with_timestamp>
-XML
-
-            expect {
-              Entities::TestEntityWithTimestamp.from_xml(Nokogiri::XML::Document.parse(xml).root)
-            }.to raise_error Entity::ValidationError, "missing required properties: test"
-          end
-        end
       end
 
-      context "nested entities" do
-        let(:child_entity1) { Entities::TestEntity.new(test: "bla") }
-        let(:child_entity2) { Entities::OtherEntity.new(asdf: "blabla") }
-        let(:nested_entity) {
-          Entities::TestNestedEntity.new(asdf:  "QWERT",
-                                         test:  child_entity1,
-                                         multi: [child_entity2, child_entity2])
-        }
-        let(:nested_payload) { nested_entity.to_xml }
+      it "forms .from_hash arguments basing on parse return array" do
+        arguments = [{arg1: "value"}]
+        expect_any_instance_of(DiasporaFederation::Parsers::XmlParser).to receive(:parse).and_return(arguments)
+        expect(Entities::TestDefaultEntity).to receive(:from_hash).with(*arguments)
+        Entities::TestDefaultEntity.from_xml(Nokogiri::XML::Document.parse("<dummy/>").root)
+      end
 
-        it "parses the xml with all the nested data" do
-          entity = Entities::TestNestedEntity.from_xml(nested_payload)
-          expect(entity.test.to_h).to eq(child_entity1.to_h)
-          expect(entity.multi).to have(2).items
-          expect(entity.multi.first.to_h).to eq(child_entity2.to_h)
-          expect(entity.asdf).to eq("QWERT")
+      it "passes input parameter directly to .parse method of the parser" do
+        root = Nokogiri::XML::Document.parse("<dummy/>").root
+        expect_any_instance_of(DiasporaFederation::Parsers::XmlParser).to receive(:parse).with(root)
+          .and_return([{test1: "2", test2: "1"}])
+        Entities::TestDefaultEntity.from_xml(root)
+      end
+    end
+
+    describe "#to_json" do
+      let(:basic_props) {
+        {
+          test1: "123",
+          test2: false,
+          test3: "456",
+          test4: 789,
+          test5: Time.current.utc
+        }
+      }
+
+      let(:hash) {
+        basic_props.merge(
+          test6: {
+            test: "000"
+          },
+          multi: [
+            {asdf: "01"},
+            {asdf: "02"}
+          ]
+        )
+      }
+      let(:entity_class) { Entities::TestComplexEntity }
+
+      it "generates expected JSON data" do
+        json_output = entity_class.new(hash).to_json.to_json
+        basic_props[:test5] = basic_props[:test5].iso8601
+        expect(json_output).to include_json(
+          entity_type: "test_complex_entity",
+          entity_data: basic_props.merge(
+            test6: {
+              entity_type: "test_entity",
+              entity_data: {
+                test: "000"
+              }
+            },
+            multi: [
+              {
+                entity_type: "other_entity",
+                entity_data: {
+                  asdf: "01"
+                }
+              },
+              {
+                entity_type: "other_entity",
+                entity_data: {
+                  asdf: "02"
+                }
+              }
+            ]
+          )
+        )
+      end
+    end
+
+    describe ".from_json" do
+      it "parses entity properties from the input JSON data" do
+        now = Time.now.change(usec: 0).utc
+        entity_data = <<-JSON
+{
+  "entity_type": "test_complex_entity",
+  "entity_data": {
+    "test1": "abc",
+    "test2": false,
+    "test3": "def",
+    "test4": 123,
+    "test5": "#{now.iso8601}",
+    "test6": {
+      "entity_type": "test_entity",
+      "entity_data": {
+        "test": "nested"
+      }
+    },
+    "multi": [
+      {
+        "entity_type": "other_entity",
+        "entity_data": {
+          "asdf": "01"
+        }
+      },
+      {
+        "entity_type": "other_entity",
+        "entity_data": {
+          "asdf": "02"
+        }
+      }
+    ]
+  }
+}
+JSON
+
+        entity = Entities::TestComplexEntity.from_json(JSON.parse(entity_data))
+        expect(entity).to be_an_instance_of(Entities::TestComplexEntity)
+        expect(entity.test1).to eq("abc")
+        expect(entity.test2).to eq(false)
+        expect(entity.test3).to eq("def")
+        expect(entity.test4).to eq(123)
+        expect(entity.test5).to eq(now)
+        expect(entity.test6.test).to eq("nested")
+        expect(entity.multi[0].asdf).to eq("01")
+        expect(entity.multi[1].asdf).to eq("02")
+      end
+
+      it "calls .from_hash with the entity_data of json hash" do
+        json = {
+          "entity_type" => "test_entity",
+          "entity_data" => {
+            "test" => "value"
+          }
+        }
+        expect(Entities::TestEntity).to receive(:json_parser_class).and_call_original
+        expect_any_instance_of(Parsers::JsonParser).to receive(:parse).with(json).and_call_original
+        expect(Entities::TestEntity).to receive(:from_hash).with(test: "value")
+        Entities::TestEntity.from_json(json)
+      end
+
+      it "forms .from_hash arguments basing on parse return array" do
+        class EntityWithFromHashMethod < Entity
+          def self.from_hash(_arg1, _arg2, _arg3); end
         end
+
+        expect(EntityWithFromHashMethod).to receive(:json_parser_class).and_call_original
+        expect_any_instance_of(Parsers::JsonParser).to receive(:parse).with("{}").and_return(%i(arg1 arg2 arg3))
+        expect(EntityWithFromHashMethod).to receive(:from_hash).with(:arg1, :arg2, :arg3)
+        EntityWithFromHashMethod.from_json("{}")
+      end
+    end
+
+    describe ".from_hash" do
+      it "parses entity properties from the input data" do
+        now = Time.now.change(usec: 0).utc
+        entity_data = {
+          test1: "abc",
+          test2: false,
+          test3: "def",
+          test4: 123,
+          test5: now,
+          test6: {
+            test: "nested"
+          },
+          multi: [
+            {asdf: "01"},
+            {asdf: "02"}
+          ]
+        }
+
+        entity = Entities::TestComplexEntity.from_hash(entity_data)
+        expect(entity).to be_an_instance_of(Entities::TestComplexEntity)
+        expect(entity.test1).to eq("abc")
+        expect(entity.test2).to eq(false)
+        expect(entity.test3).to eq("def")
+        expect(entity.test4).to eq(123)
+        expect(entity.test5).to eq(now)
+        expect(entity.test6.test).to eq("nested")
+        expect(entity.multi[0].asdf).to eq("01")
+        expect(entity.multi[1].asdf).to eq("02")
+      end
+
+      it "calls a constructor of the entity of the appropriate type" do
+        entity_data = {test1: "abc", test2: "123"}
+        expect(Entities::TestDefaultEntity).to receive(:new).with(test1: "abc", test2: "123")
+        Entities::TestDefaultEntity.from_hash(entity_data)
+      end
+
+      it "supports instantiation of nested entities using objects of the respective type" do
+        entity1 = Entities::TestEntity.new(test: "hello")
+        entity2 = Entities::OtherEntity.new(asdf: "01")
+        entity3 = Entities::OtherEntity.new(asdf: "02")
+        entity_data = {
+          asdf:  "value",
+          test:  entity1,
+          multi: [entity2, entity3]
+        }
+        entity = Entities::TestNestedEntity.from_hash(entity_data)
+        expect(entity.test).to eq(entity1)
+        expect(entity.multi[0]).to eq(entity2)
+        expect(entity.multi[1]).to eq(entity3)
       end
     end
 

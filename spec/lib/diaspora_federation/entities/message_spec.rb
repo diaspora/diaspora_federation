@@ -76,7 +76,7 @@ XML
       end
     end
 
-    describe ".populate_entity" do
+    describe ".from_xml" do
       it "adds a nil parent" do
         xml = Entities::Message.new(data).to_xml
         parsed = Entities::Message.from_xml(xml)

@@ -20,11 +20,34 @@ module DiasporaFederation
 </profile>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "entity_type": "profile",
+  "entity_data": {
+    "author": "#{data[:author]}",
+    "first_name": "#{data[:first_name]}",
+    "last_name": "",
+    "image_url": "#{data[:image_url]}",
+    "image_url_medium": "#{data[:image_url]}",
+    "image_url_small": "#{data[:image_url]}",
+    "birthday": "#{data[:birthday]}",
+    "gender": "#{data[:gender]}",
+    "bio": "#{data[:bio]}",
+    "location": "#{data[:location]}",
+    "searchable": #{data[:searchable]},
+    "nsfw": #{data[:nsfw]},
+    "tag_string": "#{data[:tag_string]}"
+  }
+}
+JSON
+
     let(:string) { "Profile:#{data[:author]}" }
 
     it_behaves_like "an Entity subclass"
 
     it_behaves_like "an XML Entity"
+
+    it_behaves_like "a JSON Entity"
 
     context "default values" do
       it "uses default values" do
