@@ -15,14 +15,6 @@ module DiasporaFederation
 
     let(:legacy_signature_data) { "#{guid};#{author};#{property};#{parent_guid}" }
 
-    def sign_with_key(privkey, signature_data)
-      Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, signature_data))
-    end
-
-    def verify_signature(pubkey, signature, signed_string)
-      pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
-    end
-
     describe "#initialize" do
       it "filters signatures from order" do
         xml_order = [:author, :guid, :parent_guid, :property, "new_property", :author_signature]

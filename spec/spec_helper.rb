@@ -45,6 +45,14 @@ def add_signatures(hash, klass=described_class)
   hash[:parent_author_signature] = properties[:parent_author_signature]
 end
 
+def sign_with_key(privkey, signature_data)
+  Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, signature_data))
+end
+
+def verify_signature(pubkey, signature, signed_string)
+  pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
+end
+
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 fixture_builder_file = "#{File.dirname(__FILE__)}/support/fixture_builder.rb"

@@ -12,6 +12,7 @@ require "diaspora_federation/entities/related_entity"
 
 # abstract types
 require "diaspora_federation/entities/post"
+require "diaspora_federation/entities/signable"
 require "diaspora_federation/entities/relayable"
 
 # types
