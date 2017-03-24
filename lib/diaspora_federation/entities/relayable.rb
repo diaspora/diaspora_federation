@@ -76,7 +76,8 @@ module DiasporaFederation
       end
 
       # Verifies the signatures (+author_signature+ and +parent_author_signature+ if needed).
-      # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
+      # @raise [SignatureVerificationFailed] if the signature is not valid
+      # @raise [PublicKeyNotFound] if no public key is found
       def verify_signatures
         verify_signature(author, :author_signature)
 

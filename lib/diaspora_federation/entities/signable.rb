@@ -19,7 +19,8 @@ module DiasporaFederation
       #
       # @param [String] author The author of the signature
       # @param [String] signature_key The signature to be verified
-      # @return [Boolean] signature valid
+      # @raise [SignatureVerificationFailed] if the signature is not valid
+      # @raise [PublicKeyNotFound] if no public key is found
       def verify_signature(author, signature_key)
         pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, author)
         raise PublicKeyNotFound, "signature=#{signature_key} person=#{author} obj=#{self}" if pubkey.nil?
