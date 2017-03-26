@@ -12,6 +12,7 @@ require "diaspora_federation/entities/related_entity"
 
 # abstract types
 require "diaspora_federation/entities/post"
+require "diaspora_federation/entities/signable"
 require "diaspora_federation/entities/relayable"
 
 # types
@@ -19,6 +20,7 @@ require "diaspora_federation/entities/profile"
 require "diaspora_federation/entities/person"
 require "diaspora_federation/entities/contact"
 require "diaspora_federation/entities/account_deletion"
+require "diaspora_federation/entities/account_migration"
 
 require "diaspora_federation/entities/participation"
 require "diaspora_federation/entities/like"

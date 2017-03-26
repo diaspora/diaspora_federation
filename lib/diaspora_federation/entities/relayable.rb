@@ -5,10 +5,7 @@ module DiasporaFederation
     # has a parent, identified by guid. Relayables are also signed and signing/verification
     # logic is embedded into Salmon XML processing code.
     module Relayable
-      include Logging
-
-      # Digest instance used for signing
-      DIGEST = OpenSSL::Digest::SHA256.new
+      include Signable
 
       # Order from the parsed xml for signature
       # @return [Array] order from xml
@@ -79,7 +76,8 @@ module DiasporaFederation
       end
 
       # Verifies the signatures (+author_signature+ and +parent_author_signature+ if needed).
-      # @raise [SignatureVerificationFailed] if the signature is not valid or no public key is found
+      # @raise [SignatureVerificationFailed] if the signature is not valid
+      # @raise [PublicKeyNotFound] if no public key is found
       def verify_signatures
         verify_signature(author, :author_signature)
 
@@ -107,24 +105,6 @@ module DiasporaFederation
 
       private
 
-      # Check that signature is a correct signature
-      #
-      # @param [String] author The author of the signature
-      # @param [String] signature_key The signature to be verified
-      # @return [Boolean] signature valid
-      def verify_signature(author, signature_key)
-        pubkey = DiasporaFederation.callbacks.trigger(:fetch_public_key, author)
-        raise PublicKeyNotFound, "signature=#{signature_key} person=#{author} obj=#{self}" if pubkey.nil?
-
-        signature = public_send(signature_key)
-        raise SignatureVerificationFailed, "no #{signature_key} for #{self}" if signature.nil?
-
-        valid = pubkey.verify(DIGEST, Base64.decode64(signature), signature_data)
-        raise SignatureVerificationFailed, "wrong #{signature_key} for #{self}" unless valid
-
-        logger.info "event=verify_signature signature=#{signature_key} status=valid obj=#{self}"
-      end
-
       # Sign with author key
       # @raise [AuthorPrivateKeyNotFound] if the author private key is not found
       # @return [String] A Base64 encoded signature of #signature_data with key
@@ -145,14 +125,6 @@ module DiasporaFederation
         sign_with_key(privkey).tap do
           logger.info "event=sign status=complete signature=parent_author_signature obj=#{self}"
         end
-      end
-
-      # Sign the data with the key
-      #
-      # @param [OpenSSL::PKey::RSA] privkey An RSA key
-      # @return [String] A Base64 encoded signature of #signature_data with key
-      def sign_with_key(privkey)
-        Base64.strict_encode64(privkey.sign(DIGEST, signature_data))
       end
 
       # Update the signatures with the keys of the author and the parent
@@ -244,14 +216,6 @@ module DiasporaFederation
 
       # Raised, if creating the author_signature fails, because the private key was not found
       class AuthorPrivateKeyNotFound < RuntimeError
-      end
-
-      # Raised, if verify_signatures fails to verify signatures (no public key found)
-      class PublicKeyNotFound < RuntimeError
-      end
-
-      # Raised, if verify_signatures fails to verify signatures (signatures are wrong)
-      class SignatureVerificationFailed < RuntimeError
       end
     end
   end
