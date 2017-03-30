@@ -171,7 +171,14 @@ Rails/TimeZone:
   Exclude:
     - "spec/lib/**/*"
 
+# Rails cops only for controllers
 Rails/Delegate:
+  Exclude:
+    - "lib/**/*"
+Rails/Blank:
+  Exclude:
+    - "lib/**/*"
+Rails/Present:
   Exclude:
     - "lib/**/*"
 
@@ -192,6 +199,8 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 Style/SafeNavigation:
   Enabled: false
+Style/IndentHeredoc:
+  Enabled: false
 
 # only with ruby >= 2.4
 Performance/RegexpMatch:
@@ -201,3 +210,8 @@ Performance/RegexpMatch:
 Rails/HttpPositionalArguments:
   Exclude:
     - "spec/controllers/diaspora_federation/fixtures_rails4_spec.rb"
+
+# remove with next rubocop update, see https://github.com/bbatsov/rubocop/issues/4172
+Style/MixinGrouping:
+  Exclude:
+    - "spec/**/*"
