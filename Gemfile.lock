@@ -163,7 +163,7 @@ GEM
     parser (2.4.0.0)
       ast (~> 2.2)
     powerpack (0.1.1)
-    pronto (0.8.1)
+    pronto (0.8.2)
       gitlab (~> 3.6, >= 3.4.0)
       httparty (>= 0.13.7, < 0.15)
       octokit (~> 4.3, >= 4.1.0)
@@ -312,7 +312,7 @@ DEPENDENCIES
   json-schema-rspec (= 0.0.4)
   logging-rails (= 0.5.0)
   nyan-cat-formatter
-  pronto (= 0.8.1)
+  pronto (= 0.8.2)
   pronto-rubocop (= 0.8.0)
   pry
   pry-byebug
