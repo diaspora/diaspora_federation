@@ -56,6 +56,8 @@ JSON
 
     it_behaves_like "a relayable Entity"
 
+    it_behaves_like "a relayable JSON entity"
+
     context "invalid XML" do
       it "raises a ValidationError if the parent_type is missing" do
         broken_xml = <<-XML
