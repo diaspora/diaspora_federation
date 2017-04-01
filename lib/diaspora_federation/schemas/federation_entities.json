@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://diaspora.github.io/diaspora_federation/schemas/federation_entities-0.2.0-dev.json",
+  "id": "https://diaspora.github.io/diaspora_federation/schemas/federation_entities.json",
   "oneOf": [
     {"$ref": "#/definitions/comment"},
     {"$ref": "#/definitions/like"},
