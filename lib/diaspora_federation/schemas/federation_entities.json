@@ -17,8 +17,17 @@
 
   "definitions": {
     "signature": {
-      "type": "string",
-      "minLength": 30
+      "oneOf" : [
+        {
+          "type": "string",
+          "minLength": 30
+        },
+        {
+          "type": "string",
+          "maxLength": 0,
+          "description": "Allow empty string when no signature is provided"
+        }
+      ]
     },
 
     "guid": {

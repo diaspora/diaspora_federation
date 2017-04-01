@@ -51,5 +51,7 @@ JSON
     it_behaves_like "a JSON Entity"
 
     it_behaves_like "a relayable Entity"
+
+    it_behaves_like "a relayable JSON entity"
   end
 end

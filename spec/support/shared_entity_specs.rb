@@ -188,3 +188,12 @@ shared_examples "a JSON Entity" do
     expect(described_class.from_json(JSON.parse(entity_json)).to_json.to_json).to eq(entity_json)
   end
 end
+
+shared_examples "a relayable JSON entity" do
+  it "matches JSON schema with empty string signatures" do
+    json = described_class.new(data).to_json
+    json[:entity_data][:author_signature] = ""
+    json[:entity_data][:parent_author_signature] = ""
+    expect(json.to_json).to match_json_schema(:entity_schema)
+  end
+end

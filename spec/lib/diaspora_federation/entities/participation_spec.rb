@@ -53,6 +53,8 @@ JSON
 
     it_behaves_like "a relayable Entity"
 
+    it_behaves_like "a relayable JSON entity"
+
     describe "#sender_valid?" do
       let(:entity) { Entities::Participation.new(data) }
 
