@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = "~> 2.1"
 
   s.add_dependency "nokogiri", "~> 1.6", ">= 1.6.8"
-  s.add_dependency "faraday", ">= 0.9.0", "< 0.12.0"
+  s.add_dependency "faraday", ">= 0.9.0", "< 0.13.0"
   s.add_dependency "faraday_middleware", ">= 0.10.0", "< 0.12.0"
   s.add_dependency "typhoeus", "~> 1.0"
   s.add_dependency "valid", "~> 1.0"

@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     diaspora_federation (0.1.8)
-      faraday (>= 0.9.0, < 0.12.0)
+      faraday (>= 0.9.0, < 0.13.0)
       faraday_middleware (>= 0.10.0, < 0.12.0)
       nokogiri (~> 1.6, >= 1.6.8)
       typhoeus (~> 1.0)
@@ -78,7 +78,7 @@ GEM
     factory_girl_rails (4.8.0)
       factory_girl (~> 4.8.0)
       railties (>= 3.0.0)
-    faraday (0.11.0)
+    faraday (0.12.0.1)
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.11.0.1)
       faraday (>= 0.7.4, < 1.0)
