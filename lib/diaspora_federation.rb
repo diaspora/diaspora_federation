@@ -1,3 +1,5 @@
+require "nokogiri"
+
 require "diaspora_federation/version"
 
 require "diaspora_federation/logging"
