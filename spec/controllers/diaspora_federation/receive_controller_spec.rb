@@ -15,21 +15,21 @@ module DiasporaFederation
           expect(response.code).to eq("422")
         end
 
-        it "returns a 202 if queued correctly" do
+        it "returns a 202 if queued correctly", rails: 5 do
           expect_callback(:queue_public_receive, "<diaspora/>", true)
 
           post :public, params: {xml: "<diaspora/>"}
           expect(response.code).to eq("202")
         end
 
-        it "unescapes the xml before sending it to the callback" do
+        it "unescapes the xml before sending it to the callback", rails: 5 do
           expect_callback(:queue_public_receive, "<diaspora/>", true)
 
           post :public, params: {xml: CGI.escape("<diaspora/>")}
         end
       end
 
-      context "magic envelope" do
+      context "magic envelope", rails: 5 do
         before do
           Mime::Type.register("application/magic-envelope+xml", :magic_envelope)
           @request.env["CONTENT_TYPE"] = "application/magic-envelope+xml"
@@ -44,7 +44,7 @@ module DiasporaFederation
       end
     end
 
-    describe "POST #private" do
+    describe "POST #private", rails: 5 do
       context "legacy salmon slap" do
         it "return a 404 if not queued successfully (unknown user guid)" do
           expect_callback(:queue_private_receive, "any-guid", "<diaspora/>", true).and_return(false)

@@ -204,7 +204,7 @@ Performance/RegexpMatch:
 # for rails 4 and ruby < 2.2.2
 Rails/HttpPositionalArguments:
   Exclude:
-    - "spec/controllers/diaspora_federation/fixtures_rails4_spec.rb"
+    - "spec/controllers/diaspora_federation/rails4_spec.rb"
 
 # remove with next rubocop update, see https://github.com/bbatsov/rubocop/issues/4172
 Style/MixinGrouping:
