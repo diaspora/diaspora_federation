@@ -1,4 +1,4 @@
-require "diaspora_federation/discovery"
+require "diaspora_federation"
 
 ca_file = if File.file?("/etc/ssl/certs/ca-certificates.crt")
             # For Debian, Ubuntu, Archlinux, Gentoo

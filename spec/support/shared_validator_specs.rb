@@ -135,7 +135,7 @@ shared_examples "a boolean validator" do
   end
 
   it "must not be an arbitrary string or other object" do
-    ["asdf", Time.zone.today, 1234].each do |val|
+    ["asdf", Date.today, 1234].each do |val|
       validator = described_class.new(entity_stub(entity, property => val))
 
       expect(validator).not_to be_valid

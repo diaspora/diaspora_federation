@@ -17,9 +17,9 @@ end
 
 group :development do
   # code style
-  gem "pronto",         "0.8.2"
-  gem "pronto-rubocop", "0.8.0", require: false
-  gem "rubocop",        "0.48.0"
+  gem "pronto",         "0.8.2",  require: false
+  gem "pronto-rubocop", "0.8.0",  require: false
+  gem "rubocop",        "0.48.0", require: false
 
   # automatic test runs
   gem "guard-rspec",   require: false
@@ -56,7 +56,9 @@ group :test do
 end
 
 group :development, :test do
+  gem "rake"
+
   # unit tests
-  gem "rspec-core", "~> 3.5.1"
+  gem "rspec", "~> 3.5.0"
   gem "rspec-rails", "~> 3.5.1"
 end

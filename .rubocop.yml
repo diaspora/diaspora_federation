@@ -162,11 +162,13 @@ Metrics/BlockLength:
     - "spec/**/*.rb"
     - "test/dummy/config/**/*.rb"
 
+# Rails cops only for controllers
+Rails/Date:
+  Exclude:
+    - "spec/support/**/*"
 Rails/TimeZone:
   Exclude:
     - "spec/lib/**/*"
-
-# Rails cops only for controllers
 Rails/Delegate:
   Exclude:
     - "lib/**/*"

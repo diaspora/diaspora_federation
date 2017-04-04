@@ -248,8 +248,9 @@ DEPENDENCIES
   pronto-rubocop (= 0.8.0)
   pry
   pry-byebug
+  rake
+  rspec (~> 3.5.0)
   rspec-collection_matchers (~> 1.1.2)
-  rspec-core (~> 3.5.1)
   rspec-json_expectations (~> 2.1)
   rspec-rails (~> 3.5.1)
   rubocop (= 0.48.0)

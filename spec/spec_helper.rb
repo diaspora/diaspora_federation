@@ -12,12 +12,25 @@ unless ENV["NO_COVERAGE"] == "true"
   end
 end
 
-ENV["RAILS_ENV"] ||= "test"
-require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "environment")
+dummy_app_path = File.join(File.dirname(__FILE__), "..", "test", "dummy")
 
-require "rspec/rails"
-require "webmock/rspec"
+begin
+  require "rails" # try to load rails
+rescue LoadError
+  Dir["#{File.join(dummy_app_path, 'app', 'models')}/*.rb"].each {|f| require f }
+  require File.join(dummy_app_path, "config", "initializers", "diaspora_federation")
+else
+  ENV["RAILS_ENV"] ||= "test"
+  require File.join(dummy_app_path, "config", "environment")
+
+  require "rspec/rails"
+end
+
+# test helpers
+require "json-schema-rspec"
+require "rspec/collection_matchers"
 require "rspec/json_expectations"
+require "webmock/rspec"
 
 # load factories
 require "factories"
@@ -39,7 +52,12 @@ RSpec.configure do |config|
     expect_config.syntax = :expect
   end
 
-  config.filter_run_excluding rails: (Rails::VERSION::MAJOR == 5 ? 4 : 5)
+  if defined?(::Rails)
+    config.filter_run_excluding rails: (::Rails::VERSION::MAJOR == 5 ? 4 : 5)
+  else
+    config.exclude_pattern = "**/controllers/**/*_spec.rb, **/routing/**/*_spec.rb"
+    config.filter_run_excluding rails: true
+  end
 
   # whitelist codeclimate.com so test coverage can be reported
   config.after(:suite) do

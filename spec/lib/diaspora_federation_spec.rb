@@ -14,7 +14,7 @@ module DiasporaFederation
         DiasporaFederation.server_uri = temp
       end
 
-      context "certificate_authorities" do
+      context "certificate_authorities", rails: true do
         before do
           @certificate_authorities = DiasporaFederation.certificate_authorities
         end
