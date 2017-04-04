@@ -61,7 +61,7 @@ RSpec.configure do |config|
   config.include JSON::SchemaMatchers
   config.json_schemas[:entity_schema] = "lib/diaspora_federation/schemas/federation_entities.json"
 
-  config.example_status_persistence_file_path = "spec/rspec-persistance.txt"
+  config.example_status_persistence_file_path = "spec/rspec-persistence.txt"
 
   config.expect_with :rspec do |expect_config|
     expect_config.syntax = :expect

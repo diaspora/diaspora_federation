@@ -23,7 +23,7 @@ doc
 test/dummy/log/*.log
 test/dummy/log/*.log*
 
-rspec-persistance.txt
+rspec-persistence.txt
 
 .rake_tasks
 
