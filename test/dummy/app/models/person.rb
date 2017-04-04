@@ -1,5 +1,9 @@
-class Person < ActiveRecord::Base
-  include ::Diaspora::Guid
+class Person
+  attr_accessor :diaspora_id, :url, :guid, :serialized_public_key, :serialized_private_key
+
+  def initialize
+    @guid = UUID.generate(:compact)
+  end
 
   def private_key; OpenSSL::PKey::RSA.new(serialized_private_key) end
   def public_key;  OpenSSL::PKey::RSA.new(serialized_public_key) end
@@ -19,4 +23,20 @@ class Person < ActiveRecord::Base
   def full_name;  "Dummy User" end
   def first_name; "Dummy" end
   def last_name;  "User" end
+
+  def save!
+    Person.database[:diaspora_id][diaspora_id] = self
+    Person.database[:guid][guid] = self
+  end
+
+  class << self
+    def find_by(opts)
+      return database[:diaspora_id][opts[:diaspora_id]] if opts[:diaspora_id]
+      database[:guid][opts[:guid]]
+    end
+
+    def database
+      @database ||= {diaspora_id: {}, guid: {}}
+    end
+  end
 end

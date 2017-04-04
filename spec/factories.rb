@@ -17,26 +17,26 @@ Fabricator(:user, class_name: Person) do
 end
 
 Fabricator(:post, class_name: Entity) do
-  on_init { init_with(entity_type: "Post") }
+  on_init { init_with("Post") }
   author { Fabricate(:person) }
 end
 
 Fabricator(:comment, class_name: Entity) do
-  on_init { init_with(entity_type: "Comment") }
+  on_init { init_with("Comment") }
   author { Fabricate(:person) }
 end
 
 Fabricator(:poll, class_name: Entity) do
-  on_init { init_with(entity_type: "Poll") }
+  on_init { init_with("Poll") }
   author { Fabricate(:person) }
 end
 
 Fabricator(:event, class_name: Entity) do
-  on_init { init_with(entity_type: "Event") }
+  on_init { init_with("Event") }
   author { Fabricate(:person) }
 end
 
 Fabricator(:conversation, class_name: Entity) do
-  on_init { init_with(entity_type: "Conversation") }
+  on_init { init_with("Conversation") }
   author { Fabricate(:person) }
 end

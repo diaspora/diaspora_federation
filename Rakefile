@@ -22,5 +22,5 @@ Bundler::GemHelper.install_tasks name: "diaspora_federation"
 
 Rails.application.load_tasks
 
-task test: %w(spec:prepare spec)
+task test: :spec
 task default: :test

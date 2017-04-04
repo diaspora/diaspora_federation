@@ -1,6 +1,6 @@
 require_relative "boot"
 
-require "rails/all"
+require "action_controller/railtie"
 
 Bundler.require(*Rails.groups)
 require "diaspora_federation/rails"
@@ -20,7 +20,7 @@ module Dummy
     # config.i18n.default_locale = :de
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = "1.0"
+    # config.assets.version = "1.0"
 
     # autoload files from test/dummy/lib
     config.autoload_once_paths += %W(#{config.root}/lib)

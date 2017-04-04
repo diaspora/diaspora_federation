@@ -59,12 +59,4 @@ group :development, :test do
   # unit tests
   gem "rspec-core", "~> 3.5.1"
   gem "rspec-rails", "~> 3.5.1"
-
-  # test database
-  gem "sqlite3", "~> 1.3.11"
-end
-
-group :development, :production do
-  # Logging (only for dummy-app, not for the gem)
-  gem "logging-rails", "0.5.0"
 end

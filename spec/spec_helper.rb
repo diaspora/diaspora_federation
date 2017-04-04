@@ -63,15 +63,9 @@ RSpec.configure do |config|
 
   config.example_status_persistence_file_path = "spec/rspec-persistance.txt"
 
-  config.infer_spec_type_from_file_location!
-
-  config.render_views
-
   config.expect_with :rspec do |expect_config|
     expect_config.syntax = :expect
   end
-
-  config.use_transactional_fixtures = true
 
   config.filter_run_excluding rails: (Rails::VERSION::MAJOR == 5 ? 4 : 5)
 

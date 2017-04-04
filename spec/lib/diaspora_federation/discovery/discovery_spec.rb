@@ -54,6 +54,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
 
+        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
         person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
@@ -100,6 +101,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
 
+        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
         person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
@@ -116,6 +118,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
 
+        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
         person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
@@ -215,6 +218,7 @@ HTML
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: historic_hcard_html)
 
+        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
         person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
