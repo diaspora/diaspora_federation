@@ -1,10 +1,10 @@
 # default users
 def alice
-  @alice ||= Fabricate(:user, diaspora_id: "alice@localhost:3000")
+  @alice ||= Person.find_by(diaspora_id: "alice@localhost:3000")
 end
 
 def bob
-  @bob ||= Fabricate(:user, diaspora_id: "bob@localhost:3000")
+  @bob ||= Person.find_by(diaspora_id: "bob@localhost:3000")
 end
 
 # callback expectation helper

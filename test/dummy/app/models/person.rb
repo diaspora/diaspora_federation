@@ -30,13 +30,19 @@ class Person
   end
 
   class << self
+    attr_writer :init_database
+
     def find_by(opts)
       return database[:diaspora_id][opts[:diaspora_id]] if opts[:diaspora_id]
       database[:guid][opts[:guid]]
     end
 
     def database
-      @database ||= {diaspora_id: {}, guid: {}}
+      @database ||= @init_database || {diaspora_id: {}, guid: {}}
+    end
+
+    def reset_database
+      @database = nil
     end
   end
 end

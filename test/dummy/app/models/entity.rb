@@ -19,5 +19,9 @@ class Entity
     def database
       @database ||= Hash.new({})
     end
+
+    def reset_database
+      @database = nil
+    end
   end
 end
