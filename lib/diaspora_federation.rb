@@ -1,4 +1,5 @@
 require "nokogiri"
+require "openssl"
 
 require "diaspora_federation/version"
 
