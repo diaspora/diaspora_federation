@@ -205,8 +205,8 @@ module DiasporaFederation
         guid { Fabricate.sequence(:guid) }
         summary "Cool event"
         description "You need to see this!"
-        start { Time.now.utc.change(min: 0).change(sec: 0).change(usec: 0) - 1.hour }
-        f.end { Time.now.utc.change(min: 0).change(sec: 0).change(usec: 0) + 1.hour }
+        start { change_time(Time.now.utc, min: 0) - 3600 }
+        f.end { change_time(Time.now.utc, min: 0) + 3600 }
         all_day false
         timezone "Europe/Berlin"
       end

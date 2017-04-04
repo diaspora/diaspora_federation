@@ -26,7 +26,7 @@ JSON
                        '{"entity_type": "test_complex_entity"}'
 
       it "returns a hash for the correct JSON input" do
-        now = Time.now.change(usec: 0).utc
+        now = change_time(Time.now.utc)
         json = <<-JSON
 {
   "entity_type": "test_complex_entity",

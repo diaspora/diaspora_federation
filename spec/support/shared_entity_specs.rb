@@ -90,7 +90,7 @@ shared_examples "an XML Entity" do |ignored_props=[]|
 
   def validate_property(value, parsed_value)
     if value.is_a?(Time)
-      expect(parsed_value).to eq(value.change(usec: 0))
+      expect(parsed_value).to eq(change_time(value))
     else
       expect(parsed_value).to eq(value)
     end

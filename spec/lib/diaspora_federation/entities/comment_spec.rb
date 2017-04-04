@@ -60,11 +60,11 @@ JSON
     describe "#created_at" do
       it "has a created_at after parse" do
         entity = described_class.from_xml(Nokogiri::XML::Document.parse(xml).root)
-        expect(entity.created_at).to be_within(1.second).of(Time.now.utc)
+        expect(entity.created_at).to be_within(1).of(Time.now.utc)
       end
 
       it "parses the created_at from the xml if it is included and correctly signed" do
-        created_at = Time.now.utc.change(usec: 0) - 1.minute
+        created_at = change_time(Time.now.utc) - 60
         comment_data = Fabricate.attributes_for(:comment_entity, author: alice.diaspora_id, parent_guid: parent.guid)
         comment_data[:created_at] = created_at
         comment_data[:parent] = parent_entity

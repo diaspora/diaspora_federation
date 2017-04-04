@@ -26,3 +26,12 @@ end
 def verify_signature(pubkey, signature, signed_string)
   pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
 end
+
+# time helper
+def change_time(time, options={})
+  new_hour  = options.fetch(:hour, time.hour)
+  new_min   = options.fetch(:min, options[:hour] ? 0 : time.min)
+  new_sec   = options.fetch(:sec, options[:hour] || options[:min] ? 0 : time.sec)
+
+  ::Time.utc(time.year, time.month, time.day, new_hour, new_min, new_sec)
+end
