@@ -35,3 +35,8 @@ def change_time(time, options={})
 
   ::Time.utc(time.year, time.month, time.day, new_hour, new_min, new_sec)
 end
+
+# indent helper
+def indent(string, amount)
+  string.gsub(/^/, " " * amount)
+end
