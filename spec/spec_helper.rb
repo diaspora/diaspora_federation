@@ -25,34 +25,6 @@ require "factories"
 # load test entities
 require "entities"
 
-# some helper methods
-
-def alice
-  @alice ||= Fabricate(:user, diaspora_id: "alice@localhost:3000")
-end
-
-def bob
-  @bob ||= Fabricate(:user, diaspora_id: "bob@localhost:3000")
-end
-
-def expect_callback(*opts)
-  expect(DiasporaFederation.callbacks).to receive(:trigger).with(*opts)
-end
-
-def add_signatures(hash, klass=described_class)
-  properties = klass.new(hash).send(:enriched_properties)
-  hash[:author_signature] = properties[:author_signature]
-  hash[:parent_author_signature] = properties[:parent_author_signature]
-end
-
-def sign_with_key(privkey, signature_data)
-  Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, signature_data))
-end
-
-def verify_signature(pubkey, signature, signed_string)
-  pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
-end
-
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f }
