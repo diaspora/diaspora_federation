@@ -79,9 +79,6 @@ GEM
     faraday_middleware (0.11.0.1)
       faraday (>= 0.7.4, < 1.0)
     ffi (1.9.18)
-    fixture_builder (0.5.0)
-      activerecord (>= 2)
-      activesupport (>= 2)
     formatador (0.2.5)
     fuubar (2.2.0)
       rspec-core (~> 3.0)
@@ -300,7 +297,6 @@ DEPENDENCIES
   diaspora_federation-json_schema!
   diaspora_federation-rails!
   diaspora_federation-test!
-  fixture_builder (= 0.5.0)
   fuubar (= 2.2.0)
   guard-rspec
   guard-rubocop

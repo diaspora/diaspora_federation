@@ -28,11 +28,11 @@ require "entities"
 # some helper methods
 
 def alice
-  @alice ||= Person.find_by(diaspora_id: "alice@localhost:3000")
+  @alice ||= Fabricate(:user, diaspora_id: "alice@localhost:3000")
 end
 
 def bob
-  @bob ||= Person.find_by(diaspora_id: "bob@localhost:3000")
+  @bob ||= Fabricate(:user, diaspora_id: "bob@localhost:3000")
 end
 
 def expect_callback(*opts)
@@ -55,10 +55,7 @@ end
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-fixture_builder_file = "#{File.dirname(__FILE__)}/support/fixture_builder.rb"
-support_files = Dir["#{File.dirname(__FILE__)}/support/**/*.rb"] - [fixture_builder_file]
-support_files.each {|f| require f }
-require fixture_builder_file
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f }
 
 RSpec.configure do |config|
   config.include JSON::SchemaMatchers
@@ -75,10 +72,6 @@ RSpec.configure do |config|
   end
 
   config.use_transactional_fixtures = true
-
-  # load fixtures
-  config.fixture_path = "#{::Rails.root}/test/fixtures"
-  config.global_fixtures = :all
 
   config.filter_run_excluding rails: (Rails::VERSION::MAJOR == 5 ? 4 : 5)
 

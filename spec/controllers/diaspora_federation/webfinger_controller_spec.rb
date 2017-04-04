@@ -37,17 +37,17 @@ module DiasporaFederation
 
     describe "GET #legacy_webfinger", rails: 5 do
       it "succeeds when the person exists" do
-        get :legacy_webfinger, params: {q: "alice@localhost:3000"}
+        get :legacy_webfinger, params: {q: alice.diaspora_id}
         expect(response).to be_success
       end
 
       it "succeeds with 'acct:' in the query when the person exists" do
-        get :legacy_webfinger, params: {q: "acct:alice@localhost:3000"}
+        get :legacy_webfinger, params: {q: "acct:#{alice.diaspora_id}"}
         expect(response).to be_success
       end
 
       it "contains the diaspora* ID" do
-        get :legacy_webfinger, params: {q: "acct:alice@localhost:3000"}
+        get :legacy_webfinger, params: {q: "acct:#{alice.diaspora_id}"}
         expect(response.body).to include "<Subject>acct:alice@localhost:3000</Subject>"
       end
 

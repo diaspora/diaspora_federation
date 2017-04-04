@@ -17,7 +17,7 @@ module DiasporaFederation
         public_key:    alice.serialized_public_key
       ).to_xml
 
-      get :legacy_webfinger, q: "alice@localhost:3000"
+      get :legacy_webfinger, q: alice.diaspora_id
       expect(response).to be_success
       expect(response.body).to eq(webfinger_xrd)
     end
