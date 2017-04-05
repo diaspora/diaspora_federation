@@ -2,12 +2,11 @@
 
 set -x
 
-if [[ ${TRAVIS_RUBY_VERSION} == "2.1" ]]; then
-  # ruby 2.1
-  export NO_COVERAGE="true" # No coverage for rails 4, because controller specs are disabled
+if [[ ${BUNDLE_GEMFILE} =~ .*test/gemfiles/.*.Gemfile ]]; then
+  # No coverage for other gemfiles, because some specs are disabled
+  export NO_COVERAGE="true"
   bundle exec rake --trace
 else
-  # ruby >= 2.2
   bundle exec rake --trace
   test_exit_code=$?
   bundle exec codeclimate-test-reporter
