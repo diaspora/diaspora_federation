@@ -1,15 +1,15 @@
 def entity_hash_from(hash)
-  hash.transform_values {|value|
+  hash.map {|key, value|
     if [String, TrueClass, FalseClass, Integer, NilClass].any? {|c| value.is_a? c }
-      value
+      [key, value]
     elsif value.is_a? Time
-      value.iso8601
+      [key, value.iso8601]
     elsif value.instance_of?(Array)
-      value.map(&:to_h)
+      [key, value.map(&:to_h)]
     else
-      value.to_h
+      [key, value.to_h]
     end
-  }
+  }.to_h
 end
 
 shared_examples "an Entity subclass" do
