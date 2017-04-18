@@ -1,5 +1,5 @@
 describe Validation::Rule::DiasporaIdCount do
-  let(:id_str) { Array.new(3) { FactoryGirl.generate(:diaspora_id) }.join(";") }
+  let(:id_str) { Array.new(3) { Fabricate.sequence(:diaspora_id) }.join(";") }
 
   it "requires a parameter" do
     validator = Validation::Validator.new({})

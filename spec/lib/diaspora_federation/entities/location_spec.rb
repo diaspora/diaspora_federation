@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Location do
-    let(:data) { FactoryGirl.attributes_for(:location_entity) }
+    let(:data) { Fabricate.attributes_for(:location_entity) }
 
     let(:xml) { <<-XML }
 <location>

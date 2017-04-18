@@ -15,8 +15,6 @@ Metrics/LineLength:
 # the code easier to read (by naming things), but can also clutter the class
 Metrics/MethodLength:
   Max: 20
-  Exclude:
-    - "lib/diaspora_federation/test/factories.rb"
 
 # The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
 Metrics/ClassLength:
@@ -27,8 +25,6 @@ Metrics/ModuleLength:
 # Raise AbcSize from 15 to 20
 Metrics/AbcSize:
   Max: 20
-  Exclude:
-    - "lib/diaspora_federation/test/factories.rb"
 
 # No space makes the method definition shorter and differentiates
 # from a regular assignment.
@@ -165,13 +161,14 @@ Metrics/BlockLength:
     - "**/*.rake"
     - "spec/**/*.rb"
     - "test/dummy/config/**/*.rb"
-    - "lib/diaspora_federation/test/factories.rb"
 
+# Rails cops only for controllers
+Rails/Date:
+  Exclude:
+    - "spec/support/**/*"
 Rails/TimeZone:
   Exclude:
     - "spec/lib/**/*"
-
-# Rails cops only for controllers
 Rails/Delegate:
   Exclude:
     - "lib/**/*"
@@ -209,7 +206,7 @@ Performance/RegexpMatch:
 # for rails 4 and ruby < 2.2.2
 Rails/HttpPositionalArguments:
   Exclude:
-    - "spec/controllers/diaspora_federation/fixtures_rails4_spec.rb"
+    - "spec/controllers/diaspora_federation/rails4_spec.rb"
 
 # remove with next rubocop update, see https://github.com/bbatsov/rubocop/issues/4172
 Style/MixinGrouping:

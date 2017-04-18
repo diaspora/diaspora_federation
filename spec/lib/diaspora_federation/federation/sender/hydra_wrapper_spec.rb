@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Federation::Sender::HydraWrapper do
-    let(:sender_id) { FactoryGirl.generate(:diaspora_id) }
+    let(:sender_id) { Fabricate.sequence(:diaspora_id) }
     let(:obj_str) { "status_message@guid" }
     let(:xml) { "<xml>post</xml>" }
     let(:url) { "http://example.org/receive/public" }

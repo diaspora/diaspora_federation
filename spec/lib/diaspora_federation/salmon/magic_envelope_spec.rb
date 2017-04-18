@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Salmon::MagicEnvelope do
-    let(:sender) { FactoryGirl.generate(:diaspora_id) }
+    let(:sender) { Fabricate.sequence(:diaspora_id) }
     let(:privkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
     let(:payload) { Entities::TestEntity.new(test: "asdf") }
     let(:envelope) { Salmon::MagicEnvelope.new(payload, sender) }
@@ -139,7 +139,7 @@ module DiasporaFederation
         end
 
         it "verifies the signature" do
-          other_sender = FactoryGirl.generate(:diaspora_id)
+          other_sender = Fabricate.sequence(:diaspora_id)
           other_key = OpenSSL::PKey::RSA.generate(512)
 
           expect_callback(:fetch_public_key, other_sender).and_return(other_key)

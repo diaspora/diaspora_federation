@@ -12,76 +12,52 @@ unless ENV["NO_COVERAGE"] == "true"
   end
 end
 
-ENV["RAILS_ENV"] ||= "test"
-require File.join(File.dirname(__FILE__), "..", "test", "dummy", "config", "environment")
+dummy_app_path = File.join(File.dirname(__FILE__), "..", "test", "dummy")
 
-require "rspec/rails"
-require "webmock/rspec"
+begin
+  require "rails" # try to load rails
+rescue LoadError
+  Dir["#{File.join(dummy_app_path, 'app', 'models')}/*.rb"].each {|f| require f }
+  require File.join(dummy_app_path, "config", "initializers", "diaspora_federation")
+else
+  ENV["RAILS_ENV"] ||= "test"
+  require File.join(dummy_app_path, "config", "environment")
+
+  require "rspec/rails"
+end
+
+# test helpers
+require "json-schema-rspec"
+require "rspec/collection_matchers"
 require "rspec/json_expectations"
+require "webmock/rspec"
 
-# load factory girl factories
+# load factories
 require "factories"
 
 # load test entities
 require "entities"
 
-# some helper methods
-
-def alice
-  @alice ||= Person.find_by(diaspora_id: "alice@localhost:3000")
-end
-
-def bob
-  @bob ||= Person.find_by(diaspora_id: "bob@localhost:3000")
-end
-
-def expect_callback(*opts)
-  expect(DiasporaFederation.callbacks).to receive(:trigger).with(*opts)
-end
-
-def add_signatures(hash, klass=described_class)
-  properties = klass.new(hash).send(:enriched_properties)
-  hash[:author_signature] = properties[:author_signature]
-  hash[:parent_author_signature] = properties[:parent_author_signature]
-end
-
-def sign_with_key(privkey, signature_data)
-  Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, signature_data))
-end
-
-def verify_signature(pubkey, signature, signed_string)
-  pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
-end
-
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-fixture_builder_file = "#{File.dirname(__FILE__)}/support/fixture_builder.rb"
-support_files = Dir["#{File.dirname(__FILE__)}/support/**/*.rb"] - [fixture_builder_file]
-support_files.each {|f| require f }
-require fixture_builder_file
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f }
 
 RSpec.configure do |config|
   config.include JSON::SchemaMatchers
   config.json_schemas[:entity_schema] = "lib/diaspora_federation/schemas/federation_entities.json"
 
-  config.example_status_persistence_file_path = "spec/rspec-persistance.txt"
-
-  config.infer_spec_type_from_file_location!
-
-  config.render_views
+  config.example_status_persistence_file_path = "spec/rspec-persistence.txt"
 
   config.expect_with :rspec do |expect_config|
     expect_config.syntax = :expect
   end
 
-  config.include FactoryGirl::Syntax::Methods
-  config.use_transactional_fixtures = true
-
-  # load fixtures
-  config.fixture_path = "#{::Rails.root}/test/fixtures"
-  config.global_fixtures = :all
-
-  config.filter_run_excluding rails4: true if Rails::VERSION::MAJOR == 5
+  if defined?(::Rails)
+    config.filter_run_excluding rails: (::Rails::VERSION::MAJOR == 5 ? 4 : 5)
+  else
+    config.exclude_pattern = "**/controllers/**/*_spec.rb, **/routing/**/*_spec.rb"
+    config.filter_run_excluding rails: true
+  end
 
   # whitelist codeclimate.com so test coverage can be reported
   config.after(:suite) do

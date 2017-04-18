@@ -1,8 +1,35 @@
 module DiasporaFederation
   describe Discovery::Discovery do
-    let(:host_meta_xrd) { FixtureGeneration.load_fixture("host-meta") }
-    let(:webfinger_xrd) { FixtureGeneration.load_fixture("legacy-webfinger") }
-    let(:hcard_html) { FixtureGeneration.load_fixture("hcard") }
+    let(:host_meta_xrd) { Discovery::HostMeta.from_base_url("http://localhost:3000/").to_xml }
+    let(:webfinger_xrd) {
+      DiasporaFederation::Discovery::WebFinger.new(
+        acct_uri:      "acct:#{alice.diaspora_id}",
+        alias_url:     alice.alias_url,
+        hcard_url:     alice.hcard_url,
+        seed_url:      alice.url,
+        profile_url:   alice.profile_url,
+        atom_url:      alice.atom_url,
+        salmon_url:    alice.salmon_url,
+        subscribe_url: alice.subscribe_url,
+        guid:          alice.guid,
+        public_key:    alice.serialized_public_key
+      ).to_xml
+    }
+    let(:hcard_html) {
+      DiasporaFederation::Discovery::HCard.new(
+        guid:             alice.guid,
+        nickname:         alice.nickname,
+        full_name:        alice.full_name,
+        url:              alice.url,
+        photo_large_url:  alice.photo_default_url,
+        photo_medium_url: alice.photo_default_url,
+        photo_small_url:  alice.photo_default_url,
+        public_key:       alice.serialized_public_key,
+        searchable:       alice.searchable,
+        first_name:       alice.first_name,
+        last_name:        alice.last_name
+      ).to_html
+    }
     let(:account) { alice.diaspora_id }
     let(:default_image) { "http://localhost:3000/assets/user/default.png" }
 
@@ -27,6 +54,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
 
+        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
         person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
@@ -73,6 +101,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
 
+        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
         person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
@@ -89,6 +118,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
 
+        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
         person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)
@@ -179,7 +209,7 @@ module DiasporaFederation
 </div>
 </div>
 </div>
-        HTML
+HTML
 
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
@@ -188,6 +218,7 @@ module DiasporaFederation
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: historic_hcard_html)
 
+        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
         person = Discovery::Discovery.new(account).fetch_and_save
 
         expect(person.guid).to eq(alice.guid)

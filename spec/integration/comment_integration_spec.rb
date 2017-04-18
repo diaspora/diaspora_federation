@@ -56,7 +56,7 @@ KEY
     let(:new_data) { "foobar" }
     let(:text) { "this is a very informative comment" }
 
-    let(:parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
+    let(:parent) { Fabricate(:related_entity, author: bob.diaspora_id) }
     let(:comment) {
       Entities::Comment.new(
         author: author, guid: guid, parent_guid: parent_guid, text: text, parent: parent, new_data: new_data
@@ -210,7 +210,7 @@ XML
     end
 
     context "parsing on every other pod" do
-      let(:parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id, local: false) }
+      let(:parent) { Fabricate(:related_entity, author: bob.diaspora_id, local: false) }
 
       before do
         expect_callback(:fetch_public_key, author).and_return(author_key.public_key)

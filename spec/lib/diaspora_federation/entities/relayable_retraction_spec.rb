@@ -1,15 +1,15 @@
 module DiasporaFederation
   describe Entities::RelayableRetraction do
-    let(:target) { FactoryGirl.create(:comment, author: bob) }
+    let(:target) { Fabricate(:comment, author: bob) }
     let(:target_entity) {
-      FactoryGirl.build(
+      Fabricate(
         :related_entity,
         author: bob.diaspora_id,
-        parent: FactoryGirl.build(:related_entity, author: alice.diaspora_id)
+        parent: Fabricate(:related_entity, author: alice.diaspora_id)
       )
     }
     let(:data) {
-      FactoryGirl.build(
+      Fabricate(
         :relayable_retraction_entity,
         author:      alice.diaspora_id,
         target_guid: target.guid,
@@ -41,11 +41,11 @@ XML
 
     describe "#to_xml" do
       let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
-      let(:hash) { FactoryGirl.attributes_for(:relayable_retraction_entity) }
+      let(:hash) { Fabricate.attributes_for(:relayable_retraction_entity) }
 
       it "updates author signature when it was nil and key was supplied and author is not parent author" do
-        parent = FactoryGirl.build(:related_entity, author: bob.diaspora_id)
-        hash[:target] = FactoryGirl.build(:related_entity, author: hash[:author], parent: parent)
+        parent = Fabricate(:related_entity, author: bob.diaspora_id)
+        hash[:target] = Fabricate(:related_entity, author: hash[:author], parent: parent)
 
         expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
 
@@ -58,8 +58,8 @@ XML
       end
 
       it "sets parent author signature when author is parent author" do
-        parent = FactoryGirl.build(:related_entity, author: hash[:author])
-        hash[:target] = FactoryGirl.build(:related_entity, author: hash[:author], parent: parent)
+        parent = Fabricate(:related_entity, author: hash[:author])
+        hash[:target] = Fabricate(:related_entity, author: hash[:author], parent: parent)
 
         expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
 
@@ -72,8 +72,8 @@ XML
       end
 
       it "updates parent author signature when it was nil, key was supplied and sender is author of the parent" do
-        parent = FactoryGirl.build(:related_entity, author: hash[:author])
-        hash[:target] = FactoryGirl.build(:related_entity, author: bob.diaspora_id, parent: parent)
+        parent = Fabricate(:related_entity, author: hash[:author])
+        hash[:target] = Fabricate(:related_entity, author: bob.diaspora_id, parent: parent)
 
         expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
 
@@ -105,7 +105,7 @@ XML
 
     describe "#to_retraction" do
       it "copies the attributes to a Retraction" do
-        relayable_retraction = FactoryGirl.build(:relayable_retraction_entity)
+        relayable_retraction = Fabricate(:relayable_retraction_entity)
         retraction = relayable_retraction.to_retraction
 
         expect(retraction).to be_a(Entities::Retraction)

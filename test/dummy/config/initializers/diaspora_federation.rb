@@ -1,4 +1,4 @@
-require "diaspora_federation/discovery"
+require "diaspora_federation"
 
 ca_file = if File.file?("/etc/ssl/certs/ca-certificates.crt")
             # For Debian, Ubuntu, Archlinux, Gentoo
@@ -53,20 +53,16 @@ DiasporaFederation.configure do |config|
       end
     end
 
-    on :save_person_after_webfinger do |person|
-      unless Person.exists?(diaspora_id: person.diaspora_id)
-        Person.new(diaspora_id: person.diaspora_id, guid: person.guid,
-                   serialized_public_key: person.exported_key, url: person.url).save!
-      end
+    on :save_person_after_webfinger do
     end
 
     on :fetch_private_key do |diaspora_id|
-      key = Person.where(diaspora_id: diaspora_id).pluck(:serialized_private_key).first
-      OpenSSL::PKey::RSA.new(key) unless key.nil?
+      person = Person.find_by(diaspora_id: diaspora_id)
+      OpenSSL::PKey::RSA.new(person.serialized_private_key) unless person.nil?
     end
 
     on :fetch_public_key do |diaspora_id|
-      key = Person.where(diaspora_id: diaspora_id).pluck(:serialized_public_key).first
+      key = Person.find_by(diaspora_id: diaspora_id).serialized_public_key
       key = DiasporaFederation::Discovery::Discovery.new(diaspora_id).fetch_and_save.exported_key if key.nil?
       OpenSSL::PKey::RSA.new(key) unless key.nil?
     end
@@ -94,7 +90,7 @@ DiasporaFederation.configure do |config|
 
     on :fetch_public_entity do |entity_type, guid|
       type = DiasporaFederation::Entities.const_get(entity_type).entity_name
-      FactoryGirl.build("#{type}_entity", guid: guid)
+      Fabricate("#{type}_entity", guid: guid)
     end
 
     on :fetch_person_url_to do |diaspora_id, path|

@@ -1,17 +1,14 @@
-require "fixture_builder"
+# set default users as initial database for each test
+RSpec.configure do |config|
+  config.before(:suite) do
+    Person.reset_database
+    Fabricate(:user, diaspora_id: "alice@localhost:3000")
+    Fabricate(:user, diaspora_id: "bob@localhost:3000")
+    Person.init_database = Person.database
+  end
 
-FixtureBuilder.configure do |fbuilder|
-  # rebuild fixtures automatically when these files change:
-  fbuilder.files_to_check += Dir[
-      "lib/**/*.rb",
-      "spec/factories.rb",
-      "spec/support/fixture_builder.rb",
-      "test/dummy/app/models/*.rb"
-  ]
-
-  # now declare objects
-  fbuilder.factory do
-    FactoryGirl.create(:user, diaspora_id: "alice@localhost:3000")
-    FactoryGirl.create(:user, diaspora_id: "bob@localhost:3000")
+  config.after(:each) do
+    Entity.reset_database
+    Person.reset_database
   end
 end

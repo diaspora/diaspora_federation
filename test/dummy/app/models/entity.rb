@@ -1,5 +1,27 @@
-class Entity < ActiveRecord::Base
-  include ::Diaspora::Guid
+class Entity
+  attr_accessor :author, :guid
+  attr_reader :entity_type
 
-  belongs_to :author, class_name: "Person"
+  def initialize(entity_type)
+    @entity_type = entity_type
+    @guid = UUID.generate(:compact)
+  end
+
+  def save!
+    Entity.database[entity_type][guid] = self
+  end
+
+  class << self
+    def find_by(opts)
+      database[opts[:entity_type]][opts[:guid]]
+    end
+
+    def database
+      @database ||= Hash.new({})
+    end
+
+    def reset_database
+      @database = nil
+    end
+  end
 end

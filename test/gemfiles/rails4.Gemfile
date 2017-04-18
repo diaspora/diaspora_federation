@@ -3,40 +3,17 @@ source "https://rubygems.org"
 # Declare your gem's dependencies in diaspora_federation.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
 # development dependencies will be added by default to the :development group.
-gemspec name: "diaspora_federation"
+gemspec name: "diaspora_federation", path: "../../"
 
 Dir["diaspora_federation-*.gemspec"].each do |gemspec|
   plugin = gemspec.scan(/diaspora_federation-(.*)\.gemspec/).flatten.first
-  gemspec(name: "diaspora_federation-#{plugin}", development_group: plugin)
+  gemspec(name: "diaspora_federation-#{plugin}", development_group: plugin, path: "../../")
 end
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
-
-group :development do
-  # code style
-  gem "pronto",         "0.8.2",  require: false
-  gem "pronto-rubocop", "0.8.0",  require: false
-  gem "rubocop",        "0.48.0", require: false
-
-  # automatic test runs
-  gem "guard-rspec",   require: false
-  gem "guard-rubocop", require: false
-
-  # preloading environment
-  gem "spring"
-  gem "spring-commands-rspec"
-  gem "spring-watcher-listen"
-
-  # debugging
-  gem "pry"
-  gem "pry-byebug"
-
-  # documentation
-  gem "yard", require: false
-end
 
 group :test do
   # rspec formatter
@@ -62,3 +39,5 @@ group :development, :test do
   gem "rspec", "~> 3.5.0"
   gem "rspec-rails", "~> 3.5.1"
 end
+
+gem "actionpack", "4.2.8"

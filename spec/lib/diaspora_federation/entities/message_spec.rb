@@ -1,9 +1,9 @@
 module DiasporaFederation
   describe Entities::Message do
-    let(:parent) { FactoryGirl.create(:conversation, author: bob) }
-    let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
+    let(:parent) { Fabricate(:conversation, author: bob) }
+    let(:parent_entity) { Fabricate(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      FactoryGirl
+      Fabricate
         .attributes_for(:message_entity, author: alice.diaspora_id, parent_guid: parent.guid, parent: parent_entity)
         .tap {|hash| add_signatures(hash) }
     }
@@ -44,7 +44,7 @@ XML
 
       it "does not allow any other person" do
         expect_callback(:fetch_related_entity, "Conversation", entity.conversation_guid).and_return(parent_entity)
-        invalid_sender = FactoryGirl.generate(:diaspora_id)
+        invalid_sender = Fabricate.sequence(:diaspora_id)
         expect(entity.sender_valid?(invalid_sender)).to be_falsey
       end
 

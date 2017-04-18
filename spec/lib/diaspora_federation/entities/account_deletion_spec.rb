@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::AccountDeletion do
-    let(:data) { FactoryGirl.attributes_for(:account_deletion_entity) }
+    let(:data) { Fabricate.attributes_for(:account_deletion_entity) }
 
     let(:xml) { <<-XML }
 <account_deletion>

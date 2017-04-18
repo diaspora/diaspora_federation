@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Discovery::HCard do
-    let(:person) { FactoryGirl.create(:person) }
+    let(:person) { Fabricate(:person) }
     let(:photo_large_url) { "#{person.url}/upload/large.png" }
     let(:photo_medium_url) { "#{person.url}/upload/medium.png" }
     let(:photo_small_url) { "#{person.url}/upload/small.png" }

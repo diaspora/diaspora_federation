@@ -1,12 +1,12 @@
 module DiasporaFederation
   describe Entities::Poll do
-    let(:data) { FactoryGirl.attributes_for(:poll_entity) }
+    let(:data) { Fabricate.attributes_for(:poll_entity) }
 
     let(:xml) { <<-XML }
 <poll>
   <guid>#{data[:guid]}</guid>
   <question>#{data[:question]}</question>
-#{data[:poll_answers].map {|a| a.to_xml.to_s.indent(2) }.join("\n")}
+#{data[:poll_answers].map {|a| indent(a.to_xml.to_s, 2) }.join("\n")}
 </poll>
 XML
 
@@ -17,7 +17,7 @@ XML
     "guid": "#{data[:guid]}",
     "question": "#{data[:question]}",
     "poll_answers": [
-#{data[:poll_answers].map {|a| JSON.pretty_generate(a.to_json).indent(6) }.join(",\n")}
+#{data[:poll_answers].map {|a| indent(JSON.pretty_generate(a.to_json), 6) }.join(",\n")}
     ]
   }
 }

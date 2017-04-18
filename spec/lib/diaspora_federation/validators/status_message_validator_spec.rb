@@ -17,7 +17,7 @@ module DiasporaFederation
       it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :photos }
         let(:wrong_values) { [nil] }
-        let(:correct_values) { [[], [FactoryGirl.build(:photo_entity)]] }
+        let(:correct_values) { [[], [Fabricate(:photo_entity)]] }
       end
     end
 

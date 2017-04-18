@@ -3,13 +3,13 @@ module DiasporaFederation
     let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
     let(:parent_pkey) { OpenSSL::PKey::RSA.generate(1024) }
 
-    let(:guid) { FactoryGirl.generate(:guid) }
-    let(:parent_guid) { FactoryGirl.generate(:guid) }
-    let(:author) { FactoryGirl.generate(:diaspora_id) }
+    let(:guid) { Fabricate.sequence(:guid) }
+    let(:parent_guid) { Fabricate.sequence(:guid) }
+    let(:author) { Fabricate.sequence(:diaspora_id) }
     let(:property) { "hello" }
     let(:new_property) { "some text" }
-    let(:local_parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
-    let(:remote_parent) { FactoryGirl.build(:related_entity, author: bob.diaspora_id, local: false) }
+    let(:local_parent) { Fabricate(:related_entity, author: bob.diaspora_id) }
+    let(:remote_parent) { Fabricate(:related_entity, author: bob.diaspora_id, local: false) }
     let(:hash) { {guid: guid, author: author, parent_guid: parent_guid, parent: local_parent, property: property} }
     let(:hash_with_fake_signatures) { hash.merge!(author_signature: "aa", parent_author_signature: "bb") }
 
@@ -521,7 +521,7 @@ XML
 
       it "does not allow any random author" do
         entity = Entities::SomeRelayable.new(hash)
-        invalid_author = FactoryGirl.generate(:diaspora_id)
+        invalid_author = Fabricate.sequence(:diaspora_id)
 
         expect(entity.sender_valid?(invalid_author)).to be_falsey
       end

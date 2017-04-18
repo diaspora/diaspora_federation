@@ -158,7 +158,7 @@ XML
           test2: false,
           test3: "456",
           test4: 789,
-          test5: Time.current.utc
+          test5: Time.now.utc
         }
       }
 
@@ -208,7 +208,7 @@ XML
 
     describe ".from_json" do
       it "parses entity properties from the input JSON data" do
-        now = Time.now.change(usec: 0).utc
+        now = change_time(Time.now.utc)
         entity_data = <<-JSON
 {
   "entity_type": "test_complex_entity",
@@ -281,7 +281,7 @@ JSON
 
     describe ".from_hash" do
       it "parses entity properties from the input data" do
-        now = Time.now.change(usec: 0).utc
+        now = change_time(Time.now.utc)
         entity_data = {
           test1: "abc",
           test2: false,
@@ -417,7 +417,7 @@ JSON
       end
 
       it "is not added to xml if #to_xml returns nil" do
-        entity = Entities::TestEntityWithRelatedEntity.new(test: "test", parent: FactoryGirl.build(:related_entity))
+        entity = Entities::TestEntityWithRelatedEntity.new(test: "test", parent: Fabricate(:related_entity))
         xml = entity.to_xml
         expect(xml.children).to have_exactly(1).items
         xml.children.first.name = "test"

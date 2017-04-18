@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Profile do
-    let(:data) { FactoryGirl.attributes_for(:profile_entity) }
+    let(:data) { Fabricate.attributes_for(:profile_entity) }
 
     let(:xml) { <<-XML }
 <profile>

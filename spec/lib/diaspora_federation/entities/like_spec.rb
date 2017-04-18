@@ -1,9 +1,9 @@
 module DiasporaFederation
   describe Entities::Like do
-    let(:parent) { FactoryGirl.create(:post, author: bob) }
-    let(:parent_entity) { FactoryGirl.build(:related_entity, author: bob.diaspora_id) }
+    let(:parent) { Fabricate(:post, author: bob) }
+    let(:parent_entity) { Fabricate(:related_entity, author: bob.diaspora_id) }
     let(:data) {
-      FactoryGirl.attributes_for(
+      Fabricate.attributes_for(
         :like_entity,
         author:      alice.diaspora_id,
         parent_guid: parent.guid,

@@ -20,15 +20,10 @@ doc
 *.directory
 
 # dummmy app
-test/dummy/db/*.sqlite3
-test/dummy/db/*.sqlite3-journal
 test/dummy/log/*.log
 test/dummy/log/*.log*
-test/dummy/tmp/
-test/dummy/.sass-cache
-test/dummy/test/fixtures/*.y*ml
 
-rspec-persistance.txt
+rspec-persistence.txt
 
 .rake_tasks
 

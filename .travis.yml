@@ -5,6 +5,15 @@ rvm:
   - 2.3.3
   - 2.2.5
   - 2.1
+gemfile:
+  - Gemfile
+  - test/gemfiles/rails4.Gemfile
+  - test/gemfiles/no-rails.Gemfile
+
+matrix:
+  exclude:
+    - rvm: 2.1
+      gemfile: Gemfile
 
 sudo: false
 cache:
@@ -15,7 +24,7 @@ branches:
     - 'master'
     - 'develop'
 
-before_install: test/scripts/prepare-travis.sh
+before_install: gem install bundler
 bundler_args: "--deployment --without development --jobs=3 --retry=3"
 
 script: test/scripts/travis.sh

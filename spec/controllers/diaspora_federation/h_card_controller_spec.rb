@@ -1,12 +1,11 @@
 module DiasporaFederation
-  describe HCardController, type: :controller do
+  describe HCardController, type: :controller, rails: 5 do
     routes { DiasporaFederation::Engine.routes }
 
     describe "GET #hcard" do
-      it "succeeds when the person exists", fixture: true do
+      it "succeeds when the person exists" do
         get :hcard, params: {guid: alice.guid}
         expect(response).to be_success
-        save_fixture(response.body, "hcard")
       end
 
       it "contains the guid" do

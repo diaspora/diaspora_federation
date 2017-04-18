@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Entities::Contact do
-    let(:data) { FactoryGirl.attributes_for(:contact_entity) }
+    let(:data) { Fabricate.attributes_for(:contact_entity) }
 
     let(:xml) { <<-XML }
 <contact>

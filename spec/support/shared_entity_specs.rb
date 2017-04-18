@@ -1,15 +1,15 @@
 def entity_hash_from(hash)
-  hash.transform_values {|value|
+  hash.map {|key, value|
     if [String, TrueClass, FalseClass, Integer, NilClass].any? {|c| value.is_a? c }
-      value
+      [key, value]
     elsif value.is_a? Time
-      value.iso8601
+      [key, value.iso8601]
     elsif value.instance_of?(Array)
-      value.map(&:to_h)
+      [key, value.map(&:to_h)]
     else
-      value.to_h
+      [key, value.to_h]
     end
-  }
+  }.to_h
 end
 
 shared_examples "an Entity subclass" do
@@ -90,7 +90,7 @@ shared_examples "an XML Entity" do |ignored_props=[]|
 
   def validate_property(value, parsed_value)
     if value.is_a?(Time)
-      expect(parsed_value).to eq(value.change(usec: 0))
+      expect(parsed_value).to eq(change_time(value))
     else
       expect(parsed_value).to eq(value)
     end
@@ -121,7 +121,7 @@ end
 
 shared_examples "a retraction" do
   context "receive with no target found" do
-    let(:unknown_guid) { FactoryGirl.generate(:guid) }
+    let(:unknown_guid) { Fabricate.sequence(:guid) }
     let(:instance) { described_class.new(data.merge(target_guid: unknown_guid)) }
 
     it "raises when no target is found" do
