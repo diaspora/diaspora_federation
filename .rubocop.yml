@@ -189,6 +189,16 @@ Style/EmptyLineBetweenDefs:
 Style/NumericPredicate:
   EnforcedStyle: comparison
 
+# Old defaults from rubocop < 0.48.1 (Maybe change this in the future?)
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: '()'
+    '%i': '()'
+    '%I': '()'
+    '%r': '{}'
+    '%w': '()'
+    '%W': '()'
+
 ### backward compatibility
 
 # only with ruby >= 2.3
@@ -207,8 +217,3 @@ Performance/RegexpMatch:
 Rails/HttpPositionalArguments:
   Exclude:
     - "spec/controllers/diaspora_federation/rails4_spec.rb"
-
-# remove with next rubocop update, see https://github.com/bbatsov/rubocop/issues/4172
-Style/MixinGrouping:
-  Exclude:
-    - "spec/**/*"
