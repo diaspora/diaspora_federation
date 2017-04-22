@@ -224,7 +224,7 @@ GEM
     uuid (2.3.8)
       macaddr (~> 1.0)
     valid (1.2.0)
-    webmock (2.3.2)
+    webmock (3.0.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -259,7 +259,7 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   spring-watcher-listen
-  webmock (~> 2.0)
+  webmock (~> 3.0)
   yard
 
 BUNDLED WITH
