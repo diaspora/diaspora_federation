@@ -17,7 +17,9 @@ Gem::Specification.new do |s|
   s.license     = "AGPL-3.0"
 
   s.files       = Dir["lib/**/*", "LICENSE", "README.md", "Changelog.md"] -
-                    Dir["lib/diaspora_federation/{engine,rails,test}.rb", "lib/diaspora_federation/test/*"]
+                    Dir["lib/diaspora_federation/{engine,rails,test}.rb",
+                        "lib/diaspora_federation/test/*",
+                        "lib/tasks/*.rake"]
 
   s.required_ruby_version = "~> 2.1"
 
