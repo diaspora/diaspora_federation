@@ -167,8 +167,7 @@ module DiasporaFederation
           photo_medium_url: photo_from_doc(doc, :photo_medium),
           photo_small_url:  photo_from_doc(doc, :photo_small),
           searchable:       (content_from_doc(doc, :searchable) == "true"),
-          # TODO: public key is new and can be missing
-          public_key:       (content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?),
+          public_key:       content_from_doc(doc, :key),
 
           # TODO: remove first_name and last_name!
           first_name:       content_from_doc(doc, :given_name),
