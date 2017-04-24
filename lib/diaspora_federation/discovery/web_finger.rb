@@ -177,8 +177,7 @@ module DiasporaFederation
       # * friendica has two aliases and the first is with "acct:": return only an URL starting with http (or https)
       private_class_method def self.parse_alias(aliases)
         return nil unless aliases
-        # TODO: Old pods had quotes around alias. Remove the +map+ in next line, when all pods use this gem
-        aliases.map {|a| a.gsub(/\A"|"\Z/, "") }.find {|a| a.start_with?("http") }
+        aliases.find {|a| a.start_with?("http") }
       end
     end
   end
