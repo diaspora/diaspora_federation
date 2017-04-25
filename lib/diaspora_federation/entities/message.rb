@@ -4,11 +4,17 @@ module DiasporaFederation
     #
     # @see Validators::MessageValidator
     class Message < Entity
-      # Old signature order
-      # @deprecated
-      LEGACY_SIGNATURE_ORDER = %i(guid parent_guid text created_at author conversation_guid).freeze
+      # @!attribute [r] author
+      #   The diaspora* ID of the author
+      #   @see Person#author
+      #   @return [String] diaspora* ID
+      property :author, :string, xml_name: :diaspora_handle
 
-      include Relayable
+      # @!attribute [r] guid
+      #   A random string of at least 16 chars
+      #   @see Validation::Rule::Guid
+      #   @return [String] guid
+      property :guid, :string
 
       # @!attribute [r] text
       #   Text of the message composed by a user
@@ -26,55 +32,9 @@ module DiasporaFederation
       #   @return [String] conversation guid
       property :conversation_guid, :string
 
-      # It is only valid to receive a {Message} from the author itself,
-      # or from the author of the parent {Conversation} if the author signature is valid.
-      # @deprecated remove after {Message} doesn't include {Relayable} anymore
-      def sender_valid?(sender)
-        sender == author || (sender == parent_author && verify_author_signature)
-      end
-
-      # @deprecated remove after {Message} doesn't include {Relayable} anymore
-      def to_h
-        super.tap {|hash| hash[:created_at] = created_at.utc.iso8601 }
-      end
-
-      # @deprecated remove after {Message} doesn't include {Relayable} anymore
-      private_class_method def self.xml_parser_class
-        DiasporaFederation::Parsers::XmlParser
-      end
-
-      # Default implementation, don't verify signatures for a {Message}.
-      # @see Entity.from_hash
-      # @deprecated remove after {Message} doesn't include {Relayable} anymore
-      # @param [Hash] properties hash
-      # @return [Entity] instance
-      def self.from_hash(hash)
-        new({parent_guid: nil, parent: nil}.merge(hash))
-      end
-
-      private
-
-      # @deprecated remove after {Message} doesn't include {Relayable} anymore
-      def verify_author_signature
-        verify_signature(author, :author_signature)
-        true
-      end
-
-      # @deprecated remove after {Message} doesn't include {Relayable} anymore
-      def parent_author
-        parent = DiasporaFederation.callbacks.trigger(:fetch_related_entity, "Conversation", conversation_guid)
-        raise Federation::Fetcher::NotFetchable, "parent of #{self} not found" unless parent
-        parent.author
-      end
-
-      # old timestamp format, because this signature is only used from old pods which also relay with old format
-      # @deprecated remove after {Message} doesn't include {Relayable} anymore
-      def normalize_property(name, value)
-        if name == :created_at
-          value.to_s
-        else
-          super
-        end
+      # @return [String] string representation of this object
+      def to_s
+        "#{super}:#{conversation_guid}"
       end
     end
   end

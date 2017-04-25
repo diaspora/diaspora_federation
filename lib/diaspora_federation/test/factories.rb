@@ -142,7 +142,7 @@ module DiasporaFederation
         participants { Array.new(3) { Fabricate.sequence(:diaspora_id) }.join(";") }
       end
 
-      Fabricator(:message_entity, class_name: DiasporaFederation::Entities::Message, from: :relayable_entity) do
+      Fabricator(:message_entity, class_name: DiasporaFederation::Entities::Message) do
         guid { Fabricate.sequence(:guid) }
         author { Fabricate.sequence(:diaspora_id) }
         text "this is a very informative text"
