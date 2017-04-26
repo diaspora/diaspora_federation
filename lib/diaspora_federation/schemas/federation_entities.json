@@ -110,24 +110,22 @@
     },
 
     "participation": {
-      "allOf": [
-        {"$ref": "#/definitions/relayable"},
-        {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^participation$"
+        },
+        "entity_data": {
           "type": "object",
           "properties": {
-            "entity_type": {
-              "type": "string",
-              "pattern": "^participation$"
-            },
-            "entity_data": {
-              "type": "object",
-              "properties": {
-                "parent_type": {"enum": ["Post"]}
-              }
-            }
+            "author": { "type": "string" },
+            "guid": { "$ref": "#/definitions/guid" },
+            "parent_guid": { "$ref": "#/definitions/guid" },
+            "parent_type": {"enum": ["Post"]}
           }
         }
-      ]
+      }
     },
 
     "poll_participation": {

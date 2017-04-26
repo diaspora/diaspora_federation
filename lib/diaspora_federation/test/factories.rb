@@ -93,10 +93,10 @@ module DiasporaFederation
         parent { Fabricate(:related_entity) }
       end
 
-      Fabricator(:participation_entity,
-                 class_name: DiasporaFederation::Entities::Participation, from: :relayable_entity) do
+      Fabricator(:participation_entity, class_name: DiasporaFederation::Entities::Participation) do
         author { Fabricate.sequence(:diaspora_id) }
         guid { Fabricate.sequence(:guid) }
+        parent_guid { Fabricate.sequence(:guid) }
         parent_type "Post"
       end
 
