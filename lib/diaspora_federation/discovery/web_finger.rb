@@ -14,9 +14,7 @@ module DiasporaFederation
     #     seed_url:    "https://server.example/",
     #     profile_url: "https://server.example/u/user",
     #     atom_url:    "https://server.example/public/user.atom",
-    #     salmon_url:  "https://server.example/receive/users/0123456789abcdef",
-    #     guid:        "0123456789abcdef",
-    #     public_key:  "-----BEGIN PUBLIC KEY-----\nABCDEF==\n-----END PUBLIC KEY-----"
+    #     salmon_url:  "https://server.example/receive/users/0123456789abcdef"
     #   )
     #   xml_string = wf.to_xml
     #
@@ -76,41 +74,11 @@ module DiasporaFederation
       #   This url is used to find another user on the home-pod of the user in the webfinger.
       property :subscribe_url, :string
 
-      # @!attribute [r] guid
-      #   @deprecated Either convert these to +Property+ elements or move to the
-      #     +hCard+, which actually has fields for an +UID+ defined in the +vCard+
-      #     specification (will affect older diaspora* installations).
-      #
-      #   @see HCard#guid
-      #   @see Entities::Person#guid
-      #   @return [String] guid
-      property :guid, :string
-
-      # @!attribute [r] public_key
-      #   @deprecated Either convert these to +Property+ elements or move to the
-      #     +hCard+, which actually has fields for an +KEY+ defined in the +vCard+
-      #     specification (will affect older diaspora* installations).
-      #
-      #   @see HCard#public_key
-      #
-      #   When a user is created on the pod, the pod MUST generate a pgp keypair
-      #   for them. This key is used for signing messages. The format is a
-      #   DER-encoded PKCS#1 key beginning with the text
-      #   "-----BEGIN PUBLIC KEY-----" and ending with "-----END PUBLIC KEY-----".
-      #   @return [String] public key
-      property :public_key, :string
-
       # +hcard_url+ link relation
       REL_HCARD = "http://microformats.org/profile/hcard".freeze
 
       # +seed_url+ link relation
       REL_SEED = "http://joindiaspora.com/seed_location".freeze
-
-      # @deprecated This should be a +Property+ or moved to the +hCard+, but +Link+
-      #   is inappropriate according to the specification (will affect older
-      #   diaspora* installations).
-      # +guid+ link relation
-      REL_GUID = "http://joindiaspora.com/guid".freeze
 
       # +profile_url+ link relation.
       # @note This might just as well be an +Alias+ instead of a +Link+.
@@ -124,12 +92,6 @@ module DiasporaFederation
 
       # +subscribe_url+ link relation
       REL_SUBSCRIBE = "http://ostatus.org/schema/1.0/subscribe".freeze
-
-      # @deprecated This should be a +Property+ or moved to the +hcard+, but +Link+
-      #   is inappropriate according to the specification (will affect older
-      #   diaspora* installations).
-      # +pubkey+ link relation
-      REL_PUBKEY = "diaspora-public-key".freeze
 
       # Creates the XML string from the current WebFinger instance
       # @return [String] XML string
@@ -152,9 +114,6 @@ module DiasporaFederation
 
         links = data[:links]
 
-        # TODO: remove! public key is deprecated in webfinger
-        public_key = parse_link(links, REL_PUBKEY)
-
         new(
           acct_uri:      data[:subject],
           alias_url:     parse_alias(data[:aliases]),
@@ -164,11 +123,7 @@ module DiasporaFederation
           atom_url:      parse_link(links, REL_ATOM),
           salmon_url:    parse_link(links, REL_SALMON),
 
-          subscribe_url: parse_link_template(links, REL_SUBSCRIBE),
-
-          # TODO: remove me!  ##########
-          guid:          parse_link(links, REL_GUID),
-          public_key:    (Base64.strict_decode64(public_key) if public_key)
+          subscribe_url: parse_link_template(links, REL_SUBSCRIBE)
         )
       end
 
@@ -195,21 +150,11 @@ module DiasporaFederation
         doc.links << {rel: REL_HCARD, type: "text/html", href: @hcard_url}
         doc.links << {rel: REL_SEED, type: "text/html", href: @seed_url}
 
-        # TODO: remove me!  ##############
-        doc.links << {rel: REL_GUID, type: "text/html", href: @guid}
-        ##################################
-
         doc.links << {rel: REL_PROFILE, type: "text/html", href: @profile_url}
         doc.links << {rel: REL_ATOM, type: "application/atom+xml", href: @atom_url}
         doc.links << {rel: REL_SALMON, href: @salmon_url}
 
         doc.links << {rel: REL_SUBSCRIBE, template: @subscribe_url}
-
-        # TODO: remove me!  ##############
-        doc.links << {rel:  REL_PUBKEY,
-                      type: "RSA",
-                      href: Base64.strict_encode64(@public_key)}
-        ##################################
       end
 
       private_class_method def self.find_link(links, rel)
@@ -232,8 +177,7 @@ module DiasporaFederation
       # * friendica has two aliases and the first is with "acct:": return only an URL starting with http (or https)
       private_class_method def self.parse_alias(aliases)
         return nil unless aliases
-        # TODO: Old pods had quotes around alias. Remove the +map+ in next line, when all pods use this gem
-        aliases.map {|a| a.gsub(/\A"|"\Z/, "") }.find {|a| a.start_with?("http") }
+        aliases.find {|a| a.start_with?("http") }
       end
     end
   end

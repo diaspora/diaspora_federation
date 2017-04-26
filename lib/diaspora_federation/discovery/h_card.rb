@@ -160,15 +160,14 @@ module DiasporaFederation
         doc = parse_html_and_validate(html_string)
 
         new(
-          guid:             guid_from_doc(doc),
+          guid:             content_from_doc(doc, :uid),
           nickname:         content_from_doc(doc, :nickname),
           full_name:        content_from_doc(doc, :fn),
           photo_large_url:  photo_from_doc(doc, :photo),
           photo_medium_url: photo_from_doc(doc, :photo_medium),
           photo_small_url:  photo_from_doc(doc, :photo_small),
           searchable:       (content_from_doc(doc, :searchable) == "true"),
-          # TODO: public key is new and can be missing
-          public_key:       (content_from_doc(doc, :key) unless element_from_doc(doc, :key).nil?),
+          public_key:       content_from_doc(doc, :key),
 
           # TODO: remove first_name and last_name!
           first_name:       content_from_doc(doc, :given_name),
@@ -275,13 +274,6 @@ module DiasporaFederation
 
       private_class_method def self.photo_from_doc(doc, photo_selector)
         element_from_doc(doc, photo_selector)["src"]
-      end
-
-      # @deprecated hack for old hcard
-      # @todo remove this when all pods have the new generator
-      private_class_method def self.guid_from_doc(doc)
-        uid_element = element_from_doc(doc, :uid)
-        uid_element.content unless uid_element[:class].include? "nickname"
       end
     end
   end

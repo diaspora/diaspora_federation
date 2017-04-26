@@ -11,7 +11,6 @@ module DiasporaFederation
       Fabricate.sequence(:public_key) { OpenSSL::PKey::RSA.generate(1024).public_key.export }
 
       Fabricator(:webfinger, class_name: DiasporaFederation::Discovery::WebFinger) do
-        guid { Fabricate.sequence(:guid) }
         acct_uri { "acct:#{Fabricate.sequence(:diaspora_id)}" }
         alias_url "http://localhost:3000/people/0123456789abcdef"
         hcard_url "http://localhost:3000/hcard/users/user"
@@ -19,7 +18,6 @@ module DiasporaFederation
         profile_url "http://localhost:3000/u/user"
         atom_url "http://localhost:3000/public/user.atom"
         salmon_url "http://localhost:3000/receive/users/0123456789abcdef"
-        public_key { Fabricate.sequence(:public_key) }
         subscribe_url "http://localhost:3000/people?q={uri}"
       end
 

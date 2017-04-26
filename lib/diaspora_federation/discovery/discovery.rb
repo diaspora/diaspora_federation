@@ -74,10 +74,10 @@ module DiasporaFederation
 
       def person
         @person ||= Entities::Person.new(
-          guid:         hcard.guid || webfinger.guid,
+          guid:         hcard.guid,
           diaspora_id:  diaspora_id,
           url:          webfinger.seed_url,
-          exported_key: hcard.public_key || webfinger.public_key,
+          exported_key: hcard.public_key,
           profile:      profile
         )
       end

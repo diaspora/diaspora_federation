@@ -2,14 +2,11 @@ module DiasporaFederation
   module Validators
     # This validates a {Discovery::HCard}.
     #
-    # @todo activate guid and public key validation after all pod have it in
-    #   the hcard.
-    #
     # @note
     class HCardValidator < Validation::Validator
       include Validation
 
-      # rule :guid, :guid
+      rule :guid, :guid
 
       # The name must not contain a semicolon because of mentions.
       # @{<full_name> ; <diaspora_id>}
@@ -22,7 +19,7 @@ module DiasporaFederation
       rule :photo_medium_url, [:not_nil, URI: [:path]]
       rule :photo_small_url, [:not_nil, URI: [:path]]
 
-      # rule :exported_key, :public_key
+      rule :public_key, :public_key
 
       rule :searchable, :boolean
     end
