@@ -106,7 +106,8 @@ shared_examples "a relayable Entity" do
     end
 
     it "computes correct signatures for the entity" do
-      signed_string = described_class::LEGACY_SIGNATURE_ORDER.map {|name| data[name] }.join(";")
+      order = described_class.class_props.keys - %i(author_signature parent_author_signature parent created_at)
+      signed_string = order.map {|name| data[name] }.join(";")
 
       xml = DiasporaFederation::Salmon::XmlPayload.pack(instance)
 

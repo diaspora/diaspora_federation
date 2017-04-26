@@ -154,7 +154,7 @@ module DiasporaFederation
           prop_names = self.class.class_props.keys.map(&:to_s)
           xml_order.map {|name| prop_names.include?(name) ? name.to_sym : name }
         else
-          self.class::LEGACY_SIGNATURE_ORDER
+          self.class.class_props.keys - %i(author_signature parent_author_signature parent)
         end
       end
 

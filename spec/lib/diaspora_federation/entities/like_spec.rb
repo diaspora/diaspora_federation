@@ -14,11 +14,11 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <like>
-  <positive>#{data[:positive]}</positive>
-  <guid>#{data[:guid]}</guid>
-  <target_type>#{parent.entity_type}</target_type>
-  <parent_guid>#{parent.guid}</parent_guid>
   <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <guid>#{data[:guid]}</guid>
+  <parent_guid>#{parent.guid}</parent_guid>
+  <target_type>#{parent.entity_type}</target_type>
+  <positive>#{data[:positive]}</positive>
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
 </like>
@@ -33,15 +33,15 @@ XML
     "parent_guid": "#{parent.guid}",
     "author_signature": "#{data[:author_signature]}",
     "parent_author_signature": "#{data[:parent_author_signature]}",
-    "positive": #{data[:positive]},
-    "parent_type": "#{parent.entity_type}"
+    "parent_type": "#{parent.entity_type}",
+    "positive": #{data[:positive]}
   },
   "property_order": [
-    "positive",
+    "author",
     "guid",
-    "parent_type",
     "parent_guid",
-    "author"
+    "parent_type",
+    "positive"
   ]
 }
 JSON

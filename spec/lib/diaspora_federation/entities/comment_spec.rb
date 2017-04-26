@@ -15,10 +15,10 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <comment>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
   <text>#{data[:text]}</text>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
 </comment>
@@ -37,10 +37,10 @@ XML
     "created_at": "#{data[:created_at].iso8601}"
   },
   "property_order": [
+    "author",
     "guid",
     "parent_guid",
-    "text",
-    "author"
+    "text"
   ]
 }
 JSON

@@ -13,9 +13,9 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <poll_participation>
+  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <poll_answer_guid>#{data[:poll_answer_guid]}</poll_answer_guid>
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
@@ -34,9 +34,9 @@ XML
     "poll_answer_guid": "#{data[:poll_answer_guid]}"
   },
   "property_order": [
+    "author",
     "guid",
     "parent_guid",
-    "author",
     "poll_answer_guid"
   ]
 }

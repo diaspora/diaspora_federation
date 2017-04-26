@@ -4,10 +4,6 @@ module DiasporaFederation
     #
     # @see Validators::EventParticipationValidator
     class EventParticipation < Entity
-      # Old signature order
-      # @deprecated
-      LEGACY_SIGNATURE_ORDER = %i(author guid parent_guid status).freeze
-
       # The {EventParticipation} parent is an {Event}
       PARENT_TYPE = "Event".freeze
 

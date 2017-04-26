@@ -4,10 +4,6 @@ module DiasporaFederation
     #
     # @see Validators::PollParticipationValidator
     class PollParticipation < Entity
-      # Old signature order
-      # @deprecated
-      LEGACY_SIGNATURE_ORDER = %i(guid parent_guid author poll_answer_guid).freeze
-
       # The {PollParticipation} parent is a {Poll}
       PARENT_TYPE = "Poll".freeze
 
