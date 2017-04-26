@@ -19,6 +19,7 @@ module DiasporaFederation
     <bio>#{data[:profile].bio}</bio>
     <location>#{data[:profile].location}</location>
     <searchable>#{data[:profile].searchable}</searchable>
+    <public>#{data[:profile].public}</public>
     <nsfw>#{data[:profile].nsfw}</nsfw>
     <tag_string>#{data[:profile].tag_string}</tag_string>
   </profile>

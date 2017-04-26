@@ -53,6 +53,11 @@ module DiasporaFederation
       #   @return [Boolean] searchable flag
       property :searchable, :boolean, default: true
 
+      # @!attribute [r] public
+      #   Shows whether the profile is visible to everyone or only to contacts
+      #   @return [Boolean] is it public
+      property :public, :boolean, default: false
+
       property :nsfw, :boolean, default: false
       property :tag_string, :string, default: nil
 

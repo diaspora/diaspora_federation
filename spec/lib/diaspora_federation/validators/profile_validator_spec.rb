@@ -61,7 +61,7 @@ module DiasporaFederation
       end
     end
 
-    %i(searchable nsfw).each do |prop|
+    %i(searchable public nsfw).each do |prop|
       describe "##{prop}" do
         it_behaves_like "a boolean validator" do
           let(:property) { prop }

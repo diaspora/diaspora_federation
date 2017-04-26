@@ -23,7 +23,7 @@ module DiasporaFederation
       rule :location, length: {maximum: 255}
 
       rule :searchable, :boolean
-
+      rule :public, :boolean
       rule :nsfw, :boolean
 
       rule :tag_string, tag_count: {maximum: 5}

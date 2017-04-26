@@ -126,10 +126,10 @@ module DiasporaFederation
         end
 
         it "allows entities without public flag" do
-          profile = Fabricate(:profile_entity)
-          magic_env = Salmon::MagicEnvelope.new(profile, profile.author)
+          like = Fabricate(:like_entity)
+          magic_env = Salmon::MagicEnvelope.new(like, like.author)
 
-          expect_callback(:receive_entity, profile, profile.author, nil)
+          expect_callback(:receive_entity, like, like.author, nil)
 
           described_class.new(magic_env).receive
         end

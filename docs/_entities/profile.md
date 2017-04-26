@@ -24,6 +24,7 @@ This entity contains all the profile data of a person.
 | `bio`              | [Markdown][markdown] (65535) | The description of the person. This field can contain markdown.                                          |
 | `location`         | [String][string] (255)       | The location of the person.                                                                              |
 | `searchable`       | [Boolean][boolean]           | `false` if the person doesn't want to be searchable by name.                                             |
+| `public`           | [Boolean][boolean]           | `true` if the profile is visible to everyone.                                                            |
 | `nsfw`             | [Boolean][boolean]           | `true` if all posts of this person should be marked as NSFW.                                             |
 | `tag_string`       | [String][string]             | A list of hashtags for this person, each tag beginning with `#` and seperated by spaces, at most 5 tags. |
 
@@ -42,6 +43,7 @@ This entity contains all the profile data of a person.
   <bio>some text about me</bio>
   <location>github</location>
   <searchable>true</searchable>
+  <public>false</public>
   <nsfw>false</nsfw>
   <tag_string>#i #love #tags</tag_string>
 </profile>

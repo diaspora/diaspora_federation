@@ -66,6 +66,7 @@ module DiasporaFederation
         bio "some text about me"
         location "github"
         searchable true
+        public false
         nsfw false
         tag_string "#i #love #tags"
       end

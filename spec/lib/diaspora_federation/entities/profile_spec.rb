@@ -15,6 +15,7 @@ module DiasporaFederation
   <bio>#{data[:bio]}</bio>
   <location>#{data[:location]}</location>
   <searchable>#{data[:searchable]}</searchable>
+  <public>#{data[:public]}</public>
   <nsfw>#{data[:nsfw]}</nsfw>
   <tag_string>#{data[:tag_string]}</tag_string>
 </profile>
@@ -35,6 +36,7 @@ XML
     "bio": "#{data[:bio]}",
     "location": "#{data[:location]}",
     "searchable": #{data[:searchable]},
+    "public": #{data[:public]},
     "nsfw": #{data[:nsfw]},
     "tag_string": "#{data[:tag_string]}"
   }
@@ -68,6 +70,7 @@ XML
         expect(parsed_instance.bio).to be_nil
         expect(parsed_instance.location).to be_nil
         expect(parsed_instance.searchable).to be_truthy
+        expect(parsed_instance.public).to be_falsey
         expect(parsed_instance.nsfw).to be_falsey
         expect(parsed_instance.tag_string).to be_nil
       end
