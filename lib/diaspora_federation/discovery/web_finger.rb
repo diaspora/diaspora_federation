@@ -38,7 +38,7 @@ module DiasporaFederation
       # @!attribute [r] alias_url
       #   @note could be nil
       #   @return [String] link to the users profile
-      property :alias_url, :string
+      property :alias_url, :string, default: nil
 
       # @!attribute [r] hcard_url
       #   @return [String] link to the +hCard+
@@ -50,7 +50,7 @@ module DiasporaFederation
 
       # @!attribute [r] profile_url
       #   @return [String] link to the users profile
-      property :profile_url, :string
+      property :profile_url, :string, default: nil
 
       # @!attribute [r] atom_url
       #   This atom feed is an Activity Stream of the user's public posts. diaspora*
@@ -61,18 +61,18 @@ module DiasporaFederation
       #   Note that this feed MAY also be made available through the PubSubHubbub
       #   mechanism by supplying a <link rel="hub"> in the atom feed itself.
       #   @return [String] atom feed url
-      property :atom_url, :string
+      property :atom_url, :string, default: nil
 
       # @!attribute [r] salmon_url
       #   @note could be nil
       #   @return [String] salmon endpoint url
       #   @see https://cdn.rawgit.com/salmon-protocol/salmon-protocol/master/draft-panzer-salmon-00.html#SMLR
       #     Panzer draft for Salmon, paragraph 3.3
-      property :salmon_url, :string
+      property :salmon_url, :string, default: nil
 
       # @!attribute [r] subscribe_url
       #   This url is used to find another user on the home-pod of the user in the webfinger.
-      property :subscribe_url, :string
+      property :subscribe_url, :string, default: nil
 
       # +hcard_url+ link relation
       REL_HCARD = "http://microformats.org/profile/hcard".freeze
@@ -97,8 +97,8 @@ module DiasporaFederation
       # @return [String] XML string
       def to_xml
         doc = XrdDocument.new
-        doc.subject = @acct_uri
-        doc.aliases << @alias_url
+        doc.subject = acct_uri
+        doc.aliases << alias_url
 
         add_links_to(doc)
 
@@ -147,14 +147,18 @@ module DiasporaFederation
       end
 
       def add_links_to(doc)
-        doc.links << {rel: REL_HCARD, type: "text/html", href: @hcard_url}
-        doc.links << {rel: REL_SEED, type: "text/html", href: @seed_url}
+        doc.links << {rel: REL_HCARD, type: "text/html", href: hcard_url}
+        doc.links << {rel: REL_SEED, type: "text/html", href: seed_url}
 
-        doc.links << {rel: REL_PROFILE, type: "text/html", href: @profile_url}
-        doc.links << {rel: REL_ATOM, type: "application/atom+xml", href: @atom_url}
-        doc.links << {rel: REL_SALMON, href: @salmon_url}
+        add_optional_links_to(doc)
+      end
 
-        doc.links << {rel: REL_SUBSCRIBE, template: @subscribe_url}
+      def add_optional_links_to(doc)
+        doc.links << {rel: REL_PROFILE, type: "text/html", href: profile_url} if profile_url
+        doc.links << {rel: REL_ATOM, type: "application/atom+xml", href: atom_url} if atom_url
+        doc.links << {rel: REL_SALMON, href: salmon_url} if salmon_url
+
+        doc.links << {rel: REL_SUBSCRIBE, template: subscribe_url} if subscribe_url
       end
 
       private_class_method def self.find_link(links, rel)

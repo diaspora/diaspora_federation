@@ -31,6 +31,15 @@ module DiasporaFederation
 </XRD>
 XML
 
+    let(:minimal_xml) { <<-XML }
+<?xml version="1.0" encoding="UTF-8"?>
+<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
+  <Subject>#{acct}</Subject>
+  <Link rel="http://microformats.org/profile/hcard" type="text/html" href="#{person.hcard_url}"/>
+  <Link rel="http://joindiaspora.com/seed_location" type="text/html" href="#{person.url}"/>
+</XRD>
+XML
+
     let(:string) { "WebFinger:#{data[:acct_uri]}" }
 
     it_behaves_like "an Entity subclass"
@@ -39,6 +48,15 @@ XML
       it "creates a nice XML document" do
         wf = Discovery::WebFinger.new(data)
         expect(wf.to_xml).to eq(xml)
+      end
+
+      it "creates minimal XML document" do
+        wf = Discovery::WebFinger.new(
+          acct_uri:  "acct:#{person.diaspora_id}",
+          hcard_url: person.hcard_url,
+          seed_url:  person.url
+        )
+        expect(wf.to_xml).to eq(minimal_xml)
       end
     end
 
@@ -56,14 +74,6 @@ XML
       end
 
       it "reads minimal xml" do
-        minimal_xml = <<-XML
-<?xml version="1.0" encoding="UTF-8"?>
-<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
-  <Subject>#{acct}</Subject>
-  <Link rel="http://microformats.org/profile/hcard" type="text/html" href="#{person.hcard_url}"/>
-  <Link rel="http://joindiaspora.com/seed_location" type="text/html" href="#{person.url}"/>
-</XRD>
-XML
         wf = Discovery::WebFinger.from_xml(minimal_xml)
         expect(wf.acct_uri).to eq(acct)
         expect(wf.hcard_url).to eq(person.hcard_url)
