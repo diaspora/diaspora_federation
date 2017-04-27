@@ -13,9 +13,9 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <retraction>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
-  <post_guid>#{data[:target_guid]}</post_guid>
-  <type>#{data[:target_type]}</type>
+  <author>#{data[:author]}</author>
+  <target_guid>#{data[:target_guid]}</target_guid>
+  <target_type>#{data[:target_type]}</target_type>
 </retraction>
 XML
 

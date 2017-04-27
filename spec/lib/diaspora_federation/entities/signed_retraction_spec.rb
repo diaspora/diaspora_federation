@@ -16,7 +16,7 @@ module DiasporaFederation
 <signed_retraction>
   <target_guid>#{data[:target_guid]}</target_guid>
   <target_type>#{data[:target_type]}</target_type>
-  <sender_handle>#{data[:author]}</sender_handle>
+  <author>#{data[:author]}</author>
   <target_author_signature>#{data[:target_author_signature]}</target_author_signature>
 </signed_retraction>
 XML

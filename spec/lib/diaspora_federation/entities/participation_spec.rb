@@ -12,10 +12,10 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <participation>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
-  <target_type>#{parent.entity_type}</target_type>
+  <parent_type>#{parent.entity_type}</parent_type>
 </participation>
 XML
 

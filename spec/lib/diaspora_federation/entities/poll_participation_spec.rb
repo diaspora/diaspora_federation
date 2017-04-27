@@ -13,7 +13,7 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <poll_participation>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
   <poll_answer_guid>#{data[:poll_answer_guid]}</poll_answer_guid>

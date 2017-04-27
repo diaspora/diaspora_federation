@@ -4,7 +4,7 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <message>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
   <text>#{data[:text]}</text>
   <created_at>#{data[:created_at].utc.iso8601}</created_at>

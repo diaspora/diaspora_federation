@@ -26,7 +26,7 @@ module DiasporaFederation
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
   <target_guid>#{data[:target_guid]}</target_guid>
   <target_type>#{data[:target_type]}</target_type>
-  <sender_handle>#{data[:author]}</sender_handle>
+  <author>#{data[:author]}</author>
   <target_author_signature/>
 </relayable_retraction>
 XML

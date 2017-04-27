@@ -296,8 +296,7 @@ module DiasporaFederation
 
     # Create simple node, fill it with text and append to root
     def simple_node(doc, name, value)
-      xml_name = self.class.xml_names[name]
-      Nokogiri::XML::Element.new(xml_name ? xml_name.to_s : name, doc).tap do |node|
+      Nokogiri::XML::Element.new(name.to_s, doc).tap do |node|
         node.content = value.gsub(INVALID_XML_REGEX, "\uFFFD") unless value.empty?
       end
     end

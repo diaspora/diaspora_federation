@@ -14,10 +14,10 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <like>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
-  <target_type>#{parent.entity_type}</target_type>
+  <parent_type>#{parent.entity_type}</parent_type>
   <positive>#{data[:positive]}</positive>
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>

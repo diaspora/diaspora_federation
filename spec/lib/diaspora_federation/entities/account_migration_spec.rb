@@ -19,7 +19,7 @@ module DiasporaFederation
 <account_migration>
   <author>#{data[:author]}</author>
   <profile>
-    <diaspora_handle>#{data[:profile].author}</diaspora_handle>
+    <author>#{data[:profile].author}</author>
     <first_name>#{data[:profile].first_name}</first_name>
     <last_name/>
     <image_url>#{data[:profile].image_url}</image_url>

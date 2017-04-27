@@ -5,10 +5,10 @@ module DiasporaFederation
     let(:xml) { <<-XML }
 <person>
   <guid>#{data[:guid]}</guid>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <url>#{data[:url]}</url>
   <profile>
-    <diaspora_handle>#{data[:profile].author}</diaspora_handle>
+    <author>#{data[:profile].author}</author>
     <first_name>#{data[:profile].first_name}</first_name>
     <last_name/>
     <image_url>#{data[:profile].image_url}</image_url>

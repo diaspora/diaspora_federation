@@ -15,7 +15,7 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <comment>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
   <text>#{data[:text]}</text>

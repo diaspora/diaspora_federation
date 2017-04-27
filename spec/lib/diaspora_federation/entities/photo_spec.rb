@@ -5,7 +5,7 @@ module DiasporaFederation
     let(:xml) { <<-XML }
 <photo>
   <guid>#{data[:guid]}</guid>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <public>#{data[:public]}</public>
   <created_at>#{data[:created_at].utc.iso8601}</created_at>
   <remote_photo_path>#{data[:remote_photo_path]}</remote_photo_path>

@@ -29,11 +29,11 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <conversation>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <guid>#{parent.guid}</guid>
   <subject>#{data[:subject]}</subject>
   <created_at>#{data[:created_at].utc.iso8601}</created_at>
-  <participant_handles>#{data[:participants]}</participant_handles>
+  <participants>#{data[:participants]}</participants>
 #{data[:messages].map {|a| indent(a.to_xml.to_s, 2) }.join("\n")}
 </conversation>
 XML

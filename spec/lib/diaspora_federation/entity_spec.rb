@@ -455,15 +455,6 @@ XML
     context "xml_name" do
       let(:hash) { {test: "test", qwer: "qwer"} }
 
-      it "uses xml_name for the #to_xml" do
-        entity = Entities::TestEntityWithXmlName.new(hash)
-        xml_children = entity.to_xml.children
-        expect(xml_children).to have_exactly(2).items
-        xml_children.each do |node|
-          expect(%w(test asdf)).to include(node.name)
-        end
-      end
-
       it "should not use the xml_name for the #to_h" do
         entity = Entities::TestEntityWithXmlName.new(hash)
         expect(entity.to_h).to eq(hash)

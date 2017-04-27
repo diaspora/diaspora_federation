@@ -133,7 +133,7 @@ module DiasporaFederation
     describe "#to_xml" do
       let(:expected_xml) { <<-XML }
 <some_relayable>
-  <diaspora_handle>#{author}</diaspora_handle>
+  <author>#{author}</author>
   <guid>#{guid}</guid>
   <parent_guid>#{parent_guid}</parent_guid>
   <property>#{property}</property>
