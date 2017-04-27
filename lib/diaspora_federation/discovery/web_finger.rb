@@ -9,7 +9,6 @@ module DiasporaFederation
     # @example Creating a WebFinger document from a person hash
     #   wf = WebFinger.new(
     #     acct_uri:    "acct:user@server.example",
-    #     alias_url:   "https://server.example/people/0123456789abcdef",
     #     hcard_url:   "https://server.example/hcard/users/user",
     #     seed_url:    "https://server.example/",
     #     profile_url: "https://server.example/u/user",
@@ -34,11 +33,6 @@ module DiasporaFederation
       #   for. If it does not, then this webfinger profile MUST be ignored.
       #   @return [String]
       property :acct_uri, :string
-
-      # @!attribute [r] alias_url
-      #   @note could be nil
-      #   @return [String] link to the users profile
-      property :alias_url, :string, default: nil
 
       # @!attribute [r] hcard_url
       #   @return [String] link to the +hCard+
@@ -93,12 +87,31 @@ module DiasporaFederation
       # +subscribe_url+ link relation
       REL_SUBSCRIBE = "http://ostatus.org/schema/1.0/subscribe".freeze
 
+      # Additional WebFinger data
+      # @return [Hash] additional elements
+      attr_reader :additional_data
+
+      # Initializes a new WebFinger Entity
+      #
+      # @param [Hash] data WebFinger data
+      # @param [Hash] additional_data additional WebFinger data
+      # @option additional_data [Array<String>] :aliases additional aliases
+      # @option additional_data [Hash] :properties properties
+      # @option additional_data [Array<Hash>] :links additional link elements
+      # @see DiasporaFederation::Entity#initialize
+      def initialize(data, additional_data={})
+        @additional_data = additional_data
+        super(data)
+      end
+
       # Creates the XML string from the current WebFinger instance
       # @return [String] XML string
       def to_xml
         doc = XrdDocument.new
+
         doc.subject = acct_uri
-        doc.aliases << alias_url
+        doc.aliases.concat(additional_data[:aliases]) if additional_data[:aliases]
+        doc.properties.merge!(additional_data[:properties]) if additional_data[:properties]
 
         add_links_to(doc)
 
@@ -116,7 +129,7 @@ module DiasporaFederation
 
         new(
           acct_uri:      data[:subject],
-          alias_url:     parse_alias(data[:aliases]),
+
           hcard_url:     parse_link(links, REL_HCARD),
           seed_url:      parse_link(links, REL_SEED),
           profile_url:   parse_link(links, REL_PROFILE),
@@ -151,6 +164,8 @@ module DiasporaFederation
         doc.links << {rel: REL_SEED, type: "text/html", href: seed_url}
 
         add_optional_links_to(doc)
+
+        doc.links.concat(additional_data[:links]) if additional_data[:links]
       end
 
       def add_optional_links_to(doc)
@@ -173,15 +188,6 @@ module DiasporaFederation
       private_class_method def self.parse_link_template(links, rel)
         element = find_link(links, rel)
         element ? element[:template] : nil
-      end
-
-      # This method is used to parse the alias_url from the XML.
-      # * redmatrix has sometimes no alias, return nil
-      # * old pods had quotes around the alias url, this can be removed later
-      # * friendica has two aliases and the first is with "acct:": return only an URL starting with http (or https)
-      private_class_method def self.parse_alias(aliases)
-        return nil unless aliases
-        aliases.find {|a| a.start_with?("http") }
       end
     end
   end

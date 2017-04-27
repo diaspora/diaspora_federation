@@ -6,8 +6,7 @@ module DiasporaFederation
 
     let(:data) {
       {
-        acct_uri:      "acct:#{person.diaspora_id}",
-        alias_url:     person.alias_url,
+        acct_uri:      acct,
         hcard_url:     person.hcard_url,
         seed_url:      person.url,
         profile_url:   person.profile_url,
@@ -46,17 +45,52 @@ XML
 
     context "generation" do
       it "creates a nice XML document" do
-        wf = Discovery::WebFinger.new(data)
+        wf = Discovery::WebFinger.new(data, aliases: [person.alias_url])
         expect(wf.to_xml).to eq(xml)
       end
 
       it "creates minimal XML document" do
         wf = Discovery::WebFinger.new(
-          acct_uri:  "acct:#{person.diaspora_id}",
+          acct_uri:  acct,
           hcard_url: person.hcard_url,
           seed_url:  person.url
         )
         expect(wf.to_xml).to eq(minimal_xml)
+      end
+
+      it "creates XML document with additional data" do
+        xml_with_additional_data = <<-XML
+<?xml version="1.0" encoding="UTF-8"?>
+<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
+  <Subject>#{acct}</Subject>
+  <Alias>#{person.alias_url}</Alias>
+  <Alias>#{person.profile_url}</Alias>
+  <Property type="http://webfinger.example/ns/name">Bob Smith</Property>
+  <Link rel="http://microformats.org/profile/hcard" type="text/html" href="#{person.hcard_url}"/>
+  <Link rel="http://joindiaspora.com/seed_location" type="text/html" href="#{person.url}"/>
+  <Link rel="http://portablecontacts.net/spec/1.0" href="https://pod.example.tld/poco/trouble"/>
+  <Link rel="http://webfinger.net/rel/avatar" type="image/jpeg" href="http://localhost:3000/assets/user/default.png"/>
+</XRD>
+XML
+
+        wf = Discovery::WebFinger.new(
+          {
+            acct_uri:  acct,
+            hcard_url: person.hcard_url,
+            seed_url:  person.url
+          },
+          aliases:    [person.alias_url, person.profile_url],
+          properties: {"http://webfinger.example/ns/name" => "Bob Smith"},
+          links:      [
+            {rel: "http://portablecontacts.net/spec/1.0", href: "https://pod.example.tld/poco/trouble"},
+            {
+              rel:  "http://webfinger.net/rel/avatar",
+              type: "image/jpeg",
+              href: "http://localhost:3000/assets/user/default.png"
+            }
+          ]
+        )
+        expect(wf.to_xml).to eq(xml_with_additional_data)
       end
     end
 
@@ -64,7 +98,6 @@ XML
       it "reads its own output" do
         wf = Discovery::WebFinger.from_xml(xml)
         expect(wf.acct_uri).to eq(acct)
-        expect(wf.alias_url).to eq(person.alias_url)
         expect(wf.hcard_url).to eq(person.hcard_url)
         expect(wf.seed_url).to eq(person.url)
         expect(wf.profile_url).to eq(person.profile_url)
@@ -134,7 +167,6 @@ XML
 
         wf = Discovery::WebFinger.from_xml(friendica_xml)
         expect(wf.acct_uri).to eq(acct)
-        expect(wf.alias_url).to eq(person.alias_url)
         expect(wf.hcard_url).to eq(person.hcard_url)
         expect(wf.seed_url).to eq(person.url)
         expect(wf.profile_url).to eq(person.profile_url)
@@ -177,7 +209,6 @@ XML
 
         wf = Discovery::WebFinger.from_xml(redmatrix_xml)
         expect(wf.acct_uri).to eq(person.diaspora_id)
-        expect(wf.alias_url).to be_nil
         expect(wf.hcard_url).to eq(person.hcard_url)
         expect(wf.seed_url).to eq(person.url)
         expect(wf.profile_url).to eq(person.profile_url)
