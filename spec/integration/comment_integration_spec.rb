@@ -113,6 +113,16 @@ XML
   </post>
 </XML>
 XML
+    let(:legacy_signature_comment_xml_bob) { <<-XML }
+<comment>
+  <guid>e21589b0b41101333b870f77ba60fa73</guid>
+  <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
+  <text>this is a very informative comment</text>
+  <author>alice@pod-a.org</author>
+  <author_signature>XU5X1uqTh8SY6JMG9uhEVR5Rg7FURV6lpRwl/HYOu6DJ3Hd9tpA2aSFFibUxxsMgJXKNrrc5SykrrEdTiQoEei+j0QqZf3B5R7r84qgK7M46KazwIpqRPwVl2MdA/0DdQyYJLA/oavNj1nwll9vtR87M7e/C94qG6P+iQTMBQzo=</author_signature>
+  <parent_author_signature>QqWSdwpb+/dcJUxuKKVe7aiz1NivXzlIdWZ71xyrxnhFxFYd+7EIittyTcp1cVehjg96pwDbn++P/rWyCffqenWu025DHvUfSmQkC93Z0dX6r3OIUlZqwEggtOdbunybiE++F3BVsGt5wC4YbAESB5ZFuhFVhBXh1X+EaZ/qoKo=</parent_author_signature>
+</comment>
+XML
     let(:legacy_new_signature_comment_xml_bob) { <<-XML }
 <XML>
   <post>
@@ -185,7 +195,6 @@ XML
 
     context "relaying on bobs pod" do
       before do
-        skip("TODO: expect new format as output")
         expect_callback(:fetch_public_key, author).and_return(author_key.public_key)
         expect_callback(:fetch_private_key, parent.author).and_return(parent_key)
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
@@ -194,19 +203,19 @@ XML
       it "relays legacy signatures and xml" do
         xml = Nokogiri::XML::Document.parse(legacy_comment_xml_alice).root
         entity = Salmon::XmlPayload.unpack(xml)
-        expect(Salmon::XmlPayload.pack(entity).to_xml).to eq(legacy_comment_xml_bob.strip)
+        expect(entity.to_xml.to_xml).to eq(legacy_signature_comment_xml_bob.strip)
       end
 
       it "relays new signatures and xml" do
         xml = Nokogiri::XML::Document.parse(new_signature_comment_xml_alice).root
         entity = Salmon::XmlPayload.unpack(xml)
-        expect(Salmon::XmlPayload.pack(entity).to_xml).to eq(legacy_new_signature_comment_xml_bob.strip)
+        expect(entity.to_xml.to_xml).to eq(new_signature_comment_xml_bob.strip)
       end
 
       it "relays new signatures with new data" do
         xml = Nokogiri::XML::Document.parse(new_data_comment_xml_alice).root
         entity = Salmon::XmlPayload.unpack(xml)
-        expect(Salmon::XmlPayload.pack(entity).to_xml).to eq(legacy_new_data_comment_xml_bob.strip)
+        expect(entity.to_xml.to_xml).to eq(new_data_comment_xml_bob.strip)
       end
     end
 
@@ -221,6 +230,14 @@ XML
 
       it "parses legacy signatures and xml" do
         xml = Nokogiri::XML::Document.parse(legacy_comment_xml_bob).root
+        entity = Salmon::XmlPayload.unpack(xml)
+
+        expect(entity.author).to eq(author)
+        expect(entity.text).to eq(text)
+      end
+
+      it "parses legacy signatures and with new xml" do
+        xml = Nokogiri::XML::Document.parse(legacy_signature_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)

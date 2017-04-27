@@ -13,25 +13,6 @@ module DiasporaFederation
     # (The +post+ element is there for historic reasons...)
     # @deprecated
     module XmlPayload
-      # Encapsulates an Entity inside the wrapping xml structure
-      # and returns the XML Object.
-      #
-      # @param [Entity] entity subject
-      # @return [Nokogiri::XML::Element] XML root node
-      # @raise [ArgumentError] if the argument is not an Entity subclass
-      def self.pack(entity)
-        raise ArgumentError, "only instances of DiasporaFederation::Entity allowed" unless entity.is_a?(Entity)
-
-        entity_xml = entity.to_xml
-        doc = entity_xml.document
-        wrap = Nokogiri::XML::Element.new("XML", doc)
-        wrap_post = Nokogiri::XML::Element.new("post", doc)
-        entity_xml.parent = wrap_post
-        wrap << wrap_post
-
-        wrap
-      end
-
       # Extracts the Entity XML from the wrapping XML structure, parses the entity
       # XML and returns a new instance of the Entity that was packed inside the
       # given payload.

@@ -136,7 +136,7 @@ module DiasporaFederation
       # The payload data as string
       # @return [String] payload data
       def payload_data
-        @payload_data ||= XmlPayload.pack(@payload).to_xml.strip.tap do |data|
+        @payload_data ||= payload.to_xml.to_xml.strip.tap do |data|
           logger.debug "send payload:\n#{data}"
         end
       end

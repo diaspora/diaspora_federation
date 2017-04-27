@@ -63,7 +63,7 @@ shared_examples "an XML Entity" do |ignored_props=[]|
 
   context "parsing" do
     it "reads its own output" do
-      packed_xml = DiasporaFederation::Salmon::XmlPayload.pack(instance)
+      packed_xml = instance.to_xml
       parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(packed_xml)
 
       check_entity(instance, parsed_instance, ignored_props)
@@ -109,10 +109,10 @@ shared_examples "a relayable Entity" do
       order = described_class.class_props.keys - %i(author_signature parent_author_signature parent created_at)
       signed_string = order.map {|name| data[name] }.join(";")
 
-      xml = DiasporaFederation::Salmon::XmlPayload.pack(instance)
+      xml = instance.to_xml
 
-      author_signature = xml.at_xpath("post/*[1]/author_signature").text
-      parent_author_signature = xml.at_xpath("post/*[1]/parent_author_signature").text
+      author_signature = xml.at_xpath("author_signature").text
+      parent_author_signature = xml.at_xpath("parent_author_signature").text
 
       expect(verify_signature(alice.public_key, author_signature, signed_string)).to be_truthy
       expect(verify_signature(bob.public_key, parent_author_signature, signed_string)).to be_truthy
