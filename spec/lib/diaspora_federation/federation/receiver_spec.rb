@@ -24,7 +24,13 @@ module DiasporaFederation
       it "parses the entity with legacy slap receiver" do
         expect_callback(:fetch_public_key, post.author).and_return(sender_key)
 
-        data = DiasporaFederation::Salmon::Slap.generate_xml(post.author, sender_key, post)
+        data = DiasporaFederation::Salmon::Slap.build_xml do |xml|
+          xml.header {
+            xml.author_id(post.author)
+          }
+
+          xml.parent << Salmon::MagicEnvelope.new(post, post.author).envelop(sender_key).root
+        end
 
         expect_callback(:receive_entity, kind_of(Entities::StatusMessage), post.author, nil) do |_, entity|
           expect(entity.guid).to eq(post.guid)

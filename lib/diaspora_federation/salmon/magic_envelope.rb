@@ -153,7 +153,7 @@ module DiasporaFederation
       def build_xml
         Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
           yield xml
-        }.doc.root
+        }.doc
       end
 
       # Creates the signature for all fields according to specification

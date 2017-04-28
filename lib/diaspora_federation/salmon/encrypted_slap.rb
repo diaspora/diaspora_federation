@@ -115,7 +115,7 @@ module DiasporaFederation
 
           magic_envelope = MagicEnvelope.new(entity)
           slap.cipher_params = magic_envelope.encrypt!
-          slap.magic_envelope_xml = magic_envelope.envelop(privkey)
+          slap.magic_envelope_xml = magic_envelope.envelop(privkey).root
         end
       end
 

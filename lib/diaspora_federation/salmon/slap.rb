@@ -49,27 +49,6 @@ module DiasporaFederation
         MagicEnvelope.unenvelop(magic_env_from_doc(doc), sender)
       end
 
-      # Creates an unencrypted Salmon Slap and returns the XML string.
-      #
-      # @param [String] author_id diaspora* ID of the author
-      # @param [OpenSSL::PKey::RSA] privkey sender private_key for signing the magic envelope
-      # @param [Entity] entity payload
-      # @return [String] Salmon XML string
-      # @raise [ArgumentError] if any of the arguments is not the correct type
-      def self.generate_xml(author_id, privkey, entity)
-        raise ArgumentError unless author_id.instance_of?(String) &&
-                                   privkey.instance_of?(OpenSSL::PKey::RSA) &&
-                                   entity.is_a?(Entity)
-
-        build_xml do |xml|
-          xml.header {
-            xml.author_id(author_id)
-          }
-
-          xml.parent << MagicEnvelope.new(entity, author_id).envelop(privkey)
-        end
-      end
-
       # Builds the xml for the Salmon Slap.
       #
       # @yield [xml] Invokes the block with the
