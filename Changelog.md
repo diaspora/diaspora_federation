@@ -1,3 +1,9 @@
+# 0.1.9
+
+## Bug fixes
+
+* Don't log encrypted private messages [8859c96](https://github.com/diaspora/diaspora_federation/commit/8859c960ac2b771399ad42ccf795043aea4ec9a5)
+
 # 0.1.8
 
 ## Feature
