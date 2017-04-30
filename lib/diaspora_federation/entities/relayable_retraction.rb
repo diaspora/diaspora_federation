@@ -53,50 +53,13 @@ module DiasporaFederation
       #   @return [String] target author signature
       property :target_author_signature, :string, default: nil
 
-      # @!attribute [r] target
-      #   Target entity
-      #   @return [RelatedEntity] target entity
-      entity :target, Entities::RelatedEntity
-
-      # Use only {Retraction} for receive
-      # @return [Retraction] instance as normal retraction
-      def to_retraction
-        Retraction.new(author: author, target_guid: target_guid, target_type: target_type, target: target)
-      end
-
-      # @return [String] string representation of this object
-      def to_s
-        "RelayableRetraction:#{target_type}:#{target_guid}"
+      def initialize(*)
+        raise "Sending RelayableRetraction is not supported anymore! Use Retraction instead!"
       end
 
       # @return [Retraction] instance
       def self.from_hash(hash)
-        hash[:target] = Retraction.send(:fetch_target, hash[:target_type], hash[:target_guid])
-        new(hash).to_retraction
-      end
-
-      private
-
-      # It updates also the signatures with the keys of the author and the parent
-      # if the signatures are not there yet and if the keys are available.
-      #
-      # @return [Hash] xml elements with updated signatures
-      def enriched_properties
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, author)
-
-        super.tap do |hash|
-          fill_required_signature(privkey, hash) unless privkey.nil?
-        end
-      end
-
-      # @param [OpenSSL::PKey::RSA] privkey private key of sender
-      # @param [Hash] hash hash given for a signing
-      def fill_required_signature(privkey, hash)
-        if target.parent.author == author && parent_author_signature.nil?
-          hash[:parent_author_signature] = SignedRetraction.sign_with_key(privkey, self)
-        elsif target.author == author && target_author_signature.nil?
-          hash[:target_author_signature] = SignedRetraction.sign_with_key(privkey, self)
-        end
+        Retraction.from_hash(hash)
       end
     end
   end

@@ -150,13 +150,6 @@ module DiasporaFederation
         conversation_guid { Fabricate.sequence(:guid) }
       end
 
-      Fabricator(:relayable_retraction_entity, class_name: DiasporaFederation::Entities::RelayableRetraction) do
-        author { Fabricate.sequence(:diaspora_id) }
-        target_guid { Fabricate.sequence(:guid) }
-        target_type "Comment"
-        target {|attrs| Fabricate(:related_entity, author: attrs[:author]) }
-      end
-
       Fabricator(:reshare_entity, class_name: DiasporaFederation::Entities::Reshare) do
         root_author { Fabricate.sequence(:diaspora_id) }
         root_guid { Fabricate.sequence(:guid) }
@@ -168,13 +161,6 @@ module DiasporaFederation
       end
 
       Fabricator(:retraction_entity, class_name: DiasporaFederation::Entities::Retraction) do
-        author { Fabricate.sequence(:diaspora_id) }
-        target_guid { Fabricate.sequence(:guid) }
-        target_type "Post"
-        target {|attrs| Fabricate(:related_entity, author: attrs[:author]) }
-      end
-
-      Fabricator(:signed_retraction_entity, class_name: DiasporaFederation::Entities::SignedRetraction) do
         author { Fabricate.sequence(:diaspora_id) }
         target_guid { Fabricate.sequence(:guid) }
         target_type "Post"

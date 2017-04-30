@@ -8,117 +8,36 @@ module DiasporaFederation
         parent: Fabricate(:related_entity, author: alice.diaspora_id)
       )
     }
-    let(:data) {
-      Fabricate(
-        :relayable_retraction_entity,
-        author:      alice.diaspora_id,
-        target_guid: target.guid,
-        target_type: target.entity_type,
-        target:      target_entity
-      ).send(:enriched_properties).tap do |data|
-        data[:target_author_signature] = ""
-        data[:target] = target_entity
-      end
-    }
+    let(:data) { {author: alice.diaspora_id, target_guid: target.guid, target_type: target.entity_type} }
 
     let(:xml) { <<-XML }
 <relayable_retraction>
-  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
+  <parent_author_signature/>
   <target_guid>#{data[:target_guid]}</target_guid>
   <target_type>#{data[:target_type]}</target_type>
-  <author>#{data[:author]}</author>
+  <sender_handle>#{data[:author]}</sender_handle>
   <target_author_signature/>
 </relayable_retraction>
 XML
 
-    let(:string) { "RelayableRetraction:#{data[:target_type]}:#{data[:target_guid]}" }
-
-    it_behaves_like "an Entity subclass"
-
-    it_behaves_like "an XML Entity", %i(parent_author_signature target_author_signature target)
-
-    it_behaves_like "a retraction"
-
-    describe "#to_xml" do
-      let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
-      let(:hash) { Fabricate.attributes_for(:relayable_retraction_entity) }
-
-      it "updates author signature when it was nil and key was supplied and author is not parent author" do
-        parent = Fabricate(:related_entity, author: bob.diaspora_id)
-        hash[:target] = Fabricate(:related_entity, author: hash[:author], parent: parent)
-
-        expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
-
-        signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
-
-        xml = Entities::RelayableRetraction.new(hash).to_xml
-
-        signature = Base64.decode64(xml.at_xpath("target_author_signature").text)
-        expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
-      end
-
-      it "sets parent author signature when author is parent author" do
-        parent = Fabricate(:related_entity, author: hash[:author])
-        hash[:target] = Fabricate(:related_entity, author: hash[:author], parent: parent)
-
-        expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
-
-        signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
-
-        xml = Entities::RelayableRetraction.new(hash).to_xml
-
-        signature = Base64.decode64(xml.at_xpath("parent_author_signature").text)
-        expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
-      end
-
-      it "updates parent author signature when it was nil, key was supplied and sender is author of the parent" do
-        parent = Fabricate(:related_entity, author: hash[:author])
-        hash[:target] = Fabricate(:related_entity, author: bob.diaspora_id, parent: parent)
-
-        expect_callback(:fetch_private_key, hash[:author]).and_return(author_pkey)
-
-        signed_string = "#{hash[:target_guid]};#{hash[:target_type]}"
-
-        xml = Entities::RelayableRetraction.new(hash).to_xml
-
-        signature = Base64.decode64(xml.at_xpath("parent_author_signature").text)
-        expect(author_pkey.verify(OpenSSL::Digest::SHA256.new, signature, signed_string)).to be_truthy
-      end
-
-      it "doesn't change signatures if they are already set" do
-        hash.merge!(target_author_signature: "aa", parent_author_signature: "bb")
-
-        xml = Entities::RelayableRetraction.new(hash).to_xml
-
-        expect(xml.at_xpath("target_author_signature").text).to eq("aa")
-        expect(xml.at_xpath("parent_author_signature").text).to eq("bb")
-      end
-
-      it "doesn't change signatures if keys weren't supplied" do
-        expect_callback(:fetch_private_key, hash[:author]).and_return(nil)
-
-        xml = Entities::RelayableRetraction.new(hash).to_xml
-        expect(xml.at_xpath("target_author_signature").text).to eq("")
-        expect(xml.at_xpath("parent_author_signature").text).to eq("")
-      end
-    end
-
-    describe "#to_retraction" do
-      it "copies the attributes to a Retraction" do
-        relayable_retraction = Fabricate(:relayable_retraction_entity)
-        retraction = relayable_retraction.to_retraction
-
-        expect(retraction).to be_a(Entities::Retraction)
-        expect(retraction.author).to eq(relayable_retraction.author)
-        expect(retraction.target_guid).to eq(relayable_retraction.target_guid)
-        expect(retraction.target_type).to eq(relayable_retraction.target_type)
+    describe "#initialize" do
+      it "raises because it is not supported anymore" do
+        expect {
+          Entities::RelayableRetraction.new(data)
+        }.to raise_error RuntimeError,
+                         "Sending RelayableRetraction is not supported anymore! Use Retraction instead!"
       end
     end
 
     context "parse retraction" do
       it "parses the xml as a retraction" do
+        expect(Entities::Retraction).to receive(:fetch_target).and_return(target_entity)
         retraction = Entities::RelayableRetraction.from_xml(Nokogiri::XML::Document.parse(xml).root)
         expect(retraction).to be_a(Entities::Retraction)
+        expect(retraction.author).to eq(data[:author])
+        expect(retraction.target_guid).to eq(data[:target_guid])
+        expect(retraction.target_type).to eq(data[:target_type])
+        expect(retraction.target).to eq(target_entity)
       end
     end
   end
