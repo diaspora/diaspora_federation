@@ -4,7 +4,7 @@ module DiasporaFederation
       let(:entity_class) { Entities::SomeRelayable }
       let(:xml_parser) { Parsers::RelayableXmlParser.new(entity_class) }
       it "passes order of the XML elements as a second argument in the returned list" do
-        xml_object = Nokogiri::XML::Document.parse(<<-XML).root
+        xml_object = Nokogiri::XML(<<-XML).root
 <some_relayable>
   <guid>im a guid</guid>
   <property>value</property>

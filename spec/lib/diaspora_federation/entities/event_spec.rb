@@ -40,7 +40,7 @@ XML
 </event>
 XML
 
-        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
+        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.end).to be_nil
         expect(parsed_instance.all_day).to be_falsey
         expect(parsed_instance.timezone).to be_nil

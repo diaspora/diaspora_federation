@@ -188,7 +188,7 @@ XML
         expect_callback(:fetch_private_key, parent.author).and_return(parent_key)
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
 
-        xml = Nokogiri::XML::Document.parse(new_data_comment_xml_alice).root
+        xml = Nokogiri::XML(new_data_comment_xml_alice).root
         Salmon::XmlPayload.unpack(xml).to_xml
       end
     end
@@ -201,19 +201,19 @@ XML
       end
 
       it "relays legacy signatures and xml" do
-        xml = Nokogiri::XML::Document.parse(legacy_comment_xml_alice).root
+        xml = Nokogiri::XML(legacy_comment_xml_alice).root
         entity = Salmon::XmlPayload.unpack(xml)
         expect(entity.to_xml.to_xml).to eq(legacy_signature_comment_xml_bob.strip)
       end
 
       it "relays new signatures and xml" do
-        xml = Nokogiri::XML::Document.parse(new_signature_comment_xml_alice).root
+        xml = Nokogiri::XML(new_signature_comment_xml_alice).root
         entity = Salmon::XmlPayload.unpack(xml)
         expect(entity.to_xml.to_xml).to eq(new_signature_comment_xml_bob.strip)
       end
 
       it "relays new signatures with new data" do
-        xml = Nokogiri::XML::Document.parse(new_data_comment_xml_alice).root
+        xml = Nokogiri::XML(new_data_comment_xml_alice).root
         entity = Salmon::XmlPayload.unpack(xml)
         expect(entity.to_xml.to_xml).to eq(new_data_comment_xml_bob.strip)
       end
@@ -229,7 +229,7 @@ XML
       end
 
       it "parses legacy signatures and xml" do
-        xml = Nokogiri::XML::Document.parse(legacy_comment_xml_bob).root
+        xml = Nokogiri::XML(legacy_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)
@@ -237,7 +237,7 @@ XML
       end
 
       it "parses legacy signatures and with new xml" do
-        xml = Nokogiri::XML::Document.parse(legacy_signature_comment_xml_bob).root
+        xml = Nokogiri::XML(legacy_signature_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)
@@ -245,7 +245,7 @@ XML
       end
 
       it "parses new signatures with legacy xml" do
-        xml = Nokogiri::XML::Document.parse(legacy_new_signature_comment_xml_bob).root
+        xml = Nokogiri::XML(legacy_new_signature_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)
@@ -253,7 +253,7 @@ XML
       end
 
       it "parses new signatures and xml" do
-        xml = Nokogiri::XML::Document.parse(new_signature_comment_xml_bob).root
+        xml = Nokogiri::XML(new_signature_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)
@@ -261,7 +261,7 @@ XML
       end
 
       it "parses new data with legacy xml" do
-        xml = Nokogiri::XML::Document.parse(legacy_new_data_comment_xml_bob).root
+        xml = Nokogiri::XML(legacy_new_data_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)
@@ -270,7 +270,7 @@ XML
       end
 
       it "parses new xml with additional data" do
-        xml = Nokogiri::XML::Document.parse(new_data_comment_xml_bob).root
+        xml = Nokogiri::XML(new_data_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)

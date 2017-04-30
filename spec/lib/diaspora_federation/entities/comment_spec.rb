@@ -59,7 +59,7 @@ JSON
 
     describe "#created_at" do
       it "has a created_at after parse" do
-        entity = described_class.from_xml(Nokogiri::XML::Document.parse(xml).root)
+        entity = described_class.from_xml(Nokogiri::XML(xml).root)
         expect(entity.created_at).to be_within(1).of(Time.now.utc)
       end
 

@@ -30,7 +30,7 @@ XML
 
     context "parse contact" do
       it "parses the xml as a contact" do
-        contact = Entities::Request.from_xml(Nokogiri::XML::Document.parse(xml).root)
+        contact = Entities::Request.from_xml(Nokogiri::XML(xml).root)
         expect(contact).to be_a(Entities::Contact)
       end
     end

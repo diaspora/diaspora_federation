@@ -15,7 +15,7 @@ XML
       context "sanity" do
         it "expects an Nokogiri::XML::Element as param" do
           expect {
-            Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(entity_xml).root)
+            Salmon::XmlPayload.unpack(Nokogiri::XML(entity_xml).root)
           }.not_to raise_error
         end
 
@@ -29,7 +29,7 @@ XML
       end
 
       context "returned object" do
-        subject { Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(entity_xml).root) }
+        subject { Salmon::XmlPayload.unpack(Nokogiri::XML(entity_xml).root) }
 
         it "#to_h should match entity.to_h" do
           expect(subject.to_h).to eq(entity.to_h)
@@ -47,7 +47,7 @@ XML
 </test_entity>
 XML
 
-          entity = Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(xml).root)
+          entity = Salmon::XmlPayload.unpack(Nokogiri::XML(xml).root)
 
           expect(entity).to be_an_instance_of Entities::TestEntity
           expect(entity.test).to eq("asdf")

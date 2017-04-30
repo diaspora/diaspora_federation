@@ -32,7 +32,7 @@ XML
     context "parse retraction" do
       it "parses the xml as a retraction" do
         expect(Entities::Retraction).to receive(:fetch_target).and_return(target_entity)
-        retraction = Entities::RelayableRetraction.from_xml(Nokogiri::XML::Document.parse(xml).root)
+        retraction = Entities::RelayableRetraction.from_xml(Nokogiri::XML(xml).root)
         expect(retraction).to be_a(Entities::Retraction)
         expect(retraction.author).to eq(data[:author])
         expect(retraction.target_guid).to eq(data[:target_guid])

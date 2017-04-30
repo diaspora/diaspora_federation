@@ -69,7 +69,7 @@ JSON
 XML
 
         expect {
-          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)
+          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML(broken_xml).root)
         }.to raise_error Entity::ValidationError, "invalid DiasporaFederation::Entities::Like! missing 'parent_type'."
       end
 
@@ -83,7 +83,7 @@ XML
 XML
 
         expect {
-          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)
+          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML(broken_xml).root)
         }.to raise_error Entity::ValidationError, "invalid DiasporaFederation::Entities::Like! missing 'parent_guid'."
       end
     end

@@ -40,7 +40,7 @@ module DiasporaFederation
       # @raise [MissingMagicEnvelope] if the +me:env+ element is missing from the XML
       def self.from_xml(slap_xml)
         raise ArgumentError unless slap_xml.instance_of?(String)
-        doc = Nokogiri::XML::Document.parse(slap_xml)
+        doc = Nokogiri::XML(slap_xml)
 
         author_elem = doc.at_xpath("d:diaspora/d:header/d:author_id", Slap::NS)
         raise MissingAuthor if author_elem.nil? || author_elem.content.empty?

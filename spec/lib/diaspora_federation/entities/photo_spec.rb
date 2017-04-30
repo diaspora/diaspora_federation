@@ -58,7 +58,7 @@ JSON
 </photo>
 XML
 
-        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
+        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.public).to be_falsey
         expect(parsed_instance.text).to be_nil
       end

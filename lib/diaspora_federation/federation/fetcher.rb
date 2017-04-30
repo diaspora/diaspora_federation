@@ -13,7 +13,7 @@ module DiasporaFederation
         response = HttpClient.get(url)
         raise "Failed to fetch #{url}: #{response.status}" unless response.success?
 
-        magic_env_xml = Nokogiri::XML::Document.parse(response.body).root
+        magic_env_xml = Nokogiri::XML(response.body).root
         magic_env = Salmon::MagicEnvelope.unenvelop(magic_env_xml)
         Receiver::Public.new(magic_env).receive
       rescue => e

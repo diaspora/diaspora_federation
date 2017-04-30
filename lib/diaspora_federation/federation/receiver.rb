@@ -11,7 +11,7 @@ module DiasporaFederation
         magic_env = if legacy
                       Salmon::Slap.from_xml(data)
                     else
-                      magic_env_xml = Nokogiri::XML::Document.parse(data).root
+                      magic_env_xml = Nokogiri::XML(data).root
                       Salmon::MagicEnvelope.unenvelop(magic_env_xml)
                     end
         Public.new(magic_env).receive

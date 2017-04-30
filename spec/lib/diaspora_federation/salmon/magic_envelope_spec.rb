@@ -128,7 +128,7 @@ module DiasporaFederation
 
         it "verifies the envelope structure" do
           expect {
-            Salmon::MagicEnvelope.unenvelop(Nokogiri::XML::Document.parse("<asdf/>").root, sender)
+            Salmon::MagicEnvelope.unenvelop(Nokogiri::XML("<asdf/>").root, sender)
           }.to raise_error Salmon::InvalidEnvelope
         end
 

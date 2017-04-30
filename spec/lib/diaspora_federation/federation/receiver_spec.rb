@@ -94,7 +94,7 @@ module DiasporaFederation
       end
 
       it "redirects exceptions from the receiver" do
-        invalid_magic_env = Nokogiri::XML::Document.parse("<xml/>").root
+        invalid_magic_env = Nokogiri::XML("<xml/>").root
         data = Salmon::EncryptedMagicEnvelope.encrypt(invalid_magic_env, recipient_key.public_key)
 
         expect {

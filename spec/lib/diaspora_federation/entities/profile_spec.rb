@@ -59,7 +59,7 @@ JSON
 </profile>
 XML
 
-        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
+        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.first_name).to be_nil
         expect(parsed_instance.last_name).to be_nil
         expect(parsed_instance.image_url).to be_nil

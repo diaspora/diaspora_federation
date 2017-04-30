@@ -128,7 +128,7 @@ module DiasporaFederation
 
         logger.debug "unenvelop message from #{sender}:\n#{data}"
 
-        new(XmlPayload.unpack(Nokogiri::XML::Document.parse(data).root), sender)
+        new(XmlPayload.unpack(Nokogiri::XML(data).root), sender)
       end
 
       private

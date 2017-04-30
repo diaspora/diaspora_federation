@@ -129,7 +129,7 @@ JSON
 </status_message>
 XML
 
-        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
+        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.photos).to eq([])
         expect(parsed_instance.location).to be_nil
         expect(parsed_instance.poll).to be_nil

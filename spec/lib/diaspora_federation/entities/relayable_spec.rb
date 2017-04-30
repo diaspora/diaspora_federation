@@ -241,7 +241,7 @@ XML
 XML
 
         it "doesn't drop unknown properties" do
-          entity = Entities::SomeRelayable.from_xml(Nokogiri::XML::Document.parse(new_xml).root)
+          entity = Entities::SomeRelayable.from_xml(Nokogiri::XML(new_xml).root)
 
           expect(entity).to be_an_instance_of Entities::SomeRelayable
           expect(entity.property).to eq(property)
@@ -251,7 +251,7 @@ XML
         end
 
         it "hand over the order in the xml to the instance without signatures" do
-          entity = Entities::SomeRelayable.from_xml(Nokogiri::XML::Document.parse(new_xml).root)
+          entity = Entities::SomeRelayable.from_xml(Nokogiri::XML(new_xml).root)
 
           expect(entity.xml_order).to eq([:author, :guid, :parent_guid, "new_property", :property])
         end
@@ -280,7 +280,7 @@ XML
 XML
 
           expect {
-            Entities::SomeRelayable.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)
+            Entities::SomeRelayable.from_xml(Nokogiri::XML(broken_xml).root)
           }.to raise_error Entity::ValidationError,
                            "invalid DiasporaFederation::Entities::SomeRelayable! missing 'parent_guid'."
         end

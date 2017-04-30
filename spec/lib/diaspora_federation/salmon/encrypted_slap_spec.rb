@@ -55,7 +55,7 @@ module DiasporaFederation
         end
 
         it "generates valid xml" do
-          doc = Nokogiri::XML::Document.parse(slap_xml)
+          doc = Nokogiri::XML(slap_xml)
           expect(doc.root.name).to eq("diaspora")
           expect(doc.at_xpath("d:diaspora/d:encrypted_header", ns).content).to_not be_empty
           expect(doc.xpath("d:diaspora/me:env", ns)).to have(1).item
@@ -64,7 +64,7 @@ module DiasporaFederation
         it "can generate xml for two people" do
           slap = Salmon::EncryptedSlap.prepare(sender, privkey, payload)
 
-          doc1 = Nokogiri::XML::Document.parse(slap.generate_xml(recipient_key.public_key))
+          doc1 = Nokogiri::XML(slap.generate_xml(recipient_key.public_key))
           enc_header1 = doc1.at_xpath("d:diaspora/d:encrypted_header", ns).content
           cipher_header1 = JSON.parse(Base64.decode64(enc_header1))
           header_key1 = JSON.parse(recipient_key.private_decrypt(Base64.decode64(cipher_header1["aes_key"])))
@@ -73,7 +73,7 @@ module DiasporaFederation
                                                   Base64.decode64(header_key1["iv"]))
 
           recipient2_key = OpenSSL::PKey::RSA.generate(1024)
-          doc2 = Nokogiri::XML::Document.parse(slap.generate_xml(recipient2_key.public_key))
+          doc2 = Nokogiri::XML(slap.generate_xml(recipient2_key.public_key))
           enc_header2 = doc2.at_xpath("d:diaspora/d:encrypted_header", ns).content
           cipher_header2 = JSON.parse(Base64.decode64(enc_header2))
           header_key2 = JSON.parse(recipient2_key.private_decrypt(Base64.decode64(cipher_header2["aes_key"])))
@@ -88,13 +88,13 @@ module DiasporaFederation
         end
 
         it "does not add the sender to the magic envelope" do
-          doc = Nokogiri::XML::Document.parse(slap_xml)
+          doc = Nokogiri::XML(slap_xml)
           expect(doc.at_xpath("d:diaspora/me:env/me:sig", ns)["key_id"]).to be_nil
         end
 
         context "header" do
           subject {
-            doc = Nokogiri::XML::Document.parse(slap_xml)
+            doc = Nokogiri::XML(slap_xml)
             doc.at_xpath("d:diaspora/d:encrypted_header", ns).content
           }
           let(:cipher_header) { JSON.parse(Base64.decode64(subject)) }
@@ -125,7 +125,7 @@ module DiasporaFederation
                                            Base64.decode64(header_key["key"]),
                                            Base64.decode64(header_key["iv"]))
             }.not_to raise_error
-            header_doc = Nokogiri::XML::Document.parse(header)
+            header_doc = Nokogiri::XML(header)
             expect(header_doc.root.name).to eq("decrypted_header")
             expect(header_doc.xpath("//iv")).to have(1).item
             expect(header_doc.xpath("//aes_key")).to have(1).item
