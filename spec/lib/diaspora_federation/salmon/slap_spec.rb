@@ -3,15 +3,7 @@ module DiasporaFederation
     let(:sender) { "test_user@pod.somedomain.tld" }
     let(:privkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
     let(:payload) { Entities::TestEntity.new(test: "qwertzuiop") }
-    let(:slap_xml) {
-      Salmon::Slap.build_xml do |xml|
-        xml.header {
-          xml.author_id(sender)
-        }
-
-        xml.parent << Salmon::MagicEnvelope.new(payload, sender).envelop(privkey).root
-      end
-    }
+    let(:slap_xml) { generate_legacy_salmon_slap(payload, sender, privkey) }
 
     describe ".from_xml" do
       context "sanity" do

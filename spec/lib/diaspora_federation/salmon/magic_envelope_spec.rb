@@ -80,28 +80,6 @@ module DiasporaFederation
       end
     end
 
-    describe "#encrypt!" do
-      it "encrypts the payload, returning cipher params" do
-        params = envelope.encrypt!
-        expect(params).to include(:key, :iv)
-      end
-
-      it "actually encrypts the payload" do
-        plain_payload = envelope.send(:payload_data)
-        params = envelope.encrypt!
-        encrypted_payload = envelope.send(:payload_data)
-
-        cipher = OpenSSL::Cipher.new(Salmon::AES::CIPHER)
-        cipher.encrypt
-        cipher.iv = params[:iv]
-        cipher.key = params[:key]
-
-        ciphertext = cipher.update(plain_payload) + cipher.final
-
-        expect(Base64.strict_encode64(ciphertext)).to eq(encrypted_payload)
-      end
-    end
-
     describe ".unenvelop" do
       let(:envelope_root) { envelope.envelop(privkey).root }
 
@@ -210,7 +188,7 @@ module DiasporaFederation
         expect_callback(:fetch_public_key, sender).and_return(privkey.public_key)
 
         env = Salmon::MagicEnvelope.new(payload)
-        params = env.encrypt!
+        params = encrypt_magic_env(env)
         env_xml = env.envelop(privkey).root
 
         magic_env = Salmon::MagicEnvelope.unenvelop(env_xml, sender, params)

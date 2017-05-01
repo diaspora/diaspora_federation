@@ -48,32 +48,12 @@ module DiasporaFederation
     # Finally, before decrypting the magic envelope payload, the signature should
     # first be verified.
     #
-    # @example Generating an encrypted Salmon Slap
-    #   author_id = "author@pod.example.tld"
-    #   author_privkey = however_you_retrieve_the_authors_private_key(author_id)
-    #   recipient_pubkey = however_you_retrieve_the_recipients_public_key()
-    #   entity = YourEntity.new(attr: "val")
-    #
-    #   slap_xml = EncryptedSlap.prepare(author_id, author_privkey, entity).generate_xml(recipient_pubkey)
-    #
     # @example Parsing a Salmon Slap
     #   recipient_privkey = however_you_retrieve_the_recipients_private_key()
     #   entity = EncryptedSlap.from_xml(slap_xml, recipient_privkey).payload
     #
     # @deprecated
     class EncryptedSlap < Slap
-      # the author of the slap
-      # @param [String] value the author diaspora* ID
-      attr_writer :author_id
-
-      # the key and iv if it is an encrypted slap
-      # @param [Hash] value hash containing the key and iv
-      attr_writer :cipher_params
-
-      # the prepared encrypted magic envelope xml
-      # @param [Nokogiri::XML::Element] value magic envelope xml
-      attr_writer :magic_envelope_xml
-
       # Creates a {MagicEnvelope} instance from the data within the given XML string
       # containing an encrypted payload.
       #
@@ -97,44 +77,6 @@ module DiasporaFederation
 
         MagicEnvelope.unenvelop(magic_env_from_doc(doc), sender, cipher_params)
       end
-
-      # Creates an encrypted Salmon Slap.
-      #
-      # @param [String] author_id diaspora* ID of the author
-      # @param [OpenSSL::PKey::RSA] privkey sender private key for signing the magic envelope
-      # @param [Entity] entity payload
-      # @return [EncryptedSlap] encrypted Slap instance
-      # @raise [ArgumentError] if any of the arguments is of the wrong type
-      def self.prepare(author_id, privkey, entity)
-        raise ArgumentError unless author_id.instance_of?(String) &&
-                                   privkey.instance_of?(OpenSSL::PKey::RSA) &&
-                                   entity.is_a?(Entity)
-
-        EncryptedSlap.new.tap do |slap|
-          slap.author_id = author_id
-
-          magic_envelope = MagicEnvelope.new(entity)
-          slap.cipher_params = magic_envelope.encrypt!
-          slap.magic_envelope_xml = magic_envelope.envelop(privkey).root
-        end
-      end
-
-      # Creates an encrypted Salmon Slap XML string.
-      #
-      # @param [OpenSSL::PKey::RSA] pubkey recipient public key for encrypting the AES key
-      # @return [String] Salmon XML string
-      # @raise [ArgumentError] if any of the arguments is of the wrong type
-      def generate_xml(pubkey)
-        raise ArgumentError unless pubkey.instance_of?(OpenSSL::PKey::RSA)
-
-        Slap.build_xml do |xml|
-          xml.encrypted_header(encrypted_header(@author_id, @cipher_params, pubkey))
-
-          xml.parent << @magic_envelope_xml
-        end
-      end
-
-      private
 
       # Decrypts and reads the data from the encrypted XML header
       # @param [String] data base64 encoded, encrypted header data
@@ -161,45 +103,6 @@ module DiasporaFederation
 
         xml = AES.decrypt(cipher_header["ciphertext"], Base64.decode64(key["key"]), Base64.decode64(key["iv"]))
         Nokogiri::XML(xml).root
-      end
-
-      # Encrypt the header xml with an AES cipher and encrypt the cipher params
-      # with the recipients public_key.
-      # @param [String] author_id diaspora_handle
-      # @param [Hash] envelope_key envelope cipher params
-      # @param [OpenSSL::PKey::RSA] pubkey recipient public_key
-      # @return [String] encrypted base64 encoded header
-      def encrypted_header(author_id, envelope_key, pubkey)
-        data = header_xml(author_id, strict_base64_encode(envelope_key))
-        header_key = AES.generate_key_and_iv
-        ciphertext = AES.encrypt(data, header_key[:key], header_key[:iv])
-
-        json_key = JSON.generate(strict_base64_encode(header_key))
-        encrypted_key = Base64.strict_encode64(pubkey.public_encrypt(json_key))
-
-        json_header = JSON.generate(aes_key: encrypted_key, ciphertext: ciphertext)
-
-        Base64.strict_encode64(json_header)
-      end
-
-      # Generate the header xml string, including the author, aes_key and iv
-      # @param [String] author_id diaspora_handle of the author
-      # @param [Hash] envelope_key { key: "...", iv: "..." } (values in base64)
-      # @return [String] header XML string
-      def header_xml(author_id, envelope_key)
-        @header_xml ||= Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
-          xml.decrypted_header {
-            xml.iv(envelope_key[:iv])
-            xml.aes_key(envelope_key[:key])
-            xml.author_id(author_id)
-          }
-        }.to_xml.strip
-      end
-
-      # @param [Hash] hash { key: "...", iv: "..." }
-      # @return [Hash] encoded hash: { key: "...", iv: "..." }
-      def strict_base64_encode(hash)
-        hash.map {|k, v| [k, Base64.strict_encode64(v)] }.to_h
       end
     end
   end

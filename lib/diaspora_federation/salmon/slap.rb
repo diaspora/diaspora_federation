@@ -13,13 +13,6 @@ module DiasporaFederation
     #     {magic_envelope}
     #   </diaspora>
     #
-    # @example Generating a Salmon Slap
-    #   author_id = "author@pod.example.tld"
-    #   author_privkey = however_you_retrieve_the_authors_private_key(author_id)
-    #   entity = YourEntity.new(attr: "val")
-    #
-    #   slap_xml = Slap.generate_xml(author_id, author_privkey, entity)
-    #
     # @example Parsing a Salmon Slap
     #   entity = Slap.from_xml(slap_xml).payload
     #
@@ -47,19 +40,6 @@ module DiasporaFederation
         sender = author_elem.content
 
         MagicEnvelope.unenvelop(magic_env_from_doc(doc), sender)
-      end
-
-      # Builds the xml for the Salmon Slap.
-      #
-      # @yield [xml] Invokes the block with the
-      #   {http://www.rubydoc.info/gems/nokogiri/Nokogiri/XML/Builder Nokogiri::XML::Builder}
-      # @return [String] Slap XML
-      def self.build_xml
-        Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
-          xml.diaspora("xmlns" => Salmon::XMLNS, "xmlns:me" => MagicEnvelope::XMLNS) {
-            yield xml
-          }
-        }.to_xml
       end
 
       # Parses the magic envelop from the document.
