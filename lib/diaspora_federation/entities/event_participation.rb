@@ -9,10 +9,6 @@ module DiasporaFederation
 
       include Relayable
 
-      # Redefine the author property without +diaspora_handle+ +xml_name+
-      # @deprecated Can be removed after XMLs are generated with new names
-      property :author, :string
-
       # @!attribute [r] status
       #   The participation status of the user
       #   "accepted", "declined" or "tentative"
