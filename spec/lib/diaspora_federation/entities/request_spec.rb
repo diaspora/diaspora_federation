@@ -1,30 +1,19 @@
 module DiasporaFederation
   describe Entities::Request do
-    let(:data) { Fabricate.attributes_for(:request_entity) }
+    let(:data) { {author: Fabricate.sequence(:diaspora_id), recipient: Fabricate.sequence(:diaspora_id)} }
 
     let(:xml) { <<-XML }
 <request>
-  <author>#{data[:author]}</author>
-  <recipient>#{data[:recipient]}</recipient>
+  <sender_handle>#{data[:author]}</sender_handle>
+  <recipient_handle>#{data[:recipient]}</recipient_handle>
 </request>
 XML
 
-    let(:string) { "Request:#{data[:author]}:#{data[:recipient]}" }
-
-    it_behaves_like "an Entity subclass"
-
-    it_behaves_like "an XML Entity"
-
-    describe "#to_contact" do
-      it "copies the attributes to a Contact" do
-        request = Fabricate(:request_entity)
-        contact = request.to_contact
-
-        expect(contact).to be_a(Entities::Contact)
-        expect(contact.author).to eq(request.author)
-        expect(contact.recipient).to eq(request.recipient)
-        expect(contact.following).to be_truthy
-        expect(contact.sharing).to be_truthy
+    describe "#initialize" do
+      it "raises because it is not supported anymore" do
+        expect {
+          Entities::Request.new(data)
+        }.to raise_error RuntimeError, "Sending Request is not supported anymore! Use Contact instead!"
       end
     end
 
@@ -32,6 +21,10 @@ XML
       it "parses the xml as a contact" do
         contact = Entities::Request.from_xml(Nokogiri::XML(xml).root)
         expect(contact).to be_a(Entities::Contact)
+        expect(contact.author).to eq(data[:author])
+        expect(contact.recipient).to eq(data[:recipient])
+        expect(contact.following).to be_truthy
+        expect(contact.sharing).to be_truthy
       end
     end
   end

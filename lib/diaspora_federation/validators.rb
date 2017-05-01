@@ -62,6 +62,3 @@ require "diaspora_federation/validators/reshare_validator"
 require "diaspora_federation/validators/retraction_validator"
 require "diaspora_federation/validators/status_message_validator"
 require "diaspora_federation/validators/web_finger_validator"
-
-# deprecated
-require "diaspora_federation/validators/request_validator"

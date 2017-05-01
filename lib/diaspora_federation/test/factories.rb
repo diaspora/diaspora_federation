@@ -108,11 +108,6 @@ module DiasporaFederation
         created_at { Time.now.utc }
       end
 
-      Fabricator(:request_entity, class_name: DiasporaFederation::Entities::Request) do
-        author { Fabricate.sequence(:diaspora_id) }
-        recipient { Fabricate.sequence(:diaspora_id) }
-      end
-
       Fabricator(:contact_entity, class_name: DiasporaFederation::Entities::Contact) do
         author { Fabricate.sequence(:diaspora_id) }
         recipient { Fabricate.sequence(:diaspora_id) }
