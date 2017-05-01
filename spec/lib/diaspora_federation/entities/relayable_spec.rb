@@ -18,9 +18,9 @@ module DiasporaFederation
 
     describe "#initialize" do
       it "filters signatures from order" do
-        xml_order = [:author, :guid, :parent_guid, :property, "new_property", :author_signature]
+        signature_order = [:author, :guid, :parent_guid, :property, "new_property", :author_signature]
 
-        expect(Entities::SomeRelayable.new(hash, xml_order).xml_order)
+        expect(Entities::SomeRelayable.new(hash, signature_order).signature_order)
           .to eq([:author, :guid, :parent_guid, :property, "new_property"])
       end
     end
@@ -144,23 +144,27 @@ module DiasporaFederation
 XML
 
       it "adds new unknown xml elements to the xml again" do
-        xml_order = [:author, :guid, :parent_guid, :property, "new_property"]
-        xml = Entities::SomeRelayable.new(hash_with_fake_signatures, xml_order, "new_property" => new_property).to_xml
+        signature_order = [:author, :guid, :parent_guid, :property, "new_property"]
+        xml = Entities::SomeRelayable.new(
+          hash_with_fake_signatures, signature_order, "new_property" => new_property
+        ).to_xml
 
         expect(xml.to_s.strip).to eq(expected_xml.strip)
       end
 
-      it "converts strings in xml_order to symbol if needed" do
-        xml_order = %w(author guid parent_guid property new_property)
-        xml = Entities::SomeRelayable.new(hash_with_fake_signatures, xml_order, "new_property" => new_property).to_xml
+      it "accepts string names of known properties in signature_order" do
+        signature_order = %w(author guid parent_guid property new_property)
+        xml = Entities::SomeRelayable.new(
+          hash_with_fake_signatures, signature_order, "new_property" => new_property
+        ).to_xml
 
         expect(xml.to_s.strip).to eq(expected_xml.strip)
       end
 
-      it "adds missing properties from xml_order to xml" do
-        xml_order = [:author, :guid, :parent_guid, :property, "new_property"]
+      it "adds missing properties from signature_order to xml" do
+        signature_order = [:author, :guid, :parent_guid, :property, "new_property"]
 
-        xml = Entities::SomeRelayable.new(hash_with_fake_signatures, xml_order).to_xml
+        xml = Entities::SomeRelayable.new(hash_with_fake_signatures, signature_order).to_xml
 
         expect(xml.at_xpath("new_property").text).to be_empty
       end
@@ -182,10 +186,10 @@ XML
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
         expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
 
-        xml_order = [:author, :guid, :parent_guid, "new_property", :property]
+        signature_order = [:author, :guid, :parent_guid, "new_property", :property]
         signature_data_with_new_property = "#{author};#{guid};#{parent_guid};#{new_property};#{property}"
 
-        xml = Entities::SomeRelayable.new(hash, xml_order, "new_property" => new_property).to_xml
+        xml = Entities::SomeRelayable.new(hash, signature_order, "new_property" => new_property).to_xml
 
         author_signature = xml.at_xpath("author_signature").text
         parent_author_signature = xml.at_xpath("parent_author_signature").text
@@ -253,7 +257,7 @@ XML
         it "hand over the order in the xml to the instance without signatures" do
           entity = Entities::SomeRelayable.from_xml(Nokogiri::XML(new_xml).root)
 
-          expect(entity.xml_order).to eq([:author, :guid, :parent_guid, "new_property", :property])
+          expect(entity.signature_order).to eq([:author, :guid, :parent_guid, "new_property", :property])
         end
 
         it "creates Entity with empty 'additional_data' if the xml has only known properties" do
@@ -297,7 +301,7 @@ XML
         expect(json).to include_json(property_order: property_order.map(&:to_s))
       end
 
-      it "uses property order for filling property_order when no xml_order supplied" do
+      it "uses property order for filling property_order when no signature_order supplied" do
         entity = entity_class.new(hash_with_fake_signatures)
         expect(
           entity.to_json.to_json
@@ -408,7 +412,7 @@ XML
 
           it "hands over the order in the data to the instance without signatures" do
             entity = Entities::SomeRelayable.from_hash(entity_data, property_order)
-            expect(entity.xml_order).to eq(%w(author guid parent_guid new_property property))
+            expect(entity.signature_order).to eq([:author, :guid, :parent_guid, "new_property", :property])
           end
 
           it "calls a constructor of the entity of the appropriate type" do

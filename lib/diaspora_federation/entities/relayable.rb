@@ -7,10 +7,6 @@ module DiasporaFederation
     module Relayable
       include Signable
 
-      # Order from the parsed xml for signature
-      # @return [Array] order from xml
-      attr_reader :xml_order
-
       # Additional properties from parsed input object
       # @return [Hash] additional elements
       attr_reader :additional_data
@@ -65,11 +61,11 @@ module DiasporaFederation
       # Initializes a new relayable Entity with order and additional xml elements
       #
       # @param [Hash] data entity data
-      # @param [Array] xml_order order from xml
+      # @param [Array] signature_order order for the signature
       # @param [Hash] additional_data additional xml elements
       # @see DiasporaFederation::Entity#initialize
-      def initialize(data, xml_order=nil, additional_data={})
-        @xml_order = xml_order.reject {|name| name =~ /signature/ } if xml_order
+      def initialize(data, signature_order=nil, additional_data={})
+        self.signature_order = signature_order if signature_order
         @additional_data = additional_data
 
         super(data)
@@ -101,6 +97,12 @@ module DiasporaFederation
             json_hash[:entity_data][property] = nil
           }
         }
+      end
+
+      # The order for signing
+      # @return [Array]
+      def signature_order
+        @signature_order || self.class.class_props.keys - %i(author_signature parent_author_signature parent)
       end
 
       private
@@ -147,15 +149,10 @@ module DiasporaFederation
         order.map {|element| [element, data[element] || ""] }.to_h
       end
 
-      # The order for signing
-      # @return [Array]
-      def signature_order
-        if xml_order
-          prop_names = self.class.class_props.keys.map(&:to_s)
-          xml_order.map {|name| prop_names.include?(name) ? name.to_sym : name }
-        else
-          self.class.class_props.keys - %i(author_signature parent_author_signature parent)
-        end
+      def signature_order=(order)
+        prop_names = self.class.class_props.keys.map(&:to_s)
+        @signature_order = order.reject {|name| name =~ /signature/ }
+                                .map {|name| prop_names.include?(name) ? name.to_sym : name }
       end
 
       # @return [String] signature data string

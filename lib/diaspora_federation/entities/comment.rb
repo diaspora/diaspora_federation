@@ -18,12 +18,10 @@ module DiasporaFederation
       #   @return [Time] creation time
       property :created_at, :timestamp, default: -> { Time.now.utc }
 
-      private
-
       # Remove "created_at" when no order was received.
       # @deprecated TODO: Remove this, this will break compatibility with pods older than 0.6.3.0.
       def signature_order
-        super.tap {|order| order.delete(:created_at) unless xml_order }
+        @signature_order || super.tap {|order| order.delete(:created_at) }
       end
     end
   end
