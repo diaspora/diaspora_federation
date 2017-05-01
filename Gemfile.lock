@@ -113,7 +113,7 @@ GEM
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    nyan-cat-formatter (0.11)
+    nyan-cat-formatter (0.12.0)
       rspec (>= 2.99, >= 2.14.2, < 4)
     octokit (4.7.0)
       sawyer (~> 0.8.0, >= 0.5.3)
