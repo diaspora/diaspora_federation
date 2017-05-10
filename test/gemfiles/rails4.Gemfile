@@ -36,8 +36,8 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.5.0"
-  gem "rspec-rails", "~> 3.5.1"
+  gem "rspec", "~> 3.6.0"
+  gem "rspec-rails", "~> 3.6.0"
 end
 
 gem "actionpack", "4.2.8"
