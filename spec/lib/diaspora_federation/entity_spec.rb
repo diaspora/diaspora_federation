@@ -99,7 +99,7 @@ module DiasporaFederation
       it "replaces invalid XML characters" do
         entity = Entities::TestEntity.new(test: "asdfasdf asdf💩asdf\nasdf")
         xml = entity.to_xml.to_xml
-        parsed = Entities::TestEntity.from_xml(Nokogiri::XML::Document.parse(xml).root).test
+        parsed = Entities::TestEntity.from_xml(Nokogiri::XML(xml).root).test
         expect(parsed).to eq("asdf�asdf asdf💩asdf\nasdf")
       end
     end
@@ -127,7 +127,7 @@ module DiasporaFederation
           test2: "qwer",
           test3: true
         )
-        Entities::TestDefaultEntity.from_xml(Nokogiri::XML::Document.parse(<<-XML).root)
+        Entities::TestDefaultEntity.from_xml(Nokogiri::XML(<<-XML).root)
 <test_default_entity>
   <test1>asdf</test1>
   <test2>qwer</qwer2>
@@ -140,11 +140,11 @@ XML
         arguments = [{arg1: "value"}]
         expect_any_instance_of(DiasporaFederation::Parsers::XmlParser).to receive(:parse).and_return(arguments)
         expect(Entities::TestDefaultEntity).to receive(:from_hash).with(*arguments)
-        Entities::TestDefaultEntity.from_xml(Nokogiri::XML::Document.parse("<dummy/>").root)
+        Entities::TestDefaultEntity.from_xml(Nokogiri::XML("<dummy/>").root)
       end
 
       it "passes input parameter directly to .parse method of the parser" do
-        root = Nokogiri::XML::Document.parse("<dummy/>").root
+        root = Nokogiri::XML("<dummy/>").root
         expect_any_instance_of(DiasporaFederation::Parsers::XmlParser).to receive(:parse).with(root)
           .and_return([{test1: "2", test2: "1"}])
         Entities::TestDefaultEntity.from_xml(root)
@@ -444,7 +444,7 @@ JSON
 </test_nested_entity>
 XML
 
-        entity = Entities::TestNestedEntity.from_xml(Nokogiri::XML::Document.parse(xml).root)
+        entity = Entities::TestNestedEntity.from_xml(Nokogiri::XML(xml).root)
 
         expect(entity.asdf).to eq("FDSA")
         expect(entity.test).to be_nil
@@ -454,15 +454,6 @@ XML
 
     context "xml_name" do
       let(:hash) { {test: "test", qwer: "qwer"} }
-
-      it "uses xml_name for the #to_xml" do
-        entity = Entities::TestEntityWithXmlName.new(hash)
-        xml_children = entity.to_xml.children
-        expect(xml_children).to have_exactly(2).items
-        xml_children.each do |node|
-          expect(%w(test asdf)).to include(node.name)
-        end
-      end
 
       it "should not use the xml_name for the #to_h" do
         entity = Entities::TestEntityWithXmlName.new(hash)

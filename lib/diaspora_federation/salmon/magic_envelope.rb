@@ -76,22 +76,6 @@ module DiasporaFederation
         }
       end
 
-      # Encrypts the payload with a new, random AES cipher and returns the cipher
-      # params that were used.
-      #
-      # This must happen after the MagicEnvelope instance was created and before
-      # {MagicEnvelope#envelop} is called.
-      #
-      # @see AES#generate_key_and_iv
-      # @see AES#encrypt
-      #
-      # @return [Hash] AES key and iv. E.g.: { key: "...", iv: "..." }
-      def encrypt!
-        AES.generate_key_and_iv.tap do |key|
-          @payload_data = AES.encrypt(payload_data, key[:key], key[:iv])
-        end
-      end
-
       # Extracts the entity encoded in the magic envelope data, if the signature
       # is valid. If +cipher_params+ is given, also attempts to decrypt the payload first.
       #
@@ -128,7 +112,7 @@ module DiasporaFederation
 
         logger.debug "unenvelop message from #{sender}:\n#{data}"
 
-        new(XmlPayload.unpack(Nokogiri::XML::Document.parse(data).root), sender)
+        new(XmlPayload.unpack(Nokogiri::XML(data).root), sender)
       end
 
       private
@@ -136,7 +120,7 @@ module DiasporaFederation
       # The payload data as string
       # @return [String] payload data
       def payload_data
-        @payload_data ||= XmlPayload.pack(@payload).to_xml.strip.tap do |data|
+        @payload_data ||= payload.to_xml.to_xml.strip.tap do |data|
           logger.debug "send payload:\n#{data}"
         end
       end
@@ -153,7 +137,7 @@ module DiasporaFederation
       def build_xml
         Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
           yield xml
-        }.doc.root
+        }.doc
       end
 
       # Creates the signature for all fields according to specification

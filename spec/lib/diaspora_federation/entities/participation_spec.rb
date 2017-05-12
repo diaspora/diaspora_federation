@@ -1,25 +1,21 @@
 module DiasporaFederation
   describe Entities::Participation do
     let(:parent) { Fabricate(:post, author: bob) }
-    let(:parent_entity) { Fabricate(:related_entity, author: bob.diaspora_id) }
     let(:data) {
       Fabricate.attributes_for(
         :participation_entity,
         author:      alice.diaspora_id,
         parent_guid: parent.guid,
-        parent_type: parent.entity_type,
-        parent:      parent_entity
-      ).tap {|hash| add_signatures(hash) }
+        parent_type: parent.entity_type
+      )
     }
 
     let(:xml) { <<-XML }
 <participation>
+  <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
-  <target_type>#{parent.entity_type}</target_type>
   <parent_guid>#{parent.guid}</parent_guid>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
-  <author_signature>#{data[:author_signature]}</author_signature>
-  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
+  <parent_type>#{parent.entity_type}</parent_type>
 </participation>
 XML
 
@@ -30,16 +26,8 @@ XML
     "author": "#{data[:author]}",
     "guid": "#{data[:guid]}",
     "parent_guid": "#{parent.guid}",
-    "author_signature": "#{data[:author_signature]}",
-    "parent_author_signature": "#{data[:parent_author_signature]}",
     "parent_type": "#{parent.entity_type}"
-  },
-  "property_order": [
-    "guid",
-    "parent_type",
-    "parent_guid",
-    "author"
-  ]
+  }
 }
 JSON
 
@@ -47,36 +35,11 @@ JSON
 
     it_behaves_like "an Entity subclass"
 
-    it_behaves_like "an XML Entity", [:parent]
+    it_behaves_like "an XML Entity"
 
     it_behaves_like "a JSON Entity"
 
-    it_behaves_like "a relayable Entity"
-
-    it_behaves_like "a relayable JSON entity"
-
-    describe "#sender_valid?" do
-      let(:entity) { Entities::Participation.new(data) }
-
-      it "allows the author" do
-        expect(entity.sender_valid?(alice.diaspora_id)).to be_truthy
-      end
-
-      it "does not allow the parent author" do
-        expect(entity.sender_valid?(bob.diaspora_id)).to be_falsey
-      end
-    end
-
     context "parse xml" do
-      it "does not verify the signature" do
-        data.merge!(author_signature: "aa", parent_author_signature: "bb")
-        xml = Entities::Participation.new(data).to_xml
-
-        expect {
-          Entities::Participation.from_xml(xml)
-        }.not_to raise_error
-      end
-
       describe "#validate_parent" do
         let(:participation) {
           allow(DiasporaFederation.callbacks).to receive(:trigger).and_call_original

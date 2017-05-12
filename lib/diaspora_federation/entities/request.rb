@@ -18,20 +18,13 @@ module DiasporaFederation
       #   @return [String] recipient ID
       property :recipient, :string, xml_name: :recipient_handle
 
-      # Use only {Contact} for receive
-      # @return [Contact] instance as contact
-      def to_contact
-        Contact.new(author: author, recipient: recipient)
-      end
-
-      # @return [String] string representation of this object
-      def to_s
-        "Request:#{author}:#{recipient}"
+      def initialize(*)
+        raise "Sending Request is not supported anymore! Use Contact instead!"
       end
 
       # @return [Retraction] instance
       def self.from_hash(hash)
-        super.to_contact
+        Contact.new(hash)
       end
     end
   end

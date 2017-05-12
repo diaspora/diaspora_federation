@@ -135,7 +135,7 @@ module DiasporaFederation
       private_class_method def self.parse_xrd_document(xrd_doc)
         raise ArgumentError unless xrd_doc.instance_of?(String)
 
-        doc = Nokogiri::XML::Document.parse(xrd_doc)
+        doc = Nokogiri::XML(xrd_doc)
         raise InvalidDocument, "Not an XRD document" if !doc.root || doc.root.name != "XRD"
         doc
       end

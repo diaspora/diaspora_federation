@@ -3,6 +3,7 @@ module DiasporaFederation
     let(:sender_id) { Fabricate.sequence(:diaspora_id) }
     let(:obj_str) { "status_message@guid" }
     let(:xml) { "<xml>post</xml>" }
+    let(:json) { "{\"aes_key\": \"...\", \"encrypted_magic_envelope\": \"...\"}" }
     let(:url) { "http://example.org/receive/public" }
     let(:url2) { "http://example.com/receive/public" }
 
@@ -13,21 +14,45 @@ module DiasporaFederation
       allow(Typhoeus::Hydra).to receive(:new).and_return(hydra)
     end
 
-    describe "#insert_job" do
+    describe "#insert_magic_env_request" do
       it "queues a request to hydra" do
         expect(hydra).to receive(:queue).with(kind_of(Typhoeus::Request))
         expect(Typhoeus::Request).to receive(:new).with(
-          url, Federation::Sender::HydraWrapper.hydra_opts.merge(body: {xml: xml})
+          url,
+          Federation::Sender::HydraWrapper.hydra_opts.merge(
+            body: xml, headers: Federation::Sender::HydraWrapper.xml_headers
+          )
         ).and_call_original
 
-        hydra_wrapper.insert_job(url, xml)
+        hydra_wrapper.insert_magic_env_request(url, xml)
       end
 
       it "queues multiple requests to hydra" do
         expect(hydra).to receive(:queue).twice.with(kind_of(Typhoeus::Request))
 
-        hydra_wrapper.insert_job(url, xml)
-        hydra_wrapper.insert_job(url2, xml)
+        hydra_wrapper.insert_magic_env_request(url, xml)
+        hydra_wrapper.insert_magic_env_request(url2, xml)
+      end
+    end
+
+    describe "#insert_enc_magic_env_request" do
+      it "queues a request to hydra" do
+        expect(hydra).to receive(:queue).with(kind_of(Typhoeus::Request))
+        expect(Typhoeus::Request).to receive(:new).with(
+          url,
+          Federation::Sender::HydraWrapper.hydra_opts.merge(
+            body: json, headers: Federation::Sender::HydraWrapper.json_headers
+          )
+        ).and_call_original
+
+        hydra_wrapper.insert_enc_magic_env_request(url, json)
+      end
+
+      it "queues multiple requests to hydra" do
+        expect(hydra).to receive(:queue).twice.with(kind_of(Typhoeus::Request))
+
+        hydra_wrapper.insert_enc_magic_env_request(url, json)
+        hydra_wrapper.insert_enc_magic_env_request(url2, json)
       end
     end
 
@@ -54,8 +79,8 @@ module DiasporaFederation
       before do
         Typhoeus.stub(url).and_return(response)
         Typhoeus.stub(url2).and_return(error_response)
-        hydra_wrapper.insert_job(url, xml)
-        hydra_wrapper.insert_job(url2, xml)
+        hydra_wrapper.insert_magic_env_request(url, xml)
+        hydra_wrapper.insert_magic_env_request(url2, xml)
       end
       before :all do
         WebMock::HttpLibAdapters::TyphoeusAdapter.disable!
@@ -88,7 +113,7 @@ module DiasporaFederation
           return_code:   :ok
         )
         Typhoeus.stub("http://example.net/receive/not_found").and_return(not_found)
-        hydra_wrapper.insert_job("http://example.net/receive/not_found", xml)
+        hydra_wrapper.insert_magic_env_request("http://example.net/receive/not_found", xml)
 
         hydra_wrapper.send
       end
@@ -100,7 +125,7 @@ module DiasporaFederation
 
         url3 = "http://example.net/receive/public"
         Typhoeus.stub(url3).and_return(response)
-        hydra_wrapper.insert_job(url3, xml)
+        hydra_wrapper.insert_magic_env_request(url3, xml)
 
         expect(hydra_wrapper.send).to eq([url2, url3])
       end

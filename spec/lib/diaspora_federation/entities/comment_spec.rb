@@ -15,10 +15,10 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <comment>
+  <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
   <text>#{data[:text]}</text>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
 </comment>
@@ -37,10 +37,10 @@ XML
     "created_at": "#{data[:created_at].iso8601}"
   },
   "property_order": [
+    "author",
     "guid",
     "parent_guid",
-    "text",
-    "author"
+    "text"
   ]
 }
 JSON
@@ -59,7 +59,7 @@ JSON
 
     describe "#created_at" do
       it "has a created_at after parse" do
-        entity = described_class.from_xml(Nokogiri::XML::Document.parse(xml).root)
+        entity = described_class.from_xml(Nokogiri::XML(xml).root)
         expect(entity.created_at).to be_within(1).of(Time.now.utc)
       end
 

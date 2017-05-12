@@ -3,49 +3,7 @@ module DiasporaFederation
     let(:sender) { "test_user@pod.somedomain.tld" }
     let(:privkey) { OpenSSL::PKey::RSA.generate(512) } # use small key for speedy specs
     let(:payload) { Entities::TestEntity.new(test: "qwertzuiop") }
-    let(:slap_xml) { Salmon::Slap.generate_xml(sender, privkey, payload) }
-
-    describe ".generate_xml" do
-      context "sanity" do
-        it "accepts correct params" do
-          expect {
-            Salmon::Slap.generate_xml(sender, privkey, payload)
-          }.not_to raise_error
-        end
-
-        it "raises an error when the sender is the wrong type" do
-          [1234, true, :symbol, payload, privkey].each do |val|
-            expect {
-              Salmon::Slap.generate_xml(val, privkey, payload)
-            }.to raise_error ArgumentError
-          end
-        end
-
-        it "raises an error when the privkey is the wrong type" do
-          ["asdf", 1234, true, :symbol, payload].each do |val|
-            expect {
-              Salmon::Slap.generate_xml(sender, val, payload)
-            }.to raise_error ArgumentError
-          end
-        end
-
-        it "raises an error when the payload is the wrong type" do
-          ["asdf", 1234, true, :symbol, privkey].each do |val|
-            expect {
-              Salmon::Slap.generate_xml(sender, privkey, val)
-            }.to raise_error ArgumentError
-          end
-        end
-      end
-
-      it "generates valid xml" do
-        ns = {d: Salmon::XMLNS, me: Salmon::MagicEnvelope::XMLNS}
-        doc = Nokogiri::XML::Document.parse(slap_xml)
-        expect(doc.root.name).to eq("diaspora")
-        expect(doc.at_xpath("d:diaspora/d:header/d:author_id", ns).content).to eq(sender)
-        expect(doc.xpath("d:diaspora/me:env", ns)).to have(1).item
-      end
-    end
+    let(:slap_xml) { generate_legacy_salmon_slap(payload, sender, privkey) }
 
     describe ".from_xml" do
       context "sanity" do

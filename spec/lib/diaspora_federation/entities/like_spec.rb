@@ -14,11 +14,11 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <like>
-  <positive>#{data[:positive]}</positive>
+  <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
-  <target_type>#{parent.entity_type}</target_type>
   <parent_guid>#{parent.guid}</parent_guid>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <parent_type>#{parent.entity_type}</parent_type>
+  <positive>#{data[:positive]}</positive>
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
 </like>
@@ -33,15 +33,15 @@ XML
     "parent_guid": "#{parent.guid}",
     "author_signature": "#{data[:author_signature]}",
     "parent_author_signature": "#{data[:parent_author_signature]}",
-    "positive": #{data[:positive]},
-    "parent_type": "#{parent.entity_type}"
+    "parent_type": "#{parent.entity_type}",
+    "positive": #{data[:positive]}
   },
   "property_order": [
-    "positive",
+    "author",
     "guid",
-    "parent_type",
     "parent_guid",
-    "author"
+    "parent_type",
+    "positive"
   ]
 }
 JSON
@@ -69,7 +69,7 @@ JSON
 XML
 
         expect {
-          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)
+          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML(broken_xml).root)
         }.to raise_error Entity::ValidationError, "invalid DiasporaFederation::Entities::Like! missing 'parent_type'."
       end
 
@@ -83,7 +83,7 @@ XML
 XML
 
         expect {
-          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML::Document.parse(broken_xml).root)
+          DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML(broken_xml).root)
         }.to raise_error Entity::ValidationError, "invalid DiasporaFederation::Entities::Like! missing 'parent_guid'."
       end
     end

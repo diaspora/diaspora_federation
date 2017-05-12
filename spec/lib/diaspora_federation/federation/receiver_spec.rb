@@ -24,7 +24,7 @@ module DiasporaFederation
       it "parses the entity with legacy slap receiver" do
         expect_callback(:fetch_public_key, post.author).and_return(sender_key)
 
-        data = DiasporaFederation::Salmon::Slap.generate_xml(post.author, sender_key, post)
+        data = generate_legacy_salmon_slap(post, post.author, sender_key)
 
         expect_callback(:receive_entity, kind_of(Entities::StatusMessage), post.author, nil) do |_, entity|
           expect(entity.guid).to eq(post.guid)
@@ -65,8 +65,7 @@ module DiasporaFederation
       it "parses the entity with legacy slap receiver" do
         expect_callback(:fetch_public_key, post.author).and_return(sender_key)
 
-        data = DiasporaFederation::Salmon::EncryptedSlap.prepare(post.author, sender_key, post)
-                                                        .generate_xml(recipient_key)
+        data = generate_legacy_encrypted_salmon_slap(post, post.author, sender_key, recipient_key)
 
         expect_callback(:receive_entity, kind_of(Entities::StatusMessage), post.author, 1234) do |_, entity|
           expect(entity.guid).to eq(post.guid)
@@ -88,7 +87,7 @@ module DiasporaFederation
       end
 
       it "redirects exceptions from the receiver" do
-        invalid_magic_env = Nokogiri::XML::Document.parse("<xml/>").root
+        invalid_magic_env = Nokogiri::XML("<xml/>").root
         data = Salmon::EncryptedMagicEnvelope.encrypt(invalid_magic_env, recipient_key.public_key)
 
         expect {

@@ -93,10 +93,10 @@ module DiasporaFederation
         parent { Fabricate(:related_entity) }
       end
 
-      Fabricator(:participation_entity,
-                 class_name: DiasporaFederation::Entities::Participation, from: :relayable_entity) do
+      Fabricator(:participation_entity, class_name: DiasporaFederation::Entities::Participation) do
         author { Fabricate.sequence(:diaspora_id) }
         guid { Fabricate.sequence(:guid) }
+        parent_guid { Fabricate.sequence(:guid) }
         parent_type "Post"
       end
 
@@ -106,11 +106,6 @@ module DiasporaFederation
         guid { Fabricate.sequence(:guid) }
         public true
         created_at { Time.now.utc }
-      end
-
-      Fabricator(:request_entity, class_name: DiasporaFederation::Entities::Request) do
-        author { Fabricate.sequence(:diaspora_id) }
-        recipient { Fabricate.sequence(:diaspora_id) }
       end
 
       Fabricator(:contact_entity, class_name: DiasporaFederation::Entities::Contact) do
@@ -142,19 +137,12 @@ module DiasporaFederation
         participants { Array.new(3) { Fabricate.sequence(:diaspora_id) }.join(";") }
       end
 
-      Fabricator(:message_entity, class_name: DiasporaFederation::Entities::Message, from: :relayable_entity) do
+      Fabricator(:message_entity, class_name: DiasporaFederation::Entities::Message) do
         guid { Fabricate.sequence(:guid) }
         author { Fabricate.sequence(:diaspora_id) }
         text "this is a very informative text"
         created_at { Time.now.utc }
         conversation_guid { Fabricate.sequence(:guid) }
-      end
-
-      Fabricator(:relayable_retraction_entity, class_name: DiasporaFederation::Entities::RelayableRetraction) do
-        author { Fabricate.sequence(:diaspora_id) }
-        target_guid { Fabricate.sequence(:guid) }
-        target_type "Comment"
-        target {|attrs| Fabricate(:related_entity, author: attrs[:author]) }
       end
 
       Fabricator(:reshare_entity, class_name: DiasporaFederation::Entities::Reshare) do
@@ -168,13 +156,6 @@ module DiasporaFederation
       end
 
       Fabricator(:retraction_entity, class_name: DiasporaFederation::Entities::Retraction) do
-        author { Fabricate.sequence(:diaspora_id) }
-        target_guid { Fabricate.sequence(:guid) }
-        target_type "Post"
-        target {|attrs| Fabricate(:related_entity, author: attrs[:author]) }
-      end
-
-      Fabricator(:signed_retraction_entity, class_name: DiasporaFederation::Entities::SignedRetraction) do
         author { Fabricate.sequence(:diaspora_id) }
         target_guid { Fabricate.sequence(:guid) }
         target_type "Post"

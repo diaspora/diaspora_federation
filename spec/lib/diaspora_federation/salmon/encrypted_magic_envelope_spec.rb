@@ -32,7 +32,7 @@ module DiasporaFederation
 
         xml = Salmon::AES.decrypt(json["encrypted_magic_envelope"], key["key"], key["iv"])
 
-        expect(Nokogiri::XML::Document.parse(xml).root.to_xml).to eq(magic_env.to_xml)
+        expect(Nokogiri::XML(xml).to_xml).to eq(magic_env.to_xml)
       end
     end
 

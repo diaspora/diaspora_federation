@@ -58,17 +58,11 @@ module DiasporaFederation
     end
 
     class SomeRelayable < DiasporaFederation::Entity
-      LEGACY_SIGNATURE_ORDER = %i(guid author property parent_guid).freeze
-
       PARENT_TYPE = "Parent".freeze
 
       include Entities::Relayable
 
       property :property, :string
-
-      def parent_type
-        PARENT_TYPE
-      end
     end
   end
 

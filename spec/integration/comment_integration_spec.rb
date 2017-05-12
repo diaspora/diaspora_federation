@@ -63,7 +63,7 @@ KEY
       )
     }
 
-    let(:legacy_comment_xml_alice) { <<-XML }
+    let(:legacy_format_comment_xml_alice) { <<-XML }
 <XML>
   <post>
     <comment>
@@ -77,7 +77,7 @@ KEY
   </post>
 </XML>
 XML
-    let(:new_signature_comment_xml_alice) { <<-XML }
+    let(:new_format_comment_xml_alice) { <<-XML }
 <comment>
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
@@ -99,7 +99,7 @@ XML
 </comment>
 XML
 
-    let(:legacy_comment_xml_bob) { <<-XML }
+    let(:legacy_format_comment_xml_bob) { <<-XML }
 <XML>
   <post>
     <comment>
@@ -113,7 +113,17 @@ XML
   </post>
 </XML>
 XML
-    let(:legacy_new_signature_comment_xml_bob) { <<-XML }
+    let(:legacy_order_new_format_comment_xml_bob) { <<-XML }
+<comment>
+  <guid>e21589b0b41101333b870f77ba60fa73</guid>
+  <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
+  <text>this is a very informative comment</text>
+  <author>alice@pod-a.org</author>
+  <author_signature>XU5X1uqTh8SY6JMG9uhEVR5Rg7FURV6lpRwl/HYOu6DJ3Hd9tpA2aSFFibUxxsMgJXKNrrc5SykrrEdTiQoEei+j0QqZf3B5R7r84qgK7M46KazwIpqRPwVl2MdA/0DdQyYJLA/oavNj1nwll9vtR87M7e/C94qG6P+iQTMBQzo=</author_signature>
+  <parent_author_signature>QqWSdwpb+/dcJUxuKKVe7aiz1NivXzlIdWZ71xyrxnhFxFYd+7EIittyTcp1cVehjg96pwDbn++P/rWyCffqenWu025DHvUfSmQkC93Z0dX6r3OIUlZqwEggtOdbunybiE++F3BVsGt5wC4YbAESB5ZFuhFVhBXh1X+EaZ/qoKo=</parent_author_signature>
+</comment>
+XML
+    let(:new_order_legacy_format_comment_xml_bob) { <<-XML }
 <XML>
   <post>
     <comment>
@@ -127,7 +137,7 @@ XML
   </post>
 </XML>
 XML
-    let(:new_signature_comment_xml_bob) { <<-XML }
+    let(:new_format_comment_xml_bob) { <<-XML }
 <comment>
   <author>alice@pod-a.org</author>
   <guid>e21589b0b41101333b870f77ba60fa73</guid>
@@ -137,7 +147,7 @@ XML
   <parent_author_signature>hWsagsczmZD6d36d6MFdTt3hKAdnRtupSIU6464G2kkMJ+WlExxMgbF6kWR+jVCBTeKipWCYK3Arnj0YkuIZM9d14bJGVMTsW/ZzNfJ69bXZhsyawI8dPnZnLVydo+hU/XmGJBEuh2TOj9Emq6/HCYiWzPTF5qhYAtyJ1oxJ4Yk=</parent_author_signature>
 </comment>
 XML
-    let(:legacy_new_data_comment_xml_bob) { <<-XML }
+    let(:legacy_format_new_data_comment_xml_bob) { <<-XML }
 <XML>
   <post>
     <comment>
@@ -178,7 +188,7 @@ XML
         expect_callback(:fetch_private_key, parent.author).and_return(parent_key)
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
 
-        xml = Nokogiri::XML::Document.parse(new_data_comment_xml_alice).root
+        xml = Nokogiri::XML(new_data_comment_xml_alice).root
         Salmon::XmlPayload.unpack(xml).to_xml
       end
     end
@@ -190,22 +200,22 @@ XML
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
       end
 
-      it "relays legacy signatures and xml" do
-        xml = Nokogiri::XML::Document.parse(legacy_comment_xml_alice).root
+      it "relays legacy order" do
+        xml = Nokogiri::XML(legacy_format_comment_xml_alice).root
         entity = Salmon::XmlPayload.unpack(xml)
-        expect(Salmon::XmlPayload.pack(entity).to_xml).to eq(legacy_comment_xml_bob.strip)
+        expect(entity.to_xml.to_xml).to eq(legacy_order_new_format_comment_xml_bob.strip)
       end
 
-      it "relays new signatures and xml" do
-        xml = Nokogiri::XML::Document.parse(new_signature_comment_xml_alice).root
+      it "relays new order" do
+        xml = Nokogiri::XML(new_format_comment_xml_alice).root
         entity = Salmon::XmlPayload.unpack(xml)
-        expect(Salmon::XmlPayload.pack(entity).to_xml).to eq(legacy_new_signature_comment_xml_bob.strip)
+        expect(entity.to_xml.to_xml).to eq(new_format_comment_xml_bob.strip)
       end
 
-      it "relays new signatures with new data" do
-        xml = Nokogiri::XML::Document.parse(new_data_comment_xml_alice).root
+      it "relays new data" do
+        xml = Nokogiri::XML(new_data_comment_xml_alice).root
         entity = Salmon::XmlPayload.unpack(xml)
-        expect(Salmon::XmlPayload.pack(entity).to_xml).to eq(legacy_new_data_comment_xml_bob.strip)
+        expect(entity.to_xml.to_xml).to eq(new_data_comment_xml_bob.strip)
       end
     end
 
@@ -218,32 +228,40 @@ XML
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
       end
 
-      it "parses legacy signatures and xml" do
-        xml = Nokogiri::XML::Document.parse(legacy_comment_xml_bob).root
+      it "parses legacy format" do
+        xml = Nokogiri::XML(legacy_format_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)
         expect(entity.text).to eq(text)
       end
 
-      it "parses new signatures with legacy xml" do
-        xml = Nokogiri::XML::Document.parse(legacy_new_signature_comment_xml_bob).root
+      it "parses legacy order with new xml format" do
+        xml = Nokogiri::XML(legacy_order_new_format_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)
         expect(entity.text).to eq(text)
       end
 
-      it "parses new signatures and xml" do
-        xml = Nokogiri::XML::Document.parse(new_signature_comment_xml_bob).root
+      it "parses new order with legacy xml format" do
+        xml = Nokogiri::XML(new_order_legacy_format_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)
         expect(entity.text).to eq(text)
       end
 
-      it "parses new data with legacy xml" do
-        xml = Nokogiri::XML::Document.parse(legacy_new_data_comment_xml_bob).root
+      it "parses new xml format" do
+        xml = Nokogiri::XML(new_format_comment_xml_bob).root
+        entity = Salmon::XmlPayload.unpack(xml)
+
+        expect(entity.author).to eq(author)
+        expect(entity.text).to eq(text)
+      end
+
+      it "parses new data with legacy xml format" do
+        xml = Nokogiri::XML(legacy_format_new_data_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)
@@ -251,8 +269,8 @@ XML
         expect(entity.additional_data["new_data"]).to eq(new_data)
       end
 
-      it "parses new xml with additional data" do
-        xml = Nokogiri::XML::Document.parse(new_data_comment_xml_bob).root
+      it "parses new data with new xml format" do
+        xml = Nokogiri::XML(new_data_comment_xml_bob).root
         entity = Salmon::XmlPayload.unpack(xml)
 
         expect(entity.author).to eq(author)

@@ -13,8 +13,8 @@ module DiasporaFederation
       let(:urls) { ["https://example.org/receive/public", "https://example.com/receive/public"] }
 
       before do
-        expect(hydra_wrapper).to receive(:insert_job).with(urls.at(0), xml)
-        expect(hydra_wrapper).to receive(:insert_job).with(urls.at(1), xml)
+        expect(hydra_wrapper).to receive(:insert_magic_env_request).with(urls.at(0), xml)
+        expect(hydra_wrapper).to receive(:insert_magic_env_request).with(urls.at(1), xml)
       end
 
       it "returns empty array if send was successful" do
@@ -34,14 +34,14 @@ module DiasporaFederation
     describe ".private" do
       let(:targets) {
         {
-          "https://example.org/receive/user/guid" => "<xml>post</xml>",
-          "https://example.com/receive/user/guid" => "<xml>post2</xml>"
+          "https://example.org/receive/user/guid" => "{\"aes_key\": \"key1\", \"encrypted_magic_envelope\": \"...\"}",
+          "https://example.com/receive/user/guid" => "{\"aes_key\": \"key2\", \"encrypted_magic_envelope\": \"...\"}"
         }
       }
 
       before do
-        targets.each do |url, xml|
-          expect(hydra_wrapper).to receive(:insert_job).with(url, xml)
+        targets.each do |url, json|
+          expect(hydra_wrapper).to receive(:insert_enc_magic_env_request).with(url, json)
         end
       end
 
@@ -55,7 +55,9 @@ module DiasporaFederation
         expect(hydra_wrapper).to receive(:send).and_return(["https://example.com/receive/user/guid"])
 
         expect(Federation::Sender.private(sender_id, obj_str, targets))
-          .to eq("https://example.com/receive/user/guid" => "<xml>post2</xml>")
+          .to eq(
+            "https://example.com/receive/user/guid" => "{\"aes_key\": \"key2\", \"encrypted_magic_envelope\": \"...\"}"
+          )
       end
     end
   end

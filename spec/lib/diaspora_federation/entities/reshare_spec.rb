@@ -5,11 +5,11 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <reshare>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
   <created_at>#{data[:created_at].utc.iso8601}</created_at>
   <provider_display_name>#{data[:provider_display_name]}</provider_display_name>
-  <root_diaspora_id>#{data[:root_author]}</root_diaspora_id>
+  <root_author>#{data[:root_author]}</root_author>
   <root_guid>#{data[:root_guid]}</root_guid>
   <public>#{data[:public]}</public>
 </reshare>
@@ -50,7 +50,7 @@ JSON
 </reshare>
 XML
 
-        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
+        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.public).to be_truthy
         expect(parsed_instance.provider_display_name).to be_nil
       end
@@ -61,7 +61,7 @@ XML
         expect_callback(:fetch_related_entity, "Post", data[:root_guid]).and_return(nil)
         expect(Federation::Fetcher).to receive(:fetch_public).with(data[:root_author], "Post", data[:root_guid])
 
-        Entities::Reshare.from_xml(Nokogiri::XML::Document.parse(xml).root)
+        Entities::Reshare.from_xml(Nokogiri::XML(xml).root)
       end
     end
   end

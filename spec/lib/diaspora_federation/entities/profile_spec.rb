@@ -4,7 +4,7 @@ module DiasporaFederation
 
     let(:xml) { <<-XML }
 <profile>
-  <diaspora_handle>#{data[:author]}</diaspora_handle>
+  <author>#{data[:author]}</author>
   <first_name>#{data[:first_name]}</first_name>
   <last_name/>
   <image_url>#{data[:image_url]}</image_url>
@@ -59,7 +59,7 @@ JSON
 </profile>
 XML
 
-        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML::Document.parse(minimal_xml).root)
+        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.first_name).to be_nil
         expect(parsed_instance.last_name).to be_nil
         expect(parsed_instance.image_url).to be_nil

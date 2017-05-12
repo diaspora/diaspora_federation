@@ -11,7 +11,7 @@ module DiasporaFederation
       # @return [Array<String>] url to retry
       def self.public(sender_id, obj_str, urls, xml)
         hydra = HydraWrapper.new(sender_id, obj_str)
-        urls.each {|url| hydra.insert_job(url, xml) }
+        urls.each {|url| hydra.insert_magic_env_request(url, xml) }
         hydra.send
       end
 
@@ -23,7 +23,7 @@ module DiasporaFederation
       # @return [Hash] targets to retry
       def self.private(sender_id, obj_str, targets)
         hydra = HydraWrapper.new(sender_id, obj_str)
-        targets.each {|url, xml| hydra.insert_job(url, xml) }
+        targets.each {|url, json| hydra.insert_enc_magic_env_request(url, json) }
         hydra.send.map {|url| [url, targets[url]] }.to_h
       end
     end

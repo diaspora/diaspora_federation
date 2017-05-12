@@ -14,7 +14,7 @@ module DiasporaFederation
 
         expect_callback(:fetch_public_key, alice.diaspora_id).and_return(alice.public_key)
 
-        magic_env_xml = Nokogiri::XML::Document.parse(response.body).root
+        magic_env_xml = Nokogiri::XML(response.body).root
         magic_env = Salmon::MagicEnvelope.unenvelop(magic_env_xml)
         entity = magic_env.payload
 
@@ -33,7 +33,7 @@ module DiasporaFederation
 
         expect_callback(:fetch_public_key, alice.diaspora_id).and_return(alice.public_key)
 
-        magic_env_xml = Nokogiri::XML::Document.parse(response.body).root
+        magic_env_xml = Nokogiri::XML(response.body).root
         magic_env = Salmon::MagicEnvelope.unenvelop(magic_env_xml)
         entity = magic_env.payload
 
