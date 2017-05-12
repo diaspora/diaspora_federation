@@ -9,7 +9,6 @@ module DiasporaFederation
 
       rule :acct_uri, :not_empty
 
-      rule :alias_url, URI: %i(host path)
       rule :hcard_url, [:not_nil, URI: %i(host path)]
       rule :seed_url, %i(not_nil URI)
       rule :profile_url, URI: %i(host path)
