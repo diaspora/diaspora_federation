@@ -10,6 +10,7 @@ DiasporaFederation::Engine.routes.draw do
 
   controller :webfinger do
     get ".well-known/host-meta" => :host_meta,        :as => "host_meta"
+    get ".well-known/webfinger" => :webfinger,        :as => "webfinger"
     get "webfinger"             => :legacy_webfinger, :as => "legacy_webfinger"
   end
 
