@@ -70,13 +70,13 @@ module DiasporaFederation
         super(data)
       end
 
-      # Verifies the +author_signature+.
+      # Verifies the +author_signature+ if needed.
       # @see DiasporaFederation::Entities::Signable#verify_signature
       #
       # @raise [SignatureVerificationFailed] if the signature is not valid
       # @raise [PublicKeyNotFound] if no public key is found
       def verify_signature
-        super(author, :author_signature)
+        super(author, :author_signature) unless author == parent.author
       end
 
       def sender_valid?(sender)

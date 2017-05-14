@@ -24,14 +24,17 @@ All relayables have the following properties:
 
 ## Relaying
 
-The author of the relayable sends the entity to the parent author. The author must include the `author_signature`.
+If the author is not the same as the parent author, the author of the relayable sends the entity to the parent author
+and the author must include the `author_signature`.
 
 The parent author then must envelop it in a new [Magic Envelope][magicsig] and send the entity to all the recipients
 of the parent entity. If the author and the parent author are on the same server, the author must sign the
 `author_signature` and the parent author needs to sign the Magic Envelope.
 
 If someone other then the parent author receives a relayable without a valid Magic Envelope signed from
-the parent author, it must be ignored. If the `author_signature` is missing or invalid, it also must be ignored.
+the parent author, it must be ignored. If the author is not the same as the parent author and the `author_signature`
+is missing or invalid, it also must be ignored. If the author is the same as the parent author, the `author_signature`
+can be missing, because a valid signature in the Magic Envelope from the author is enough in that case.
 
 ## Signatures
 

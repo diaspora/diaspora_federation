@@ -69,6 +69,15 @@ module DiasporaFederation
         }.to raise_error Entities::Relayable::SignatureVerificationFailed
       end
 
+      it "doesn't raise when no author signature was passed, but the author is also the parent author" do
+        hash[:author_signature] = nil
+        hash[:parent] = Fabricate(:related_entity, author: author, local: false)
+
+        expect {
+          Entities::SomeRelayable.new(hash, signature_order).verify_signature
+        }.not_to raise_error
+      end
+
       it "raises when bad author signature was passed" do
         hash[:author_signature] = sign_with_key(author_pkey, "bad signed string")
 
