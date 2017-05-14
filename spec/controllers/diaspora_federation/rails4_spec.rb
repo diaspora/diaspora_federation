@@ -17,13 +17,13 @@ module DiasporaFederation
         public_key:    alice.serialized_public_key
       ).to_xml
 
-      get :legacy_webfinger, q: alice.diaspora_id
+      get :webfinger, format: :xml, resource: alice.diaspora_id
       expect(response).to be_success
       expect(response.body).to eq(webfinger_xrd)
     end
 
     it "404s when the person does not exist" do
-      get :legacy_webfinger, q: "me@mydiaspora.pod.com"
+      get :webfinger, format: :xml, resource: "me@mydiaspora.pod.com"
       expect(response).to be_not_found
     end
   end

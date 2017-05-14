@@ -15,7 +15,7 @@ module DiasporaFederation
 
       it "contains the webfinger-template" do
         get :host_meta
-        expect(response.body).to include "template=\"http://localhost:3000/webfinger?q={uri}\""
+        expect(response.body).to include "template=\"http://localhost:3000/.well-known/webfinger.xml?resource={uri}\""
       end
 
       it "returns a application/xrd+xml" do
@@ -117,34 +117,6 @@ module DiasporaFederation
 
           get :webfinger, format: :xml, params: {resource: "acct:alice@localhost:3000"}
         end
-      end
-    end
-
-    describe "GET #legacy_webfinger", rails: 5 do
-      it "succeeds when the person exists" do
-        get :legacy_webfinger, params: {q: alice.diaspora_id}
-        expect(response).to be_success
-      end
-
-      it "succeeds with 'acct:' in the query when the person exists" do
-        get :legacy_webfinger, params: {q: "acct:#{alice.diaspora_id}"}
-        expect(response).to be_success
-      end
-
-      it "contains the diaspora* ID" do
-        get :legacy_webfinger, params: {q: "acct:#{alice.diaspora_id}"}
-        expect(response.body).to include "<Subject>acct:alice@localhost:3000</Subject>"
-      end
-
-      it "404s when the person does not exist" do
-        get :legacy_webfinger, params: {q: "me@mydiaspora.pod.com"}
-        expect(response).to be_not_found
-      end
-
-      it "calls the fetch_person_for_webfinger callback" do
-        expect_callback(:fetch_person_for_webfinger, "alice@localhost:3000").and_call_original
-
-        get :legacy_webfinger, params: {q: "acct:alice@localhost:3000"}
       end
     end
   end
