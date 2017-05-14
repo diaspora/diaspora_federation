@@ -25,16 +25,15 @@ module DiasporaFederation
       end
     end
 
-    describe "#verify_signatures" do
+    describe "#verify_signature" do
       it "doesn't raise anything if correct signatures were passed" do
         hash[:author_signature] = sign_with_key(author_pkey, signature_data)
         hash[:parent_author_signature] = sign_with_key(parent_pkey, signature_data)
         hash[:parent] = remote_parent
 
         expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-        expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
 
-        expect { Entities::SomeRelayable.new(hash, signature_order).verify_signatures }.not_to raise_error
+        expect { Entities::SomeRelayable.new(hash, signature_order).verify_signature }.not_to raise_error
       end
 
       it "doesn't raise anything if correct signatures with new property were passed" do
@@ -46,10 +45,9 @@ module DiasporaFederation
         hash[:parent] = remote_parent
 
         expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-        expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
 
         expect {
-          Entities::SomeRelayable.new(hash, signature_order, "new_property" => new_property).verify_signatures
+          Entities::SomeRelayable.new(hash, signature_order, "new_property" => new_property).verify_signature
         }.not_to raise_error
       end
 
@@ -57,7 +55,7 @@ module DiasporaFederation
         expect_callback(:fetch_public_key, anything).and_return(nil)
 
         expect {
-          Entities::SomeRelayable.new(hash, signature_order).verify_signatures
+          Entities::SomeRelayable.new(hash, signature_order).verify_signature
         }.to raise_error Entities::Relayable::PublicKeyNotFound
       end
 
@@ -67,7 +65,7 @@ module DiasporaFederation
         expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
 
         expect {
-          Entities::SomeRelayable.new(hash, signature_order).verify_signatures
+          Entities::SomeRelayable.new(hash, signature_order).verify_signature
         }.to raise_error Entities::Relayable::SignatureVerificationFailed
       end
 
@@ -77,56 +75,28 @@ module DiasporaFederation
         expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
 
         expect {
-          Entities::SomeRelayable.new(hash, signature_order).verify_signatures
+          Entities::SomeRelayable.new(hash, signature_order).verify_signature
         }.to raise_error Entities::Relayable::SignatureVerificationFailed
       end
 
-      it "raises when no public key for parent author was fetched" do
-        hash[:author_signature] = sign_with_key(author_pkey, signature_data)
-        hash[:parent] = remote_parent
-
-        expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-        expect_callback(:fetch_public_key, remote_parent.author).and_return(nil)
-
-        expect {
-          Entities::SomeRelayable.new(hash, signature_order).verify_signatures
-        }.to raise_error Entities::Relayable::PublicKeyNotFound
-      end
-
-      it "raises when no parent author signature was passed" do
+      it "doesn't raise when no parent author signature was passed" do
         hash[:author_signature] = sign_with_key(author_pkey, signature_data)
         hash[:parent_author_signature] = nil
         hash[:parent] = remote_parent
 
         expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-        expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
 
-        expect {
-          Entities::SomeRelayable.new(hash, signature_order).verify_signatures
-        }.to raise_error Entities::Relayable::SignatureVerificationFailed
+        expect { Entities::SomeRelayable.new(hash, signature_order).verify_signature }.not_to raise_error
       end
 
-      it "raises when bad parent author signature was passed" do
-        hash[:author_signature] = sign_with_key(author_pkey, signature_data)
-        hash[:parent_author_signature] = sign_with_key(parent_pkey, "bad signed string")
-        hash[:parent] = remote_parent
-
-        expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-        expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
-
-        expect {
-          Entities::SomeRelayable.new(hash, signature_order).verify_signatures
-        }.to raise_error Entities::Relayable::SignatureVerificationFailed
-      end
-
-      it "doesn't raise if parent_author_signature isn't set but we're on upstream federation" do
+      it "doesn't raise when no parent author signature was passed and we're on upstream federation" do
         hash[:author_signature] = sign_with_key(author_pkey, signature_data)
         hash[:parent_author_signature] = nil
         hash[:parent] = local_parent
 
         expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
 
-        expect { Entities::SomeRelayable.new(hash, signature_order).verify_signatures }.not_to raise_error
+        expect { Entities::SomeRelayable.new(hash, signature_order).verify_signature }.not_to raise_error
       end
     end
 
@@ -228,7 +198,6 @@ XML
         before do
           expect_callback(:fetch_related_entity, "Parent", parent_guid).and_return(remote_parent)
           expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-          expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
         end
 
         let(:new_signature_data) { "#{author};#{guid};#{parent_guid};#{new_property};#{property}" }
@@ -374,7 +343,6 @@ XML
         before do
           expect_callback(:fetch_related_entity, "Parent", parent_guid).and_return(remote_parent)
           expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-          expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
         end
 
         context "when properties are sorted and there is an unknown property" do
@@ -475,7 +443,6 @@ XML
       context "fetch parent" do
         before do
           expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-          expect_callback(:fetch_public_key, remote_parent.author).and_return(parent_pkey.public_key)
           expect_callback(:fetch_private_key, author).and_return(author_pkey)
           expect_callback(:fetch_private_key, remote_parent.author).and_return(parent_pkey)
         end
@@ -508,10 +475,16 @@ XML
     end
 
     describe "#sender_valid?" do
-      it "allows author" do
+      it "allows author if the parent is local" do
         entity = Entities::SomeRelayable.new(hash)
 
         expect(entity.sender_valid?(author)).to be_truthy
+      end
+
+      it "does not allow the author if the parent is not local" do
+        entity = Entities::SomeRelayable.new(hash.merge(parent: remote_parent))
+
+        expect(entity.sender_valid?(author)).to be_falsey
       end
 
       it "allows parent author" do

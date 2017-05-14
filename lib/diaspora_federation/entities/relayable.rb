@@ -28,16 +28,15 @@ module DiasporaFederation
       #   @return [String] parent guid
       #
       # @!attribute [r] author_signature
-      #   Contains a signature of the entity using the private key of the author of a post itself
+      #   Contains a signature of the entity using the private key of the author of a relayable itself.
       #   The presence of this signature is mandatory. Without it the entity won't be accepted by
       #   a target pod.
       #   @return [String] author signature
       #
       # @!attribute [r] parent_author_signature
-      #   Contains a signature of the entity using the private key of the author of a parent post
-      #   This signature is required only when federating from upstream (parent) post author to
-      #   downstream subscribers. This is the case when the parent author has to resend a relayable
-      #   received from one of their subscribers to all others.
+      #   Contains a signature of the entity using the private key of the author of a parent post.
+      #   @deprecated This signature isn't required anymore, because we can check the signature from
+      #     the parent author in the MagicEnvelope.
       #   @return [String] parent author signature
       #
       # @!attribute [r] parent
@@ -71,18 +70,17 @@ module DiasporaFederation
         super(data)
       end
 
-      # Verifies the signatures (+author_signature+ and +parent_author_signature+ if needed).
+      # Verifies the +author_signature+.
+      # @see DiasporaFederation::Entities::Signable#verify_signature
+      #
       # @raise [SignatureVerificationFailed] if the signature is not valid
       # @raise [PublicKeyNotFound] if no public key is found
-      def verify_signatures
-        verify_signature(author, :author_signature)
-
-        # This happens only on downstream federation.
-        verify_signature(parent.author, :parent_author_signature) unless parent.local
+      def verify_signature
+        super(author, :author_signature)
       end
 
       def sender_valid?(sender)
-        sender == author || sender == parent.author
+        (sender == author && parent.local) || sender == parent.author
       end
 
       # @return [String] string representation of this object
@@ -178,7 +176,7 @@ module DiasporaFederation
           additional_data = properties_hash.reject {|key, _| class_props.has_key?(key) }
 
           fetch_parent(properties_hash)
-          new(properties_hash, property_order, additional_data).tap(&:verify_signatures)
+          new(properties_hash, property_order, additional_data).tap(&:verify_signature)
         end
 
         private

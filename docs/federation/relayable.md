@@ -21,24 +21,22 @@ All relayables have the following properties:
 | `guid`                    | [GUID][guid]                 | The GUID of the relayable.                        |
 | `parent_guid`             | [GUID][guid]                 | The GUID of the parent entity.                    |
 | `author_signature`        | [Signature][signature]       | The signature from the author of the relayable.   |
-| `parent_author_signature` | [Signature][signature]       | The signature from the parent entity author.      |
 
 ## Relaying
 
-The author of the relayable sends the entity to the parent author. The author must include the `author_signature`. The
-`parent_author_signature` may be empty or missing.
+The author of the relayable sends the entity to the parent author. The author must include the `author_signature`.
 
-The parent author then must add the `parent_author_signature` and send the entity to all the recipients of the parent
-entity.
+The parent author then must envelop it in a new [Magic Envelope][magicsig] and send the entity to all the recipients
+of the parent entity. If the author and the parent author are on the same server, the author must sign the
+`author_signature` and the parent author needs to sign the Magic Envelope.
 
-If someone other then the parent author receives an relayable without a valid `parent_author_signature`, it must be
-ignored. If the `author_signature` is missing or invalid, it also must be ignored.
+If someone other then the parent author receives a relayable without a valid Magic Envelope signed from
+the parent author, it must be ignored. If the `author_signature` is missing or invalid, it also must be ignored.
 
 ## Signatures
 
-The string to sign is built with the content of all properties (except the `author_signature` and
-`parent_author_signature` itself), concatenated using `;` as separator in the same order as they appear in the XML. The
-order in the XML is not specified.
+The string to sign is built with the content of all properties (except the `author_signature` itself),
+concatenated using `;` as separator in the same order as they appear in the XML. The order in the XML is not specified.
 
 This ensures that relayables even work, if the parent author or another recipient does not know all properties of the
 relayable entity (e.g. older version of diaspora\*).
