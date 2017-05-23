@@ -30,7 +30,6 @@ XML
     "guid": "#{data[:guid]}",
     "parent_guid": "#{parent.guid}",
     "author_signature": "#{data[:author_signature]}",
-    "parent_author_signature": "#{data[:parent_author_signature]}",
     "poll_answer_guid": "#{data[:poll_answer_guid]}"
   },
   "property_order": [

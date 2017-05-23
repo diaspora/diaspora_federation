@@ -134,7 +134,7 @@ module DiasporaFederation
       def enriched_properties
         super.merge(additional_data).tap do |hash|
           hash[:author_signature] = author_signature || sign_with_author
-          hash[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
+          hash.delete(:parent_author_signature)
         end
       end
 
@@ -142,7 +142,9 @@ module DiasporaFederation
       #
       # @return [Hash] sorted xml elements
       def xml_elements
-        data = super
+        data = super.tap do |hash|
+          hash[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
+        end
         order = signature_order + %i(author_signature parent_author_signature)
         order.map {|element| [element, data[element] || ""] }.to_h
       end

@@ -46,8 +46,7 @@
             "author": { "type": "string" },
             "guid": { "$ref": "#/definitions/guid" },
             "parent_guid": { "$ref": "#/definitions/guid" },
-            "author_signature": { "$ref": "#/definitions/signature" },
-            "parent_author_signature": { "$ref": "#/definitions/signature" }
+            "author_signature": { "$ref": "#/definitions/signature" }
           },
           "required": [
             "author", "guid", "parent_guid"

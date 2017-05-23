@@ -307,25 +307,21 @@ XML
         )
       end
 
-      it "computes correct signatures for the entity with new unknown elements" do
+      it "computes correct author_signature for the entity with new unknown elements" do
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
-        expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
 
         property_order = [:author, :guid, :parent_guid, "new_property", :property]
         signature_data_with_new_property = "#{author};#{guid};#{parent_guid};#{new_property};#{property}"
 
         json_hash = Entities::SomeRelayable.new(hash, property_order, "new_property" => new_property).to_json
         author_signature = json_hash[:entity_data][:author_signature]
-        parent_author_signature = json_hash[:entity_data][:parent_author_signature]
 
         expect(verify_signature(author_pkey, author_signature, signature_data_with_new_property)).to be_truthy
-        expect(verify_signature(parent_pkey, parent_author_signature, signature_data_with_new_property)).to be_truthy
       end
 
-      it "doesn't change signatures if they are already set" do
+      it "doesn't change author_signature if it is already set" do
         json = Entities::SomeRelayable.new(hash_with_fake_signatures).to_json.to_json
         expect(json).to include_json(entity_data: {author_signature: "aa"})
-        expect(json).to include_json(entity_data: {parent_author_signature: "bb"})
       end
 
       it "raises when author_signature not set and key isn't supplied" do
@@ -336,12 +332,11 @@ XML
         }.to raise_error Entities::Relayable::AuthorPrivateKeyNotFound
       end
 
-      it "doesn't set parent_author_signature if key isn't supplied" do
+      it "doesn't contain the parent_author_signature" do
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
-        expect_callback(:fetch_private_key, local_parent.author).and_return(nil)
 
-        json = Entities::SomeRelayable.new(hash).to_json.to_json
-        expect(json).to include_json(entity_data: {parent_author_signature: ""})
+        json = Entities::SomeRelayable.new(hash).to_json
+        expect(json[:entity_data]).not_to include(:parent_author_signature)
       end
     end
 
@@ -453,7 +448,6 @@ XML
         before do
           expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
           expect_callback(:fetch_private_key, author).and_return(author_pkey)
-          expect_callback(:fetch_private_key, remote_parent.author).and_return(parent_pkey)
         end
 
         let(:entity) { Entities::SomeRelayable.new(hash) }
