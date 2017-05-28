@@ -4,7 +4,7 @@ module DiasporaFederation
     let(:xml) { <<-XML }
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
-  <Link rel="lrdd" type="application/xrd+xml" template="#{base_url}webfinger?q={uri}"/>
+  <Link rel="lrdd" type="application/xrd+xml" template="#{base_url}.well-known/webfinger.xml?resource={uri}"/>
 </XRD>
 XML
 
@@ -36,7 +36,7 @@ XML
     context "parsing" do
       it "parses its own output" do
         hm = Discovery::HostMeta.from_xml(xml)
-        expect(hm.webfinger_template_url).to eq("#{base_url}webfinger?q={uri}")
+        expect(hm.webfinger_template_url).to eq("#{base_url}.well-known/webfinger.xml?resource={uri}")
       end
 
       it "also reads old-style XML" do

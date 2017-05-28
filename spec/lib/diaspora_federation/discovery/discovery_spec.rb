@@ -49,7 +49,7 @@ module DiasporaFederation
       it "fetches the userdata and returns a person object" do
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
-        stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
+        stub_request(:get, "http://localhost:3000/.well-known/webfinger.xml?resource=acct:#{account}")
           .to_return(status: 200, body: webfinger_xrd)
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
@@ -76,7 +76,7 @@ module DiasporaFederation
       it "fetches the userdata and saves the person object via callback" do
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
-        stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
+        stub_request(:get, "http://localhost:3000/.well-known/webfinger.xml?resource=acct:#{account}")
           .to_return(status: 200, body: webfinger_xrd)
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
@@ -96,7 +96,7 @@ module DiasporaFederation
           .to_return(status: 404)
         stub_request(:get, "http://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
-        stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
+        stub_request(:get, "http://localhost:3000/.well-known/webfinger.xml?resource=acct:#{account}")
           .to_return(status: 200, body: webfinger_xrd)
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
@@ -113,7 +113,7 @@ module DiasporaFederation
           .to_raise(OpenSSL::SSL::SSLError)
         stub_request(:get, "http://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
-        stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
+        stub_request(:get, "http://localhost:3000/.well-known/webfinger.xml?resource=acct:#{account}")
           .to_return(status: 200, body: webfinger_xrd)
         stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
           .to_return(status: 200, body: hcard_html)
@@ -130,7 +130,7 @@ module DiasporaFederation
 
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
-        stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
+        stub_request(:get, "http://localhost:3000/.well-known/webfinger.xml?resource=acct:#{account}")
           .to_return(status: 200, body: modified_webfinger)
 
         expect { Discovery::Discovery.new(account).fetch_and_save }.to raise_error Discovery::DiscoveryError
@@ -139,7 +139,7 @@ module DiasporaFederation
       it "fails if the diaspora* ID was not found" do
         stub_request(:get, "https://localhost:3000/.well-known/host-meta")
           .to_return(status: 200, body: host_meta_xrd)
-        stub_request(:get, "http://localhost:3000/webfinger?q=acct:#{account}")
+        stub_request(:get, "http://localhost:3000/.well-known/webfinger.xml?resource=acct:#{account}")
           .to_return(status: 404)
 
         expect { Discovery::Discovery.new(account).fetch_and_save }.to raise_error Discovery::DiscoveryError

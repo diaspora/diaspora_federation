@@ -6,7 +6,7 @@ diaspora\* uses an old draft of [WebFinger][webfinger-draft] to discover users f
 
 {% include warning_box.html
    title="Old WebFinger"
-   content="<p>diaspora* doesn't yet support the RFC 7033 WebFinger!</p>"
+   content="<p>diaspora* doesn't yet fully support the RFC 7033 WebFinger!</p>"
 %}
 
 ## WebFinger endpoint discovery
@@ -54,7 +54,7 @@ Content-Type: application/xrd+xml; charset=utf-8
 ~~~xml
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
-  <Link rel="lrdd" type="application/xrd+xml" template="https://example.org/webfinger?q={uri}"/>
+  <Link rel="lrdd" type="application/xrd+xml" template="https://example.org/.well-known/webfinger.xml?resource={uri}"/>
 </XRD>
 ~~~
 
@@ -70,7 +70,7 @@ of the searched person.
 #### Example
 
 ~~~
-GET /webfinger?q=acct:alice@example.org
+GET /.well-known/webfinger.xml?resource=acct:alice@example.org
 Host: example.org
 ~~~
 
@@ -117,6 +117,7 @@ Content-Type: application/xrd+xml; charset=utf-8
 * [RFC 6415: Web Host Metadata][host-meta]
 * [WebFinger draft][webfinger-draft]
 * [Extensible Resource Descriptor (XRD) Version 1.0][xrd]
+* [RFC 7033: WebFinger][webfinger-rfc]
 
 [host-meta]: https://tools.ietf.org/html/rfc6415
 [webfinger-draft]: https://tools.ietf.org/html/draft-jones-appsawg-webfinger-06

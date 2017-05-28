@@ -69,15 +69,25 @@ module DiasporaFederation
       def to_xml
         Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
           xml.XRD("xmlns" => XMLNS) {
-            xml.Expires(@expires.strftime(DATETIME_FORMAT)) if @expires.instance_of?(DateTime)
+            xml.Expires(expires.strftime(DATETIME_FORMAT)) if expires.instance_of?(DateTime)
 
-            xml.Subject(@subject) if !@subject.nil? && !@subject.empty?
+            xml.Subject(subject) if !subject.nil? && !subject.empty?
 
             add_aliases_to(xml)
             add_properties_to(xml)
             add_links_to(xml)
           }
         }.to_xml
+      end
+
+      def to_json
+        {
+          subject:    subject,
+          expires:    expires,
+          aliases:    (aliases if aliases.any?),
+          links:      (links if links.any?),
+          properties: (properties if properties.any?)
+        }.reject {|_, v| v.nil? }
       end
 
       # Parse the XRD document from the given string and create a hash containing
@@ -107,23 +117,26 @@ module DiasporaFederation
 
       private
 
+      attr_reader :expires
+      attr_reader :subject
+
       NS = {xrd: XMLNS}.freeze
 
       def add_aliases_to(xml)
-        @aliases.each do |a|
+        aliases.each do |a|
           next if !a.instance_of?(String) || a.empty?
           xml.Alias(a.to_s)
         end
       end
 
       def add_properties_to(xml)
-        @properties.each do |type, val|
+        properties.each do |type, val|
           xml.Property(val.to_s, type: type)
         end
       end
 
       def add_links_to(xml)
-        @links.each do |l|
+        links.each do |l|
           attrs = {}
           LINK_ATTRS.each do |attr|
             attrs[attr.to_s] = l[attr] if l.key?(attr)

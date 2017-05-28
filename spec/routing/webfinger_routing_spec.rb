@@ -9,10 +9,10 @@ module DiasporaFederation
       )
     end
 
-    it "routes GET legacy webfinger" do
-      expect(get: "/webfinger").to route_to(
+    it "routes GET webfinger" do
+      expect(get: "/.well-known/webfinger").to route_to(
         controller: "diaspora_federation/webfinger",
-        action:     "legacy_webfinger"
+        action:     "webfinger"
       )
     end
   end

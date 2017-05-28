@@ -107,15 +107,11 @@ module DiasporaFederation
       # Creates the XML string from the current WebFinger instance
       # @return [String] XML string
       def to_xml
-        doc = XrdDocument.new
+        to_xrd.to_xml
+      end
 
-        doc.subject = acct_uri
-        doc.aliases.concat(additional_data[:aliases]) if additional_data[:aliases]
-        doc.properties.merge!(additional_data[:properties]) if additional_data[:properties]
-
-        add_links_to(doc)
-
-        doc.to_xml
+      def to_json
+        to_xrd.to_json
       end
 
       # Creates a WebFinger instance from the given XML string
@@ -156,6 +152,16 @@ module DiasporaFederation
         XrdDocument.xml_data(webfinger_xml).tap do |data|
           valid = data.key?(:subject) && data.key?(:links)
           raise InvalidData, "webfinger xml is incomplete" unless valid
+        end
+      end
+
+      def to_xrd
+        XrdDocument.new.tap do |xrd|
+          xrd.subject = acct_uri
+          xrd.aliases.concat(additional_data[:aliases]) if additional_data[:aliases]
+          xrd.properties.merge!(additional_data[:properties]) if additional_data[:properties]
+
+          add_links_to(xrd)
         end
       end
 
