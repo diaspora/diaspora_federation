@@ -193,13 +193,7 @@ module DiasporaFederation
             raise DiasporaFederation::Entity::ValidationError, "invalid #{self}! missing 'parent_guid'."
           }
 
-          data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
-
-          return if data[:parent]
-
-          # Fetch and receive parent from remote, if not available locally
-          Federation::Fetcher.fetch_public(data[:author], type, guid)
-          data[:parent] = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
+          data[:parent] = RelatedEntity.fetch(data[:author], type, guid)
         end
 
         def xml_parser_class

@@ -24,6 +24,18 @@ module DiasporaFederation
       #   @return [RelatedEntity] parent entity
       entity :parent, Entities::RelatedEntity, default: nil
 
+      # Get related entity from the backend or fetch it from remote if not available locally
+      # @return [RelatedEntity] fetched related entity
+      def self.fetch(author, type, guid)
+        # Try to fetch locally
+        entity = DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
+        return entity if entity
+
+        # Fetch and receive entity from remote if not available locally
+        Federation::Fetcher.fetch_public(author, type, guid)
+        DiasporaFederation.callbacks.trigger(:fetch_related_entity, type, guid)
+      end
+
       # never add {RelatedEntity} to xml
       def to_xml
         nil
