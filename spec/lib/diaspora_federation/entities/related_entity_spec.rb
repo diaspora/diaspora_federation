@@ -30,5 +30,11 @@ module DiasporaFederation
         expect(described_class.new(data).to_xml).to be_nil
       end
     end
+
+    describe "#to_json" do
+      it "returns nil" do
+        expect(described_class.new(data).to_json).to be_nil
+      end
+    end
   end
 end

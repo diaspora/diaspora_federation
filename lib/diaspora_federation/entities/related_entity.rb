@@ -41,6 +41,7 @@ module DiasporaFederation
         nil
       end
 
+      # never add {RelatedEntity} to json
       def to_json
         nil
       end
