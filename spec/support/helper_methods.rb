@@ -14,7 +14,7 @@ end
 
 # signature methods
 def add_signatures(hash, klass=described_class)
-  properties = klass.new(hash).send(:enriched_properties)
+  properties = klass.new(hash).send(:xml_elements)
   hash[:author_signature] = properties[:author_signature]
   hash[:parent_author_signature] = properties[:parent_author_signature]
 end

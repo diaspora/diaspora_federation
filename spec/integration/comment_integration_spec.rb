@@ -224,7 +224,6 @@ XML
 
       before do
         expect_callback(:fetch_public_key, author).and_return(author_key.public_key)
-        expect_callback(:fetch_public_key, parent.author).and_return(parent_key.public_key)
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
       end
 

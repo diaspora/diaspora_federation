@@ -32,7 +32,6 @@ XML
     "guid": "#{data[:guid]}",
     "parent_guid": "#{parent.guid}",
     "author_signature": "#{data[:author_signature]}",
-    "parent_author_signature": "#{data[:parent_author_signature]}",
     "parent_type": "#{parent.entity_type}",
     "positive": #{data[:positive]}
   },

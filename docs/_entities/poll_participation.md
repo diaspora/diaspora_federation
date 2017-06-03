@@ -15,12 +15,9 @@ See also: [Relayable][relayable]
 | `parent_guid`             | [GUID][guid]                 | The GUID of the [Poll][poll].                              |
 | `poll_answer_guid`        | [GUID][guid]                 | The GUID of the [PollAnswer][poll_answer].                 |
 | `author_signature`        | [Signature][signature]       | The signature from the author of the poll participation.   |
-| `parent_author_signature` | [Signature][signature]       | The signature from the author of the [Poll][poll].         |
 
 ## Examples
 
-### From author
-
 ~~~xml
 <poll_participation>
   <guid>f1eb866029f7013487753131731751e9</guid>
@@ -28,20 +25,6 @@ See also: [Relayable][relayable]
   <author>alice@example.org</author>
   <poll_answer_guid>2a22db2029e9013487753131731751e9</poll_answer_guid>
   <author_signature>dT6KbT7kp0bE+s3//ZErxO1wvVIqtD0lY67i81+dO43B4D2m5kjCdzW240eWt/jZmcHIsdxXf4WHNdrb6ZDnamA8I1FUVnLjHA9xexBITQsSLXrcV88UdammSmmOxl1Ac4VUXqFpdavm6a7/MwOJ7+JHP8TbUO9siN+hMfgUbtY=</author_signature>
-  <parent_author_signature/>
-</poll_participation>
-~~~
-
-### From parent author
-
-~~~xml
-<poll_participation>
-  <guid>f1eb866029f7013487753131731751e9</guid>
-  <parent_guid>2a22d6c029e9013487753131731751e9</parent_guid>
-  <author>alice@example.org</author>
-  <poll_answer_guid>2a22db2029e9013487753131731751e9</poll_answer_guid>
-  <author_signature>dT6KbT7kp0bE+s3//ZErxO1wvVIqtD0lY67i81+dO43B4D2m5kjCdzW240eWt/jZmcHIsdxXf4WHNdrb6ZDnamA8I1FUVnLjHA9xexBITQsSLXrcV88UdammSmmOxl1Ac4VUXqFpdavm6a7/MwOJ7+JHP8TbUO9siN+hMfgUbtY=</author_signature>
-  <parent_author_signature>gWasNPpSnMcKBIMWyzfoVO6sr8eRYkhUqy3PIkkh53n/ki+DM9mnh3ayotI0+6un9aq1N3XkS7Vn05ZD3+nHVby6i21XkYgPnbD8pWYuBBj7VGPyahT70BUs/vSvY8KX8V3wYfsPsaiAgJsAFg2UHYdY3r4/oWdIIbBZc21O3zk=</parent_author_signature>
 </poll_participation>
 ~~~
 

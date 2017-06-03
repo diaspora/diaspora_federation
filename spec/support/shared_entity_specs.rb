@@ -1,4 +1,5 @@
 def entity_hash_from(hash)
+  hash.delete(:parent_author_signature)
   hash.map {|key, value|
     if [String, TrueClass, FalseClass, Integer, NilClass].any? {|c| value.is_a? c }
       [key, value]
@@ -136,10 +137,9 @@ shared_examples "a JSON Entity" do
     it "contains JSON properties for each of the entity properties with the entity_data property" do
       entity_data = entity_hash_from(data)
       entity_data.delete(:parent)
-      nested_elements = entity_data.select {|_key, value| value.is_a?(Array) || value.is_a?(Hash) }
-      entity_data.reject! {|_key, value| value.is_a?(Array) || value.is_a?(Hash) }
+      nested_elements, simple_props = entity_data.partition {|_key, value| value.is_a?(Array) || value.is_a?(Hash) }
 
-      expect(to_json_output).to include_json(entity_data: entity_data)
+      expect(to_json_output).to include_json(entity_data: simple_props.to_h)
       nested_elements.each {|key, value|
         type = described_class.class_props[key]
         if value.is_a?(Array)
