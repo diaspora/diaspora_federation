@@ -4,6 +4,9 @@ title: Reshare
 
 This entity represents a reshare of a [StatusMessage][status_message]. It inherits from [Post][post].
 
+The recipient must [fetch][fetching] the root from `root_author` if the post is not already known.
+When the `root_guid` is already available locally, the recipient must validate that it's from `root_author`.
+
 ## Properties
 
 | Property      | Type                         | Description                                                   |
@@ -40,5 +43,6 @@ This entity represents a reshare of a [StatusMessage][status_message]. It inheri
 [timestamp]: {{ site.baseurl }}/federation/types.html#timestamp
 [string]: {{ site.baseurl }}/federation/types.html#string
 [boolean]: {{ site.baseurl }}/federation/types.html#boolean
+[fetching]: {{ site.baseurl }}/federation/fetching.html
 [post]: {{ site.baseurl }}/entities/post.html
 [status_message]: {{ site.baseurl }}/entities/status_message.html

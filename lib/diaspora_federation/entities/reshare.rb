@@ -29,16 +29,21 @@ module DiasporaFederation
       end
 
       # Fetch and receive root post from remote, if not available locally
-      def fetch_root
-        root = DiasporaFederation.callbacks.trigger(:fetch_related_entity, "Post", root_guid)
-        Federation::Fetcher.fetch_public(root_author, "Post", root_guid) unless root
+      # and validates if it's from the correct author
+      def validate_root
+        root = RelatedEntity.fetch(root_author, "Post", root_guid)
+
+        return if root_author == root.author
+
+        raise Entity::ValidationError,
+              "root_author mismatch: obj=#{self} root_author=#{root_author} known_root_author=#{root.author}"
       end
 
       # Fetch root post after parse
       # @see Entity.from_hash
       # @return [Entity] instance
       def self.from_hash(hash)
-        super.tap(&:fetch_root)
+        super.tap(&:validate_root)
       end
     end
   end

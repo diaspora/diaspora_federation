@@ -56,12 +56,24 @@ XML
       end
     end
 
-    context "fetch root" do
-      it "fetches the root post if it is not available already" do
-        expect_callback(:fetch_related_entity, "Post", data[:root_guid]).and_return(nil)
-        expect(Federation::Fetcher).to receive(:fetch_public).with(data[:root_author], "Post", data[:root_guid])
+    context "parse xml" do
+      describe "#validate_root" do
+        it "fetches the root post if it is not available already" do
+          root = Fabricate(:related_entity, author: bob.diaspora_id)
+          expect_callback(:fetch_related_entity, "Post", data[:root_guid]).and_return(nil, root)
+          expect(Federation::Fetcher).to receive(:fetch_public).with(data[:root_author], "Post", data[:root_guid])
 
-        Entities::Reshare.from_xml(Nokogiri::XML(xml).root)
+          Entities::Reshare.from_xml(Nokogiri::XML(xml).root)
+        end
+
+        it "validates the author of the root post" do
+          fake_root = Fabricate(:related_entity, author: alice.diaspora_id)
+          expect_callback(:fetch_related_entity, "Post", data[:root_guid]).and_return(fake_root)
+
+          expect {
+            Entities::Reshare.from_xml(Nokogiri::XML(xml).root)
+          }.to raise_error Entity::ValidationError
+        end
       end
     end
   end
