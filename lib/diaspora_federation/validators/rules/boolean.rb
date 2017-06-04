@@ -20,8 +20,8 @@ module Validation
         if value.is_a?(String)
           true if value =~ /\A(true|false|t|f|yes|no|y|n|1|0)\z/i
         elsif value.is_a?(Integer)
-          true if value == 1 || value == 0
-        elsif [true, false].include? value
+          true if [1, 0].include?(value)
+        elsif [true, false].include?(value)
           true
         else
           false

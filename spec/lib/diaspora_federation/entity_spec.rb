@@ -145,8 +145,8 @@ XML
 
       it "passes input parameter directly to .parse method of the parser" do
         root = Nokogiri::XML("<dummy/>").root
-        expect_any_instance_of(DiasporaFederation::Parsers::XmlParser).to receive(:parse).with(root)
-          .and_return([{test1: "2", test2: "1"}])
+        expect_any_instance_of(DiasporaFederation::Parsers::XmlParser)
+          .to receive(:parse).with(root).and_return([{test1: "2", test2: "1"}])
         Entities::TestDefaultEntity.from_xml(root)
       end
     end
