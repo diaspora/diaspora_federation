@@ -14,8 +14,18 @@ if [[ ${BUNDLE_GEMFILE} =~ .*test/gemfiles/.*.Gemfile ]]; then
   export NO_COVERAGE="true"
   bundle exec rake --trace
 else
+  if [[ -n ${CODECLIMATE_REPO_TOKEN} ]]; then
+    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    chmod +x ./cc-test-reporter
+    ./cc-test-reporter before-build --id ${CODECLIMATE_REPO_TOKEN}
+  fi
+
   bundle exec rake --trace
   test_exit_code=$?
-  bundle exec codeclimate-test-reporter
-  exit $test_exit_code
+
+  if [[ -n ${CODECLIMATE_REPO_TOKEN} ]]; then
+    ./cc-test-reporter after-build --id ${CODECLIMATE_REPO_TOKEN} --exit-code ${test_exit_code}
+  fi
+
+  exit ${test_exit_code}
 fi
