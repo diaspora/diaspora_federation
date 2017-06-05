@@ -107,8 +107,8 @@ shared_examples "a relayable Entity" do
     end
 
     it "computes correct signatures for the entity" do
-      order = described_class.class_props.keys - %i(author_signature parent_author_signature parent created_at)
-      signed_string = order.map {|name| data[name] }.join(";")
+      order = described_class.class_props.keys - %i(author_signature parent_author_signature parent)
+      signed_string = order.map {|name| data[name].is_a?(Time) ? data[name].iso8601 : data[name] }.join(";")
 
       xml = instance.to_xml
 

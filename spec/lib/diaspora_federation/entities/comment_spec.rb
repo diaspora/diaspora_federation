@@ -19,6 +19,7 @@ module DiasporaFederation
   <guid>#{data[:guid]}</guid>
   <parent_guid>#{parent.guid}</parent_guid>
   <text>#{data[:text]}</text>
+  <created_at>#{data[:created_at].utc.iso8601}</created_at>
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
 </comment>
@@ -39,7 +40,8 @@ XML
     "author",
     "guid",
     "parent_guid",
-    "text"
+    "text",
+    "created_at"
   ]
 }
 JSON
@@ -55,23 +57,5 @@ JSON
     it_behaves_like "a relayable Entity"
 
     it_behaves_like "a relayable JSON entity"
-
-    describe "#created_at" do
-      it "has a created_at after parse" do
-        entity = described_class.from_xml(Nokogiri::XML(xml).root)
-        expect(entity.created_at).to be_within(1).of(Time.now.utc)
-      end
-
-      it "parses the created_at from the xml if it is included and correctly signed" do
-        created_at = change_time(Time.now.utc) - 60
-        comment_data = Fabricate.attributes_for(:comment_entity, author: alice.diaspora_id, parent_guid: parent.guid)
-        comment_data[:created_at] = created_at
-        comment_data[:parent] = parent_entity
-        comment = described_class.new(comment_data, %i(author guid parent_guid text created_at))
-
-        parsed_comment = described_class.from_xml(comment.to_xml)
-        expect(parsed_comment.created_at).to eq(created_at)
-      end
-    end
   end
 end
