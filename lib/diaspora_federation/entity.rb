@@ -131,7 +131,7 @@ module DiasporaFederation
     #
     # @return [String] entity name
     def self.entity_name
-      name.rpartition("::").last.tap do |word|
+      class_name.tap do |word|
         word.gsub!(/(.)([A-Z])/, '\1_\2')
         word.downcase!
       end
@@ -154,9 +154,14 @@ module DiasporaFederation
       Entities.const_get(class_name)
     end
 
+    # @return [String] class name as string
+    def self.class_name
+      name.rpartition("::").last
+    end
+
     # @return [String] string representation of this object
     def to_s
-      "#{self.class.name.rpartition('::').last}#{":#{guid}" if respond_to?(:guid)}"
+      "#{self.class.class_name}#{":#{guid}" if respond_to?(:guid)}"
     end
 
     # Renders entity to a hash representation of the entity JSON format
@@ -190,7 +195,11 @@ module DiasporaFederation
 
     def validate_missing_props(entity_data)
       missing_props = self.class.missing_props(entity_data)
-      raise ValidationError, "missing required properties: #{missing_props.join(', ')}" unless missing_props.empty?
+      return if missing_props.empty?
+
+      obj_str = "#{self.class.class_name}#{":#{entity_data[:guid]}" if entity_data.has_key?(:guid)}" \
+                "#{" from #{entity_data[:author]}" if entity_data.has_key?(:author)}"
+      raise ValidationError, "#{obj_str}: Missing required properties: #{missing_props.join(', ')}"
     end
 
     def setable?(name, val)
@@ -246,7 +255,7 @@ module DiasporaFederation
       errors = validator.errors.map do |prop, rule|
         "property: #{prop}, value: #{public_send(prop).inspect}, rule: #{rule[:rule]}, with params: #{rule[:params]}"
       end
-      "Failed validation for properties: #{errors.join(' | ')}"
+      "Failed validation for #{self}#{" from #{author}" if respond_to?(:author)} for properties: #{errors.join(' | ')}"
     end
 
     # @return [Hash] hash with all properties

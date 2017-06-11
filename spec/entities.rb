@@ -57,6 +57,12 @@ module DiasporaFederation
       entity :multi, [OtherEntity]
     end
 
+    class TestEntityWithAuthorAndGuid < DiasporaFederation::Entity
+      property :test, :string
+      property :author, :string
+      property :guid, :string
+    end
+
     class SomeRelayable < DiasporaFederation::Entity
       PARENT_TYPE = "Parent".freeze
 
@@ -73,6 +79,14 @@ module DiasporaFederation
       rule :test1, regular_expression: {regex: /\A[^;]{,32}\z/}
       rule :test2, :not_nil
       rule :test3, :boolean
+    end
+
+    class TestEntityWithAuthorAndGuidValidator < Validation::Validator
+      include Validation
+
+      rule :test, :boolean
+      rule :author, %i(not_empty diaspora_id)
+      rule :guid, :guid
     end
   end
 end

@@ -1,6 +1,7 @@
 module DiasporaFederation
   describe Entity do
     let(:data) { {test1: "asdf", test2: 1234, test3: false, test4: false} }
+    let(:guid) { Fabricate.sequence(:guid) }
 
     it "should extend Entity" do
       expect(Entities::TestDefaultEntity).to be < Entity
@@ -12,10 +13,26 @@ module DiasporaFederation
         expect(entity).to be_frozen
       end
 
-      it "checks for required properties" do
-        expect {
-          Entities::TestDefaultEntity.new({})
-        }.to raise_error Entity::ValidationError, "missing required properties: test1, test2"
+      context "required properties" do
+        it "checks for required properties" do
+          expect {
+            Entities::TestDefaultEntity.new({})
+          }.to raise_error Entity::ValidationError, "TestDefaultEntity: Missing required properties: test1, test2"
+        end
+
+        it "adds the guid to the error message if available" do
+          expect {
+            Entities::TestDefaultEntity.new(guid: guid)
+          }.to raise_error Entity::ValidationError,
+                           "TestDefaultEntity:#{guid}: Missing required properties: test1, test2"
+        end
+
+        it "adds the author to the error message if available" do
+          expect {
+            Entities::TestDefaultEntity.new(author: alice.diaspora_id)
+          }.to raise_error Entity::ValidationError,
+                           "TestDefaultEntity from #{alice.diaspora_id}: Missing required properties: test1, test2"
+        end
       end
 
       context "defaults" do
@@ -48,7 +65,8 @@ module DiasporaFederation
         it "validates the entity and raise an error with failed properties if not valid" do
           expect {
             Entities::TestDefaultEntity.new(invalid_data)
-          }.to raise_error Entity::ValidationError, /Failed validation for properties:.*test1.*\|.*test2.*\|.*test3/
+          }.to raise_error Entity::ValidationError,
+                           /Failed validation for TestDefaultEntity for properties:.*test1.*\|.*test2.*\|.*test3/
         end
 
         it "contains the failed rule" do
@@ -61,6 +79,34 @@ module DiasporaFederation
           expect {
             Entities::TestDefaultEntity.new(invalid_data)
           }.to raise_error Entity::ValidationError, /rule: regular_expression, with params: \{:regex=>.*\}/
+        end
+
+        it "adds the guid to the error message if available" do
+          expect {
+            Entities::TestEntityWithAuthorAndGuid.new(test: "invalid", guid: guid, author: alice.diaspora_id)
+          }.to raise_error Entity::ValidationError,
+                           /Failed validation for TestEntityWithAuthorAndGuid:#{guid} from .* for properties:.*/
+        end
+
+        it "handles missing guid" do
+          expect {
+            Entities::TestEntityWithAuthorAndGuid.new(test: "invalid", guid: nil, author: alice.diaspora_id)
+          }.to raise_error Entity::ValidationError,
+                           /Failed validation for TestEntityWithAuthorAndGuid: from .* for properties:.*/
+        end
+
+        it "adds the author to the error message if available" do
+          expect {
+            Entities::TestEntityWithAuthorAndGuid.new(test: "invalid", guid: guid, author: alice.diaspora_id)
+          }.to raise_error Entity::ValidationError,
+                           /Failed validation for .* from #{alice.diaspora_id} for properties:.*/
+        end
+
+        it "handles missing author" do
+          expect {
+            Entities::TestEntityWithAuthorAndGuid.new(test: "invalid", guid: guid, author: nil)
+          }.to raise_error Entity::ValidationError,
+                           /Failed validation for .* from  for properties:.*/
         end
       end
     end

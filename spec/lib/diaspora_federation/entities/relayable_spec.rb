@@ -256,15 +256,36 @@ XML
         it "raises a ValidationError if the parent_guid is missing" do
           broken_xml = <<-XML
 <some_relayable>
-  <author_signature/>
-  <parent_author_signature/>
 </some_relayable>
 XML
 
           expect {
             Entities::SomeRelayable.from_xml(Nokogiri::XML(broken_xml).root)
-          }.to raise_error Entity::ValidationError,
-                           "invalid DiasporaFederation::Entities::SomeRelayable! missing 'parent_guid'."
+          }.to raise_error Entity::ValidationError, "Invalid SomeRelayable! Missing 'parent_guid'."
+        end
+
+        it "adds the guid to the error message if available" do
+          broken_xml = <<-XML
+<some_relayable>
+  <guid>#{guid}</guid>
+</some_relayable>
+XML
+
+          expect {
+            Entities::SomeRelayable.from_xml(Nokogiri::XML(broken_xml).root)
+          }.to raise_error Entity::ValidationError, "Invalid SomeRelayable:#{guid}! Missing 'parent_guid'."
+        end
+
+        it "adds the author to the error message if available" do
+          broken_xml = <<-XML
+<some_relayable>
+  <author>#{author}</author>
+</some_relayable>
+XML
+
+          expect {
+            Entities::SomeRelayable.from_xml(Nokogiri::XML(broken_xml).root)
+          }.to raise_error Entity::ValidationError, "Invalid SomeRelayable from #{author}! Missing 'parent_guid'."
         end
       end
     end

@@ -187,13 +187,19 @@ module DiasporaFederation
           type = data.fetch(:parent_type) {
             break self::PARENT_TYPE if const_defined?(:PARENT_TYPE)
 
-            raise DiasporaFederation::Entity::ValidationError, "invalid #{self}! missing 'parent_type'."
+            raise DiasporaFederation::Entity::ValidationError, error_message_missing_property(data, "parent_type")
           }
           guid = data.fetch(:parent_guid) {
-            raise DiasporaFederation::Entity::ValidationError, "invalid #{self}! missing 'parent_guid'."
+            raise DiasporaFederation::Entity::ValidationError, error_message_missing_property(data, "parent_guid")
           }
 
           data[:parent] = RelatedEntity.fetch(data[:author], type, guid)
+        end
+
+        def error_message_missing_property(data, missing_property)
+          obj_str = "#{class_name}#{":#{data[:guid]}" if data.has_key?(:guid)}" \
+                    "#{" from #{data[:author]}" if data.has_key?(:author)}"
+          "Invalid #{obj_str}! Missing '#{missing_property}'."
         end
 
         def xml_parser_class
