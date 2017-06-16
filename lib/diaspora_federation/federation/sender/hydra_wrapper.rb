@@ -1,3 +1,5 @@
+require "typhoeus"
+
 module DiasporaFederation
   module Federation
     module Sender
