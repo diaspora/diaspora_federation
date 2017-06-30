@@ -4,7 +4,7 @@ module DiasporaFederation
 
     it_behaves_like "a common validator"
 
-    %i(author recipient).each do |prop|
+    %i[author recipient].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a diaspora* ID validator" do
           let(:property) { prop }
@@ -13,7 +13,7 @@ module DiasporaFederation
       end
     end
 
-    %i(following sharing).each do |prop|
+    %i[following sharing].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a boolean validator" do
           let(:property) { prop }

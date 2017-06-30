@@ -13,7 +13,7 @@ module DiasporaFederation
     let(:hash) { {guid: guid, author: author, parent_guid: parent_guid, parent: local_parent, property: property} }
     let(:hash_with_fake_signatures) { hash.merge!(author_signature: "aa", parent_author_signature: "bb") }
 
-    let(:signature_order) { %i(author guid parent_guid property) }
+    let(:signature_order) { %i[author guid parent_guid property] }
     let(:signature_data) { "#{author};#{guid};#{parent_guid};#{property}" }
 
     describe "#initialize" do
@@ -132,7 +132,7 @@ XML
       end
 
       it "accepts string names of known properties in signature_order" do
-        signature_order = %w(author guid parent_guid property new_property)
+        signature_order = %w[author guid parent_guid property new_property]
         xml = Entities::SomeRelayable.new(
           hash_with_fake_signatures, signature_order, "new_property" => new_property
         ).to_xml
@@ -294,7 +294,7 @@ XML
       let(:entity_class) { Entities::SomeRelayable }
 
       it "contains the property order within the property_order property" do
-        property_order = %i(author guid parent_guid property)
+        property_order = %i[author guid parent_guid property]
         json = entity_class.new(hash_with_fake_signatures, property_order).to_json.to_json
 
         expect(json).to include_json(property_order: property_order.map(&:to_s))
@@ -304,7 +304,7 @@ XML
         entity = entity_class.new(hash_with_fake_signatures)
         expect(
           entity.to_json.to_json
-        ).to include_json(property_order: %w(author guid parent_guid property))
+        ).to include_json(property_order: %w[author guid parent_guid property])
       end
 
       it "adds new unknown elements to the json again" do
@@ -385,7 +385,7 @@ XML
               :parent_author_signature => parent_author_signature
             }
           }
-          let(:property_order) { %w(author guid parent_guid new_property property) }
+          let(:property_order) { %w[author guid parent_guid new_property property] }
 
           it "parses entity properties from the input data" do
             entity = Entities::SomeRelayable.from_hash(entity_data, property_order)
@@ -419,7 +419,7 @@ XML
                 parent_author_signature: parent_author_signature,
                 parent:                  remote_parent
               }.merge("new_property" => new_property),
-              %w(author guid parent_guid new_property property),
+              %w[author guid parent_guid new_property property],
               "new_property" => new_property
             ).and_call_original
             Entities::SomeRelayable.from_hash(entity_data, property_order)
@@ -427,7 +427,7 @@ XML
         end
 
         it "creates Entity with empty 'additional_data' if it has only known properties" do
-          property_order = %w(author guid parent_guid property)
+          property_order = %w[author guid parent_guid property]
 
           entity_data = {
             guid:                    guid,
@@ -447,7 +447,7 @@ XML
 
       context "relayable signature verification feature support" do
         it "calls signatures verification on relayable unpack" do
-          property_order = %w(guid author property parent_guid)
+          property_order = %w[guid author property parent_guid]
           entity_data = {
             guid:                    guid,
             author:                  author,

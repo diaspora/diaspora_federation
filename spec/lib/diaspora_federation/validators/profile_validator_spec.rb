@@ -9,7 +9,7 @@ module DiasporaFederation
       let(:mandatory) { false }
     end
 
-    %i(first_name last_name).each do |prop|
+    %i[first_name last_name].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a name validator" do
           let(:property) { prop }
@@ -18,7 +18,7 @@ module DiasporaFederation
       end
     end
 
-    %i(image_url image_url_medium image_url_small).each do |prop|
+    %i[image_url image_url_medium image_url_small].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a property with a value validation/restriction" do
           let(:property) { prop }
@@ -61,7 +61,7 @@ module DiasporaFederation
       end
     end
 
-    %i(searchable public nsfw).each do |prop|
+    %i[searchable public nsfw].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a boolean validator" do
           let(:property) { prop }

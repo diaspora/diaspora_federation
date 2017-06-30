@@ -87,7 +87,7 @@ XML
       end
 
       it "parses boolean fields with a randomly matching pattern as nil" do
-        %w(ttFFFtt yesFFDSFSDy noDFDSFFDFn fXf LLyes).each do |weird_value|
+        %w[ttFFFtt yesFFDSFSDy noDFDSFFDFn fXf LLyes].each do |weird_value|
           xml = <<-XML.strip
 <test_entity_with_boolean>
   <test>#{weird_value}</test>
@@ -102,7 +102,7 @@ XML
       end
 
       it "parses integer fields with a randomly matching pattern as nil" do
-        %w(1,2,3 foobar two).each do |weird_value|
+        %w[1,2,3 foobar two].each do |weird_value|
           xml = <<-XML.strip
 <test_entity_with_integer>
   <test>#{weird_value}</test>
@@ -117,7 +117,7 @@ XML
       end
 
       it "parses timestamp fields with a randomly matching pattern as nil" do
-        %w(foobar yesterday now 1.2.foo).each do |weird_value|
+        %w[foobar yesterday now 1.2.foo].each do |weird_value|
           xml = <<-XML.strip
 <test_entity_with_timestamp>
   <test>#{weird_value}</test>

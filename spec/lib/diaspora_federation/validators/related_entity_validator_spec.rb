@@ -9,7 +9,7 @@ module DiasporaFederation
       let(:mandatory) { true }
     end
 
-    %i(local public).each do |prop|
+    %i[local public].each do |prop|
       it_behaves_like "a boolean validator" do
         let(:property) { prop }
       end

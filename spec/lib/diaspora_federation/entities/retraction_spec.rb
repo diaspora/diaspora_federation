@@ -52,7 +52,7 @@ XML
         end
       end
 
-      %w(Comment Like PollParticipation).each do |target_type|
+      %w[Comment Like PollParticipation].each do |target_type|
         context "#{target_type} target" do
           let(:relayable_target) {
             Fabricate(

@@ -17,7 +17,7 @@ XML
         expect(parsed_data[0][:guid]).to eq("im a guid")
         expect(parsed_data[0][:property]).to eq("value")
         expect(parsed_data[0][:author]).to eq("id@example.tld")
-        expect(parsed_data[1]).to eq(%i(guid property author))
+        expect(parsed_data[1]).to eq(%i[guid property author])
       end
     end
   end

@@ -11,7 +11,7 @@ module DiasporaFederation
       end
     end
 
-    %i(first_name last_name).each do |prop|
+    %i[first_name last_name].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a name validator" do
           let(:property) { prop }
@@ -20,7 +20,7 @@ module DiasporaFederation
       end
     end
 
-    %i(photo_large_url photo_medium_url photo_small_url).each do |prop|
+    %i[photo_large_url photo_medium_url photo_small_url].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a property that mustn't be empty" do
           let(:property) { prop }

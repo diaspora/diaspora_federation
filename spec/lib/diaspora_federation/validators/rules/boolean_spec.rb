@@ -13,7 +13,7 @@ describe Validation::Rule::Boolean do
   context "validation" do
     context "strings" do
       it "validates boolean-esque strings" do
-        %w(true false yes no t f y n 1 0).each do |str|
+        %w[true false yes no t f y n 1 0].each do |str|
           validator = Validation::Validator.new(OpenStruct.new(boolean: str))
           validator.rule(:boolean, :boolean)
 

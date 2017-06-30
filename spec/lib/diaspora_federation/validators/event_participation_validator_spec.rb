@@ -10,7 +10,7 @@ module DiasporaFederation
       it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :status }
         let(:wrong_values) { ["", "yes", "foobar"] }
-        let(:correct_values) { %w(accepted declined tentative) }
+        let(:correct_values) { %w[accepted declined tentative] }
       end
     end
   end

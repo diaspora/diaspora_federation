@@ -4,7 +4,7 @@ module DiasporaFederation
     class AccountDeletionValidator < Validation::Validator
       include Validation
 
-      rule :author, %i(not_empty diaspora_id)
+      rule :author, %i[not_empty diaspora_id]
     end
   end
 end

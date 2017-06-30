@@ -4,7 +4,7 @@ module DiasporaFederation
     class ConversationValidator < Validation::Validator
       include Validation
 
-      rule :author, %i(not_empty diaspora_id)
+      rule :author, %i[not_empty diaspora_id]
       rule :guid, :guid
 
       rule :subject, [:not_empty, length: {maximum: 255}]

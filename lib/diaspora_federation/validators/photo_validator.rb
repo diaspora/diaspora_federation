@@ -6,7 +6,7 @@ module DiasporaFederation
 
       rule :guid, :guid
 
-      rule :author, %i(not_empty diaspora_id)
+      rule :author, %i[not_empty diaspora_id]
 
       rule :public, :boolean
 

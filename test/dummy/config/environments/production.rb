@@ -49,7 +49,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Set the logging destination(s)
-  config.log_to = %w(file)
+  config.log_to = %w[file]
 
   # Show the logging configuration on STDOUT
   config.show_log_configuration = false

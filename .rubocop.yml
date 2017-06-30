@@ -189,16 +189,6 @@ Layout/EmptyLineBetweenDefs:
 Style/NumericPredicate:
   EnforcedStyle: comparison
 
-# Old defaults from rubocop < 0.48.1 (Maybe change this in the future?)
-Style/PercentLiteralDelimiters:
-  PreferredDelimiters:
-    default: '()'
-    '%i': '()'
-    '%I': '()'
-    '%r': '{}'
-    '%w': '()'
-    '%W': '()'
-
 ### backward compatibility
 
 # only with ruby >= 2.3

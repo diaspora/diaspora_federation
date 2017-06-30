@@ -3,7 +3,7 @@ module DiasporaFederation
     let(:entity) { :reshare_entity }
     it_behaves_like "a common validator"
 
-    %i(root_author author).each do |prop|
+    %i[root_author author].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a diaspora* ID validator" do
           let(:property) { prop }
@@ -12,7 +12,7 @@ module DiasporaFederation
       end
     end
 
-    %i(root_guid guid).each do |prop|
+    %i[root_guid guid].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a guid validator" do
           let(:property) { prop }

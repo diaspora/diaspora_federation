@@ -23,6 +23,6 @@ module Dummy
     # config.assets.version = "1.0"
 
     # autoload files from test/dummy/lib
-    config.autoload_once_paths += %W(#{config.root}/lib)
+    config.autoload_once_paths += %W[#{config.root}/lib]
   end
 end

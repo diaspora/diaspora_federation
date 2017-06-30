@@ -138,7 +138,7 @@ module DiasporaFederation
         xml_children = entity.to_xml.children
         expect(xml_children).to have_exactly(4).items
         xml_children.each do |node|
-          expect(%w(test1 test2 test3 test4)).to include(node.name)
+          expect(%w[test1 test2 test3 test4]).to include(node.name)
         end
       end
 
@@ -319,7 +319,7 @@ JSON
         end
 
         expect(EntityWithFromHashMethod).to receive(:json_parser_class).and_call_original
-        expect_any_instance_of(Parsers::JsonParser).to receive(:parse).with("{}").and_return(%i(arg1 arg2 arg3))
+        expect_any_instance_of(Parsers::JsonParser).to receive(:parse).with("{}").and_return(%i[arg1 arg2 arg3])
         expect(EntityWithFromHashMethod).to receive(:from_hash).with(:arg1, :arg2, :arg3)
         EntityWithFromHashMethod.from_json("{}")
       end
@@ -456,7 +456,7 @@ JSON
         xml = entity.to_xml
         expect(xml.children).to have_exactly(4).items
         xml.children.each do |node|
-          expect(%w(asdf test_entity other_entity)).to include(node.name)
+          expect(%w[asdf test_entity other_entity]).to include(node.name)
         end
         expect(xml.xpath("test_entity")).to have_exactly(1).items
         expect(xml.xpath("other_entity")).to have_exactly(2).items

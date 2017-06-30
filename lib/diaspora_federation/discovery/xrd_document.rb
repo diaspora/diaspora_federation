@@ -32,7 +32,7 @@ module DiasporaFederation
       XMLNS = "http://docs.oasis-open.org/ns/xri/xrd-1.0".freeze
 
       # +Link+ element attributes
-      LINK_ATTRS = %i(rel type href template).freeze
+      LINK_ATTRS = %i[rel type href template].freeze
 
       # format string for datetime (+Expires+ element)
       DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ".freeze

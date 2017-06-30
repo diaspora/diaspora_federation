@@ -28,7 +28,7 @@ module DiasporaFederation
       end
 
       it "accepts only supported types" do
-        %i(text number foobar).each do |val|
+        %i[text number foobar].each do |val|
           expect {
             dsl.property :fail, val
           }.to raise_error PropertiesDSL::InvalidType

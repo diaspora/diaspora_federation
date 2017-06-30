@@ -27,7 +27,7 @@ module DiasporaFederation
       let(:property) { :public }
     end
 
-    %i(remote_photo_name remote_photo_path).each do |prop|
+    %i[remote_photo_name remote_photo_path].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a property that mustn't be empty" do
           let(:property) { prop }
@@ -35,7 +35,7 @@ module DiasporaFederation
       end
     end
 
-    %i(height width).each do |prop|
+    %i[height width].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a property with a value validation/restriction" do
           let(:property) { prop }

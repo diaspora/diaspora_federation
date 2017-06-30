@@ -214,7 +214,7 @@ module DiasporaFederation
     end
 
     def setable_string?(type, val)
-      %i(string integer boolean).include?(type) && val.respond_to?(:to_s)
+      %i[string integer boolean].include?(type) && val.respond_to?(:to_s)
     end
 
     def setable_nested?(type, val)

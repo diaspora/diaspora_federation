@@ -1,6 +1,6 @@
 module DiasporaFederation
   describe Callbacks do
-    subject(:callbacks) { Callbacks.new %i(some_event another_event) }
+    subject(:callbacks) { Callbacks.new %i[some_event another_event] }
 
     context "callbacks" do
       it "defines a callback and calls it" do
@@ -56,12 +56,12 @@ module DiasporaFederation
 
     describe "#missing_handlers" do
       it "contains all events if nothing isdefined" do
-        expect(callbacks.missing_handlers).to eq(%i(some_event another_event))
+        expect(callbacks.missing_handlers).to eq(%i[some_event another_event])
       end
 
       it "contains the missing events if not all events are defined" do
         callbacks.on(:some_event) {}
-        expect(callbacks.missing_handlers).to eq(%i(another_event))
+        expect(callbacks.missing_handlers).to eq(%i[another_event])
       end
 
       it "is empty if all events are defined" do

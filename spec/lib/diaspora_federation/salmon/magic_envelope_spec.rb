@@ -49,7 +49,7 @@ module DiasporaFederation
         env_xml = envelope.envelop(privkey).root
         expect(env_xml.name).to eq("env")
 
-        control = %w(data encoding alg sig)
+        control = %w[data encoding alg sig]
         env_xml.children.each do |node|
           expect(control).to include(node.name)
           control.reject! {|i| i == node.name }

@@ -85,7 +85,7 @@ module DiasporaFederation
       include Validation
 
       rule :test, :boolean
-      rule :author, %i(not_empty diaspora_id)
+      rule :author, %i[not_empty diaspora_id]
       rule :guid, :guid
     end
   end

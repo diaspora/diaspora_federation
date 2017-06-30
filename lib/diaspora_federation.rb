@@ -23,7 +23,7 @@ require "diaspora_federation/federation"
 module DiasporaFederation
   extend Logging
 
-  @callbacks = Callbacks.new %i(
+  @callbacks = Callbacks.new %i[
     fetch_person_for_webfinger
     fetch_person_for_hcard
     save_person_after_webfinger
@@ -36,7 +36,7 @@ module DiasporaFederation
     fetch_public_entity
     fetch_person_url_to
     update_pod
-  )
+  ]
 
   # defaults
   @http_concurrency = 20

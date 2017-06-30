@@ -4,7 +4,7 @@ module DiasporaFederation
     class RelatedEntityValidator < Validation::Validator
       include Validation
 
-      rule :author, %i(not_empty diaspora_id)
+      rule :author, %i[not_empty diaspora_id]
       rule :local, :boolean
       rule :public, :boolean
     end

@@ -100,7 +100,7 @@ module DiasporaFederation
       # The order for signing
       # @return [Array]
       def signature_order
-        @signature_order || self.class.class_props.keys - %i(author_signature parent_author_signature parent)
+        @signature_order || self.class.class_props.keys - %i[author_signature parent_author_signature parent]
       end
 
       private
@@ -145,7 +145,7 @@ module DiasporaFederation
         data = super.tap do |hash|
           hash[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
         end
-        order = signature_order + %i(author_signature parent_author_signature)
+        order = signature_order + %i[author_signature parent_author_signature]
         order.map {|element| [element, data[element] || ""] }.to_h
       end
 

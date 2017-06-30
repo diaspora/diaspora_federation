@@ -30,7 +30,7 @@ module DiasporaFederation
 
       def parse_element_from_value(type, value)
         return if value.nil?
-        if %i(integer boolean timestamp).include?(type) && !value.is_a?(String)
+        if %i[integer boolean timestamp].include?(type) && !value.is_a?(String)
           value
         elsif type.instance_of?(Symbol)
           parse_string(type, value)
@@ -45,7 +45,7 @@ module DiasporaFederation
       end
 
       def from_json_sanity_validation(json_hash)
-        missing = %w(entity_type entity_data).map {|prop|
+        missing = %w[entity_type entity_data].map {|prop|
           prop if json_hash[prop].nil?
         }.compact.join(", ")
         raise DeserializationError, "Required properties are missing in JSON object: #{missing}" unless missing.empty?

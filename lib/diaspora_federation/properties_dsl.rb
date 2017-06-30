@@ -127,7 +127,7 @@ module DiasporaFederation
     end
 
     def property_type_valid?(type)
-      %i(string integer boolean timestamp).include?(type)
+      %i[string integer boolean timestamp].include?(type)
     end
 
     # Checks if the type extends {Entity}
