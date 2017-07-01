@@ -6,7 +6,7 @@ First of all: thank you very much for helping us out! Since the federation layer
 
 If you want to get in touch with other diaspora\* developers, [check our wiki][how-we-communicate] for information on how we communicate. Feel free to ask if you have any questions!
 
-As with the main diaspora\* repository, everyone interacting with our code, issue trackers, chat rooms, mailing lists, the wiki, and the Loomio group is expected to follow the [diaspora\* code of conduct][code-of-conduct].
+As with the main diaspora\* repository, everyone interacting with our code, issue trackers, chat rooms, mailing lists, the wiki, and the discourse forum is expected to follow the [diaspora\* code of conduct][code-of-conduct].
 
 ## Report a security issue
 
