@@ -1,3 +1,37 @@
+# 0.2.0
+
+## Features
+
+* Add JSON support to entities [#52](https://github.com/diaspora/diaspora_federation/pull/52)
+* Add `AccountMigration` entity [#54](https://github.com/diaspora/diaspora_federation/pull/54)
+* Add `public` flag to `Profile` entity [#59](https://github.com/diaspora/diaspora_federation/pull/59)
+* Allow to generate WebFinger with additional data [#61](https://github.com/diaspora/diaspora_federation/pull/61) [1b9dfc8](https://github.com/diaspora/diaspora_federation/commit/1b9dfc812e8b63c64a2d98db8999cae21d102c87)
+* Provide RFC 7033 WebFinger [#63](https://github.com/diaspora/diaspora_federation/pull/63)
+* Validate the author of the root post for a reshare [92ce4ea](https://github.com/diaspora/diaspora_federation/commit/92ce4eacf842f7a2fa74f298407062a4e0c891a3)
+
+## Refactor
+
+* Replace `factory_girl` with `fabrication` [184954e](https://github.com/diaspora/diaspora_federation/commit/184954e09ce72242cb7ec06c15fed0ad7b6c57c6)
+* Use `actionpack` as dependency instead of `rails` (for `diaspora_federation-rails`) [f860a62](https://github.com/diaspora/diaspora_federation/commit/f860a62382999dcf0adaf41a24b50b74611f6ed9)
+* Remove old backward-compatibility from WebFinger [#60](https://github.com/diaspora/diaspora_federation/pull/60)
+* Make optional properties optional when generating WebFinger [#61](https://github.com/diaspora/diaspora_federation/pull/61) [5fef763](https://github.com/diaspora/diaspora_federation/commit/5fef7633c3aaf47db2592749e506f40b581c0371)
+* Make `Message` entity non-relayable (see [#36](https://github.com/diaspora/diaspora_federation/issues/36)) [#62](https://github.com/diaspora/diaspora_federation/pull/62) [b7167b9](https://github.com/diaspora/diaspora_federation/commit/b7167b9fde4d614fb8f7510720918e029d3624f4)
+* Make `Participation` entity non-relayable (see [#35](https://github.com/diaspora/diaspora_federation/issues/35)) [#62](https://github.com/diaspora/diaspora_federation/pull/62) [41ebe13](https://github.com/diaspora/diaspora_federation/commit/41ebe13126a28b95dbe5acc5db3939ee9dae7e4b)
+* Remove legacy signature order and order by property order in entity (see [#26](https://github.com/diaspora/diaspora_federation/issues/26)) [#62](https://github.com/diaspora/diaspora_federation/pull/62) [87033e4](https://github.com/diaspora/diaspora_federation/commit/87033e4cd63f7d237b9d02d95b739e971d205ea1)
+* Send new property names in XML (see [#29](https://github.com/diaspora/diaspora_federation/issues/29)) [#62](https://github.com/diaspora/diaspora_federation/pull/62) [52a8c89](https://github.com/diaspora/diaspora_federation/commit/52a8c89d4c0f1f66b188ab4a2ac36ffafb0bfa1a)
+* Send unwrapped entities (see [#28](https://github.com/diaspora/diaspora_federation/issues/28)) [#62](https://github.com/diaspora/diaspora_federation/pull/62) [221d87d](https://github.com/diaspora/diaspora_federation/commit/221d87d7fe664bde8718182178cb31ba532977c6)
+* Send the raw magic envelope and new encrypted magic envelope with crypt-json-wrapper (see [#30](https://github.com/diaspora/diaspora_federation/issues/30)) [#62](https://github.com/diaspora/diaspora_federation/pull/62) [1f99518](https://github.com/diaspora/diaspora_federation/commit/1f99518706e6bef3dca51453bf571373cd389942) [e5b2ef7](https://github.com/diaspora/diaspora_federation/commit/e5b2ef71e8cfa299874e3f80175526b8999839f7)
+* Remove sign-code and prevent creation of `SignedRetraction` and `RelayableRetraction` (see [#27](https://github.com/diaspora/diaspora_federation/issues/27)) [#62](https://github.com/diaspora/diaspora_federation/pull/62) [cd3a7ab](https://github.com/diaspora/diaspora_federation/commit/cd3a7abf4d778f7e3139bcb73a42a9dc4cbcb835)
+* Rename `xml_order` to `signature_order` on relayables [b510ed8](https://github.com/diaspora/diaspora_federation/commit/b510ed868f12e15fd5c7b91909cc35281efeb10e)
+* Prevent creation of `Request` entity (see [#32](https://github.com/diaspora/diaspora_federation/issues/32)) [#62](https://github.com/diaspora/diaspora_federation/pull/62) [deed1c3](https://github.com/diaspora/diaspora_federation/commit/deed1c3f3ea76658074a4e34f534a12f083e8622)
+* Don't check `parent_author_signature` and don't check the `author_signature` when the author is the parent author for relayables (see [#64](https://github.com/diaspora/diaspora_federation/issues/64)) [#65](https://github.com/diaspora/diaspora_federation/pull/65) [6817579](https://github.com/diaspora/diaspora_federation/commit/681757907204885735bc60b18929938ec2ad04bb) [57edc8b](https://github.com/diaspora/diaspora_federation/commit/57edc8baabcf884b0ac5395266ffe148cff5da1d)
+* Add `created_at` to `Comment` entity [#67](https://github.com/diaspora/diaspora_federation/pull/67)
+* Improve logging when validation fails [c0ea38d](https://github.com/diaspora/diaspora_federation/commit/c0ea38d258ccd76a7499bff0197434d8e42768e8)
+
+## Bug fixes
+
+* Fix issues when used without rails [ed2c2b7](https://github.com/diaspora/diaspora_federation/commit/ed2c2b7f47b91c308321076344459aee839318a8) [b25e229](https://github.com/diaspora/diaspora_federation/commit/b25e2293b0b83bc083bccdbf1523ee691dbb7b2e) [6615233](https://github.com/diaspora/diaspora_federation/commit/66152337f2b47c1cf6639646f55d21f69fe99708)
+
 # 0.1.9
 
 ## Bug fixes
