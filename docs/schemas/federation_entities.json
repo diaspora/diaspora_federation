@@ -1,0 +1,379 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://diaspora.github.io/diaspora_federation/schemas/federation_entities.json",
+  "oneOf": [
+    {"$ref": "#/definitions/comment"},
+    {"$ref": "#/definitions/like"},
+    {"$ref": "#/definitions/participation"},
+    {"$ref": "#/definitions/poll_participation"},
+    {"$ref": "#/definitions/status_message"},
+    {"$ref": "#/definitions/reshare"},
+    {"$ref": "#/definitions/profile"},
+    {"$ref": "#/definitions/location"},
+    {"$ref": "#/definitions/photo"},
+    {"$ref": "#/definitions/poll"},
+    {"$ref": "#/definitions/poll_answer"}
+  ],
+
+  "definitions": {
+    "signature": {
+      "oneOf" : [
+        {
+          "type": "string",
+          "minLength": 30
+        },
+        {
+          "type": "string",
+          "maxLength": 0,
+          "description": "Allow empty string when no signature is provided"
+        }
+      ]
+    },
+
+    "guid": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 255
+    },
+
+    "relayable": {
+      "type": "object",
+      "description": "please don't use this object unless you're defining a new child relayable schema",
+      "properties": {
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "author": { "type": "string" },
+            "guid": { "$ref": "#/definitions/guid" },
+            "parent_guid": { "$ref": "#/definitions/guid" },
+            "author_signature": { "$ref": "#/definitions/signature" }
+          },
+          "required": [
+            "author", "guid", "parent_guid"
+          ]
+        },
+        "property_order": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": [
+        "entity_data", "entity_type", "property_order"
+      ]
+    },
+
+    "comment": {
+      "allOf": [
+        {"$ref": "#/definitions/relayable"},
+        {
+          "type": "object",
+          "properties": {
+            "entity_data": {
+              "type": "object",
+              "properties": {
+                "text": { "type": "string" },
+                "created_at": { "type": "string" }
+              },
+              "required": ["text"]
+            },
+            "entity_type": {
+              "type": "string",
+              "pattern": "^comment$"
+            }
+          }
+        }
+      ]
+    },
+
+    "like": {
+      "allOf": [
+        {"$ref": "#/definitions/relayable"},
+        {
+          "type": "object",
+          "properties": {
+            "entity_type": {
+              "type": "string",
+              "pattern": "^like$"
+            },
+            "entity_data": {
+              "type": "object",
+              "properties": {
+                "positive": { "type": "boolean" },
+                "parent_type": { "enum": ["Post", "Comment"] }
+              },
+              "required": ["positive"]
+            }
+          }
+        }
+      ]
+    },
+
+    "participation": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^participation$"
+        },
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "author": { "type": "string" },
+            "guid": { "$ref": "#/definitions/guid" },
+            "parent_guid": { "$ref": "#/definitions/guid" },
+            "parent_type": {"enum": ["Post"]}
+          }
+        }
+      }
+    },
+
+    "poll_participation": {
+      "allOf": [
+        {"$ref": "#/definitions/relayable"},
+        {
+          "type": "object",
+          "properties": {
+            "entity_type": {
+              "type": "string",
+              "pattern": "^poll_participation$"
+            },
+            "entity_data": {
+              "type": "object",
+              "properties": {
+                "poll_answer_guid": { "$ref": "#/definitions/guid" }
+              },
+              "required": ["poll_answer_guid"]
+            }
+          }
+        }
+      ]
+    },
+
+    "post": {
+      "type": "object",
+      "description": "please don't use this object unless you're defining a new child post schema",
+      "properties": {
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "guid": { "$ref": "#/definitions/guid" },
+            "public": { "type": "boolean" },
+            "created_at": { "type": "string" },
+            "provider_display_name" : { "type": "string" }
+          },
+          "required": [
+            "guid", "public", "created_at"
+          ]
+        },
+        "required": [
+          "entity_type", "entity_data"
+        ]
+      }
+    },
+
+    "status_message": {
+      "allOf": [
+        {"$ref": "#/definitions/post"},
+        {
+          "type": "object",
+          "properties": {
+            "entity_type": {
+              "type": "string",
+              "pattern": "^status_message$"
+            },
+
+            "entity_data": {
+              "type": "object",
+              "properties": {
+                "text": { "type": "string" },
+
+                "location": {
+                  "oneOf": [
+                    { "$ref": "#/definitions/location" },
+                    { "type": "null" }
+                  ]
+                },
+
+                "poll": {
+                  "oneOf": [
+                    { "$ref": "#/definitions/poll" },
+                    { "type": "null" }
+                  ]
+                },
+
+                "photos": {
+                  "type": ["array", "null"],
+                  "items": { "$ref": "#/definitions/photo" }
+                }
+              },
+
+              "required": ["text"]
+            }
+          }
+        }
+      ]
+    },
+
+    "reshare": {
+      "allOf": [
+        {"$ref": "#/definitions/post"},
+        {
+          "type": "object",
+          "properties": {
+            "entity_type": {
+              "type": "string",
+              "pattern": "^reshare$"
+            },
+
+            "entity_data": {
+              "type": "object",
+              "properties": {
+                "root_author": {"type": "string"},
+                "root_guid": {"$ref": "#/definitions/guid"}
+              },
+
+              "required": ["root_author", "root_guid"]
+            }
+          }
+        }
+      ]
+    },
+
+    "profile": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^profile$"
+        },
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "first_name": { "type": ["string", "null"] },
+            "last_name": { "type": ["string", "null"] },
+            "gender": { "type": ["string", "null"] },
+            "bio": { "type": ["string", "null"] },
+            "birthday": { "type": ["string", "null"] },
+            "location": { "type": ["string", "null"] },
+            "image_url": { "type": ["string", "null"] },
+            "author": { "type": "string" }
+          },
+          "required": [
+            "author"
+          ]
+        }
+      },
+      "required" :["entity_data", "entity_type"]
+    },
+
+    "photo": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^photo$"
+        },
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "author": { "type": "string" },
+            "guid": {"$ref": "#/definitions/guid"},
+            "public": {"type": "boolean"},
+            "created_at": {"type": "string"},
+            "remote_photo_path": {"type": "string"},
+            "remote_photo_name": {"type": "string"},
+            "text": {"type": ["null", "string"]},
+            "status_message_guid": {"$ref": "#/definitions/guid"},
+            "width": {"type": "number"},
+            "height": {"type": "number"}
+          },
+          "required": [
+            "author", "guid", "public", "created_at", "remote_photo_path", "remote_photo_name", "width", "height"
+          ]
+        }
+      }
+    },
+
+    "poll_answer": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^poll_answer$"
+        },
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "guid": { "$ref": "#/definitions/guid" },
+            "answer": { "type": "string" }
+          },
+          "required": [
+            "answer",
+            "guid"
+          ]
+        }
+      }
+    },
+
+    "poll": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^poll$"
+        },
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "guid": {
+              "$ref": "#/definitions/guid"
+            },
+            "question": {
+              "type": "string"
+            },
+            "poll_answers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/poll_answer"
+              }
+            }
+          },
+          "required": [
+            "guid",
+            "question",
+            "poll_answers"
+          ]
+        }
+      }
+    },
+
+    "location": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^location$"
+        },
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "string"
+            },
+            "lat": {
+              "type": "string"
+            },
+            "lng": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "address",
+            "lat",
+            "lng"
+          ]
+        }
+      }
+    }
+  }
+}
