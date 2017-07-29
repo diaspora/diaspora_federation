@@ -148,6 +148,43 @@ XML
         expect(xml.at_xpath("new_property").text).to be_empty
       end
 
+      it "adds nil properties to xml when needed for signature_order" do
+        expected_xml = <<-XML
+<some_relayable>
+  <author>#{author}</author>
+  <guid>#{guid}</guid>
+  <parent_guid>#{parent_guid}</parent_guid>
+  <property/>
+  <new_property>#{new_property}</new_property>
+  <author_signature>aa</author_signature>
+  <parent_author_signature>bb</parent_author_signature>
+</some_relayable>
+XML
+
+        signature_order = [:author, :guid, :parent_guid, :property, "new_property"]
+        xml = Entities::SomeRelayable.new(
+          hash_with_fake_signatures.merge(property: nil), signature_order, "new_property" => new_property
+        ).to_xml
+
+        expect(xml.to_s.strip).to eq(expected_xml.strip)
+      end
+
+      it "does not add nil properties to xml when not needed for signature_order" do
+        expected_xml = <<-XML
+<some_relayable>
+  <author>#{author}</author>
+  <guid>#{guid}</guid>
+  <parent_guid>#{parent_guid}</parent_guid>
+  <author_signature>aa</author_signature>
+  <parent_author_signature>bb</parent_author_signature>
+</some_relayable>
+XML
+
+        xml = Entities::SomeRelayable.new(hash_with_fake_signatures.merge(property: nil)).to_xml
+
+        expect(xml.to_s.strip).to eq(expected_xml.strip)
+      end
+
       it "computes correct signatures for the entity" do
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
         expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)

@@ -74,7 +74,7 @@ module DiasporaFederation
 
       include Entities::Relayable
 
-      property :property, :string
+      property :property, :string, optional: true
     end
   end
 
