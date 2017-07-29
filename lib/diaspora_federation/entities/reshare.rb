@@ -21,7 +21,7 @@ module DiasporaFederation
       # @!attribute [r] public
       #   Has no meaning at the moment
       #   @return [Boolean] public
-      property :public, :boolean, default: true # always true? (we only reshare public posts)
+      property :public, :boolean, optional: true, default: true # always true? (we only reshare public posts)
 
       # @return [String] string representation of this object
       def to_s

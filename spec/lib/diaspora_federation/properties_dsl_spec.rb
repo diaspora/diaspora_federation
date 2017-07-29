@@ -105,6 +105,18 @@ module DiasporaFederation
       end
     end
 
+    describe ".optional_props" do
+      it "contains an optional property" do
+        dsl.property :test, :string, optional: true
+        expect(dsl.optional_props).to include(:test)
+      end
+
+      it "doesn't contain normal properties" do
+        dsl.property :test, :string
+        expect(dsl.optional_props).to eq([])
+      end
+    end
+
     describe ".default_values" do
       it "can accept default values" do
         dsl.property :test, :string, default: :foobar
@@ -114,6 +126,19 @@ module DiasporaFederation
 
       it "can accept default blocks" do
         dsl.property :test, :string, default: -> { "default" }
+        defaults = dsl.default_values
+        expect(defaults[:test]).to eq("default")
+      end
+
+      it "contains nil as default value for optional properties" do
+        dsl.property :test, :string, optional: true
+        defaults = dsl.default_values
+        expect(defaults).to include(:test)
+        expect(defaults[:test]).to be_nil
+      end
+
+      it "contains the default value for optional properties with default value" do
+        dsl.property :test, :string, optional: true, default: "default"
         defaults = dsl.default_values
         expect(defaults[:test]).to eq("default")
       end

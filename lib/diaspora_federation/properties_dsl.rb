@@ -46,16 +46,20 @@ module DiasporaFederation
     # Return array of missing required property names
     # @return [Array<Symbol>] missing required property names
     def missing_props(args)
-      class_props.keys - default_props.keys - args.keys
+      class_props.keys - default_props.keys - optional_props - args.keys
+    end
+
+    def optional_props
+      @optional_props ||= []
     end
 
     # Return a new hash of default values, with dynamic values
     # resolved on each call
     # @return [Hash] default values
     def default_values
-      default_props.each_with_object({}) {|(name, prop), hash|
-        hash[name] = prop.respond_to?(:call) ? prop.call : prop
-      }
+      optional_props.map {|name| [name, nil] }.to_h.merge(default_props).map {|name, prop|
+        [name, prop.respond_to?(:call) ? prop.call : prop]
+      }.to_h
     end
 
     # @param [Hash] data entity data
@@ -111,6 +115,7 @@ module DiasporaFederation
       raise InvalidName unless name_valid?(name)
 
       class_props[name] = type
+      optional_props << name if opts[:optional]
       default_props[name] = opts[:default] if opts.has_key? :default
       xml_names[name] = determine_xml_name(name, type, opts)
 

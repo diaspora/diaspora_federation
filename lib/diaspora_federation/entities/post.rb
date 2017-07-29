@@ -29,7 +29,7 @@ module DiasporaFederation
           property :author, :string, xml_name: :diaspora_handle
           property :guid, :string
           property :created_at, :timestamp, default: -> { Time.now.utc }
-          property :provider_display_name, :string, default: nil
+          property :provider_display_name, :string, optional: true
         end
       end
     end

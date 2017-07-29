@@ -24,7 +24,7 @@ module DiasporaFederation
       # @!attribute [r] description
       #   Description of the event
       #   @return [String] event description
-      property :description, :string, default: nil
+      property :description, :string, optional: true
 
       # @!attribute [r] start
       #   The start time of the event
@@ -34,22 +34,22 @@ module DiasporaFederation
       # @!attribute [r] end
       #   The end time of the event
       #   @return [String] event end
-      property :end, :timestamp, default: nil
+      property :end, :timestamp, optional: true
 
       # @!attribute [r] all_day
       #   Points if the event is an all day event
       #   @return [Boolean] is it an all day event
-      property :all_day, :boolean, default: false
+      property :all_day, :boolean, optional: true, default: false
 
       # @!attribute [r] timezone
       #   Timezone to which the event is fixed to
       #   @return [String] timezone
-      property :timezone, :string, default: nil
+      property :timezone, :string, optional: true
 
       # @!attribute [r] location
       #   Location of the event
       #   @return [Entities::Location] location
-      entity :location, Entities::Location, default: nil
+      entity :location, Entities::Location, optional: true
     end
   end
 end

@@ -20,7 +20,7 @@ module DiasporaFederation
       #   @see #full_name
       #   @see Discovery::HCard#first_name
       #   @return [String] first name
-      property :first_name, :string, default: nil
+      property :first_name, :string, optional: true
 
       # @!attribute [r] last_name
       #   @deprecated We decided to only use one name field, these should be removed
@@ -28,38 +28,38 @@ module DiasporaFederation
       #   @see #full_name
       #   @see Discovery::HCard#last_name
       #   @return [String] last name
-      property :last_name, :string, default: nil
+      property :last_name, :string, optional: true
 
       # @!attribute [r] image_url
       #   @see Discovery::HCard#photo_large_url
       #   @return [String] url to the big avatar (300x300)
-      property :image_url, :string, default: nil
+      property :image_url, :string, optional: true
       # @!attribute [r] image_url_medium
       #   @see Discovery::HCard#photo_medium_url
       #   @return [String] url to the medium avatar (100x100)
-      property :image_url_medium, :string, default: nil
+      property :image_url_medium, :string, optional: true
       # @!attribute [r] image_url_small
       #   @see Discovery::HCard#photo_small_url
       #   @return [String] url to the small avatar (50x50)
-      property :image_url_small, :string, default: nil
+      property :image_url_small, :string, optional: true
 
-      property :birthday, :string, default: nil
-      property :gender, :string, default: nil
-      property :bio, :string, default: nil
-      property :location, :string, default: nil
+      property :birthday, :string, optional: true
+      property :gender, :string, optional: true
+      property :bio, :string, optional: true
+      property :location, :string, optional: true
 
       # @!attribute [r] searchable
       #   @see Discovery::HCard#searchable
       #   @return [Boolean] searchable flag
-      property :searchable, :boolean, default: true
+      property :searchable, :boolean, optional: true, default: true
 
       # @!attribute [r] public
       #   Shows whether the profile is visible to everyone or only to contacts
       #   @return [Boolean] is it public
-      property :public, :boolean, default: false
+      property :public, :boolean, optional: true, default: false
 
-      property :nsfw, :boolean, default: false
-      property :tag_string, :string, default: nil
+      property :nsfw, :boolean, optional: true, default: false
+      property :tag_string, :string, optional: true
 
       # @return [String] string representation of this object
       def to_s
