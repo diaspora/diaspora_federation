@@ -15,5 +15,5 @@ Gem::Specification.new do |s|
                   "validating JSON serialized federation objects."
   s.license     = "AGPL-3.0"
 
-  s.files       = Dir["lib/diaspora_federation/schemas/*.json"]
+  s.files       = Dir["lib/diaspora_federation/schemas.rb", "lib/diaspora_federation/schemas/*.json"]
 end

@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
   s.license     = "AGPL-3.0"
 
   s.files       = Dir["lib/**/*", "LICENSE", "README.md", "Changelog.md"] -
-                    Dir["lib/diaspora_federation/{engine,rails,test}.rb",
+                    Dir["lib/diaspora_federation/{engine,rails,schemas,test}.rb",
+                        "lib/diaspora_federation/schemas/*",
                         "lib/diaspora_federation/test/*",
                         "lib/tasks/*.rake"]
 
