@@ -139,7 +139,8 @@ shared_examples "a JSON Entity" do
       entity_data.delete(:parent)
       nested_elements, simple_props = entity_data.partition {|_key, value| value.is_a?(Array) || value.is_a?(Hash) }
 
-      expect(to_json_output).to include_json(entity_data: simple_props.to_h)
+      expect(to_json_output).to include_json(entity_data: simple_props.reject {|_key, value| value.nil? }.to_h)
+
       nested_elements.each {|key, value|
         type = described_class.class_props[key]
         if value.is_a?(Array)

@@ -142,6 +142,35 @@ module DiasporaFederation
         end
       end
 
+      context "optional properties" do
+        it "contains nodes for optional properties when not nil" do
+          entity = Entities::TestOptionalEntity.new(test1: "aa", test2: "bb")
+          xml_children = entity.to_xml.children
+          expect(xml_children).to have_exactly(2).items
+          xml_children.each do |node|
+            expect(%w[test1 test2]).to include(node.name)
+          end
+        end
+
+        it "contains no nodes for optional nil properties" do
+          entity = Entities::TestOptionalEntity.new(test2: "bb")
+          xml_children = entity.to_xml.children
+          expect(xml_children).to have_exactly(1).items
+          xml_children.each do |node|
+            expect(%w[test2]).to include(node.name)
+          end
+        end
+
+        it "contains nodes for non optional properties when nil" do
+          entity = Entities::TestOptionalEntity.new(test1: "aa", test2: nil)
+          xml_children = entity.to_xml.children
+          expect(xml_children).to have_exactly(2).items
+          xml_children.each do |node|
+            expect(%w[test1 test2]).to include(node.name)
+          end
+        end
+      end
+
       it "replaces invalid XML characters" do
         entity = Entities::TestEntity.new(test: "asdfasdf asdf💩asdf\nasdf")
         xml = entity.to_xml.to_xml

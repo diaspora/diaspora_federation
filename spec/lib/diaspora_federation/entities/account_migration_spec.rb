@@ -21,7 +21,6 @@ module DiasporaFederation
   <profile>
     <author>#{data[:profile].author}</author>
     <first_name>#{data[:profile].first_name}</first_name>
-    <last_name/>
     <image_url>#{data[:profile].image_url}</image_url>
     <image_url_medium>#{data[:profile].image_url}</image_url_medium>
     <image_url_small>#{data[:profile].image_url}</image_url_small>

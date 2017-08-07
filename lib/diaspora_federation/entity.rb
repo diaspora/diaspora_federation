@@ -270,6 +270,8 @@ module DiasporaFederation
     end
 
     def normalize_property(name, value)
+      return nil if optional_nil_value?(name, value)
+
       case self.class.class_props[name]
       when :string
         value.to_s
@@ -315,8 +317,9 @@ module DiasporaFederation
     def json_data
       enriched_properties.map {|key, value|
         type = self.class.class_props[key]
+        next if optional_nil_value?(key, value)
 
-        if !value.nil? && type.instance_of?(Class) && value.respond_to?(:to_json)
+        if !value.nil? && type.instance_of?(Class)
           entity_data = value.to_json
           [key, entity_data] unless entity_data.nil?
         elsif type.instance_of?(Array)
@@ -326,6 +329,10 @@ module DiasporaFederation
           [key, value]
         end
       }.compact.to_h
+    end
+
+    def optional_nil_value?(name, value)
+      value.nil? && self.class.optional_props.include?(name)
     end
 
     # Raised, if entity is not valid

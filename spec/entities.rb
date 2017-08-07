@@ -11,6 +11,11 @@ module DiasporaFederation
       property :test4, :boolean, default: -> { true }
     end
 
+    class TestOptionalEntity < DiasporaFederation::Entity
+      property :test1, :string, optional: true
+      property :test2, :string
+    end
+
     class OtherEntity < DiasporaFederation::Entity
       property :asdf, :string
     end
@@ -54,6 +59,7 @@ module DiasporaFederation
       property :test4, :integer
       property :test5, :timestamp
       entity :test6, TestEntity
+      property :test7, :string, optional: true
       entity :multi, [OtherEntity]
     end
 
@@ -68,7 +74,7 @@ module DiasporaFederation
 
       include Entities::Relayable
 
-      property :property, :string
+      property :property, :string, optional: true
     end
   end
 

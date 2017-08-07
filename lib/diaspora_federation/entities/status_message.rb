@@ -14,22 +14,22 @@ module DiasporaFederation
       # @!attribute [r] photos
       #   Optional photos attached to the status message
       #   @return [[Entities::Photo]] photos
-      entity :photos, [Entities::Photo], default: []
+      entity :photos, [Entities::Photo], optional: true, default: []
 
       # @!attribute [r] location
       #   Optional location attached to the status message
       #   @return [Entities::Location] location
-      entity :location, Entities::Location, default: nil
+      entity :location, Entities::Location, optional: true
 
       # @!attribute [r] poll
       #   Optional poll attached to the status message
       #   @return [Entities::Poll] poll
-      entity :poll, Entities::Poll, default: nil
+      entity :poll, Entities::Poll, optional: true
 
       # @!attribute [r] event
       #   Optional event attached to the status message
       #   @return [Entities::Event] event
-      entity :event, Entities::Event, default: nil
+      entity :event, Entities::Event, optional: true
 
       # @!attribute [r] public
       #   Shows whether the status message is visible to everyone or only to some aspects

@@ -103,8 +103,6 @@ XML
         "lng": "#{location.lng}"
       }
     },
-    "poll": null,
-    "event": null,
     "public": #{data[:public]}
   }
 }

@@ -6,7 +6,6 @@ module DiasporaFederation
 <profile>
   <author>#{data[:author]}</author>
   <first_name>#{data[:first_name]}</first_name>
-  <last_name/>
   <image_url>#{data[:image_url]}</image_url>
   <image_url_medium>#{data[:image_url]}</image_url_medium>
   <image_url_small>#{data[:image_url]}</image_url_small>
@@ -27,7 +26,6 @@ XML
   "entity_data": {
     "author": "#{data[:author]}",
     "first_name": "#{data[:first_name]}",
-    "last_name": "",
     "image_url": "#{data[:image_url]}",
     "image_url_medium": "#{data[:image_url]}",
     "image_url_small": "#{data[:image_url]}",

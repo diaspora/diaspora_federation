@@ -37,13 +37,13 @@ module DiasporaFederation
 
       # @!attribute [r] text
       #   @return [String] text
-      property :text, :string, default: nil
+      property :text, :string, optional: true
 
       # @!attribute [r] status_message_guid
       #   Guid of a status message this photo belongs to
       #   @see StatusMessage#guid
       #   @return [String] guid
-      property :status_message_guid, :string, default: nil
+      property :status_message_guid, :string, optional: true
 
       # @!attribute [r] height
       #   Photo height
