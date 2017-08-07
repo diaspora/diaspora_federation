@@ -1,3 +1,13 @@
+# 0.2.1
+
+## Features
+
+Add `DiasporaFederation::Schemas` to access the JSON schema [#70](https://github.com/diaspora/diaspora_federation/pull/70)
+
+## Refactor
+
+Don't add optional properties to generated XML and JSON when nil [#71](https://github.com/diaspora/diaspora_federation/pull/71)
+
 # 0.2.0
 
 ## Features
