@@ -196,11 +196,11 @@ GEM
       addressable (>= 2.3.5, < 2.6)
       faraday (~> 0.8, < 1.0)
     shellany (0.0.1)
-    simplecov (0.14.1)
+    simplecov (0.15.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
-    simplecov-html (0.10.1)
+    simplecov-html (0.10.2)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
     slop (3.6.0)
@@ -253,7 +253,7 @@ DEPENDENCIES
   rspec-json_expectations (~> 2.1)
   rspec-rails (~> 3.6.0)
   rubocop (= 0.49.1)
-  simplecov (= 0.14.1)
+  simplecov (= 0.15.0)
   simplecov-rcov (= 0.2.3)
   spring
   spring-commands-rspec
