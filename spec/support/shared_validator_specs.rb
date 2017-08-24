@@ -92,7 +92,7 @@ shared_examples "a diaspora* ID validator" do
   end
 end
 
-shared_examples "a guid validator" do
+shared_examples "common guid validator" do
   it "validates a well-formed guid from redmatrix" do
     validator = described_class.new(entity_stub(entity, property => "1234567890ABCDefgh_ijkl-mnopQR@example.com:3000"))
 
@@ -113,6 +113,10 @@ shared_examples "a guid validator" do
     expect(validator).not_to be_valid
     expect(validator.errors).to include(property)
   end
+end
+
+shared_examples "a guid validator" do
+  include_examples "common guid validator"
 
   it "must not be nil or empty" do
     [nil, ""].each do |val|
@@ -121,6 +125,17 @@ shared_examples "a guid validator" do
       expect(validator).not_to be_valid
       expect(validator.errors).to include(property)
     end
+  end
+end
+
+shared_examples "a nilable guid validator" do
+  include_examples "common guid validator"
+
+  it "can be nil" do
+    validator = described_class.new(entity_stub(entity, property => nil))
+
+    expect(validator).to be_valid
+    expect(validator.errors).to be_empty
   end
 end
 

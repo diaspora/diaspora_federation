@@ -31,6 +31,11 @@ module DiasporaFederation
       # Fetch and receive root post from remote, if not available locally
       # and validates if it's from the correct author
       def validate_root
+        return if root_author.nil? && root_guid.nil?
+
+        raise Entity::ValidationError, "#{self}: root_guid can't be nil if root_author is present" if root_guid.nil?
+        raise Entity::ValidationError, "#{self}: root_author can't be nil if root_guid is present" if root_author.nil?
+
         root = RelatedEntity.fetch(root_author, "Post", root_guid)
 
         return if root_author == root.author

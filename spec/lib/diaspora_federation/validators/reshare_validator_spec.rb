@@ -3,20 +3,29 @@ module DiasporaFederation
     let(:entity) { :reshare_entity }
     it_behaves_like "a common validator"
 
-    %i[root_author author].each do |prop|
-      describe "##{prop}" do
-        it_behaves_like "a diaspora* ID validator" do
-          let(:property) { prop }
-          let(:mandatory) { true }
-        end
+    describe "#author" do
+      it_behaves_like "a diaspora* ID validator" do
+        let(:property) { :author }
+        let(:mandatory) { true }
       end
     end
 
-    %i[root_guid guid].each do |prop|
-      describe "##{prop}" do
-        it_behaves_like "a guid validator" do
-          let(:property) { prop }
-        end
+    describe "#guid" do
+      it_behaves_like "a guid validator" do
+        let(:property) { :guid }
+      end
+    end
+
+    describe "#root_guid" do
+      it_behaves_like "a nilable guid validator" do
+        let(:property) { :root_guid }
+      end
+    end
+
+    describe "#root_author" do
+      it_behaves_like "a diaspora* ID validator" do
+        let(:property) { :root_author }
+        let(:mandatory) { false }
       end
     end
 
