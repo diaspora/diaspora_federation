@@ -82,7 +82,7 @@ GEM
       guard (~> 2.0)
       rubocop (~> 0.20)
     hashdiff (0.3.5)
-    httparty (0.14.0)
+    httparty (0.15.6)
       multi_xml (>= 0.5.2)
     i18n (0.8.6)
     json (2.1.0)
@@ -119,9 +119,9 @@ GEM
     parser (2.4.0.0)
       ast (~> 2.2)
     powerpack (0.1.1)
-    pronto (0.9.4)
+    pronto (0.9.5)
       gitlab (~> 4.0, >= 4.0.0)
-      httparty (>= 0.13.7, < 0.15)
+      httparty (>= 0.13.7)
       octokit (~> 4.7, >= 4.7.0)
       rainbow (~> 2.1)
       rugged (~> 0.24, >= 0.23.0)
@@ -243,7 +243,7 @@ DEPENDENCIES
   guard-rubocop
   json-schema-rspec (= 0.0.4)
   nyan-cat-formatter
-  pronto (= 0.9.4)
+  pronto (= 0.9.5)
   pronto-rubocop (= 0.9.0)
   pry
   pry-byebug
@@ -262,4 +262,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.15.3
+   1.15.4
