@@ -16,10 +16,8 @@ module DiasporaFederation
     end
 
     describe "#status_message_guid" do
-      it_behaves_like "a property with a value validation/restriction" do
+      it_behaves_like "a nilable guid validator" do
         let(:property) { :status_message_guid }
-        let(:wrong_values) { ["aaaaaa", "zzz+-#*$$", ""] }
-        let(:correct_values) { ["1234567890ABCDefgh_ijkl-mnopQR@example.com:3000", nil] }
       end
     end
 

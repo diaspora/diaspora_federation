@@ -7,6 +7,10 @@ This entity represents a reshare of a [StatusMessage][status_message]. It inheri
 The recipient must [fetch][fetching] the root from `root_author` if the post is not already known.
 When the `root_guid` is already available locally, the recipient must validate that it's from `root_author`.
 
+A special case when the entity doesn't include `root_author` and `root_guid` is allowed. This case represents
+a reshare for a deleted post. If there is only one of `root_author` and `root_guid` is present, then the entity
+is not valid.
+
 ## Properties
 
 | Property      | Type                         | Description                                                   |
