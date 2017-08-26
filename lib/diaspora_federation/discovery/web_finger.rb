@@ -119,8 +119,20 @@ module DiasporaFederation
       # @return [WebFinger] WebFinger instance
       # @raise [InvalidData] if the given XML string is invalid or incomplete
       def self.from_xml(webfinger_xml)
-        data = parse_xml_and_validate(webfinger_xml)
+        from_hash(parse_xml_and_validate(webfinger_xml))
+      end
 
+      # Creates a WebFinger instance from the given JSON string
+      # @param [String] webfinger_json WebFinger JSON string
+      # @return [WebFinger] WebFinger instance
+      def self.from_json(webfinger_json)
+        from_hash(XrdDocument.json_data(webfinger_json))
+      end
+
+      # Creates a WebFinger instance from the given data
+      # @param [Hash] data WebFinger data hash
+      # @return [WebFinger] WebFinger instance
+      def self.from_hash(data)
         links = data[:links]
 
         new(

@@ -39,6 +39,63 @@ XML
 </XRD>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "subject": "#{acct}",
+  "aliases": [
+    "#{person.alias_url}"
+  ],
+  "links": [
+    {
+      "rel": "http://microformats.org/profile/hcard",
+      "type": "text/html",
+      "href": "#{person.hcard_url}"
+    },
+    {
+      "rel": "http://joindiaspora.com/seed_location",
+      "type": "text/html",
+      "href": "#{person.url}"
+    },
+    {
+      "rel": "http://webfinger.net/rel/profile-page",
+      "type": "text/html",
+      "href": "#{person.profile_url}"
+    },
+    {
+      "rel": "http://schemas.google.com/g/2010#updates-from",
+      "type": "application/atom+xml",
+      "href": "#{person.atom_url}"
+    },
+    {
+      "rel": "salmon",
+      "href": "#{person.salmon_url}"
+    },
+    {
+      "rel": "http://ostatus.org/schema/1.0/subscribe",
+      "template": "http://somehost:3000/people?q={uri}"
+    }
+  ]
+}
+JSON
+
+    let(:minimal_json) { <<-JSON }
+{
+  "subject": "#{acct}",
+  "links": [
+    {
+      "rel": "http://microformats.org/profile/hcard",
+      "type": "text/html",
+      "href": "#{person.hcard_url}"
+    },
+    {
+      "rel": "http://joindiaspora.com/seed_location",
+      "type": "text/html",
+      "href": "#{person.url}"
+    }
+  ]
+}
+JSON
+
     let(:string) { "WebFinger:#{data[:acct_uri]}" }
 
     it_behaves_like "an Entity subclass"
@@ -95,66 +152,11 @@ XML
 
       context "json" do
         it "creates a nice JSON document" do
-          json = <<-JSON
-{
-  "subject": "#{acct}",
-  "aliases": [
-    "#{person.alias_url}"
-  ],
-  "links": [
-    {
-      "rel": "http://microformats.org/profile/hcard",
-      "type": "text/html",
-      "href": "#{person.hcard_url}"
-    },
-    {
-      "rel": "http://joindiaspora.com/seed_location",
-      "type": "text/html",
-      "href": "#{person.url}"
-    },
-    {
-      "rel": "http://webfinger.net/rel/profile-page",
-      "type": "text/html",
-      "href": "#{person.profile_url}"
-    },
-    {
-      "rel": "http://schemas.google.com/g/2010#updates-from",
-      "type": "application/atom+xml",
-      "href": "#{person.atom_url}"
-    },
-    {
-      "rel": "salmon",
-      "href": "#{person.salmon_url}"
-    },
-    {
-      "rel": "http://ostatus.org/schema/1.0/subscribe",
-      "template": "http://somehost:3000/people?q={uri}"
-    }
-  ]
-}
-JSON
           wf = Discovery::WebFinger.new(data, aliases: [person.alias_url])
           expect(JSON.pretty_generate(wf.to_json)).to eq(json.strip)
         end
 
         it "creates minimal JSON document" do
-          minimal_json = <<-JSON
-{
-  "subject": "#{acct}",
-  "links": [
-    {
-      "rel": "http://microformats.org/profile/hcard",
-      "type": "text/html",
-      "href": "#{person.hcard_url}"
-    },
-    {
-      "rel": "http://joindiaspora.com/seed_location",
-      "type": "text/html",
-      "href": "#{person.url}"
-    }
-  ]
-}
-JSON
           wf = Discovery::WebFinger.new(minimal_data)
           expect(JSON.pretty_generate(wf.to_json)).to eq(minimal_json.strip)
         end
@@ -167,6 +169,9 @@ JSON
     "#{person.alias_url}",
     "#{person.profile_url}"
   ],
+  "properties": {
+    "http://webfinger.example/ns/name": "Bob Smith"
+  },
   "links": [
     {
       "rel": "http://microformats.org/profile/hcard",
@@ -191,10 +196,7 @@ JSON
       "rel": "http://openid.net/specs/connect/1.0/issuer",
       "href": "https://pod.example.tld/"
     }
-  ],
-  "properties": {
-    "http://webfinger.example/ns/name": "Bob Smith"
-  }
+  ]
 }
 JSON
 
@@ -205,7 +207,7 @@ JSON
     end
 
     context "parsing" do
-      it "reads its own output" do
+      it "reads its own xml output" do
         wf = Discovery::WebFinger.from_xml(xml)
         expect(wf.acct_uri).to eq(acct)
         expect(wf.hcard_url).to eq(person.hcard_url)
@@ -218,6 +220,24 @@ JSON
 
       it "reads minimal xml" do
         wf = Discovery::WebFinger.from_xml(minimal_xml)
+        expect(wf.acct_uri).to eq(acct)
+        expect(wf.hcard_url).to eq(person.hcard_url)
+        expect(wf.seed_url).to eq(person.url)
+      end
+
+      it "reads its own json output" do
+        wf = Discovery::WebFinger.from_json(json)
+        expect(wf.acct_uri).to eq(acct)
+        expect(wf.hcard_url).to eq(person.hcard_url)
+        expect(wf.seed_url).to eq(person.url)
+        expect(wf.profile_url).to eq(person.profile_url)
+        expect(wf.atom_url).to eq(person.atom_url)
+        expect(wf.salmon_url).to eq(person.salmon_url)
+        expect(wf.subscribe_url).to eq(person.subscribe_url)
+      end
+
+      it "reads minimal json" do
+        wf = Discovery::WebFinger.from_json(minimal_json)
         expect(wf.acct_uri).to eq(acct)
         expect(wf.hcard_url).to eq(person.hcard_url)
         expect(wf.seed_url).to eq(person.url)
