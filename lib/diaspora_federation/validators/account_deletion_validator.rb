@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::AccountDeletion}.
-    class AccountDeletionValidator < Validation::Validator
+    class AccountDeletionValidator < OptionalAwareValidator
       include Validation
 
       rule :author, %i[not_empty diaspora_id]

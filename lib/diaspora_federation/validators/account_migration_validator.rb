@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::AccountMigration}.
-    class AccountMigrationValidator < Validation::Validator
+    class AccountMigrationValidator < OptionalAwareValidator
       include Validation
 
       rule :author, %i[not_empty diaspora_id]

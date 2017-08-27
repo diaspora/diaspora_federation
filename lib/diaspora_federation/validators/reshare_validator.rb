@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Reshare}.
-    class ReshareValidator < Validation::Validator
+    class ReshareValidator < OptionalAwareValidator
       include Validation
 
       rule :root_author, :diaspora_id

@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Message}.
-    class MessageValidator < Validation::Validator
+    class MessageValidator < OptionalAwareValidator
       include Validation
 
       rule :author, %i[not_empty diaspora_id]

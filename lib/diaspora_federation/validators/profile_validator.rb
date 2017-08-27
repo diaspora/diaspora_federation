@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Profile}.
-    class ProfileValidator < Validation::Validator
+    class ProfileValidator < OptionalAwareValidator
       include Validation
 
       rule :author, :diaspora_id

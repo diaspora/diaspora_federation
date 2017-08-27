@@ -3,7 +3,7 @@ module DiasporaFederation
     # This validates a {Discovery::HCard}.
     #
     # @note
-    class HCardValidator < Validation::Validator
+    class HCardValidator < OptionalAwareValidator
       include Validation
 
       rule :guid, :guid

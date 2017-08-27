@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Location}.
-    class LocationValidator < Validation::Validator
+    class LocationValidator < OptionalAwareValidator
       include Validation
 
       rule :lat, :not_empty

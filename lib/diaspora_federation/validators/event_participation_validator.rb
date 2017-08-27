@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::EventParticipation}.
-    class EventParticipationValidator < Validation::Validator
+    class EventParticipationValidator < OptionalAwareValidator
       include Validation
 
       include RelayableValidator

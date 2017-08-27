@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Photo}.
-    class PhotoValidator < Validation::Validator
+    class PhotoValidator < OptionalAwareValidator
       include Validation
 
       rule :guid, :guid

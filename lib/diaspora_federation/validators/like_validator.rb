@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Like}.
-    class LikeValidator < Validation::Validator
+    class LikeValidator < OptionalAwareValidator
       include Validation
 
       include RelayableValidator

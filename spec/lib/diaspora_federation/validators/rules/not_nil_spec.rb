@@ -11,7 +11,7 @@ describe Validation::Rule::NotNil do
   end
 
   context "validation" do
-    it "validates a string " do
+    it "validates a string" do
       validator = Validation::Validator.new(OpenStruct.new(not_nil: "abcd"))
       validator.rule(:not_nil, :not_nil)
 
@@ -19,7 +19,7 @@ describe Validation::Rule::NotNil do
       expect(validator.errors).to be_empty
     end
 
-    it "validates a object " do
+    it "validates a object" do
       validator = Validation::Validator.new(OpenStruct.new(not_nil: Object.new))
       validator.rule(:not_nil, :not_nil)
 
