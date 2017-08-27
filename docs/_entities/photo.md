@@ -14,8 +14,6 @@ This entity represents a photo. It can be standalone or nested in a [StatusMessa
 | `created_at`        | [Timestamp][timestamp]       | The create timestamp of the photo.                               |
 | `remote_photo_path` | [URL][url]                   | The URL to the photo, without filename (see `remote_photo_name`) |
 | `remote_photo_name` | [String][string] (255)       | The filename of the photo.                                       |
-| `height`            | [Integer][integer]           | The height of the photo in pixels.                               |
-| `width`             | [Integer][integer]           | The width of the photo in pixels.                                |
 
 ## Optional Properties
 
@@ -23,6 +21,8 @@ This entity represents a photo. It can be standalone or nested in a [StatusMessa
 | --------------------- | ------------------------ | ------------------------------------------------------------------------------- |
 | `text`                | [String][string] (65535) | Description text for the photo.                                                 |
 | `status_message_guid` | [GUID][guid]             | The GUID of the [StatusMessage][status_message] to which the photo is attached. |
+| `height`              | [Integer][integer]       | The height of the photo in pixels.                                              |
+| `width`               | [Integer][integer]       | The width of the photo in pixels.                                               |
 
 ## Example
 

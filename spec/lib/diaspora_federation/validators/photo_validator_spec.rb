@@ -38,7 +38,7 @@ module DiasporaFederation
         it_behaves_like "a property with a value validation/restriction" do
           let(:property) { prop }
           let(:wrong_values) { [true, :num, "asdf"] }
-          let(:correct_values) { [123, "123"] }
+          let(:correct_values) { [123, "123", nil] }
         end
       end
     end
