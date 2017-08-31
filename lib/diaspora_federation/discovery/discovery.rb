@@ -15,6 +15,7 @@ module DiasporaFederation
 
       # Fetches all metadata for the account and saves it via callback
       # @return [Person]
+      # @raise [DiscoveryError] if something with the discovery failed
       def fetch_and_save
         logger.info "Fetch data for #{diaspora_id}"
 
@@ -23,6 +24,10 @@ module DiasporaFederation
         DiasporaFederation.callbacks.trigger(:save_person_after_webfinger, person)
         logger.info "successfully webfingered #{diaspora_id}"
         person
+      rescue DiscoveryError
+        raise # simply re-raise DiscoveryError
+      rescue => e
+        raise DiscoveryError, "Failed discovery for #{diaspora_id}: #{e.class}: #{e.message}"
       end
 
       private

@@ -144,6 +144,41 @@ module DiasporaFederation
 
         expect { Discovery::Discovery.new(account).fetch_and_save }.to raise_error Discovery::DiscoveryError
       end
+
+      context "error handling" do
+        subject { Discovery::Discovery.new(account) }
+
+        it "re-raises DiscoveryError" do
+          expect(subject).to receive(:validate_diaspora_id)
+            .and_raise(Discovery::DiscoveryError, "Something went wrong!")
+
+          expect { subject.fetch_and_save }.to raise_error Discovery::DiscoveryError, "Something went wrong!"
+        end
+
+        it "re-raises InvalidDocument" do
+          expect(subject).to receive(:validate_diaspora_id)
+            .and_raise(Discovery::InvalidDocument, "Wrong document!")
+
+          expect { subject.fetch_and_save }.to raise_error Discovery::InvalidDocument, "Wrong document!"
+        end
+
+        it "re-raises InvalidData" do
+          expect(subject).to receive(:validate_diaspora_id)
+            .and_raise(Discovery::InvalidData, "Wrong data!")
+
+          expect { subject.fetch_and_save }.to raise_error Discovery::InvalidData, "Wrong data!"
+        end
+
+        it "raises a DiscoveryError when an unhandled error occurs" do
+          expect(subject).to receive(:validate_diaspora_id)
+            .and_raise("OMG! EVERYTHING IS BROKEN!")
+
+          expect {
+            subject.fetch_and_save
+          }.to raise_error Discovery::DiscoveryError,
+                           "Failed discovery for #{account}: RuntimeError: OMG! EVERYTHING IS BROKEN!"
+        end
+      end
     end
   end
 end
