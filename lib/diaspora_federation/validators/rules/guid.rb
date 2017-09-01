@@ -6,7 +6,11 @@ module Validation
     # * Letters: a-z
     # * Numbers: 0-9
     # * Special chars: '-', '_', '@', '.' and ':'
+    # Special chars aren't allowed at the end.
     class Guid
+      # Allowed chars to validate a GUID with a regex
+      VALID_CHARS = "[0-9A-Za-z\\-_@.:]{15,254}[0-9a-z]".freeze
+
       # The error key for this rule
       # @return [Symbol] error key
       def error_key
@@ -15,7 +19,7 @@ module Validation
 
       # Determines if value is a valid +GUID+
       def valid_value?(value)
-        value.is_a?(String) && value.downcase =~ /\A[0-9a-z\-_@.:]{16,255}\z/
+        value.is_a?(String) && value =~ /\A#{VALID_CHARS}\z/
       end
 
       # This rule has no params.

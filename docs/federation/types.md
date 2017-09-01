@@ -31,6 +31,8 @@ A network-wide, unique identifier. A random string of at least 16 and at most 25
 * Numbers: `0-9`
 * Special chars: `-`, `_`, `@`, `.` and `:`
 
+ Special chars aren't allowed at the end.
+
 Example: `298962a0b8dc0133e40d406c8f31e210`
 
 ## String
