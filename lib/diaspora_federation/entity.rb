@@ -40,6 +40,9 @@ module DiasporaFederation
     # @see https://www.w3.org/TR/REC-xml/#charsets "Extensible Markup Language (XML) 1.0"
     INVALID_XML_REGEX = /[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/
 
+    # Regex to validate and find entity names
+    ENTITY_NAME_REGEX = "[a-z]*(?:_[a-z]*)*".freeze
+
     # Initializes the Entity with the given attribute hash and freezes the created
     # instance it returns.
     #
@@ -145,7 +148,7 @@ module DiasporaFederation
     # @param [String] entity_name "snake_case" class name
     # @return [Class] entity class
     def self.entity_class(entity_name)
-      raise InvalidEntityName, "'#{entity_name}' is invalid" unless entity_name =~ /\A[a-z]*(_[a-z]*)*\z/
+      raise InvalidEntityName, "'#{entity_name}' is invalid" unless entity_name =~ /\A#{ENTITY_NAME_REGEX}\z/
       class_name = entity_name.sub(/\A[a-z]/, &:upcase)
       class_name.gsub!(/_([a-z])/) { Regexp.last_match[1].upcase }
 
