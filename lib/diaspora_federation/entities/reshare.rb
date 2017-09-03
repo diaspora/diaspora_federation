@@ -16,7 +16,7 @@ module DiasporaFederation
       #   Guid of the original post
       #   @see StatusMessage#guid
       #   @return [String] root guid
-      property :root_guid, :string
+      property :root_guid, :string, optional: true
 
       # @!attribute [r] public
       #   Has no meaning at the moment
