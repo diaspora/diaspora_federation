@@ -43,9 +43,12 @@ module DiasporaFederation
       #   @return [String] url to the small avatar (50x50)
       property :image_url_small, :string, optional: true
 
+      # @!attribute [r] bio
+      #   @return [String] bio of the person
+      property :bio, :string, alias: :text, optional: true
+
       property :birthday, :string, optional: true
       property :gender, :string, optional: true
-      property :bio, :string, optional: true
       property :location, :string, optional: true
 
       # @!attribute [r] searchable

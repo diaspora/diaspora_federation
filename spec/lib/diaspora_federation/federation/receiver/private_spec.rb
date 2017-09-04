@@ -112,6 +112,36 @@ module DiasporaFederation
           end
         end
       end
+
+      context "with text" do
+        before do
+          expect(DiasporaFederation.callbacks).to receive(:trigger)
+        end
+
+        it "fetches linked entities when the received entity has a text property" do
+          expect(Federation::DiasporaUrlParser).to receive(:fetch_linked_entities).with(post.author, post.text)
+
+          described_class.new(magic_env, recipient).receive
+        end
+
+        it "fetches linked entities for the profile bio" do
+          profile = Fabricate(:profile_entity)
+          magic_env = Salmon::MagicEnvelope.new(profile, profile.author)
+
+          expect(Federation::DiasporaUrlParser).to receive(:fetch_linked_entities).with(profile.author, profile.bio)
+
+          described_class.new(magic_env, recipient).receive
+        end
+
+        it "doesn't try to fetch linked entities when the text is nil" do
+          photo = Fabricate(:photo_entity, public: false, text: nil)
+          magic_env = Salmon::MagicEnvelope.new(photo, photo.author)
+
+          expect(Federation::DiasporaUrlParser).not_to receive(:fetch_linked_entities)
+
+          described_class.new(magic_env, recipient).receive
+        end
+      end
     end
   end
 end

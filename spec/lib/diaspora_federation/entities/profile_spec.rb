@@ -9,9 +9,9 @@ module DiasporaFederation
   <image_url>#{data[:image_url]}</image_url>
   <image_url_medium>#{data[:image_url]}</image_url_medium>
   <image_url_small>#{data[:image_url]}</image_url_small>
+  <bio>#{data[:bio]}</bio>
   <birthday>#{data[:birthday]}</birthday>
   <gender>#{data[:gender]}</gender>
-  <bio>#{data[:bio]}</bio>
   <location>#{data[:location]}</location>
   <searchable>#{data[:searchable]}</searchable>
   <public>#{data[:public]}</public>
@@ -29,9 +29,9 @@ XML
     "image_url": "#{data[:image_url]}",
     "image_url_medium": "#{data[:image_url]}",
     "image_url_small": "#{data[:image_url]}",
+    "bio": "#{data[:bio]}",
     "birthday": "#{data[:birthday]}",
     "gender": "#{data[:gender]}",
-    "bio": "#{data[:bio]}",
     "location": "#{data[:location]}",
     "searchable": #{data[:searchable]},
     "public": #{data[:public]},
