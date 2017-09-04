@@ -8,6 +8,7 @@ module DiasporaFederation
       rule :recipient, %i[not_empty diaspora_id]
       rule :following, :boolean
       rule :sharing, :boolean
+      rule :blocking, :boolean
     end
   end
 end
