@@ -7,11 +7,18 @@ module DiasporaFederation
 
         def validate
           super
-          raise NotPublic if entity_can_be_public_but_it_is_not?
+          validate_public_flag
         end
 
-        def entity_can_be_public_but_it_is_not?
-          entity.respond_to?(:public) && !entity.public
+        def validate_public_flag
+          return if !entity.respond_to?(:public) || entity.public
+
+          if entity.is_a?(Entities::Profile) &&
+            %i[bio birthday gender location].all? {|prop| entity.public_send(prop).nil? }
+            return
+          end
+
+          raise NotPublic, "received entity #{entity} should be public!"
         end
       end
     end
