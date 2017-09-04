@@ -55,7 +55,9 @@ Example: `12.3456`
 
 Text formatted with markdown using the [CommonMark spec][commonmark].
 
-Example: `Some *Text* with **markdown**.`
+It can also contain [diaspora:// URLs][diaspora_scheme].
+
+Example: `Some *Text* with **markdown** and a [link](diaspora://post/298962a0b8dc0133e40d406c8f31e210).`
 
 ## URL
 
