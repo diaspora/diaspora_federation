@@ -4,6 +4,21 @@ title: Profile
 
 This entity contains all the profile data of a person.
 
+The profile consists of two parts. The first is the base profile with the name, 
+the avatar and the tags of the person. This part is always public and visible to
+everyone. The boolean flags (`searchable`, `public` and `nsfw`) are metadata and
+public too.
+
+The second part is the extended profile consisting of `bio`, `birthday`, `gender`
+and `location` is not public by default (and only visible to contacts the person
+shares with). The owner of the profile can decide if this information should be
+public (that's what the `public` flag is for) and then the extended profile is
+visible to non-contacts too.
+
+Because of that there is a special case where the `public`-flag is `false`, but
+the profile was received via the public route. In this case the profile should
+only contain the base profile.
+
 ## Properties
 
 | Property | Type                         | Description                      |
@@ -19,9 +34,9 @@ This entity contains all the profile data of a person.
 | `image_url`        | [URL][url] (255)             | The URL to the big avatar (300x300) of the person.                                                       |
 | `image_url_medium` | [URL][url] (255)             | The URL to the medium avatar (100x100) of the person.                                                    |
 | `image_url_small`  | [URL][url] (255)             | The URL to the small avatar (50x50) of the person.                                                       |
+| `bio`              | [Markdown][markdown] (65535) | The description of the person. This field can contain markdown.                                          |
 | `birthday`         | [Date][date]                 | The birthday of the person. The year may be `1004` or less, if the person specifies only day and month.  |
 | `gender`           | [String][string] (255)       | The gender of the person.                                                                                |
-| `bio`              | [Markdown][markdown] (65535) | The description of the person. This field can contain markdown.                                          |
 | `location`         | [String][string] (255)       | The location of the person.                                                                              |
 | `searchable`       | [Boolean][boolean]           | `false` if the person doesn't want to be searchable by name.                                             |
 | `public`           | [Boolean][boolean]           | `true` if the profile is visible to everyone.                                                            |
@@ -38,9 +53,9 @@ This entity contains all the profile data of a person.
   <image_url>https://example.org/images/thumb_large_a795f872c93309597345.jpg</image_url>
   <image_url_medium>https://example.org/images/thumb_medium_a795f872c93309597345.jpg</image_url_medium>
   <image_url_small>https://example.org/images/thumb_small_a795f872c93309597345.jpg</image_url_small>
+  <bio>some text about me</bio>
   <birthday>1988-07-15</birthday>
   <gender>Male</gender>
-  <bio>some text about me</bio>
   <location>github</location>
   <searchable>true</searchable>
   <public>false</public>
