@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Comment}.
-    class CommentValidator < Validation::Validator
+    class CommentValidator < OptionalAwareValidator
       include Validation
 
       include RelayableValidator

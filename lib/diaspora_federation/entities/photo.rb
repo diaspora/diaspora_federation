@@ -48,12 +48,12 @@ module DiasporaFederation
       # @!attribute [r] height
       #   Photo height
       #   @return [Integer] height
-      property :height, :integer
+      property :height, :integer, optional: true
 
       # @!attribute [r] width
       #   Photo width
       #   @return [Integer] width
-      property :width, :integer
+      property :width, :integer, optional: true
     end
   end
 end

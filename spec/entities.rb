@@ -60,7 +60,7 @@ module DiasporaFederation
       property :test5, :timestamp
       entity :test6, TestEntity
       property :test7, :string, optional: true
-      entity :multi, [OtherEntity]
+      entity :multi, [OtherEntity], optional: true
     end
 
     class TestEntityWithAuthorAndGuid < DiasporaFederation::Entity
@@ -93,6 +93,21 @@ module DiasporaFederation
       rule :test, :boolean
       rule :author, %i[not_empty diaspora_id]
       rule :guid, :guid
+    end
+
+    class TestComplexEntityValidator < OptionalAwareValidator
+      include Validation
+
+      rule :test1, length: {minimum: 3}
+      rule :test2, :boolean
+      rule :test7, length: {minimum: 3}
+      rule :multi, :not_nil
+    end
+
+    class TestUnknownEntityValidator < OptionalAwareValidator
+      include Validation
+
+      rule :test1, length: {minimum: 3}
     end
   end
 end

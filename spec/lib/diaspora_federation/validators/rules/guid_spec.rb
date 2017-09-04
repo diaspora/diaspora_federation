@@ -1,25 +1,9 @@
 describe Validation::Rule::Guid do
-  it "allows a nilable parameter" do
+  it "will not accept parameters" do
     validator = Validation::Validator.new({})
     expect {
-      validator.rule(:guid, guid: {nilable: false})
-    }.not_to raise_error
-  end
-
-  it "doesn't require a nilable parameter" do
-    validator = Validation::Validator.new({})
-    expect {
-      validator.rule(:guid, :guid)
-    }.not_to raise_error
-  end
-
-  it "requires a boolean as parameter" do
-    validator = Validation::Validator.new({})
-    [nil, "", 42, 5.5].each do |val|
-      expect {
-        validator.rule(:guid, guid: {nilable: val})
-      }.to raise_error ArgumentError, ":nilable needs to be a boolean"
-    end
+      validator.rule(:guid, guid: {param: true})
+    }.to raise_error ArgumentError
   end
 
   it "has an error key" do
@@ -45,14 +29,6 @@ describe Validation::Rule::Guid do
       expect(validator.errors).to be_empty
     end
 
-    it "validates a nil guid if nilable is true" do
-      validator = Validation::Validator.new(OpenStruct.new(guid: nil))
-      validator.rule(:guid, guid: {nilable: true})
-
-      expect(validator).to be_valid
-      expect(validator.errors).to be_empty
-    end
-
     it "fails if the string is too short" do
       validator = Validation::Validator.new(OpenStruct.new(guid: "012345"))
       validator.rule(:guid, :guid)
@@ -72,14 +48,6 @@ describe Validation::Rule::Guid do
     it "fails if the string contains invalid chars" do
       validator = Validation::Validator.new(OpenStruct.new(guid: "ghijklmnopqrstuvwxyz++"))
       validator.rule(:guid, :guid)
-
-      expect(validator).not_to be_valid
-      expect(validator.errors).to include(:guid)
-    end
-
-    it "fails if the string contains invalid chars if nilable is true" do
-      validator = Validation::Validator.new(OpenStruct.new(guid: "ghijklmnopqrstuvwxyz++"))
-      validator.rule(:guid, guid: {nilable: true})
 
       expect(validator).not_to be_valid
       expect(validator.errors).to include(:guid)

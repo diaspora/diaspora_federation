@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::PollAnswer}.
-    class PollAnswerValidator < Validation::Validator
+    class PollAnswerValidator < OptionalAwareValidator
       include Validation
 
       rule :guid, :guid

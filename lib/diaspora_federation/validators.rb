@@ -37,6 +37,7 @@ end
 require "diaspora_federation/validators/related_entity_validator"
 
 # abstract types
+require "diaspora_federation/validators/optional_aware_validator"
 require "diaspora_federation/validators/relayable_validator"
 
 # types

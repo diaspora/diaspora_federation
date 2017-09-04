@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Contact}.
-    class ContactValidator < Validation::Validator
+    class ContactValidator < OptionalAwareValidator
       include Validation
 
       rule :author, %i[not_empty diaspora_id]

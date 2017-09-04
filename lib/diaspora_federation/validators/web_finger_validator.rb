@@ -4,7 +4,7 @@ module DiasporaFederation
     #
     # @note It does not validate the guid and public key, because it will be
     #   removed in the webfinger.
-    class WebFingerValidator < Validation::Validator
+    class WebFingerValidator < OptionalAwareValidator
       include Validation
 
       rule :acct_uri, :not_empty

@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Participation}.
-    class ParticipationValidator < Validation::Validator
+    class ParticipationValidator < OptionalAwareValidator
       include Validation
 
       rule :author, %i[not_empty diaspora_id]

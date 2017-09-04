@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Person}.
-    class PersonValidator < Validation::Validator
+    class PersonValidator < OptionalAwareValidator
       include Validation
 
       rule :guid, :guid

@@ -1,7 +1,7 @@
 module DiasporaFederation
   module Validators
     # This validates a {Entities::Photo}.
-    class PhotoValidator < Validation::Validator
+    class PhotoValidator < OptionalAwareValidator
       include Validation
 
       rule :guid, :guid
@@ -14,7 +14,7 @@ module DiasporaFederation
 
       rule :remote_photo_name, :not_empty
 
-      rule :status_message_guid, guid: {nilable: true}
+      rule :status_message_guid, :guid
 
       rule :text, length: {maximum: 65_535}
 
