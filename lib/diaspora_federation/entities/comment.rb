@@ -17,6 +17,11 @@ module DiasporaFederation
       #   Comment entity creation time
       #   @return [Time] creation time
       property :created_at, :timestamp, default: -> { Time.now.utc }
+
+      # @!attribute [r] edited_at
+      #   The timestamp when the comment was edited
+      #   @return [Time] edited time
+      property :edited_at, :timestamp, optional: true
     end
   end
 end

@@ -8,8 +8,7 @@ module DiasporaFederation
           :comment_entity,
           author:      alice.diaspora_id,
           parent_guid: parent.guid,
-          parent:      parent_entity,
-          created_at:  Time.now.utc
+          parent:      parent_entity
         ).tap {|hash| add_signatures(hash) }
     }
 
@@ -20,6 +19,7 @@ module DiasporaFederation
   <parent_guid>#{parent.guid}</parent_guid>
   <text>#{data[:text]}</text>
   <created_at>#{data[:created_at].utc.iso8601}</created_at>
+  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
   <author_signature>#{data[:author_signature]}</author_signature>
   <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
 </comment>
@@ -34,14 +34,16 @@ XML
     "parent_guid": "#{parent.guid}",
     "author_signature": "#{data[:author_signature]}",
     "text": "#{data[:text]}",
-    "created_at": "#{data[:created_at].iso8601}"
+    "created_at": "#{data[:created_at].iso8601}",
+    "edited_at": "#{data[:edited_at].iso8601}"
   },
   "property_order": [
     "author",
     "guid",
     "parent_guid",
     "text",
-    "created_at"
+    "created_at",
+    "edited_at"
   ]
 }
 JSON

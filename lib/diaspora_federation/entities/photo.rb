@@ -26,6 +26,11 @@ module DiasporaFederation
       #   @return [Time] creation time
       property :created_at, :timestamp, default: -> { Time.now.utc }
 
+      # @!attribute [r] edited_at
+      #   The timestamp when the photo was edited
+      #   @return [Time] edited time
+      property :edited_at, :timestamp, optional: true
+
       # @!attribute [r] remote_photo_path
       #   An url of the photo on a remote server
       #   @return [String] remote photo url

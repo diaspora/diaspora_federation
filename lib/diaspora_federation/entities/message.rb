@@ -26,6 +26,11 @@ module DiasporaFederation
       #   @return [Time] creation time
       property :created_at, :timestamp, default: -> { Time.now.utc }
 
+      # @!attribute [r] edited_at
+      #   The timestamp when the message was edited
+      #   @return [Time] edited time
+      property :edited_at, :timestamp, optional: true
+
       # @!attribute [r] conversation_guid
       #   Guid of a conversation this message belongs to
       #   @see Conversation#guid

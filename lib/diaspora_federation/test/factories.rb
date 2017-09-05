@@ -81,6 +81,7 @@ module DiasporaFederation
         author { Fabricate.sequence(:diaspora_id) }
         public true
         created_at { Time.now.utc }
+        edited_at { Time.now.utc + 3600 }
         remote_photo_path "https://diaspora.example.tld/uploads/images/"
         remote_photo_name "f2a41e9d2db4d9a199c8.jpg"
         text "what you see here..."
@@ -107,6 +108,7 @@ module DiasporaFederation
         guid { Fabricate.sequence(:guid) }
         public true
         created_at { Time.now.utc }
+        edited_at { Time.now.utc + 3600 }
       end
 
       Fabricator(:contact_entity, class_name: DiasporaFederation::Entities::Contact) do
@@ -121,6 +123,8 @@ module DiasporaFederation
         author { Fabricate.sequence(:diaspora_id) }
         guid { Fabricate.sequence(:guid) }
         text "this is a very informative comment"
+        created_at { Time.now.utc }
+        edited_at { Time.now.utc + 3600 }
       end
 
       Fabricator(:like_entity, class_name: DiasporaFederation::Entities::Like, from: :relayable_entity) do
@@ -144,6 +148,7 @@ module DiasporaFederation
         author { Fabricate.sequence(:diaspora_id) }
         text "this is a very informative text"
         created_at { Time.now.utc }
+        edited_at { Time.now.utc + 3600 }
         conversation_guid { Fabricate.sequence(:guid) }
       end
 

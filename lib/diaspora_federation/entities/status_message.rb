@@ -11,6 +11,11 @@ module DiasporaFederation
       #   @return [String] text of the status message
       property :text, :string, xml_name: :raw_message
 
+      # @!attribute [r] edited_at
+      #   The timestamp when the status message was edited
+      #   @return [Time] edited time
+      property :edited_at, :timestamp, optional: true
+
       # @!attribute [r] photos
       #   Optional photos attached to the status message
       #   @return [[Entities::Photo]] photos

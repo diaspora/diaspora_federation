@@ -9,20 +9,21 @@ See also: [Relayable][relayable]
 
 ## Properties
 
-| Property                  | Type (Length)                | Description                                     |
-| ------------------------- | ---------------------------- | ----------------------------------------------- |
-| `author`                  | [diaspora\* ID][diaspora-id] | The diaspora\* ID of the author of the comment. |
-| `guid`                    | [GUID][guid]                 | The GUID of the comment.                        |
-| `parent_guid`             | [GUID][guid]                 | The GUID of the parent entity.                  |
-| `text`                    | [Markdown][markdown] (65535) | The comment text.                               |
-| `created_at`              | [Timestamp][timestamp]       | The create timestamp of the comment.            |
-| `author_signature`        | [Signature][signature]       | The signature from the author of the comment.   |
+| Property                  | Type (Length)                | Editable | Description                                     |
+| ------------------------- | ---------------------------- |:--------:| ----------------------------------------------- |
+| `author`                  | [diaspora\* ID][diaspora-id] |    ✘     | The diaspora\* ID of the author of the comment. |
+| `guid`                    | [GUID][guid]                 |    ✘     | The GUID of the comment.                        |
+| `parent_guid`             | [GUID][guid]                 |    ✘     | The GUID of the parent entity.                  |
+| `text`                    | [Markdown][markdown] (65535) |    ✔     | The comment text.                               |
+| `created_at`              | [Timestamp][timestamp]       |    ✘     | The create timestamp of the comment.            |
+| `author_signature`        | [Signature][signature]       |    ✔     | The signature from the author of the comment.   |
 
 ## Optional Properties
 
-| Property             | Type (Length) | Description                                   |
-| -------------------- | ------------- | --------------------------------------------- |
-| `thread_parent_guid` | [GUID][guid]  | The GUID of the parent comment in the thread. |
+| Property             | Type (Length)          | Editable | Description                                   |
+| -------------------- | ---------------------- |:--------:| --------------------------------------------- |
+| `edited_at`          | [Timestamp][timestamp] |    ✔     | The timestamp when the comment was edited.    |
+| `thread_parent_guid` | [GUID][guid]           |    ✘     | The GUID of the parent comment in the thread. |
 
 ## Examples
 

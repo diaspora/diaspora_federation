@@ -22,11 +22,13 @@ module DiasporaFederation
   <public>#{data[:public]}</public>
   <provider_display_name>#{data[:provider_display_name]}</provider_display_name>
   <text>#{data[:text]}</text>
+  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
   <photo>
     <guid>#{photo1.guid}</guid>
     <author>#{photo1.author}</author>
     <public>#{photo1.public}</public>
     <created_at>#{photo1.created_at.utc.iso8601}</created_at>
+    <edited_at>#{photo1.edited_at.utc.iso8601}</edited_at>
     <remote_photo_path>#{photo1.remote_photo_path}</remote_photo_path>
     <remote_photo_name>#{photo1.remote_photo_name}</remote_photo_name>
     <text>#{photo1.text}</text>
@@ -39,6 +41,7 @@ module DiasporaFederation
     <author>#{photo2.author}</author>
     <public>#{photo2.public}</public>
     <created_at>#{photo2.created_at.utc.iso8601}</created_at>
+    <edited_at>#{photo2.edited_at.utc.iso8601}</edited_at>
     <remote_photo_path>#{photo2.remote_photo_path}</remote_photo_path>
     <remote_photo_name>#{photo2.remote_photo_name}</remote_photo_name>
     <text>#{photo2.text}</text>
@@ -64,6 +67,7 @@ XML
     "public": #{data[:public]},
     "provider_display_name": "#{data[:provider_display_name]}",
     "text": "#{data[:text]}",
+    "edited_at": "#{data[:edited_at].iso8601}",
     "photos": [
       {
         "entity_type": "photo",
@@ -72,6 +76,7 @@ XML
           "author": "#{photo1.author}",
           "public": #{photo1.public},
           "created_at": "#{photo1.created_at.utc.iso8601}",
+          "edited_at": "#{photo1.edited_at.utc.iso8601}",
           "remote_photo_path": "#{photo1.remote_photo_path}",
           "remote_photo_name": "#{photo1.remote_photo_name}",
           "text": "#{photo1.text}",
@@ -87,6 +92,7 @@ XML
           "author": "#{photo2.author}",
           "public": #{photo2.public},
           "created_at": "#{photo2.created_at.utc.iso8601}",
+          "edited_at": "#{photo2.edited_at.utc.iso8601}",
           "remote_photo_path": "#{photo2.remote_photo_path}",
           "remote_photo_name": "#{photo2.remote_photo_name}",
           "text": "#{photo2.text}",

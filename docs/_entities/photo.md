@@ -6,23 +6,24 @@ This entity represents a photo. It can be standalone or nested in a [StatusMessa
 
 ## Properties
 
-| Property            | Type (Length)                | Description                                                      |
-| ------------------- | ---------------------------- | ---------------------------------------------------------------- |
-| `author`            | [diaspora\* ID][diaspora-id] | The diaspora\* ID of the author of the photo.                    |
-| `guid`              | [GUID][guid]                 | The GUID of the photo.                                           |
-| `public`            | [Boolean][boolean]           | `true` if the photo is public.                                   |
-| `created_at`        | [Timestamp][timestamp]       | The create timestamp of the photo.                               |
-| `remote_photo_path` | [URL][url]                   | The URL to the photo, without filename (see `remote_photo_name`) |
-| `remote_photo_name` | [String][string] (255)       | The filename of the photo.                                       |
+| Property            | Type (Length)                | Editable | Description                                                      |
+| ------------------- | ---------------------------- |:--------:| ---------------------------------------------------------------- |
+| `author`            | [diaspora\* ID][diaspora-id] |    ✘     | The diaspora\* ID of the author of the photo.                    |
+| `guid`              | [GUID][guid]                 |    ✘     | The GUID of the photo.                                           |
+| `public`            | [Boolean][boolean]           |    ✘     | `true` if the photo is public.                                   |
+| `created_at`        | [Timestamp][timestamp]       |    ✘     | The create timestamp of the photo.                               |
+| `remote_photo_path` | [URL][url]                   |    ✔     | The URL to the photo, without filename (see `remote_photo_name`) |
+| `remote_photo_name` | [String][string] (255)       |    ✔     | The filename of the photo.                                       |
 
 ## Optional Properties
 
-| Property              | Type (Length)            | Description                                                                     |
-| --------------------- | ------------------------ | ------------------------------------------------------------------------------- |
-| `text`                | [String][string] (65535) | Description text for the photo.                                                 |
-| `status_message_guid` | [GUID][guid]             | The GUID of the [StatusMessage][status_message] to which the photo is attached. |
-| `height`              | [Integer][integer]       | The height of the photo in pixels.                                              |
-| `width`               | [Integer][integer]       | The width of the photo in pixels.                                               |
+| Property              | Type (Length)            | Editable | Description                                                                     |
+| --------------------- | ------------------------ |:--------:| ------------------------------------------------------------------------------- |
+| `edited_at`           | [Timestamp][timestamp]   |    ✔     | The timestamp when the photo was edited.                                        |
+| `text`                | [String][string] (65535) |    ✔     | Description text for the photo.                                                 |
+| `status_message_guid` | [GUID][guid]             |    ✘     | The GUID of the [StatusMessage][status_message] to which the photo is attached. |
+| `height`              | [Integer][integer]       |    ✔     | The height of the photo in pixels.                                              |
+| `width`               | [Integer][integer]       |    ✔     | The width of the photo in pixels.                                               |
 
 ## Example
 
