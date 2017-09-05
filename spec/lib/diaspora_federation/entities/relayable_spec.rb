@@ -78,6 +78,16 @@ module DiasporaFederation
         }.not_to raise_error
       end
 
+      it "doesn't raise when no author signature was passed, but the author is also the author of the root entity" do
+        hash[:author_signature] = nil
+        root = Fabricate(:related_entity, author: author, local: false)
+        hash[:parent] = Fabricate(:related_entity, author: Fabricate.sequence(:diaspora_id), local: false, parent: root)
+
+        expect {
+          Entities::SomeRelayable.new(hash, signature_order).verify_signature
+        }.not_to raise_error
+      end
+
       it "raises when bad author signature was passed" do
         hash[:author_signature] = sign_with_key(author_pkey, "bad signed string")
 
@@ -190,6 +200,22 @@ XML
         expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
 
         xml = Entities::SomeRelayable.new(hash).to_xml
+
+        author_signature = xml.at_xpath("author_signature").text
+        parent_author_signature = xml.at_xpath("parent_author_signature").text
+
+        expect(verify_signature(author_pkey, author_signature, signature_data)).to be_truthy
+        expect(verify_signature(parent_pkey, parent_author_signature, signature_data)).to be_truthy
+      end
+
+      it "computes correct signatures for the entity when the parent is a relayable itself" do
+        intermediate_author = Fabricate.sequence(:diaspora_id)
+        parent = Fabricate(:related_entity, author: intermediate_author, local: true, parent: local_parent)
+        expect_callback(:fetch_private_key, author).and_return(author_pkey)
+        expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
+        expect(DiasporaFederation.callbacks).not_to receive(:trigger).with(:fetch_private_key, intermediate_author)
+
+        xml = Entities::SomeRelayable.new(hash.merge(parent: parent)).to_xml
 
         author_signature = xml.at_xpath("author_signature").text
         parent_author_signature = xml.at_xpath("parent_author_signature").text
@@ -549,9 +575,9 @@ XML
       end
 
       it "allows parent author" do
-        entity = Entities::SomeRelayable.new(hash)
+        entity = Entities::SomeRelayable.new(hash.merge(parent: remote_parent))
 
-        expect(entity.sender_valid?(local_parent.author)).to be_truthy
+        expect(entity.sender_valid?(remote_parent.author)).to be_truthy
       end
 
       it "does not allow any random author" do
@@ -559,6 +585,38 @@ XML
         invalid_author = Fabricate.sequence(:diaspora_id)
 
         expect(entity.sender_valid?(invalid_author)).to be_falsey
+      end
+
+      context "multi-layer relayable" do
+        let(:intermediate_author) { Fabricate.sequence(:diaspora_id) }
+
+        it "allows author if the root entity is local" do
+          parent = Fabricate(:related_entity, author: intermediate_author, local: false, parent: local_parent)
+          entity = Entities::SomeRelayable.new(hash.merge(parent: parent))
+
+          expect(entity.sender_valid?(author)).to be_truthy
+        end
+
+        it "does not allow the author if the root entity is not local" do
+          parent = Fabricate(:related_entity, author: intermediate_author, local: true, parent: remote_parent)
+          entity = Entities::SomeRelayable.new(hash.merge(parent: parent))
+
+          expect(entity.sender_valid?(author)).to be_falsey
+        end
+
+        it "allows root entity author" do
+          parent = Fabricate(:related_entity, author: intermediate_author, local: false, parent: remote_parent)
+          entity = Entities::SomeRelayable.new(hash.merge(parent: parent))
+
+          expect(entity.sender_valid?(remote_parent.author)).to be_truthy
+        end
+
+        it "does not allow an intermediate parent author" do
+          parent = Fabricate(:related_entity, author: intermediate_author, local: false, parent: remote_parent)
+          entity = Entities::SomeRelayable.new(hash.merge(parent: parent))
+
+          expect(entity.sender_valid?(intermediate_author)).to be_falsey
+        end
       end
     end
   end
