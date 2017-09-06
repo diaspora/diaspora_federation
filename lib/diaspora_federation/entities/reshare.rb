@@ -23,6 +23,11 @@ module DiasporaFederation
       #   @return [Boolean] public
       property :public, :boolean, optional: true, default: true # always true? (we only reshare public posts)
 
+      # @!attribute [r] text
+      #   A comment about the reshared post
+      #   @return [String] text of the comment about the reshare
+      property :text, :string, optional: true
+
       # @return [String] string representation of this object
       def to_s
         "#{super}:#{root_guid}"

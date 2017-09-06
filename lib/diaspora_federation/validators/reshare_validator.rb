@@ -13,6 +13,8 @@ module DiasporaFederation
       rule :guid, :guid
 
       rule :public, :boolean
+
+      rule :text, length: {maximum: 65_535}
     end
   end
 end

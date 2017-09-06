@@ -23,10 +23,11 @@ is not valid.
 
 ## Optional Properties
 
-| Property                | Type (Length)          | Description                                                                                |
-| ----------------------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| `provider_display_name` | [String][string] (255) | The means by which the author has posted the reshare.                                      |
-| `public`                | [Boolean][boolean]     | `false` if the reshare is not public (diaspora\* currenlty only supports public reshares). |
+| Property                | Type (Length)                | Description                                                                                |
+| ----------------------- | ---------------------------- | ------------------------------------------------------------------------------------------ |
+| `text`                  | [Markdown][markdown] (65535) | A comment about the reshared post.                                                         |
+| `provider_display_name` | [String][string] (255)       | The means by which the author has posted the reshare.                                      |
+| `public`                | [Boolean][boolean]           | `false` if the reshare is not public (diaspora\* currenlty only supports public reshares). |
 
 ## Example
 
