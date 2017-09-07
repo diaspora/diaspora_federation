@@ -39,6 +39,7 @@ module DiasporaFederation
   ]
 
   # defaults
+  @webfinger_http_fallback = false
   @http_concurrency = 20
   @http_timeout = 30
   @http_verbose = false
@@ -73,6 +74,21 @@ module DiasporaFederation
     #     config.certificate_authorities = AppConfig.environment.certificate_authorities.get
     #   @param [String] value path to certificate authorities
     attr_accessor :certificate_authorities
+
+    # Configure if WebFinger discovery should fallback to http if https fails (default: +false+)
+    #
+    # This is useful for example for development environments where https isn't available.
+    #
+    # This setting only applies to the WebFinger route from RFC 7033 +/.well-known/webfinger+.
+    # Legacy WebFinger flow unconditionally falls back to http.
+    #
+    # @overload webfinger_http_fallback
+    #   @return [Boolean] webfinger http fallback enabled
+    # @overload webfinger_http_fallback=
+    #   @example
+    #     config.webfinger_http_fallback = AppConfig.server.rails_environment == "development"
+    #   @param [Boolean] value  webfinger http fallback enabled
+    attr_accessor :webfinger_http_fallback
 
     # Maximum number of parallel HTTP requests made to other pods (default: +20+)
     #

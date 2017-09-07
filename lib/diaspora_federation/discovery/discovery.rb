@@ -76,8 +76,8 @@ module DiasporaFederation
         return @webfinger if @webfinger
         webfinger_url = "https://#{domain}/.well-known/webfinger?resource=#{acct_parameter}"
 
-        # This tries the WebFinger URL with https first, then falls back to http.
-        @webfinger = WebFinger.from_json(get(webfinger_url, true))
+        # This tries the WebFinger URL with https first, then falls back to http if webfinger_http_fallback is enabled.
+        @webfinger = WebFinger.from_json(get(webfinger_url, DiasporaFederation.webfinger_http_fallback))
       rescue => e
         logger.warn "WebFinger failed, retrying with legacy WebFinger for #{diaspora_id}: #{e.class}: #{e.message}"
         @webfinger = WebFinger.from_xml(get(legacy_webfinger_url_from_host_meta))

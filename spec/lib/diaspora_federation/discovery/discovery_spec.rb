@@ -94,36 +94,6 @@ module DiasporaFederation
         expect(subject.fetch_and_save).to be(callback_person)
       end
 
-      it "falls back to http if https fails with 404" do
-        stub_request(:get, "https://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
-          .to_return(status: 404)
-        stub_request(:get, "http://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
-          .to_return(status: 200, body: webfinger_jrd)
-        stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
-          .to_return(status: 200, body: hcard_html)
-
-        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
-        person = subject.fetch_and_save
-
-        expect(person.guid).to eq(alice.guid)
-        expect(person.diaspora_id).to eq(account)
-      end
-
-      it "falls back to http if https fails with ssl error" do
-        stub_request(:get, "https://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
-          .to_raise(OpenSSL::SSL::SSLError)
-        stub_request(:get, "http://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
-          .to_return(status: 200, body: webfinger_jrd)
-        stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
-          .to_return(status: 200, body: hcard_html)
-
-        expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
-        person = subject.fetch_and_save
-
-        expect(person.guid).to eq(alice.guid)
-        expect(person.diaspora_id).to eq(account)
-      end
-
       it "fails if the diaspora* ID does not match" do
         modified_webfinger = webfinger_jrd.gsub(account, "anonther_user@example.com")
 
@@ -144,6 +114,86 @@ module DiasporaFederation
           .to_return(status: 404)
 
         expect { subject.fetch_and_save }.to raise_error Discovery::DiscoveryError
+      end
+
+      context "http fallback" do
+        context "http fallback disabled (default)" do
+          it "falls back to legacy WebFinger if https fails with 404" do
+            stub_request(:get, "https://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
+              .to_return(status: 404)
+            stub_request(:get, "https://localhost:3000/.well-known/host-meta")
+              .to_return(status: 200, body: host_meta_xrd)
+            stub_request(:get, "http://localhost:3000/.well-known/webfinger.xml?resource=acct:#{account}")
+              .to_return(status: 200, body: webfinger_xrd)
+            stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
+              .to_return(status: 200, body: hcard_html)
+
+            expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
+            person = subject.fetch_and_save
+
+            expect(person.guid).to eq(alice.guid)
+            expect(person.diaspora_id).to eq(account)
+          end
+
+          it "falls back to legacy WebFinger if https fails with ssl error" do
+            stub_request(:get, "https://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
+              .to_raise(OpenSSL::SSL::SSLError)
+            stub_request(:get, "https://localhost:3000/.well-known/host-meta")
+              .to_raise(OpenSSL::SSL::SSLError)
+            stub_request(:get, "http://localhost:3000/.well-known/host-meta")
+              .to_return(status: 200, body: host_meta_xrd)
+            stub_request(:get, "http://localhost:3000/.well-known/webfinger.xml?resource=acct:#{account}")
+              .to_return(status: 200, body: webfinger_xrd)
+            stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
+              .to_return(status: 200, body: hcard_html)
+
+            expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
+            person = subject.fetch_and_save
+
+            expect(person.guid).to eq(alice.guid)
+            expect(person.diaspora_id).to eq(account)
+          end
+        end
+
+        context "http fallback enabled" do
+          before :all do
+            DiasporaFederation.webfinger_http_fallback = true
+          end
+
+          after :all do
+            DiasporaFederation.webfinger_http_fallback = false
+          end
+
+          it "falls back to http if https fails with 404" do
+            stub_request(:get, "https://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
+              .to_return(status: 404)
+            stub_request(:get, "http://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
+              .to_return(status: 200, body: webfinger_jrd)
+            stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
+              .to_return(status: 200, body: hcard_html)
+
+            expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
+            person = subject.fetch_and_save
+
+            expect(person.guid).to eq(alice.guid)
+            expect(person.diaspora_id).to eq(account)
+          end
+
+          it "falls back to http if https fails with ssl error" do
+            stub_request(:get, "https://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
+              .to_raise(OpenSSL::SSL::SSLError)
+            stub_request(:get, "http://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
+              .to_return(status: 200, body: webfinger_jrd)
+            stub_request(:get, "http://localhost:3000/hcard/users/#{alice.guid}")
+              .to_return(status: 200, body: hcard_html)
+
+            expect_callback(:save_person_after_webfinger, kind_of(Entities::Person))
+            person = subject.fetch_and_save
+
+            expect(person.guid).to eq(alice.guid)
+            expect(person.diaspora_id).to eq(account)
+          end
+        end
       end
 
       context "legacy WebFinger" do
@@ -181,8 +231,6 @@ module DiasporaFederation
         it "falls back to http if https fails with 404" do
           stub_request(:get, "https://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
             .to_return(status: 404)
-          stub_request(:get, "http://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
-            .to_return(status: 404)
           stub_request(:get, "https://localhost:3000/.well-known/host-meta")
             .to_return(status: 404)
           stub_request(:get, "http://localhost:3000/.well-known/host-meta")
@@ -202,8 +250,6 @@ module DiasporaFederation
         it "falls back to http if https fails with ssl error" do
           stub_request(:get, "https://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
             .to_raise(OpenSSL::SSL::SSLError)
-          stub_request(:get, "http://localhost:3000/.well-known/webfinger?resource=acct:#{account}")
-            .to_return(status: 200, body: "foobar")
           stub_request(:get, "https://localhost:3000/.well-known/host-meta")
             .to_raise(OpenSSL::SSL::SSLError)
           stub_request(:get, "http://localhost:3000/.well-known/host-meta")

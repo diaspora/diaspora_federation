@@ -14,8 +14,6 @@ GET /.well-known/webfinger
 
 Let's assume we are searching for `alice@example.org`, then we need to make a request to `example.org`.
 
-The request should first be tried with https, if this doesn't work, the requesting server should fallback to http.
-
 #### Parameters
 
 | Name       | Description                                                  |
