@@ -24,7 +24,7 @@ module DiasporaFederation
       # @!attribute [r] description
       #   Description of the event
       #   @return [String] event description
-      property :description, :string, optional: true
+      property :description, :string, alias: :text, optional: true
 
       # @!attribute [r] start
       #   The start time of the event

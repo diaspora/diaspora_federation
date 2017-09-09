@@ -30,6 +30,7 @@ module DiasporaFederation
           validate
           DiasporaFederation.callbacks.trigger(:receive_entity, entity, sender, recipient_id)
           logger.info "successfully received #{entity} from person #{sender}#{" for #{recipient_id}" if recipient_id}"
+          fetch_linked_entities_from_text
         end
 
         def validate
@@ -42,6 +43,10 @@ module DiasporaFederation
           else
             sender == entity.author
           end
+        end
+
+        def fetch_linked_entities_from_text
+          DiasporaUrlParser.fetch_linked_entities(sender, entity.text) if entity.respond_to?(:text) && entity.text
         end
       end
     end

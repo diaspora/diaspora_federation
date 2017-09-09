@@ -13,9 +13,9 @@ module DiasporaFederation
     <image_url>#{data[:profile].image_url}</image_url>
     <image_url_medium>#{data[:profile].image_url}</image_url_medium>
     <image_url_small>#{data[:profile].image_url}</image_url_small>
+    <bio>#{data[:profile].bio}</bio>
     <birthday>#{data[:profile].birthday}</birthday>
     <gender>#{data[:profile].gender}</gender>
-    <bio>#{data[:profile].bio}</bio>
     <location>#{data[:profile].location}</location>
     <searchable>#{data[:profile].searchable}</searchable>
     <public>#{data[:profile].public}</public>

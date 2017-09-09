@@ -45,6 +45,14 @@ describe Validation::Rule::Guid do
       expect(validator.errors).to include(:guid)
     end
 
+    it "fails if the string contains special chars at the end" do
+      validator = Validation::Validator.new(OpenStruct.new(guid: "abcdef0123456789."))
+      validator.rule(:guid, :guid)
+
+      expect(validator).not_to be_valid
+      expect(validator.errors).to include(:guid)
+    end
+
     it "fails if the string contains invalid chars" do
       validator = Validation::Validator.new(OpenStruct.new(guid: "ghijklmnopqrstuvwxyz++"))
       validator.rule(:guid, :guid)
