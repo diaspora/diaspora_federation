@@ -151,6 +151,7 @@ module DiasporaFederation
         guid { Fabricate.sequence(:guid) }
         author { Fabricate.sequence(:diaspora_id) }
         public true
+        text "this post is very cool!"
         created_at { Time.now.utc }
         provider_display_name { "the testsuite" }
       end

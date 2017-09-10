@@ -12,6 +12,7 @@ module DiasporaFederation
   <root_author>#{data[:root_author]}</root_author>
   <root_guid>#{data[:root_guid]}</root_guid>
   <public>#{data[:public]}</public>
+  <text>#{data[:text]}</text>
 </reshare>
 XML
 
@@ -25,7 +26,8 @@ XML
     "provider_display_name": "#{data[:provider_display_name]}",
     "root_author": "#{data[:root_author]}",
     "root_guid": "#{data[:root_guid]}",
-    "public": #{data[:public]}
+    "public": #{data[:public]},
+    "text": "#{data[:text]}"
   }
 }
 JSON
