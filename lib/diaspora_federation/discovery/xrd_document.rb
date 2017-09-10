@@ -83,10 +83,10 @@ module DiasporaFederation
       def to_json
         {
           subject:    subject,
-          expires:    expires,
+          expires:    (expires.strftime(DATETIME_FORMAT) if expires.instance_of?(DateTime)),
           aliases:    (aliases if aliases.any?),
-          links:      (links if links.any?),
-          properties: (properties if properties.any?)
+          properties: (properties if properties.any?),
+          links:      (links if links.any?)
         }.reject {|_, v| v.nil? }
       end
 
@@ -113,6 +113,27 @@ module DiasporaFederation
           parse_properties_from_xml_doc(doc, data)
           parse_links_from_xml_doc(doc, data)
         end
+      end
+
+      # Parse the JRD document from the given string and create a hash containing
+      # the extracted data with symbolized keys.
+      #
+      # @param [String] jrd_doc JSON string
+      # @return [Hash] extracted data
+      # @raise [InvalidDocument] if the JRD is malformed
+      def self.json_data(jrd_doc)
+        json_hash = JSON.parse(jrd_doc)
+
+        {
+          subject:    json_hash["subject"],
+          expires:    (DateTime.strptime(json_hash["expires"], DATETIME_FORMAT) if json_hash.key?("expires")),
+          aliases:    json_hash["aliases"],
+          properties: json_hash["properties"],
+          links:      symbolize_keys_for_links(json_hash["links"])
+        }.reject {|_, v| v.nil? }
+      rescue JSON::JSONError => e
+        raise InvalidDocument,
+              "Not a JRD document: #{e.class}: #{e.message[0..255].encode(Encoding.default_external, undef: :replace)}"
       end
 
       private
@@ -179,6 +200,17 @@ module DiasporaFederation
           links << link
         end
         data[:links] = links unless links.empty?
+      end
+
+      # symbolize link keys from JSON hash, but only convert known keys
+      private_class_method def self.symbolize_keys_for_links(links)
+        links.map do |link|
+          {}.tap do |hash|
+            LINK_ATTRS.each do |attr|
+              hash[attr] = link[attr.to_s] if link.key?(attr.to_s)
+            end
+          end
+        end
       end
     end
   end

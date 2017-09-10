@@ -15,6 +15,36 @@ module DiasporaFederation
 </XRD>
 XML
 
+    let(:json) { <<-JSON }
+{
+  "subject": "http://blog.example.com/article/id/314",
+  "expires": "2010-01-30T09:30:00Z",
+  "aliases": [
+    "http://blog.example.com/cool_new_thing",
+    "http://blog.example.com/steve/article/7"
+  ],
+  "properties": {
+    "http://blgx.example.net/ns/version": "1.3",
+    "http://blgx.example.net/ns/ext": null
+  },
+  "links": [
+    {
+      "rel": "author",
+      "type": "text/html",
+      "href": "http://blog.example.com/author/steve"
+    },
+    {
+      "rel": "author",
+      "href": "http://example.com/author/john"
+    },
+    {
+      "rel": "copyright",
+      "template": "http://example.com/copyright?id={uri}"
+    }
+  ]
+}
+JSON
+
     let(:data) {
       {
         subject:    "http://blog.example.com/article/id/314",
@@ -72,7 +102,7 @@ XML
 
     describe "#to_json" do
       it "provides the hash for json" do
-        expect(doc.to_json).to eq(data)
+        expect(JSON.pretty_generate(doc.to_json)).to eq(json.strip)
       end
     end
 
@@ -88,6 +118,17 @@ XML
 
       it "raises InvalidDocument if the xml is no XRD document" do
         expect { Discovery::XrdDocument.xml_data("<html></html>") }.to raise_error Discovery::InvalidDocument
+      end
+    end
+
+    describe ".json_data" do
+      it "reads the json document" do
+        hash = Discovery::XrdDocument.json_data(json)
+        expect(hash).to eq(data)
+      end
+
+      it "raises InvalidDocument when a JSON error occurs" do
+        expect { Discovery::XrdDocument.json_data("foo") }.to raise_error Discovery::InvalidDocument
       end
     end
   end

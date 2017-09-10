@@ -58,23 +58,33 @@ module DiasporaFederation
         retry
       end
 
-      def host_meta_url
-        domain = diaspora_id.split("@")[1]
-        "https://#{domain}/.well-known/host-meta"
+      def domain
+        @domain ||= diaspora_id.split("@")[1]
+      end
+
+      def acct_parameter
+        "acct:#{diaspora_id}"
       end
 
       def legacy_webfinger_url_from_host_meta
         # This tries the xrd url with https first, then falls back to http.
-        host_meta = HostMeta.from_xml get(host_meta_url, true)
-        host_meta.webfinger_template_url.gsub("{uri}", "acct:#{diaspora_id}")
+        host_meta = HostMeta.from_xml(get("https://#{domain}/.well-known/host-meta", true))
+        host_meta.webfinger_template_url.gsub("{uri}", acct_parameter)
       end
 
       def webfinger
-        @webfinger ||= WebFinger.from_xml get(legacy_webfinger_url_from_host_meta)
+        return @webfinger if @webfinger
+        webfinger_url = "https://#{domain}/.well-known/webfinger?resource=#{acct_parameter}"
+
+        # This tries the WebFinger URL with https first, then falls back to http if webfinger_http_fallback is enabled.
+        @webfinger = WebFinger.from_json(get(webfinger_url, DiasporaFederation.webfinger_http_fallback))
+      rescue => e
+        logger.warn "WebFinger failed, retrying with legacy WebFinger for #{diaspora_id}: #{e.class}: #{e.message}"
+        @webfinger = WebFinger.from_xml(get(legacy_webfinger_url_from_host_meta))
       end
 
       def hcard
-        @hcard ||= HCard.from_html get(webfinger.hcard_url)
+        @hcard ||= HCard.from_html(get(webfinger.hcard_url))
       end
 
       def person
