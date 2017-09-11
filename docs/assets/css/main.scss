@@ -48,6 +48,10 @@ body {
     }
   }
 
+  .panel-body p:last-child {
+    margin-bottom: 0;
+  }
+
   /**
    * Based on the Twitter Bootstrap .table styles. See
    * https://github.com/twbs/bootstrap/blob/master/less/tables.less
