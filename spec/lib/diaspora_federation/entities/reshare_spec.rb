@@ -8,10 +8,8 @@ module DiasporaFederation
   <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
   <created_at>#{data[:created_at].utc.iso8601}</created_at>
-  <provider_display_name>#{data[:provider_display_name]}</provider_display_name>
   <root_author>#{data[:root_author]}</root_author>
   <root_guid>#{data[:root_guid]}</root_guid>
-  <public>#{data[:public]}</public>
 </reshare>
 XML
 
@@ -22,10 +20,8 @@ XML
     "author": "#{data[:author]}",
     "guid": "#{data[:guid]}",
     "created_at": "#{data[:created_at].utc.iso8601}",
-    "provider_display_name": "#{data[:provider_display_name]}",
     "root_author": "#{data[:root_author]}",
-    "root_guid": "#{data[:root_guid]}",
-    "public": #{data[:public]}
+    "root_guid": "#{data[:root_guid]}"
   }
 }
 JSON
@@ -37,24 +33,6 @@ JSON
     it_behaves_like "an XML Entity"
 
     it_behaves_like "a JSON Entity"
-
-    context "default values" do
-      it "uses default values" do
-        minimal_xml = <<-XML
-<reshare>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <created_at>#{data[:created_at]}</created_at>
-  <root_diaspora_id>#{data[:root_author]}</root_diaspora_id>
-  <root_guid>#{data[:root_guid]}</root_guid>
-</reshare>
-XML
-
-        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
-        expect(parsed_instance.public).to be_truthy
-        expect(parsed_instance.provider_display_name).to be_nil
-      end
-    end
 
     context "parse xml" do
       describe "#validate_root" do

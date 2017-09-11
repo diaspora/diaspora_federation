@@ -28,9 +28,5 @@ module DiasporaFederation
         let(:mandatory) { false }
       end
     end
-
-    it_behaves_like "a boolean validator" do
-      let(:property) { :public }
-    end
   end
 end
