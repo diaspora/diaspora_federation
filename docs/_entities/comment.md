@@ -2,7 +2,8 @@
 title: Comment
 ---
 
-This entity represents a comment to some kind of [Post][post] ([StatusMessage][status_message] or [Reshare][reshare]).
+This entity represents a comment to some kind of [Post][post] ([StatusMessage][status_message]
+or currently still a [Reshare][reshare]).
 
 See also: [Relayable][relayable]
 
