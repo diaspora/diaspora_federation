@@ -119,7 +119,7 @@ module DiasporaFederation
         end
 
         it "fetches linked entities when the received entity has a text property" do
-          expect(Federation::DiasporaUrlParser).to receive(:fetch_linked_entities).with(post.author, post.text)
+          expect(Federation::DiasporaUrlParser).to receive(:fetch_linked_entities).with(post.text)
 
           described_class.new(magic_env, recipient).receive
         end
@@ -128,7 +128,7 @@ module DiasporaFederation
           profile = Fabricate(:profile_entity)
           magic_env = Salmon::MagicEnvelope.new(profile, profile.author)
 
-          expect(Federation::DiasporaUrlParser).to receive(:fetch_linked_entities).with(profile.author, profile.bio)
+          expect(Federation::DiasporaUrlParser).to receive(:fetch_linked_entities).with(profile.bio)
 
           described_class.new(magic_env, recipient).receive
         end
