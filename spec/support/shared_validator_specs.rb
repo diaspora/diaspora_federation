@@ -20,7 +20,6 @@ end
 shared_examples "a relayable validator" do
   it_behaves_like "a diaspora* ID validator" do
     let(:property) { :author }
-    let(:mandatory) { true }
   end
 
   describe "#guid" do
@@ -74,14 +73,16 @@ shared_examples "a diaspora* ID validator" do
     [nil, ""].each do |val|
       validator = described_class.new(entity_stub(entity, property => val))
 
-      if mandatory
-        expect(validator).not_to be_valid
-        expect(validator.errors).to include(property)
-      else
-        expect(validator).to be_valid
-        expect(validator.errors).to be_empty
-      end
+      expect(validator).not_to be_valid
+      expect(validator.errors).to include(property)
     end
+  end
+
+  it "validates a well-formed diaspora* ID" do
+    validator = described_class.new(entity_stub(entity, property => "alice@example.org"))
+
+    expect(validator).to be_valid
+    expect(validator.errors).to be_empty
   end
 
   it "must be a valid diaspora* ID" do

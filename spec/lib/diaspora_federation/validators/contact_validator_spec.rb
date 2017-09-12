@@ -8,7 +8,6 @@ module DiasporaFederation
       describe "##{prop}" do
         it_behaves_like "a diaspora* ID validator" do
           let(:property) { prop }
-          let(:mandatory) { true }
         end
       end
     end

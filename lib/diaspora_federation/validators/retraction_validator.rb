@@ -4,7 +4,7 @@ module DiasporaFederation
     class RetractionValidator < OptionalAwareValidator
       include Validation
 
-      rule :author, %i[not_empty diaspora_id]
+      rule :author, :diaspora_id
 
       rule :target_guid, :guid
       rule :target_type, :not_empty

@@ -6,7 +6,6 @@ module DiasporaFederation
     describe "#author" do
       it_behaves_like "a diaspora* ID validator" do
         let(:property) { :author }
-        let(:mandatory) { true }
       end
     end
 
@@ -23,9 +22,10 @@ module DiasporaFederation
     end
 
     describe "#root_author" do
-      it_behaves_like "a diaspora* ID validator" do
+      it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :root_author }
-        let(:mandatory) { false }
+        let(:wrong_values) { ["i am a weird diaspora* ID @@@ ### 12345"] }
+        let(:correct_values) { [nil, "alice@example.org"] }
       end
     end
 

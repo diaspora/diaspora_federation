@@ -5,7 +5,6 @@ module DiasporaFederation
 
     it_behaves_like "a diaspora* ID validator" do
       let(:property) { :author }
-      let(:mandatory) { true }
     end
 
     describe "#guid" do

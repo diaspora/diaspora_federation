@@ -10,7 +10,7 @@ module DiasporaFederation
       #   The diaspora* ID of the person who posted the original post
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :root_author, :string, xml_name: :root_diaspora_id
+      property :root_author, :string, optional: true, xml_name: :root_diaspora_id
 
       # @!attribute [r] root_guid
       #   Guid of the original post
