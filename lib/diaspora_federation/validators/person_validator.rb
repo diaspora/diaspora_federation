@@ -6,7 +6,7 @@ module DiasporaFederation
 
       rule :guid, :guid
 
-      rule :author, %i[not_empty diaspora_id]
+      rule :author, :diaspora_id
 
       rule :url, %i[not_nil URI]
 

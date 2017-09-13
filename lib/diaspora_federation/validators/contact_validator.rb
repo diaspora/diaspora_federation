@@ -4,8 +4,8 @@ module DiasporaFederation
     class ContactValidator < OptionalAwareValidator
       include Validation
 
-      rule :author, %i[not_empty diaspora_id]
-      rule :recipient, %i[not_empty diaspora_id]
+      rule :author, :diaspora_id
+      rule :recipient, :diaspora_id
       rule :following, :boolean
       rule :sharing, :boolean
     end

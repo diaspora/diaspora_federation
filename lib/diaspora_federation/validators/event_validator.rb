@@ -4,7 +4,7 @@ module DiasporaFederation
     class EventValidator < OptionalAwareValidator
       include Validation
 
-      rule :author, %i[not_empty diaspora_id]
+      rule :author, :diaspora_id
 
       rule :guid, :guid
 

@@ -46,7 +46,7 @@ module DiasporaFederation
         end
 
         def fetch_linked_entities_from_text
-          DiasporaUrlParser.fetch_linked_entities(sender, entity.text) if entity.respond_to?(:text) && entity.text
+          DiasporaUrlParser.fetch_linked_entities(entity.text) if entity.respond_to?(:text) && entity.text
         end
       end
     end
