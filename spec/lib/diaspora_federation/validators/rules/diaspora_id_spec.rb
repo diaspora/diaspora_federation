@@ -83,6 +83,22 @@ describe Validation::Rule::DiasporaId do
       expect(validator.errors).to include(:diaspora_id)
     end
 
+    it "fails if the diaspora* ID contains uppercase characters in the username" do
+      validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "SOME_USER@example.com"))
+      validator.rule(:diaspora_id, :diaspora_id)
+
+      expect(validator).not_to be_valid
+      expect(validator.errors).to include(:diaspora_id)
+    end
+
+    it "fails if the diaspora* ID contains uppercase characters in the domain-name" do
+      validator = Validation::Validator.new(OpenStruct.new(diaspora_id: "some_user@EXAMPLE.com"))
+      validator.rule(:diaspora_id, :diaspora_id)
+
+      expect(validator).not_to be_valid
+      expect(validator.errors).to include(:diaspora_id)
+    end
+
     it "fails for nil and empty" do
       [nil, ""].each do |val|
         validator = Validation::Validator.new(OpenStruct.new(diaspora_id: val))
