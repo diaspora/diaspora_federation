@@ -6,17 +6,14 @@ module Validation
     class DiasporaId
       # The Regex for a valid diaspora* ID
       DIASPORA_ID_REGEX = begin
-        letter         = "a-zA-Z"
-        digit          = "0-9"
-        hexadecimal    = "[a-fA-F#{digit}]"
-        username       = "[#{letter}#{digit}\\-\\_\\.]+"
-        hostname_part  = "[#{letter}#{digit}\\-]"
+        username       = "[[:lower:]\\d\\-\\.\\_]+"
+        hostname_part  = "[[:lower:]\\d\\-]"
         hostname       = "#{hostname_part}+(?:[.]#{hostname_part}*)*"
-        ipv4           = "(?:[#{digit}]{1,3}\\.){3}[#{digit}]{1,3}"
-        ipv6           = "\\[(?:#{hexadecimal}{0,4}:){0,7}#{hexadecimal}{1,4}\\]"
+        ipv4           = "(?:[\\d]{1,3}\\.){3}[\\d]{1,3}"
+        ipv6           = "\\[(?:[[:xdigit:]]{0,4}:){0,7}[[:xdigit:]]{1,4}\\]"
         ip_addr        = "(?:#{ipv4}|#{ipv6})"
         domain         = "(?:#{hostname}|#{ip_addr})"
-        port           = "(?::[#{digit}]+)?"
+        port           = "(?::[\\d]+)?"
 
         "#{username}\\@#{domain}#{port}"
       end
