@@ -4,6 +4,9 @@ module Validation
     #
     # A simple rule to validate the base structure of diaspora* IDs.
     class DiasporaId
+      # Maximum length of a full diaspora* ID
+      DIASPORA_ID_MAX_LENGTH = 255
+
       # The Regex for a valid diaspora* ID
       DIASPORA_ID_REGEX = begin
         username       = "[[:lower:]\\d\\-\\.\\_]+"
@@ -29,7 +32,10 @@ module Validation
 
       # Determines if value is a valid diaspora* ID
       def valid_value?(value)
-        value.is_a?(String) && value =~ DIASPORA_ID
+        return false unless value.is_a?(String)
+        return false if value.length > DIASPORA_ID_MAX_LENGTH
+
+        value =~ DIASPORA_ID
       end
 
       # This rule has no params.
