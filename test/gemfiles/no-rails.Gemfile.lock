@@ -10,8 +10,8 @@ PATH
     diaspora_federation-json_schema (0.2.1)
     diaspora_federation-test (0.2.1)
       diaspora_federation (= 0.2.1)
-      fabrication (~> 2.16.0)
-      uuid (~> 2.3.8)
+      fabrication (~> 2.16)
+      uuid (~> 2.3, >= 2.3.8)
 
 GEM
   remote: https://rubygems.org/
