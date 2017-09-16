@@ -26,7 +26,7 @@ module DiasporaFederation
         person
       rescue DiscoveryError
         raise # simply re-raise DiscoveryError
-      rescue => e
+      rescue => e # rubocop:disable Lint/RescueWithoutErrorClass
         raise DiscoveryError, "Failed discovery for #{diaspora_id}: #{e.class}: #{e.message}"
       end
 
@@ -48,7 +48,7 @@ module DiasporaFederation
         response = HttpClient.get(url)
         raise "Failed to fetch #{url}: #{response.status}" unless response.success?
         response.body
-      rescue => e
+      rescue => e # rubocop:disable Lint/RescueWithoutErrorClass
         unless http_fallback && url.start_with?("https://")
           raise DiscoveryError, "Failed to fetch #{url} for #{diaspora_id}: #{e.class}: #{e.message}"
         end
@@ -78,7 +78,7 @@ module DiasporaFederation
 
         # This tries the WebFinger URL with https first, then falls back to http if webfinger_http_fallback is enabled.
         @webfinger = WebFinger.from_json(get(webfinger_url, DiasporaFederation.webfinger_http_fallback))
-      rescue => e
+      rescue => e # rubocop:disable Lint/RescueWithoutErrorClass
         logger.warn "WebFinger failed, retrying with legacy WebFinger for #{diaspora_id}: #{e.class}: #{e.message}"
         @webfinger = WebFinger.from_xml(get(legacy_webfinger_url_from_host_meta))
       end

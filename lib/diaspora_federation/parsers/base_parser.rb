@@ -29,7 +29,7 @@ module DiasporaFederation
         when :timestamp
           begin
             Time.parse(text).utc
-          rescue
+          rescue ArgumentError
             nil
           end
         when :integer

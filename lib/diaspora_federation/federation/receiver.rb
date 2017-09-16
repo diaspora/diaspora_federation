@@ -15,7 +15,7 @@ module DiasporaFederation
                       Salmon::MagicEnvelope.unenvelop(magic_env_xml)
                     end
         Public.new(magic_env).receive
-      rescue => e
+      rescue => e # rubocop:disable Lint/RescueWithoutErrorClass
         logger.error "failed to receive public message: #{e.class}: #{e.message}"
         logger.debug "received data:\n#{data}"
         raise e
@@ -36,7 +36,7 @@ module DiasporaFederation
                       Salmon::MagicEnvelope.unenvelop(magic_env_xml)
                     end
         Private.new(magic_env, recipient_id).receive
-      rescue => e
+      rescue => e # rubocop:disable Lint/RescueWithoutErrorClass
         logger.error "failed to receive private message for #{recipient_id}: #{e.class}: #{e.message}"
         logger.debug "received data:\n#{data}"
         raise e

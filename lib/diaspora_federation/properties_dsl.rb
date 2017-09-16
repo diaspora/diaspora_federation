@@ -158,9 +158,7 @@ module DiasporaFederation
     # @param [Symbol] alias_name alias name
     def define_alias(name, alias_name)
       class_prop_aliases[alias_name] = name
-      # rubocop:disable Style/Alias
       instance_eval { alias_method alias_name, name }
-      # rubocop:enable Style/Alias
     end
 
     # Raised, if the name is of an unexpected type

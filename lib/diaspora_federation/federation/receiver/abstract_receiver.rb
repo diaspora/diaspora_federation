@@ -17,7 +17,7 @@ module DiasporaFederation
         # Validates and receives the entity
         def receive
           validate_and_receive
-        rescue => e
+        rescue => e # rubocop:disable Lint/RescueWithoutErrorClass
           logger.error "failed to receive #{entity}"
           raise e
         end

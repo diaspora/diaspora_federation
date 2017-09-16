@@ -16,7 +16,7 @@ module DiasporaFederation
         magic_env_xml = Nokogiri::XML(response.body).root
         magic_env = Salmon::MagicEnvelope.unenvelop(magic_env_xml)
         Receiver::Public.new(magic_env).receive
-      rescue => e
+      rescue => e # rubocop:disable Lint/RescueWithoutErrorClass
         raise NotFetchable, "Failed to fetch #{entity_type}:#{guid} from #{author}: #{e.class}: #{e.message}"
       end
 
