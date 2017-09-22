@@ -93,6 +93,49 @@ module DiasporaFederation
           Federation::Fetcher.fetch_public(post.author, :post, post.guid)
         }.to raise_error Federation::Fetcher::NotFetchable
       end
+
+      it "detects a loop and breaks it" do
+        guid1 = Fabricate.sequence(:guid)
+        guid2 = Fabricate.sequence(:guid)
+        text1 = "Look at diaspora://#{alice.diaspora_id}/post/#{guid2}"
+        text2 = "LOL a loop at diaspora://#{alice.diaspora_id}/post/#{guid1}"
+        post1 = Fabricate(:status_message_entity, public: true, guid: guid1, text: text1, author: alice.diaspora_id)
+        post2 = Fabricate(:status_message_entity, public: true, guid: guid2, text: text2, author: alice.diaspora_id)
+
+        [post1, post2].each do |post|
+          post_magic_env = Salmon::MagicEnvelope.new(post, post.author).envelop(alice.private_key).to_xml
+
+          stub_request(:get, "https://example.org/fetch/post/#{post.guid}")
+            .to_return(status: 200, body: post_magic_env)
+
+          expect_callback(:fetch_person_url_to, post.author, "/fetch/post/#{post.guid}")
+            .and_return("https://example.org/fetch/post/#{post.guid}")
+          expect_callback(:fetch_related_entity, "Post", post.guid).and_return(nil)
+          expect_callback(:receive_entity, kind_of(DiasporaFederation::Entities::StatusMessage), post.author, nil)
+        end
+
+        expect_callback(:fetch_public_key, alice.diaspora_id).twice.and_return(alice.public_key)
+
+        Federation::Fetcher.fetch_public(post1.author, :post, post1.guid)
+      end
+
+      it "allows to fetch the same entity in two different threads" do
+        stub_request(:get, "https://example.org/fetch/post/#{post.guid}")
+          .to_return(status: 200, body: lambda {|_|
+            sleep 0.1
+            post_magic_env
+          })
+
+        expect_callback(:fetch_person_url_to, post.author, "/fetch/post/#{post.guid}")
+          .twice.and_return("https://example.org/fetch/post/#{post.guid}")
+        expect_callback(:fetch_public_key, post.author).twice.and_return(alice.public_key)
+        expect_callback(:receive_entity, kind_of(DiasporaFederation::Entities::StatusMessage), post.author, nil).twice
+
+        threads = Array.new(2).map do
+          Thread.new { Federation::Fetcher.fetch_public(post.author, :post, post.guid) }
+        end
+        threads.each(&:join)
+      end
     end
   end
 end
