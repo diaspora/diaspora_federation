@@ -2,10 +2,14 @@
 title: Relayable
 ---
 
-If a person participates on an entity, it needs to be relayed via the author of the parent entity, because only the
-parent author knows, to whom they shared the original entity.
+If a person participates on an entity, it needs to be relayed via the author of the root entity, because only the
+root author knows, to whom they shared the original entity.
 
-Such entities are:
+The root is the most top parent of the relayable: If the parent of a relayable is a relayable itself,
+the parent of that should be used, until it isn't a relayable anymore.
+For example, for both, a `Like` for a `Post` and a `Like` for a `Comment`, the author of the `Post` should be used.
+
+Such relayable entities are:
 
 * [Comment][comment]
 * [Like][like]
@@ -24,16 +28,16 @@ All relayables have the following properties:
 
 ## Relaying
 
-If the author is not the same as the parent author, the author of the relayable sends the entity to the parent author
+If the author is not the same as the root author, the author of the relayable sends the entity to the root author
 and the author must include the `author_signature`.
 
-The parent author then must envelop it in a new [Magic Envelope][magicsig] and send the entity to all the recipients
-of the parent entity. If the author and the parent author are on the same server, the author must sign the
-`author_signature` and the parent author needs to sign the Magic Envelope.
+The root author then must envelop it in a new [Magic Envelope][magicsig] and send the entity to all the recipients
+of the root entity. If the author and the root author are on the same server, the author must sign the
+`author_signature` and the root author needs to sign the Magic Envelope.
 
-If someone other then the parent author receives a relayable without a valid Magic Envelope signed from
-the parent author, it must be ignored. If the author is not the same as the parent author and the `author_signature`
-is missing or invalid, it also must be ignored. If the author is the same as the parent author, the `author_signature`
+If someone other then the root author receives a relayable without a valid Magic Envelope signed from
+the root author, it must be ignored. If the author is not the same as the root author and the `author_signature`
+is missing or invalid, it also must be ignored. If the author is the same as the root author, the `author_signature`
 can be missing, because a valid signature in the Magic Envelope from the author is enough in that case.
 
 ## Signatures
@@ -41,15 +45,15 @@ can be missing, because a valid signature in the Magic Envelope from the author 
 The string to sign is built with the content of all properties (except the `author_signature` itself),
 concatenated using `;` as separator in the same order as they appear in the XML. The order in the XML is not specified.
 
-This ensures that relayables even work, if the parent author or another recipient does not know all properties of the
+This ensures that relayables even work, if the root author or another recipient does not know all properties of the
 relayable entity (e.g. older version of diaspora\*).
 
 This string is then signed with the private RSA key using the RSA-SHA256 algorithm and base64-encoded.
 
-The parent author must use the same order as the relayable author. Unknown properties must be included again in the XML
+The root author must use the same order as the relayable author. Unknown properties must be included again in the XML
 and the signature.
 
-To support fetching of the relayables, the parent author should save the following information:
+To support fetching of the relayables, the root author should save the following information:
 
 * order of the received XML
 * additional (unknown) properties
@@ -57,13 +61,13 @@ To support fetching of the relayables, the parent author should save the followi
 
 ## Retraction / Reject
 
-The parent author is allowed to retract the entity, so there are no additional signatures required for the
+The root author is allowed to retract the entity, so there are no additional signatures required for the
 [Retraction][retraction] (only the [Salmon Magic Signature][magicsig]).
 
-If the author retracts the entity, they send a [Retraction][retraction] to the parent author. The parent author also
-must relay this retraction to all recipients of the parent entity.
+If the author retracts the entity, they send a [Retraction][retraction] to the root author. The root author also
+must relay this retraction to all recipients of the root entity.
 
-If the parent author wants to reject the entity (e.g. if they ignore the author of the relayable), they can simply send
+If the root author wants to reject the entity (e.g. if they ignore the author of the relayable), they can simply send
 a [Retraction][retraction] for it back to the author.
 
 

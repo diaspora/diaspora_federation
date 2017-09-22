@@ -62,25 +62,46 @@ XML
             )
           }
           let(:relayable_data) { data.merge(target_type: target_type, target: relayable_target) }
+          let(:entity) { Entities::Retraction.new(relayable_data) }
 
           it "allows target author" do
-            entity = Entities::Retraction.new(relayable_data)
-
             expect(entity.sender_valid?(bob.diaspora_id)).to be_truthy
           end
 
           it "allows target parent author" do
-            entity = Entities::Retraction.new(relayable_data)
-
             expect(entity.sender_valid?(alice.diaspora_id)).to be_truthy
           end
 
           it "does not allow any random author" do
-            entity = Entities::Retraction.new(relayable_data)
             invalid_author = Fabricate.sequence(:diaspora_id)
 
             expect(entity.sender_valid?(invalid_author)).to be_falsey
           end
+        end
+      end
+
+      context "Like of a Comment" do
+        let(:comment) {
+          Fabricate(
+            :related_entity,
+            author: Fabricate.sequence(:diaspora_id),
+            parent: Fabricate(:related_entity, author: alice.diaspora_id)
+          )
+        }
+        let(:relayable_target) { Fabricate(:related_entity, author: bob.diaspora_id, parent: comment) }
+        let(:relayable_data) { data.merge(target_type: "Like", target: relayable_target) }
+        let(:entity) { Entities::Retraction.new(relayable_data) }
+
+        it "allows target author" do
+          expect(entity.sender_valid?(bob.diaspora_id)).to be_truthy
+        end
+
+        it "allows target root entity author" do
+          expect(entity.sender_valid?(alice.diaspora_id)).to be_truthy
+        end
+
+        it "does not allow the comment author" do
+          expect(entity.sender_valid?(comment.author)).to be_falsey
         end
       end
     end

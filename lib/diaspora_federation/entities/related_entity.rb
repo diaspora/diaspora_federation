@@ -24,6 +24,14 @@ module DiasporaFederation
       #   @return [RelatedEntity] parent entity
       entity :parent, Entities::RelatedEntity, default: nil
 
+      # The root entity, this entity is responsible for relaying relayables
+      # @return [RelatedEntity] absolute parent entity
+      def root
+        root = self
+        root = root.parent until root.parent.nil?
+        root
+      end
+
       # Get related entity from the backend or fetch it from remote if not available locally
       # @return [RelatedEntity] fetched related entity
       def self.fetch(author, type, guid)

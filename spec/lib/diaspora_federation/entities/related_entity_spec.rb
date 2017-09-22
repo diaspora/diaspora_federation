@@ -5,6 +5,20 @@ module DiasporaFederation
 
     it_behaves_like "an Entity subclass"
 
+    describe "#root" do
+      it "returns self if it's already the root" do
+        entity = Fabricate(:related_entity, parent: nil)
+        expect(entity.root).to eq(entity)
+      end
+
+      it "returns the root entity if the current entity has parents" do
+        root = Fabricate(:related_entity, parent: nil)
+        parent = Fabricate(:related_entity, parent: root)
+        entity = Fabricate(:related_entity, parent: parent)
+        expect(entity.root).to eq(root)
+      end
+    end
+
     describe ".fetch" do
       let(:guid) { Fabricate.sequence(:guid) }
       let(:entity) { Fabricate(:related_entity) }

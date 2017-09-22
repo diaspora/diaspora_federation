@@ -76,11 +76,11 @@ module DiasporaFederation
       # @raise [SignatureVerificationFailed] if the signature is not valid
       # @raise [PublicKeyNotFound] if no public key is found
       def verify_signature
-        super(author, :author_signature) unless author == parent.author
+        super(author, :author_signature) unless author == parent.root.author
       end
 
       def sender_valid?(sender)
-        (sender == author && parent.local) || sender == parent.author
+        (sender == author && parent.root.local) || sender == parent.root.author
       end
 
       # @return [String] string representation of this object
@@ -121,7 +121,7 @@ module DiasporaFederation
       # Sign with parent author key, if the parent author is local (if the private key is found)
       # @return [String] A Base64 encoded signature of #signature_data with key
       def sign_with_parent_author_if_available
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, parent.author)
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, parent.root.author)
         return unless privkey
 
         sign_with_key(privkey).tap do
