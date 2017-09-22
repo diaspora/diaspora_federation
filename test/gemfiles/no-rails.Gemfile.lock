@@ -42,10 +42,10 @@ GEM
       rspec
     macaddr (1.7.1)
       systemu (~> 2.6.2)
-    mini_portile2 (2.2.0)
+    mini_portile2 (2.3.0)
     multipart-post (2.0.0)
-    nokogiri (1.8.0)
-      mini_portile2 (~> 2.2.0)
+    nokogiri (1.8.1)
+      mini_portile2 (~> 2.3.0)
     nyan-cat-formatter (0.12.0)
       rspec (>= 2.99, >= 2.14.2, < 4)
     public_suffix (3.0.0)
