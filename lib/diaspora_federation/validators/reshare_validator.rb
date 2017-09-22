@@ -11,8 +11,6 @@ module DiasporaFederation
       rule :author, :diaspora_id
 
       rule :guid, :guid
-
-      rule :public, :boolean
     end
   end
 end

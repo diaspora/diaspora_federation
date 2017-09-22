@@ -31,11 +31,6 @@ module DiasporaFederation
       #   @return [Entities::Event] event
       entity :event, Entities::Event, optional: true
 
-      # @!attribute [r] public
-      #   Shows whether the status message is visible to everyone or only to some aspects
-      #   @return [Boolean] is it public
-      property :public, :boolean, default: false
-
       private
 
       def validate

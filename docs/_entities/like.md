@@ -6,7 +6,7 @@ This entity represents a like to some kind of post (e.g. status message).
 
 The `parent_type` can be one of:
 
-* [Post][post] ([StatusMessage][status_message] or [Reshare][reshare])
+* [Post][post] ([StatusMessage][status_message] or currently still a [Reshare][reshare])
 * [Comment][comment] (diaspora\* doesn't support this at the moment)
 
 See also: [Relayable][relayable]

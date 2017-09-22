@@ -19,6 +19,10 @@ module DiasporaFederation
       #   Post entity creation time
       #   @return [Time] creation time
       #
+      # @!attribute [r] public
+      #   Shows whether the post is visible to everyone or only to some aspects
+      #   @return [Boolean] is it public
+      #
       # @!attribute [r] provider_display_name
       #   A string that describes a means by which a user has posted the post
       #   @return [String] provider display name
@@ -29,6 +33,7 @@ module DiasporaFederation
           property :author, :string, xml_name: :diaspora_handle
           property :guid, :string
           property :created_at, :timestamp, default: -> { Time.now.utc }
+          property :public, :boolean, default: false
           property :provider_display_name, :string, optional: true
         end
       end

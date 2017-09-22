@@ -28,9 +28,5 @@ module DiasporaFederation
         let(:correct_values) { [nil, "alice@example.org"] }
       end
     end
-
-    it_behaves_like "a boolean validator" do
-      let(:property) { :public }
-    end
   end
 end

@@ -19,6 +19,7 @@ module DiasporaFederation
   <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
   <created_at>#{data[:created_at].utc.iso8601}</created_at>
+  <public>#{data[:public]}</public>
   <provider_display_name>#{data[:provider_display_name]}</provider_display_name>
   <text>#{data[:text]}</text>
   <photo>
@@ -50,7 +51,6 @@ module DiasporaFederation
     <lat>#{location.lat}</lat>
     <lng>#{location.lng}</lng>
   </location>
-  <public>#{data[:public]}</public>
 </status_message>
 XML
 
@@ -61,6 +61,7 @@ XML
     "author": "#{data[:author]}",
     "guid": "#{data[:guid]}",
     "created_at": "#{data[:created_at].utc.iso8601}",
+    "public": #{data[:public]},
     "provider_display_name": "#{data[:provider_display_name]}",
     "text": "#{data[:text]}",
     "photos": [
@@ -102,8 +103,7 @@ XML
         "lat": "#{location.lat}",
         "lng": "#{location.lng}"
       }
-    },
-    "public": #{data[:public]}
+    }
   }
 }
 JSON

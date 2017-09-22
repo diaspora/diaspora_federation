@@ -2,7 +2,14 @@
 title: Post
 ---
 
-This is the abstract parent type of [StatusMessage][status_message] and [Reshare][reshare].
+This is the abstract parent type of [StatusMessage][status_message] and currently still [Reshare][reshare].
+
+{% include warning_box.html
+   title="Future of reshares"
+   content="<p>Reshare will not inherit from Post in the future anymore! More information about this
+   can be found <a href=\"/diaspora_federation/entities/reshare.html\">here</a> or
+   in <a href=\"https://github.com/diaspora/diaspora_federation/issues/83\">this issue</a>.</p>"
+%}
 
 ## Common Properties
 

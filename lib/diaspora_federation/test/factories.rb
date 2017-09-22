@@ -150,9 +150,7 @@ module DiasporaFederation
         root_guid { Fabricate.sequence(:guid) }
         guid { Fabricate.sequence(:guid) }
         author { Fabricate.sequence(:diaspora_id) }
-        public true
         created_at { Time.now.utc }
-        provider_display_name { "the testsuite" }
       end
 
       Fabricator(:retraction_entity, class_name: DiasporaFederation::Entities::Retraction) do

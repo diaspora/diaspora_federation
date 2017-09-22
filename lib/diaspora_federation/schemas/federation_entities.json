@@ -215,28 +215,26 @@
     },
 
     "reshare": {
-      "allOf": [
-        {"$ref": "#/definitions/post"},
-        {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^reshare$"
+        },
+
+        "entity_data": {
           "type": "object",
           "properties": {
-            "entity_type": {
-              "type": "string",
-              "pattern": "^reshare$"
-            },
-
-            "entity_data": {
-              "type": "object",
-              "properties": {
-                "root_author": {"type": "string"},
-                "root_guid": {"$ref": "#/definitions/guid"}
-              },
-
-              "required": ["root_author", "root_guid"]
-            }
-          }
-        }
-      ]
+            "author": { "type": "string" },
+            "guid": { "$ref": "#/definitions/guid" },
+            "created_at": { "type": "string" },
+            "root_author": {"type": "string"},
+            "root_guid": {"$ref": "#/definitions/guid"}
+          },
+          "required": ["author", "guid", "created_at", "root_author", "root_guid"]
+        },
+        "required": ["entity_type", "entity_data"]
+      }
     },
 
     "profile": {
