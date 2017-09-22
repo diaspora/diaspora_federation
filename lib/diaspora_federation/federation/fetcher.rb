@@ -6,6 +6,7 @@ module DiasporaFederation
       # @param [String] author the diaspora* ID of the author of the entity
       # @param [Symbol, String] entity_type snake_case version of the entity class
       # @param [String] guid guid of the entity to fetch
+      # @raise [NotFetchable] if something with the fetching failed
       def self.fetch_public(author, entity_type, guid)
         type = entity_name(entity_type).to_s
         raise "Already fetching ..." if fetching[type].include?(guid)
