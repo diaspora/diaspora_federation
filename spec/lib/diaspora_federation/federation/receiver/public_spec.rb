@@ -116,7 +116,7 @@ module DiasporaFederation
           described_class.new(magic_env).receive
         end
 
-        it "does not allow non-public entities" do
+        it "doesn't allow non-public entities" do
           private_post = Fabricate(:status_message_entity, public: false)
           magic_env = Salmon::MagicEnvelope.new(private_post, private_post.author)
 
@@ -132,6 +132,24 @@ module DiasporaFederation
           expect_callback(:receive_entity, like, like.author, nil)
 
           described_class.new(magic_env).receive
+        end
+
+        it "allows profiles flagged as private if they don't contain private information" do
+          profile = Fabricate(:profile_entity, public: false, bio: nil, birthday: nil, gender: nil, location: nil)
+          magic_env = Salmon::MagicEnvelope.new(profile, profile.author)
+
+          expect_callback(:receive_entity, profile, profile.author, nil)
+
+          described_class.new(magic_env).receive
+        end
+
+        it "doesn't allow profiles flagged as private if they contain private information" do
+          profile = Fabricate(:profile_entity, public: false)
+          magic_env = Salmon::MagicEnvelope.new(profile, profile.author)
+
+          expect {
+            described_class.new(magic_env).receive
+          }.to raise_error Federation::Receiver::NotPublic
         end
       end
 
