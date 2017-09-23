@@ -1,12 +1,37 @@
+# 0.2.2
+
+## Features
+
+* Add support for [diaspora://](https://diaspora.github.io/diaspora_federation/federation/diaspora_scheme.html) URIs and fetch linked entities (see [#75](https://github.com/diaspora/diaspora_federation/pull/75)) [#78](https://github.com/diaspora/diaspora_federation/pull/78) [#85](https://github.com/diaspora/diaspora_federation/pull/85)
+* Fetch RFC 7033 WebFinger with fallback to legacy WebFinger [#74](https://github.com/diaspora/diaspora_federation/pull/74)
+* Add support to receive and relay likes for comments [#81](https://github.com/diaspora/diaspora_federation/pull/81)
+
+## Refactor
+
+* Always raise a DiscoveryError when something with the discovery fails [#77](https://github.com/diaspora/diaspora_federation/pull/77)
+* Tighten the validation of diaspora\* IDs [#86](https://github.com/diaspora/diaspora_federation/pull/86)
+* Allow to receive non-public profiles without private data [#79](https://github.com/diaspora/diaspora_federation/pull/79)
+* Remove `public` and `provider_display_name` from `Reshare` entity [#84](https://github.com/diaspora/diaspora_federation/pull/84)
+
+## Bug fixes
+
+* Allow reshares with no root [#73](https://github.com/diaspora/diaspora_federation/pull/73)
+* Make `height` and `width` optional for photos [#76](https://github.com/diaspora/diaspora_federation/pull/76)
+* Detect loops when fetching entities [#87](https://github.com/diaspora/diaspora_federation/pull/87)
+
+## Documentation
+
+* Add documentation for the future of the `Reshare` entity (see [#83](https://github.com/diaspora/diaspora_federation/pull/83)) [#84](https://github.com/diaspora/diaspora_federation/pull/84)
+
 # 0.2.1
 
 ## Features
 
-Add `DiasporaFederation::Schemas` to access the JSON schema [#70](https://github.com/diaspora/diaspora_federation/pull/70)
+* Add `DiasporaFederation::Schemas` to access the JSON schema [#70](https://github.com/diaspora/diaspora_federation/pull/70)
 
 ## Refactor
 
-Don't add optional properties to generated XML and JSON when nil [#71](https://github.com/diaspora/diaspora_federation/pull/71)
+* Don't add optional properties to generated XML and JSON when nil [#71](https://github.com/diaspora/diaspora_federation/pull/71)
 
 # 0.2.0
 
