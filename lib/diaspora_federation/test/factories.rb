@@ -42,6 +42,7 @@ module DiasporaFederation
       Fabricator(:account_migration_entity, class_name: DiasporaFederation::Entities::AccountMigration) do
         author { Fabricate.sequence(:diaspora_id) }
         profile { Fabricate(:profile_entity) }
+        old_identity { Fabricate.sequence(:diaspora_id) }
       end
 
       Fabricator(:person_entity, class_name: DiasporaFederation::Entities::Person) do

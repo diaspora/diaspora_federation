@@ -8,9 +8,16 @@ This entity is sent when a person changes their diaspora* ID (e.g. when a user m
 
 | Property    | Type                         | Description                                                                          |
 | ----------- | ---------------------------- | ------------------------------------------------------------------------------------ |
-| `author`    | [diaspora\* ID][diaspora-id] | The diaspora\* ID of the closed account.                                             |
-| `person`    | [Profile][profile]           | New profile of a person                                                              |
-| `signature` | [Signature][signature]       | Signature that validates original and target diaspora* IDs with the new key of person |
+| `author`    | [diaspora\* ID][diaspora-id] | The diaspora\* ID of the sender of the entity. The entity may be sent by either old user identity or new user identity. |
+| `person`    | [Profile][profile]           | New profile of a person. |
+| `signature` | [Signature][signature]       | Signature that validates original and target diaspora* IDs with the private key of the second identity, other than the entity author. So if the author is the old identity then this signature is made with the new identity key, and vice versa. |
+
+## Optional Properties
+
+| Property    | Type                         | Description                                                                          |
+| ----------- | ---------------------------- | ------------------------------------------------------------------------------------ |
+| `old_identity`    | [diaspora\* ID][diaspora-id] | The diaspora\* ID of the closed account. This field is mandatory if the author of the entity is the new identity. |
+
 
 ### Signature
 
@@ -51,6 +58,7 @@ AccountMigration:old-diaspora-id@example.org:new-diaspora-id@example.com
   <signature>
     07b1OIY6sTUQwV5pbpgFK0uz6W4cu+oQnlg410Q4uISUOdNOlBdYqhZJm62VFhgvzt4TZXfiJgoupFkRjP0BsaVaZuP2zKMNvO3ngWOeJRf2oRK4Ub5cEA/g7yijkRc+7y8r1iLJ31MFb1czyeCsLxw9Ol8SvAJddogGiLHDhjE=
   </signature>
+  <old_identity>alice@example.org</old_identity>
 </account_migration>
 ~~~
 
