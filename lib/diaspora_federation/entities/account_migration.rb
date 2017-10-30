@@ -5,7 +5,7 @@ module DiasporaFederation
     #
     # @see Validators::AccountMigrationValidator
     class AccountMigration < Entity
-      include Signable
+      include AccountMigration::Signable
 
       # @!attribute [r] author
       #   The old diaspora* ID of the person who changes their ID
@@ -23,16 +23,18 @@ module DiasporaFederation
       #   @return [String] signature
       property :signature, :string, default: nil
 
-      # @return [String] string representation of this object
-      def to_s
-        "AccountMigration:#{author}:#{profile.author}"
+      def old_user_id
+        author
       end
+
+      # @return [String] string representation of this object
+      alias to_s unique_migration_descriptor
 
       # Shortcut for calling super method with sensible arguments
       #
       # @see DiasporaFederation::Entities::Signable#verify_signature
       def verify_signature
-        super(profile.author, :signature)
+        super(signer_id, :signature)
       end
 
       # Calls super and additionally does signature verification for the instantiated entity.
@@ -44,9 +46,12 @@ module DiasporaFederation
 
       private
 
-      # @see DiasporaFederation::Entities::Signable#signature_data
-      def signature_data
-        to_s
+      def new_user_id
+        profile.author
+      end
+
+      def signer_id
+        new_user_id
       end
 
       def enriched_properties
@@ -59,10 +64,10 @@ module DiasporaFederation
       # @raise [NewPrivateKeyNotFound] if the new user's private key is not found
       # @return [String] A Base64 encoded signature of #signature_data with key
       def sign_with_new_key
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, profile.author)
-        raise NewPrivateKeyNotFound, "author=#{profile.author} obj=#{self}" if privkey.nil?
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, signer_id)
+        raise NewPrivateKeyNotFound, "signer=#{signer_id} obj=#{self}" if privkey.nil?
         sign_with_key(privkey).tap do
-          logger.info "event=sign status=complete signature=signature author=#{profile.author} obj=#{self}"
+          logger.info "event=sign status=complete signature=signature signer=#{signer_id} obj=#{self}"
         end
       end
 
