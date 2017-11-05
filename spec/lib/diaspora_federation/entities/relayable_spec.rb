@@ -263,6 +263,23 @@ XML
 
         expect(xml.at_xpath("parent_author_signature").text).to eq("")
       end
+
+      it "adds 'false' booleans" do
+        expected_xml = <<-XML
+<test_relayable_with_boolean>
+  <author>#{author}</author>
+  <guid>#{guid}</guid>
+  <parent_guid>#{parent_guid}</parent_guid>
+  <test>false</test>
+  <author_signature>aa</author_signature>
+  <parent_author_signature>bb</parent_author_signature>
+</test_relayable_with_boolean>
+XML
+
+        xml = Entities::TestRelayableWithBoolean.new(hash_with_fake_signatures.merge(test: false)).to_xml
+
+        expect(xml.to_s.strip).to eq(expected_xml.strip)
+      end
     end
 
     describe ".from_xml" do
