@@ -12,7 +12,7 @@ module DiasporaFederation
       end
     end
 
-    %i[following sharing].each do |prop|
+    %i[following sharing blocking].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a boolean validator" do
           let(:property) { prop }

@@ -113,6 +113,7 @@ module DiasporaFederation
         recipient { Fabricate.sequence(:diaspora_id) }
         following true
         sharing true
+        blocking false
       end
 
       Fabricator(:comment_entity, class_name: DiasporaFederation::Entities::Comment, from: :relayable_entity) do
