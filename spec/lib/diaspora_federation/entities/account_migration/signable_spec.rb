@@ -14,8 +14,6 @@ module DiasporaFederation
       def new_identity
         "new"
       end
-
-      def freeze; end
     end
 
     it_behaves_like "a signable" do
@@ -31,8 +29,7 @@ module DiasporaFederation
 
     describe "#signature_data" do
       it "delegates to #unique_migration_descriptor" do
-        expect(entity).to receive(:unique_migration_descriptor).and_return("test123")
-        expect(entity.signature_data).to eq("test123")
+        expect(entity.signature_data).to eq("AccountMigration:old:new")
       end
     end
   end
