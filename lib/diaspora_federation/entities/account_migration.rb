@@ -5,10 +5,12 @@ module DiasporaFederation
     #
     # @see Validators::AccountMigrationValidator
     class AccountMigration < Entity
-      include Signable
+      include AccountMigration::Signable
 
       # @!attribute [r] author
-      #   The old diaspora* ID of the person who changes their ID
+      #   Sender of the AccountMigration message. Usually it is the old diaspora* ID of the person who changes their ID.
+      #   This property is also allowed to be the new diaspora* ID, which is equal to the author of the included
+      #   profile.
       #   @see Person#author
       #   @return [String] author diaspora* ID
       property :author, :string
@@ -19,20 +21,39 @@ module DiasporaFederation
       entity :profile, Entities::Profile
 
       # @!attribute [r] signature
-      #   Signature that validates original and target diaspora* IDs with the new key of person
+      #   Signature that validates original and target diaspora* IDs with the private key of the second identity, other
+      #   than the entity author. So if the author is the old identity then this signature is made with the new identity
+      #   key, and vice versa.
       #   @return [String] signature
       property :signature, :string, default: nil
 
-      # @return [String] string representation of this object
-      def to_s
-        "AccountMigration:#{author}:#{profile.author}"
+      # @!attribute [r] old_identity
+      #   Optional attribute which keeps old diaspora* ID. Must be present when author attribute contains new diaspora*
+      #   ID.
+      #   @return [String] old identity
+      property :old_identity, :string, default: nil
+
+      # Returns diaspora* ID of the old person identity.
+      # @return [String] diaspora* ID of the old person identity
+      def old_identity
+        return @old_identity if author_is_new_id?
+        author
       end
+
+      # Returns diaspora* ID of the new person identity.
+      # @return [String] diaspora* ID of the new person identity
+      def new_identity
+        profile.author
+      end
+
+      # @return [String] string representation of this object
+      alias to_s unique_migration_descriptor
 
       # Shortcut for calling super method with sensible arguments
       #
       # @see DiasporaFederation::Entities::Signable#verify_signature
       def verify_signature
-        super(profile.author, :signature)
+        super(signer_id, :signature)
       end
 
       # Calls super and additionally does signature verification for the instantiated entity.
@@ -44,30 +65,33 @@ module DiasporaFederation
 
       private
 
-      # @see DiasporaFederation::Entities::Signable#signature_data
-      def signature_data
-        to_s
+      def author_is_new_id?
+        author == new_identity
+      end
+
+      def signer_id
+        author_is_new_id? ? @old_identity : new_identity
       end
 
       def enriched_properties
         super.tap do |hash|
-          hash[:signature] = signature || sign_with_new_key
+          hash[:signature] = signature || sign_with_respective_key
         end
       end
 
-      # Sign with new user's key
-      # @raise [NewPrivateKeyNotFound] if the new user's private key is not found
+      # Sign with the key of the #signer_id identity
+      # @raise [PrivateKeyNotFound] if the signer's private key is not found
       # @return [String] A Base64 encoded signature of #signature_data with key
-      def sign_with_new_key
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, profile.author)
-        raise NewPrivateKeyNotFound, "author=#{profile.author} obj=#{self}" if privkey.nil?
+      def sign_with_respective_key
+        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, signer_id)
+        raise PrivateKeyNotFound, "signer=#{signer_id} obj=#{self}" if privkey.nil?
         sign_with_key(privkey).tap do
-          logger.info "event=sign status=complete signature=signature author=#{profile.author} obj=#{self}"
+          logger.info "event=sign status=complete signature=signature signer=#{signer_id} obj=#{self}"
         end
       end
 
       # Raised, if creating the signature fails, because the new private key of a user was not found
-      class NewPrivateKeyNotFound < RuntimeError
+      class PrivateKeyNotFound < RuntimeError
       end
     end
   end
