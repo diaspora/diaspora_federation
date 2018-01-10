@@ -148,7 +148,7 @@ module DiasporaFederation
           hash[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
         end
         order = signature_order + %i[author_signature parent_author_signature]
-        order.map {|element| [element, data[element] || ""] }.to_h
+        order.map {|element| [element, data[element].to_s] }.to_h
       end
 
       def signature_order=(order)

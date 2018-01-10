@@ -76,6 +76,14 @@ module DiasporaFederation
 
       property :property, :string, optional: true
     end
+
+    class TestRelayableWithBoolean < DiasporaFederation::Entity
+      PARENT_TYPE = "Parent".freeze
+
+      include Entities::Relayable
+
+      property :test, :boolean
+    end
   end
 
   module Validators
