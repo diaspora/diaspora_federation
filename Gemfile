@@ -58,6 +58,6 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.6.0"
-  gem "rspec-rails", "~> 3.6.0"
+  gem "rspec", "~> 3.7.0"
+  gem "rspec-rails", "~> 3.7.0"
 end
