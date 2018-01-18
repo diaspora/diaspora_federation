@@ -8,6 +8,7 @@ namespace :gemfiles do
     original_gemfile.sub!(/(gemspec name:.*)/) { "#{Regexp.last_match[1]}, path: \"../../\"" }
     original_gemfile.sub!(/(gemspec\(name:.*)\)/) { "#{Regexp.last_match[1]}, path: \"../../\")" }
     original_gemfile.sub!(/^group :development do$.*?^end$\n\n/m, "")
+    original_gemfile << "\n gem \"fabrication\", \"< 2.17.0\"\n" # new versions are not compatible with ruby 2.1
 
     rails4_version = "4.2.8"
     rails4_gemfile = "#{original_gemfile}\ngem \"actionpack\", \"#{rails4_version}\"\n"
