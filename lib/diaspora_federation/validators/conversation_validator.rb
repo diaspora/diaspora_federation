@@ -9,7 +9,7 @@ module DiasporaFederation
 
       rule :subject, [:not_empty, length: {maximum: 255}]
 
-      rule :participants, diaspora_id_count: {maximum: 20}
+      rule :participants, diaspora_id_list: {minimum: 2}
       rule :messages, :not_nil
     end
   end

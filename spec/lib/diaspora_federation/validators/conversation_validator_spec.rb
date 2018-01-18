@@ -29,11 +29,15 @@ module DiasporaFederation
     end
 
     describe "#participant_ids" do
-      # must not contain more than 20 participant handles
       it_behaves_like "a property with a value validation/restriction" do
         let(:property) { :participants }
-        let(:wrong_values) { [Array.new(21) { Fabricate.sequence(:diaspora_id) }.join(";")] }
-        let(:correct_values) { [Array.new(20) { Fabricate.sequence(:diaspora_id) }.join(";")] }
+        let(:wrong_values) { ["", "foo;bar", Fabricate.sequence(:diaspora_id)] }
+        let(:correct_values) {
+          [
+            Array.new(2) { Fabricate.sequence(:diaspora_id) }.join(";"),
+            Array.new(21) { Fabricate.sequence(:diaspora_id) }.join(";")
+          ]
+        }
       end
     end
   end
