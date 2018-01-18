@@ -58,7 +58,7 @@ GEM
       faraday (>= 0.7.4, < 1.0)
     ffi (1.9.18)
     formatador (0.2.5)
-    fuubar (2.2.0)
+    fuubar (2.3.1)
       rspec-core (~> 3.0)
       ruby-progressbar (~> 1.4)
     gitlab (4.2.0)
@@ -187,7 +187,7 @@ GEM
       rainbow (>= 2.2.2, < 3.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    ruby-progressbar (1.8.3)
+    ruby-progressbar (1.9.0)
     ruby_dep (1.5.0)
     rugged (0.26.0)
     safe_yaml (1.0.4)
@@ -236,7 +236,7 @@ DEPENDENCIES
   diaspora_federation-json_schema!
   diaspora_federation-rails!
   diaspora_federation-test!
-  fuubar (= 2.2.0)
+  fuubar (= 2.3.1)
   guard-rspec
   guard-rubocop
   json-schema-rspec (= 0.0.4)
@@ -260,4 +260,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.15.4
+   1.16.1
