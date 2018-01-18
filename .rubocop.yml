@@ -190,6 +190,16 @@ Layout/EmptyLineBetweenDefs:
 Style/NumericPredicate:
   EnforcedStyle: comparison
 
+# disable this for now, needs to be rechecked later
+Style/DateTime:
+  Exclude:
+    - "lib/diaspora_federation/discovery/xrd_document.rb"
+    - "spec/lib/diaspora_federation/discovery/xrd_document_spec.rb"
+
+# broken in 0.52.1
+Layout/EmptyLinesAroundArguments:
+  Enabled: false
+
 ### backward compatibility
 
 # only with ruby >= 2.3

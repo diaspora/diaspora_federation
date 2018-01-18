@@ -26,7 +26,7 @@ module DiasporaFederation
         class_name = Entity.entity_class(type).to_s.rpartition("::").last
         return if DiasporaFederation.callbacks.trigger(:fetch_related_entity, class_name, guid)
         Fetcher.fetch_public(author, type, guid)
-      rescue => e # rubocop:disable Lint/RescueWithoutErrorClass
+      rescue => e # rubocop:disable Style/RescueStandardError
         logger.error "Failed to fetch linked entity #{type}:#{guid}: #{e.class}: #{e.message}"
       end
     end
