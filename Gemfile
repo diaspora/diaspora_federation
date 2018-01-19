@@ -19,7 +19,7 @@ group :development do
   # code style
   gem "pronto",         "0.9.5",  require: false
   gem "pronto-rubocop", "0.9.0",  require: false
-  gem "rubocop",        "0.50.0", require: false
+  gem "rubocop",        "0.52.1", require: false
 
   # automatic test runs
   gem "guard-rspec",   require: false
@@ -40,7 +40,7 @@ end
 
 group :test do
   # rspec formatter
-  gem "fuubar", "2.2.0",    require: false
+  gem "fuubar", "2.3.1",    require: false
   gem "nyan-cat-formatter", require: false
 
   # test coverage
@@ -58,6 +58,6 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.6.0"
-  gem "rspec-rails", "~> 3.6.0"
+  gem "rspec", "~> 3.7.0"
+  gem "rspec-rails", "~> 3.7.0"
 end
