@@ -189,6 +189,7 @@ module DiasporaFederation
       Fabricator(:event_entity, class_name: DiasporaFederation::Entities::Event) do |f|
         author { Fabricate.sequence(:diaspora_id) }
         guid { Fabricate.sequence(:guid) }
+        edited_at { Time.now.utc }
         summary "Cool event"
         description "You need to see this!"
         start { change_time(Time.now.utc, min: 0) - 3600 }
@@ -202,6 +203,7 @@ module DiasporaFederation
         author { Fabricate.sequence(:diaspora_id) }
         guid { Fabricate.sequence(:guid) }
         status "accepted"
+        edited_at { Time.now.utc }
       end
 
       Fabricator(:related_entity, class_name: DiasporaFederation::Entities::RelatedEntity) do

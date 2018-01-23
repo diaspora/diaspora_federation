@@ -14,6 +14,11 @@ module DiasporaFederation
       #   "accepted", "declined" or "tentative"
       #   @return [String] event participation status
       property :status, :string
+
+      # @!attribute [r] edited_at
+      #   The timestamp when the event participation was edited
+      #   @return [Time] edited time
+      property :edited_at, :timestamp, optional: true
     end
   end
 end

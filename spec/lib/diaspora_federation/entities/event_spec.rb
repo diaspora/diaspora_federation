@@ -9,6 +9,7 @@ module DiasporaFederation
 <event>
   <author>#{data[:author]}</author>
   <guid>#{data[:guid]}</guid>
+  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
   <summary>#{data[:summary]}</summary>
   <description>#{data[:description]}</description>
   <start>#{data[:start].utc.iso8601}</start>
