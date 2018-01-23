@@ -9,6 +9,7 @@ module DiasporaFederation
       hash.tap {|hash|
         properties = described_class.new(hash).send(:enriched_properties)
         hash[:signature] = properties[:signature]
+        hash[:profile] = Entities::Profile.new(hash[:profile].to_h.tap {|profile| profile[:edited_at] = nil })
       }
     }
     let(:signature_data) { "AccountMigration:#{old_diaspora_id}:#{new_diaspora_id}" }
