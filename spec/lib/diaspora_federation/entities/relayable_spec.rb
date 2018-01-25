@@ -208,6 +208,22 @@ XML
         expect(verify_signature(parent_pkey, parent_author_signature, signature_data)).to be_truthy
       end
 
+      it "computes correct signatures for the entity with invalid XML characters" do
+        expect_callback(:fetch_private_key, author).and_return(author_pkey)
+        expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
+
+        invalid_property = "asdfasdf asdf💩asdf\nasdf"
+        signature_data_with_fixed_property = "#{author};#{guid};#{parent_guid};asdf�asdf asdf💩asdf\nasdf"
+
+        xml = Entities::SomeRelayable.new(hash.merge(property: invalid_property)).to_xml
+
+        author_signature = xml.at_xpath("author_signature").text
+        parent_author_signature = xml.at_xpath("parent_author_signature").text
+
+        expect(verify_signature(author_pkey, author_signature, signature_data_with_fixed_property)).to be_truthy
+        expect(verify_signature(parent_pkey, parent_author_signature, signature_data_with_fixed_property)).to be_truthy
+      end
+
       it "computes correct signatures for the entity when the parent is a relayable itself" do
         intermediate_author = Fabricate.sequence(:diaspora_id)
         parent = Fabricate(:related_entity, author: intermediate_author, local: true, parent: local_parent)

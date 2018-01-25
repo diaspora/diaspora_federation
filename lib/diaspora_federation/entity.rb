@@ -277,7 +277,7 @@ module DiasporaFederation
 
       case self.class.class_props[name]
       when :string
-        value.to_s
+        value.to_s.gsub(INVALID_XML_REGEX, "\uFFFD")
       when :timestamp
         value.nil? ? "" : value.utc.iso8601
       else
@@ -310,7 +310,7 @@ module DiasporaFederation
     # Create simple node, fill it with text and append to root
     def simple_node(doc, name, value)
       Nokogiri::XML::Element.new(name.to_s, doc).tap do |node|
-        node.content = value.gsub(INVALID_XML_REGEX, "\uFFFD") unless value.empty?
+        node.content = value unless value.empty?
       end
     end
 
