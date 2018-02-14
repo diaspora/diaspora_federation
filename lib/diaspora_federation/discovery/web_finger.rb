@@ -44,7 +44,7 @@ module DiasporaFederation
 
       # @!attribute [r] profile_url
       #   @return [String] link to the users profile
-      property :profile_url, :string, default: nil
+      property :profile_url, :string, optional: true
 
       # @!attribute [r] atom_url
       #   This atom feed is an Activity Stream of the user's public posts. diaspora*
@@ -55,18 +55,18 @@ module DiasporaFederation
       #   Note that this feed MAY also be made available through the PubSubHubbub
       #   mechanism by supplying a <link rel="hub"> in the atom feed itself.
       #   @return [String] atom feed url
-      property :atom_url, :string, default: nil
+      property :atom_url, :string, optional: true
 
       # @!attribute [r] salmon_url
       #   @note could be nil
       #   @return [String] salmon endpoint url
       #   @see https://cdn.rawgit.com/salmon-protocol/salmon-protocol/master/draft-panzer-salmon-00.html#SMLR
       #     Panzer draft for Salmon, paragraph 3.3
-      property :salmon_url, :string, default: nil
+      property :salmon_url, :string, optional: true
 
       # @!attribute [r] subscribe_url
       #   This url is used to find another user on the home-pod of the user in the webfinger.
-      property :subscribe_url, :string, default: nil
+      property :subscribe_url, :string, optional: true
 
       # +hcard_url+ link relation
       REL_HCARD = "http://microformats.org/profile/hcard".freeze
