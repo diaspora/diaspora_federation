@@ -27,7 +27,7 @@ module DiasporaFederation
       describe "##{prop}" do
         it_behaves_like "a property with a value validation/restriction" do
           let(:property) { prop }
-          let(:wrong_values) { ["", "https://asdf$%.com", "example.com"] }
+          let(:wrong_values) { %w[https://asdf$.com example.com] }
           let(:correct_values) { [nil] }
         end
 
