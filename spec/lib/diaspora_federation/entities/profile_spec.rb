@@ -5,6 +5,7 @@ module DiasporaFederation
     let(:xml) { <<-XML }
 <profile>
   <author>#{data[:author]}</author>
+  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
   <first_name>#{data[:first_name]}</first_name>
   <image_url>#{data[:image_url]}</image_url>
   <image_url_medium>#{data[:image_url]}</image_url_medium>
@@ -25,6 +26,7 @@ XML
   "entity_type": "profile",
   "entity_data": {
     "author": "#{data[:author]}",
+    "edited_at": "#{data[:edited_at].iso8601}",
     "first_name": "#{data[:first_name]}",
     "image_url": "#{data[:image_url]}",
     "image_url_medium": "#{data[:image_url]}",

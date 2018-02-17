@@ -14,6 +14,11 @@ module DiasporaFederation
       #   @return [String] diaspora* ID
       property :author, :string, alias: :diaspora_id, xml_name: :diaspora_handle
 
+      # @!attribute [r] edited_at
+      #   The timestamp when the profile was edited
+      #   @return [Time] edited time
+      property :edited_at, :timestamp, optional: true
+
       # @!attribute [r] first_name
       #   @deprecated We decided to only use one name field, these should be removed
       #     in later iterations (will affect older diaspora* installations).

@@ -6,23 +6,24 @@ This entity represents a reshare of a status message. It inherits from [Post][po
 
 ## Properties
 
-| Property     | Type (Length)                | Description                                            |
-| ------------ | ---------------------------- | ------------------------------------------------------ |
-| `author`     | [diaspora\* ID][diaspora-id] | The diaspora\* ID of the author of the status message. |
-| `guid`       | [GUID][guid]                 | The GUID of the status message.                        |
-| `created_at` | [Timestamp][timestamp]       | The create timestamp of the status message.            |
-| `public`     | [Boolean][boolean]           | `true` if the status message is public.                |
-| `text`       | [Markdown][markdown] (65535) | The status message text.                               |
+| Property     | Type (Length)                | Editable | Description                                            |
+| ------------ | ---------------------------- |:--------:| ------------------------------------------------------ |
+| `author`     | [diaspora\* ID][diaspora-id] |    ✘     | The diaspora\* ID of the author of the status message. |
+| `guid`       | [GUID][guid]                 |    ✘     | The GUID of the status message.                        |
+| `created_at` | [Timestamp][timestamp]       |    ✘     | The create timestamp of the status message.            |
+| `public`     | [Boolean][boolean]           |    ✘     | `true` if the status message is public.                |
+| `text`       | [Markdown][markdown] (65535) |    ✔     | The status message text.                               |
 
 ## Optional Properties
 
-| Property                | Type (Length)          | Description                                                                                                             |
-| ----------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `provider_display_name` | [String][string] (255) | The means by which the author has posted the status message.                                                            |
-| `location`              | [Location][location]   | The Location information of the status message.                                                                         |
-| `photo`                 | [Photo][photo]s        | The attached Photos of the status message, the `status_message_guid` and the `author` need to match the status message. |
-| `poll`                  | [Poll][poll]           | The attached Poll of the status message.                                                                                |
-| `event`                 | [Event][event]         | The attached Event of the status message.                                                                               |
+| Property                | Type (Length)          | Editable | Description                                                                                                             |
+| ----------------------- | ---------------------- |:--------:| ----------------------------------------------------------------------------------------------------------------------- |
+| `edited_at`             | [Timestamp][timestamp] |    ✔     | The timestamp when the status message was edited.                                                                       |
+| `provider_display_name` | [String][string] (255) |    ✘     | The means by which the author has posted the status message.                                                            |
+| `location`              | [Location][location]   |    ✔     | The Location information of the status message.                                                                         |
+| `photo`                 | [Photo][photo]s        |    ✔     | The attached Photos of the status message, the `status_message_guid` and the `author` need to match the status message. |
+| `poll`                  | [Poll][poll]           |    ✘     | The attached Poll of the status message.                                                                                |
+| `event`                 | [Event][event]         |    ✘     | The attached Event of the status message.                                                                               |
 
 ## Examples
 

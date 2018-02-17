@@ -55,6 +55,7 @@ module DiasporaFederation
 
       Fabricator(:profile_entity, class_name: DiasporaFederation::Entities::Profile) do
         author { Fabricate.sequence(:diaspora_id) }
+        edited_at { Time.now.utc }
         first_name "my name"
         last_name nil
         image_url "/assets/user/default.png"
@@ -81,6 +82,7 @@ module DiasporaFederation
         author { Fabricate.sequence(:diaspora_id) }
         public true
         created_at { Time.now.utc }
+        edited_at { Time.now.utc + 3600 }
         remote_photo_path "https://diaspora.example.tld/uploads/images/"
         remote_photo_name "f2a41e9d2db4d9a199c8.jpg"
         text "what you see here..."
@@ -107,6 +109,7 @@ module DiasporaFederation
         guid { Fabricate.sequence(:guid) }
         public true
         created_at { Time.now.utc }
+        edited_at { Time.now.utc + 3600 }
       end
 
       Fabricator(:contact_entity, class_name: DiasporaFederation::Entities::Contact) do
@@ -121,6 +124,8 @@ module DiasporaFederation
         author { Fabricate.sequence(:diaspora_id) }
         guid { Fabricate.sequence(:guid) }
         text "this is a very informative comment"
+        created_at { Time.now.utc }
+        edited_at { Time.now.utc + 3600 }
       end
 
       Fabricator(:like_entity, class_name: DiasporaFederation::Entities::Like, from: :relayable_entity) do
@@ -144,6 +149,7 @@ module DiasporaFederation
         author { Fabricate.sequence(:diaspora_id) }
         text "this is a very informative text"
         created_at { Time.now.utc }
+        edited_at { Time.now.utc + 3600 }
         conversation_guid { Fabricate.sequence(:guid) }
       end
 
@@ -183,6 +189,7 @@ module DiasporaFederation
       Fabricator(:event_entity, class_name: DiasporaFederation::Entities::Event) do |f|
         author { Fabricate.sequence(:diaspora_id) }
         guid { Fabricate.sequence(:guid) }
+        edited_at { Time.now.utc }
         summary "Cool event"
         description "You need to see this!"
         start { change_time(Time.now.utc, min: 0) - 3600 }
@@ -196,6 +203,7 @@ module DiasporaFederation
         author { Fabricate.sequence(:diaspora_id) }
         guid { Fabricate.sequence(:guid) }
         status "accepted"
+        edited_at { Time.now.utc }
       end
 
       Fabricator(:related_entity, class_name: DiasporaFederation::Entities::RelatedEntity) do

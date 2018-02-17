@@ -8,6 +8,7 @@ module DiasporaFederation
   <author>#{data[:author]}</author>
   <public>#{data[:public]}</public>
   <created_at>#{data[:created_at].utc.iso8601}</created_at>
+  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
   <remote_photo_path>#{data[:remote_photo_path]}</remote_photo_path>
   <remote_photo_name>#{data[:remote_photo_name]}</remote_photo_name>
   <text>#{data[:text]}</text>
@@ -25,6 +26,7 @@ XML
     "author": "#{data[:author]}",
     "public": #{data[:public]},
     "created_at": "#{data[:created_at].utc.iso8601}",
+    "edited_at": "#{data[:edited_at].iso8601}",
     "remote_photo_path": "#{data[:remote_photo_path]}",
     "remote_photo_name": "#{data[:remote_photo_name]}",
     "text": "#{data[:text]}",

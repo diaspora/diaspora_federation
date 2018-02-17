@@ -8,6 +8,7 @@ module DiasporaFederation
   <guid>#{data[:guid]}</guid>
   <text>#{data[:text]}</text>
   <created_at>#{data[:created_at].utc.iso8601}</created_at>
+  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
   <conversation_guid>#{data[:conversation_guid]}</conversation_guid>
 </message>
 XML

@@ -8,14 +8,19 @@ See also: [Relayable][relayable]
 
 ## Properties
 
-| Property                  | Type                         | Description                                                                                                                          |
-| ------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `author`                  | [diaspora\*&nbsp;ID][diaspora-id] | The diaspora\* ID of the author of the event participation.                                                                          |
-| `guid`                    | [GUID][guid]                 | The GUID of the event participation.                                                                                                 |
-| `parent_guid`             | [GUID][guid]                 | The GUID of the [Event][event].                                                                                                      |
-| `status`                  | [String][string]             | The participation status, lowercase string as defined in [RFC 5545, Section 3.2.12][status] (`accepted`, `declined` or `tentative`). |
-| `author_signature`        | [Signature][signature]       | The signature from the author of the event participation.                                                                            |
-| `parent_author_signature` | [Signature][signature]       | The signature from the author of the [Event][event].                                                                                 |
+| Property           | Type                         | Editable | Description                                                                                                                          |
+| ------------------ | ---------------------------- |:--------:| ------------------------------------------------------------------------------------------------------------------------------------ |
+| `author`           | [diaspora\* ID][diaspora-id] |    ✘     | The diaspora\* ID of the author of the event participation.                                                                          |
+| `guid`             | [GUID][guid]                 |    ✘     | The GUID of the event participation.                                                                                                 |
+| `parent_guid`      | [GUID][guid]                 |    ✘     | The GUID of the [Event][event].                                                                                                      |
+| `status`           | [String][string]             |    ✔     | The participation status, lowercase string as defined in [RFC 5545, Section 3.2.12][status] (`accepted`, `declined` or `tentative`). |
+| `author_signature` | [Signature][signature]       |    ✔     | The signature from the author of the event participation.                                                                            |
+
+## Optional Properties
+
+| Property    | Type                   | Editable | Description                                            |
+| ----------- | ---------------------- |:--------:| ------------------------------------------------------ |
+| `edited_at` | [Timestamp][timestamp] |    ✔     | The timestamp when the event participation was edited. |
 
 ## Examples
 
@@ -50,5 +55,6 @@ See also: [Relayable][relayable]
 [string]: {{ site.baseurl }}/federation/types.html#string
 [status]: https://tools.ietf.org/html/rfc5545#section-3.2.12
 [signature]: {{ site.baseurl }}/federation/types.html#signature
+[timestamp]: {{ site.baseurl }}/federation/types.html#timestamp
 [event]: {{ site.baseurl }}/entities/event.html
 [relayable]: {{ site.baseurl }}/federation/relayable.html

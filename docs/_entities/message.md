@@ -7,13 +7,19 @@ This entity represents a private message exchanged in private conversation. It c
 
 ## Properties
 
-| Property            | Type (Length)                | Description                                     |
-| ------------------- | ---------------------------- | ----------------------------------------------- |
-| `author`            | [diaspora\* ID][diaspora-id] | The diaspora\* ID of the author of the message. |
-| `guid`              | [GUID][guid]                 | The GUID of the message.                        |
-| `conversation_guid` | [GUID][guid]                 | The GUID of the [Conversation][conversation].   |
-| `text`              | [Markdown][markdown] (65535) | The message text.                               |
-| `created_at`        | [Timestamp][timestamp]       | The create timestamp of the message.            |
+| Property            | Type (Length)                | Editable | Description                                     |
+| ------------------- | ---------------------------- |:--------:| ----------------------------------------------- |
+| `author`            | [diaspora\* ID][diaspora-id] |    ✘     | The diaspora\* ID of the author of the message. |
+| `guid`              | [GUID][guid]                 |    ✘     | The GUID of the message.                        |
+| `conversation_guid` | [GUID][guid]                 |    ✘     | The GUID of the [Conversation][conversation].   |
+| `text`              | [Markdown][markdown] (65535) |    ✔     | The message text.                               |
+| `created_at`        | [Timestamp][timestamp]       |    ✘     | The create timestamp of the message.            |
+
+## Optional Properties
+
+| Property             | Type (Length)          | Editable | Description                                |
+| -------------------- | ---------------------- |:--------:| ------------------------------------------ |
+| `edited_at`          | [Timestamp][timestamp] |    ✔     | The timestamp when the message was edited. |
 
 ## Example
 

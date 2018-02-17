@@ -16,6 +16,11 @@ module DiasporaFederation
       #   @return [String] guid
       property :guid, :string
 
+      # @!attribute [r] edited_at
+      #   The timestamp when the event was edited
+      #   @return [Time] edited time
+      property :edited_at, :timestamp, optional: true
+
       # @!attribute [r] summary
       #   The summary of the event
       #   @return [String] event summary
