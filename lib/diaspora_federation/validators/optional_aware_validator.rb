@@ -13,10 +13,8 @@ module DiasporaFederation
       private
 
       def optional_props
-        entity_name = self.class.name.split("::").last.sub("Validator", "")
-        return [] unless Entities.const_defined?(entity_name)
-
-        Entities.const_get(entity_name).optional_props
+        return [] unless @obj.class.respond_to?(:optional_props)
+        @obj.class.optional_props
       end
     end
   end

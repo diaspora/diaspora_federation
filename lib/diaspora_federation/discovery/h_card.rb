@@ -48,7 +48,7 @@ module DiasporaFederation
       # @!attribute [r] nickname
       #   The first part of the diaspora* ID
       #   @return [String] nickname
-      property :nickname, :string, default: nil
+      property :nickname, :string, optional: true
 
       # @!attribute [r] full_name
       #   @return [String] display name of the user
@@ -60,7 +60,7 @@ module DiasporaFederation
       #     installations).
       #
       #   @return [String] link to the pod
-      property :url, :string, default: nil
+      property :url, :string, optional: true
 
       # @!attribute [r] public_key
       #   When a user is created on the pod, the pod MUST generate a pgp keypair

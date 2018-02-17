@@ -1,6 +1,8 @@
 def entity_stub(entity, data={})
-  OpenStruct.new(Fabricate.schematic(entity).options[:class_name].default_values
-                   .merge(Fabricate.attributes_for(entity)).merge(data))
+  entity_class = Fabricate.schematic(entity).options[:class_name]
+  allow_any_instance_of(entity_class).to receive(:freeze)
+  allow_any_instance_of(entity_class).to receive(:validate)
+  entity_class.new(Fabricate.attributes_for(entity).merge(data))
 end
 
 ALPHANUMERIC_RANGE = [*"0".."9", *"A".."Z", *"a".."z"].freeze

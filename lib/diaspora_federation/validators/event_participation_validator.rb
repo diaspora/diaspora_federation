@@ -6,7 +6,7 @@ module DiasporaFederation
 
       include RelayableValidator
 
-      rule :status, regular_expression: {regex: /\A(accepted|declined|tentative)\z/}
+      rule :status, [:not_empty, regular_expression: {regex: /\A(accepted|declined|tentative)\z/}]
     end
   end
 end

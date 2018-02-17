@@ -41,7 +41,7 @@ module DiasporaFederation
 
       Fabricator(:account_migration_entity, class_name: DiasporaFederation::Entities::AccountMigration) do
         author { Fabricate.sequence(:diaspora_id) }
-        profile { Fabricate(:profile_entity) }
+        profile {|attrs| Fabricate(:profile_entity, author: attrs[:author]) }
         old_identity { Fabricate.sequence(:diaspora_id) }
       end
 
