@@ -1,19 +1,29 @@
+# 0.2.4
+
+## Features
+
+* Make some entities editable and add `edited_at` property [#94](https://github.com/diaspora/diaspora_federation/pull/94)
+
+## Bug fixes
+
+* Fix validation of optional properties (for example for WebFinger) [#97](https://github.com/diaspora/diaspora_federation/pull/97)
+
 # 0.2.3
 
 ## Features
 
-Add `blocking` flag to `Contact` entity [#80](https://github.com/diaspora/diaspora_federation/pull/80)
-Introduce alternative form for `AccountMigration` entity signature [#89](https://github.com/diaspora/diaspora_federation/pull/89)
+* Add `blocking` flag to `Contact` entity [#80](https://github.com/diaspora/diaspora_federation/pull/80)
+* Introduce alternative form for `AccountMigration` entity signature [#89](https://github.com/diaspora/diaspora_federation/pull/89)
 
 ## Refactor
 
-Extract signing of `AccountMigration` to a different module [#89](https://github.com/diaspora/diaspora_federation/pull/89)
-Remove participants limit for conversations [#91](https://github.com/diaspora/diaspora_federation/pull/91)
+* Extract signing of `AccountMigration` to a different module [#89](https://github.com/diaspora/diaspora_federation/pull/89)
+* Remove participants limit for conversations [#91](https://github.com/diaspora/diaspora_federation/pull/91)
 
 ## Bug fixes
 
-Fix when booleans in relayables are false [#90](https://github.com/diaspora/diaspora_federation/pull/90)
-Fix relayable signatures for messages with invalid XML characters [#95](https://github.com/diaspora/diaspora_federation/pull/95)
+* Fix when booleans in relayables are false [#90](https://github.com/diaspora/diaspora_federation/pull/90)
+* Fix relayable signatures for messages with invalid XML characters [#95](https://github.com/diaspora/diaspora_federation/pull/95)
 
 # 0.2.2
 
