@@ -22,4 +22,4 @@ The [Friendica][friendica] project also has [its implementation in PHP][phpimple
 [entities]: {{ site.baseurl }}/entities/
 [github]: https://github.com/diaspora/diaspora_federation
 [friendica]: https://github.com/friendica/friendica
-[phpimplementation]: https://github.com/friendica/friendica/blob/master/include/diaspora.php
+[phpimplementation]: https://github.com/friendica/friendica/blob/develop/src/Protocol/Diaspora.php
