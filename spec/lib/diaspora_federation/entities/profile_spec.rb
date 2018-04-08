@@ -6,6 +6,7 @@ module DiasporaFederation
 <profile>
   <author>#{data[:author]}</author>
   <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
+  <full_name>#{data[:full_name]}</full_name>
   <first_name>#{data[:first_name]}</first_name>
   <image_url>#{data[:image_url]}</image_url>
   <image_url_medium>#{data[:image_url]}</image_url_medium>
@@ -27,6 +28,7 @@ XML
   "entity_data": {
     "author": "#{data[:author]}",
     "edited_at": "#{data[:edited_at].iso8601}",
+    "full_name": "#{data[:full_name]}",
     "first_name": "#{data[:first_name]}",
     "image_url": "#{data[:image_url]}",
     "image_url_medium": "#{data[:image_url]}",
@@ -60,6 +62,7 @@ JSON
 XML
 
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
+        expect(parsed_instance.full_name).to be_nil
         expect(parsed_instance.first_name).to be_nil
         expect(parsed_instance.last_name).to be_nil
         expect(parsed_instance.image_url).to be_nil

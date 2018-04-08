@@ -110,6 +110,7 @@ module DiasporaFederation
   <author>#{data[:author]}</author>
   <profile>
     <author>#{data[:profile].author}</author>
+    <full_name>#{data[:profile].full_name}</full_name>
     <first_name>#{data[:profile].first_name}</first_name>
     <image_url>#{data[:profile].image_url}</image_url>
     <image_url_medium>#{data[:profile].image_url}</image_url_medium>
@@ -148,6 +149,7 @@ XML
   <author>#{data[:author]}</author>
   <profile>
     <author>#{data[:profile].author}</author>
+    <full_name>#{data[:profile].full_name}</full_name>
     <first_name>#{data[:profile].first_name}</first_name>
     <image_url>#{data[:profile].image_url}</image_url>
     <image_url_medium>#{data[:profile].image_url}</image_url_medium>
@@ -185,6 +187,7 @@ XML
   <author>#{data[:author]}</author>
   <profile>
     <author>#{data[:profile].author}</author>
+    <full_name>#{data[:profile].full_name}</full_name>
     <first_name>#{data[:profile].first_name}</first_name>
     <image_url>#{data[:profile].image_url}</image_url>
     <image_url_medium>#{data[:profile].image_url}</image_url_medium>

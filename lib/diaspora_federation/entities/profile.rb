@@ -19,6 +19,10 @@ module DiasporaFederation
       #   @return [Time] edited time
       property :edited_at, :timestamp, optional: true
 
+      # @!attribute [r] full_name
+      #   @return [String] display name of the user
+      property :full_name, :string, optional: true
+
       # @!attribute [r] first_name
       #   @deprecated We decided to only use one name field, these should be removed
       #     in later iterations (will affect older diaspora* installations).

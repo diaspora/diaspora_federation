@@ -247,6 +247,7 @@
         "entity_data": {
           "type": "object",
           "properties": {
+            "full_name": { "type": ["string", "null"] },
             "first_name": { "type": ["string", "null"] },
             "last_name": { "type": ["string", "null"] },
             "gender": { "type": ["string", "null"] },

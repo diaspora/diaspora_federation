@@ -8,6 +8,7 @@ module DiasporaFederation
 
       # The name must not contain a semicolon because of mentions.
       # @{<full_name> ; <diaspora_id>}
+      rule :full_name, regular_expression: {regex: /\A[^;]{,70}\z/}
       rule :first_name, regular_expression: {regex: /\A[^;]{,32}\z/}
       rule :last_name, regular_expression: {regex: /\A[^;]{,32}\z/}
 
