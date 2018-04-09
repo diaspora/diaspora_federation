@@ -30,6 +30,7 @@ require "diaspora_federation/entities/poll_answer"
 require "diaspora_federation/entities/poll"
 require "diaspora_federation/entities/poll_participation"
 
+require "diaspora_federation/entities/embed"
 require "diaspora_federation/entities/location"
 
 require "diaspora_federation/entities/event"

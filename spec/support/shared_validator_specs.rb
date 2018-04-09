@@ -277,6 +277,13 @@ shared_examples "a url validator without path" do
 end
 
 shared_examples "a url path validator" do
+  it "validates url with a path" do
+    validator = described_class.new(entity_stub(entity, property => "https://example.com/some/path"))
+
+    expect(validator).to be_valid
+    expect(validator.errors).to be_empty
+  end
+
   it "fails for url with special chars" do
     validator = described_class.new(entity_stub(entity, property => "https://asdf$%.com/some/path"))
 

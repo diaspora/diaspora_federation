@@ -207,6 +207,14 @@ module DiasporaFederation
         edited_at { Time.now.utc }
       end
 
+      Fabricator(:embed_entity, class_name: DiasporaFederation::Entities::Embed) do
+        url "https://example.org/"
+        title "Example Website"
+        description "This is an example!"
+        image "https://example.org/example.png"
+        nothing nil
+      end
+
       Fabricator(:related_entity, class_name: DiasporaFederation::Entities::RelatedEntity) do
         author { Fabricate.sequence(:diaspora_id) }
         local true

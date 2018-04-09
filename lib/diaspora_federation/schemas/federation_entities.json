@@ -10,6 +10,7 @@
     {"$ref": "#/definitions/reshare"},
     {"$ref": "#/definitions/profile"},
     {"$ref": "#/definitions/location"},
+    {"$ref": "#/definitions/embed"},
     {"$ref": "#/definitions/photo"},
     {"$ref": "#/definitions/poll"},
     {"$ref": "#/definitions/poll_answer"}
@@ -371,6 +372,26 @@
             "lat",
             "lng"
           ]
+        }
+      }
+    },
+
+    "embed": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^embed$"
+        },
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "url": { "type": ["string", "null"] },
+            "title": { "type": ["string", "null"] },
+            "description": { "type": ["string", "null"] },
+            "image": { "type": ["string", "null"] },
+            "nothing": { "type": "boolean" }
+          }
         }
       }
     }
