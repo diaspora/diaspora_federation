@@ -101,7 +101,7 @@
                 "positive": { "type": "boolean" },
                 "parent_type": { "enum": ["Post", "Comment"] }
               },
-              "required": ["positive"]
+              "required": ["positive", "parent_type"]
             }
           }
         }
