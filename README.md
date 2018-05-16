@@ -6,7 +6,6 @@
 
 [![Code Climate](https://codeclimate.com/github/diaspora/diaspora_federation/badges/gpa.svg)](https://codeclimate.com/github/diaspora/diaspora_federation)
 [![Test Coverage](https://codeclimate.com/github/diaspora/diaspora_federation/badges/coverage.svg)](https://codeclimate.com/github/diaspora/diaspora_federation/coverage)
-[![Dependency Status](https://gemnasium.com/diaspora/diaspora_federation.svg)](https://gemnasium.com/diaspora/diaspora_federation)
 [![Inline docs](https://inch-ci.org/github/diaspora/diaspora_federation.svg?branch=master)](https://inch-ci.org/github/diaspora/diaspora_federation)
 [![Gem Version](https://badge.fury.io/rb/diaspora_federation.svg)](https://badge.fury.io/rb/diaspora_federation)
 
