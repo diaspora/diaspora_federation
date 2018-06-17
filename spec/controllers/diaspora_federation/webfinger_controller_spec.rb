@@ -10,7 +10,7 @@ module DiasporaFederation
 
       it "succeeds" do
         get :host_meta
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "contains the webfinger-template" do
@@ -38,19 +38,19 @@ module DiasporaFederation
     describe "GET #webfinger", rails: 5 do
       it "uses the JRD format as default" do
         get :webfinger, params: {resource: alice.diaspora_id}
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.header["Content-Type"]).to include "application/jrd+json"
       end
 
       context "json", exceptions: :catch do
         it "succeeds when the person exists" do
           get :webfinger, format: :json, params: {resource: alice.diaspora_id}
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it "succeeds with 'acct:' in the query when the person exists" do
           get :webfinger, format: :json, params: {resource: "acct:#{alice.diaspora_id}"}
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it "contains the diaspora* ID" do
@@ -89,12 +89,12 @@ module DiasporaFederation
       context "xml" do
         it "succeeds when the person exists" do
           get :webfinger, format: :json, params: {resource: alice.diaspora_id}
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it "succeeds with 'acct:' in the query when the person exists" do
           get :webfinger, format: :xml, params: {resource: "acct:#{alice.diaspora_id}"}
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it "contains the diaspora* ID" do

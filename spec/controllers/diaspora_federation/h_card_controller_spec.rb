@@ -5,7 +5,7 @@ module DiasporaFederation
     describe "GET #hcard" do
       it "succeeds when the person exists" do
         get :hcard, params: {guid: alice.guid}
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "contains the guid" do
