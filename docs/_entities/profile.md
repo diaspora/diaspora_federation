@@ -30,6 +30,7 @@ only contain the base profile.
 | Property           | Type (Length)                | Editable | Description                                                                                              |
 | ------------------ | ---------------------------- |:--------:| -------------------------------------------------------------------------------------------------------- |
 | `edited_at`        | [Timestamp][timestamp]       |    ✔     | The timestamp when the profile was edited.                                                               |
+| `full_name`        | [Name][name] (70)            |    ✔     | The full name of the person.                                                                             |
 | `first_name`       | [Name][name] (32)            |    ✔     | The first name of the person.                                                                            |
 | `last_name`        | [Name][name] (32)            |    ✔     | The last name of the person.                                                                             |
 | `image_url`        | [URL][url] (255)             |    ✔     | The URL to the big avatar (300x300) of the person.                                                       |
@@ -50,6 +51,7 @@ only contain the base profile.
 <profile>
   <author>alice@example.org</author>
   <edited_at>2018-01-23T01:19:56Z</edited_at>
+  <full_name>Alice Smith</full_name>
   <first_name>Alice</first_name>
   <last_name>Smith</last_name>
   <image_url>https://example.org/images/thumb_large_a795f872c93309597345.jpg</image_url>

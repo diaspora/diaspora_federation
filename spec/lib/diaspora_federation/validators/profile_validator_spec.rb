@@ -8,6 +8,13 @@ module DiasporaFederation
       let(:property) { :author }
     end
 
+    describe "#full_name" do
+      it_behaves_like "a name validator" do
+        let(:property) { :full_name }
+        let(:length) { 70 }
+      end
+    end
+
     %i[first_name last_name].each do |prop|
       describe "##{prop}" do
         it_behaves_like "a name validator" do

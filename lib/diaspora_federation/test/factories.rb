@@ -56,6 +56,7 @@ module DiasporaFederation
       Fabricator(:profile_entity, class_name: DiasporaFederation::Entities::Profile) do
         author { Fabricate.sequence(:diaspora_id) }
         edited_at { Time.now.utc }
+        full_name "my name"
         first_name "my name"
         last_name nil
         image_url "/assets/user/default.png"
