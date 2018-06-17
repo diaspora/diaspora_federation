@@ -190,6 +190,10 @@ Layout/EmptyLineBetweenDefs:
 Style/NumericPredicate:
   EnforcedStyle: comparison
 
+Style/AccessModifierDeclarations:
+  Exclude:
+    - "lib/diaspora_federation/test/factories.rb"
+
 # disable this for now, needs to be rechecked later
 Style/DateTime:
   Exclude:
@@ -200,6 +204,8 @@ Style/DateTime:
 
 # only with ruby >= 2.3
 Layout/IndentHeredoc:
+  Enabled: false
+Layout/ClosingHeredocIndentation:
   Enabled: false
 
 # for rails 4 and ruby < 2.2.2

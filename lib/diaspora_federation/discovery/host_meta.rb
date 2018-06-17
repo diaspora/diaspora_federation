@@ -1,4 +1,3 @@
-
 module DiasporaFederation
   module Discovery
     # Generates and parses Host Meta documents.
