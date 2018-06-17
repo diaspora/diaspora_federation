@@ -224,7 +224,7 @@ GEM
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.4.0)
-    uuid (2.3.8)
+    uuid (2.3.9)
       macaddr (~> 1.0)
     valid (1.2.0)
     webmock (3.3.0)
