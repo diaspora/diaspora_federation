@@ -164,11 +164,11 @@
           "required": [
             "guid", "public", "created_at"
           ]
-        },
-        "required": [
-          "entity_type", "entity_data"
-        ]
-      }
+        }
+      },
+      "required": [
+        "entity_type", "entity_data"
+      ]
     },
 
     "status_message": {
@@ -232,9 +232,9 @@
             "root_guid": {"$ref": "#/definitions/guid"}
           },
           "required": ["author", "guid", "created_at", "root_author", "root_guid"]
-        },
-        "required": ["entity_type", "entity_data"]
-      }
+        }
+      },
+      "required": ["entity_type", "entity_data"]
     },
 
     "profile": {
