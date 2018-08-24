@@ -37,7 +37,7 @@ Configure the engine in ```config/initializers/diaspora_federation.rb```:
 ```ruby
 DiasporaFederation.configure do |config|
   # the pod url
-  config.server_uri = "http://localhost:3000"
+  config.server_uri = URI("http://localhost:3000")
 
   # ... other settings
 
