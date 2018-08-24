@@ -37,24 +37,30 @@ Configure the engine in ```config/initializers/diaspora_federation.rb```:
 ```ruby
 DiasporaFederation.configure do |config|
   # the pod url
-  config.server_uri = AppConfig.pod_uri
+  config.server_uri = "http://localhost:3000"
+
+  # ... other settings
 
   config.define_callbacks do
     on :fetch_person_for_webfinger do |diaspora_id|
       person = Person.find_local_by_diaspora_id(diaspora_id)
       if person
         DiasporaFederation::Discovery::WebFinger.new(
-          # ...
+          # ... copy person attributes to WebFinger object
         )
       end
     end
 
     on :fetch_person_for_hcard do |guid|
-      # ...
+      # ... fetch hcard information
     end
+
+    # ... other callbacks
   end
 end
 ```
+
+The available config settings can be found [here](https://www.rubydoc.info/gems/diaspora_federation/DiasporaFederation#class_attr_details) and the callbacks are listed [here](https://www.rubydoc.info/gems/diaspora_federation/DiasporaFederation#define_callbacks-class_method) in the gem documentation.
 
 ## Contributing
 
