@@ -17,7 +17,7 @@ end
 
 group :test do
   # rspec formatter
-  gem "fuubar", "2.3.1",    require: false
+  gem "fuubar", "2.3.2",    require: false
   gem "nyan-cat-formatter", require: false
 
   # test coverage
@@ -35,8 +35,8 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.7.0"
-  gem "rspec-rails", "~> 3.7.0"
+  gem "rspec", "~> 3.8.0"
+  gem "rspec-rails", "~> 3.8.0"
 end
 
  gem "fabrication", "< 2.17.0"
