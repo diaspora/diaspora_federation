@@ -5,7 +5,7 @@ DiasporaFederation::Engine.routes.draw do
   end
 
   controller :fetch do
-    get "fetch/:type/:guid" => :fetch, :as => "fetch"
+    get "fetch/:type/:guid" => :fetch, :as => "fetch", :guid => /#{Validation::Rule::Guid::VALID_CHARS}/
   end
 
   controller :webfinger do
