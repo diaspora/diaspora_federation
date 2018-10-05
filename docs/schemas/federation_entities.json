@@ -10,6 +10,7 @@
     {"$ref": "#/definitions/reshare"},
     {"$ref": "#/definitions/profile"},
     {"$ref": "#/definitions/location"},
+    {"$ref": "#/definitions/embed"},
     {"$ref": "#/definitions/photo"},
     {"$ref": "#/definitions/poll"},
     {"$ref": "#/definitions/poll_answer"}
@@ -101,7 +102,7 @@
                 "positive": { "type": "boolean" },
                 "parent_type": { "enum": ["Post", "Comment"] }
               },
-              "required": ["positive"]
+              "required": ["positive", "parent_type"]
             }
           }
         }
@@ -164,11 +165,11 @@
           "required": [
             "guid", "public", "created_at"
           ]
-        },
-        "required": [
-          "entity_type", "entity_data"
-        ]
-      }
+        }
+      },
+      "required": [
+        "entity_type", "entity_data"
+      ]
     },
 
     "status_message": {
@@ -231,10 +232,10 @@
             "root_author": {"type": "string"},
             "root_guid": {"$ref": "#/definitions/guid"}
           },
-          "required": ["author", "guid", "created_at", "root_author", "root_guid"]
-        },
-        "required": ["entity_type", "entity_data"]
-      }
+          "required": ["author", "guid", "created_at"]
+        }
+      },
+      "required": ["entity_type", "entity_data"]
     },
 
     "profile": {
@@ -247,6 +248,7 @@
         "entity_data": {
           "type": "object",
           "properties": {
+            "full_name": { "type": ["string", "null"] },
             "first_name": { "type": ["string", "null"] },
             "last_name": { "type": ["string", "null"] },
             "gender": { "type": ["string", "null"] },
@@ -370,6 +372,26 @@
             "lat",
             "lng"
           ]
+        }
+      }
+    },
+
+    "embed": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "pattern": "^embed$"
+        },
+        "entity_data": {
+          "type": "object",
+          "properties": {
+            "url": { "type": ["string", "null"] },
+            "title": { "type": ["string", "null"] },
+            "description": { "type": ["string", "null"] },
+            "image": { "type": ["string", "null"] },
+            "nothing": { "type": "boolean" }
+          }
         }
       }
     }
