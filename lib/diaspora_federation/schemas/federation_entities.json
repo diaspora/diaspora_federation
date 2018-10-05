@@ -232,7 +232,7 @@
             "root_author": {"type": "string"},
             "root_guid": {"$ref": "#/definitions/guid"}
           },
-          "required": ["author", "guid", "created_at", "root_author", "root_guid"]
+          "required": ["author", "guid", "created_at"]
         }
       },
       "required": ["entity_type", "entity_data"]
