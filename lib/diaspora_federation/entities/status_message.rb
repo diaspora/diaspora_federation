@@ -36,6 +36,11 @@ module DiasporaFederation
       #   @return [Entities::Event] event
       entity :event, Entities::Event, optional: true
 
+      # @!attribute [r] embed
+      #   Optional embed information of an URL that should be embedded in the status message
+      #   @return [Entities::Embed] embed
+      entity :embed, Entities::Embed, optional: true
+
       private
 
       def validate

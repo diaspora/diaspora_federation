@@ -10,6 +10,7 @@ module DiasporaFederation
         location:              location,
         poll:                  nil,
         event:                 nil,
+        embed:                 nil,
         provider_display_name: "something"
       )
     }
@@ -137,6 +138,8 @@ XML
         expect(parsed_instance.photos).to eq([])
         expect(parsed_instance.location).to be_nil
         expect(parsed_instance.poll).to be_nil
+        expect(parsed_instance.event).to be_nil
+        expect(parsed_instance.embed).to be_nil
         expect(parsed_instance.public).to be_falsey
         expect(parsed_instance.provider_display_name).to be_nil
       end

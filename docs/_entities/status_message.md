@@ -24,6 +24,7 @@ This entity represents a reshare of a status message. It inherits from [Post][po
 | `photo`                 | [Photo][photo]s        |    ✔     | The attached Photos of the status message, the `status_message_guid` and the `author` need to match the status message. |
 | `poll`                  | [Poll][poll]           |    ✘     | The attached Poll of the status message.                                                                                |
 | `event`                 | [Event][event]         |    ✘     | The attached Event of the status message.                                                                               |
+| `embed`                 | [Embed][embed]         |    ✔     | The Embed information of an URL that should be embedded in the status message.                                          |
 
 ## Examples
 
@@ -47,12 +48,12 @@ This entity represents a reshare of a status message. It inherits from [Post][po
   <guid>c3893bf029e7013487753131731751e9</guid>
   <created_at>2016-07-11T22:50:18Z</created_at>
   <text>I am a very interesting status update</text>
+  <public>true</public>
   <location>
     <address>Vienna, Austria</address>
     <lat>48.208174</lat>
     <lng>16.373819</lng>
   </location>
-  <public>true</public>
 </status_message>
 ~~~
 
@@ -64,6 +65,7 @@ This entity represents a reshare of a status message. It inherits from [Post][po
   <guid>e05828d029e7013487753131731751e9</guid>
   <created_at>2016-07-11T22:52:56Z</created_at>
   <text>I am a very interesting status update</text>
+  <public>true</public>
   <photo>
     <guid>0788070029e8013487753131731751e9</guid>
     <author>alice@example.org</author>
@@ -86,7 +88,6 @@ This entity represents a reshare of a status message. It inherits from [Post][po
     <height>480</height>
     <width>800</width>
   </photo>
-  <public>true</public>
 </status_message>
 
 ~~~
@@ -99,6 +100,7 @@ This entity represents a reshare of a status message. It inherits from [Post][po
   <guid>378473f029e9013487753131731751e9</guid>
   <created_at>2016-07-11T23:00:42Z</created_at>
   <text>I am a very interesting status update</text>
+  <public>true</public>
   <poll>
     <guid>2a22d6c029e9013487753131731751e9</guid>
     <question>Select an answer</question>
@@ -115,7 +117,24 @@ This entity represents a reshare of a status message. It inherits from [Post][po
       <answer>Maybe</answer>
     </poll_answer>
   </poll>
+</status_message>
+~~~
+
+### With [Embed][embed]
+
+~~~xml
+<status_message>
+  <author>alice@example.org</author>
+  <guid>378473f029e9013487753131731751e9</guid>
+  <created_at>2016-07-11T23:00:42Z</created_at>
+  <text>I am a very interesting status update</text>
   <public>true</public>
+  <embed>
+    <url>https://example.org/</url>
+    <title>Example Website</title>
+    <description>This is an example!</description>
+    <image>https://example.org/example.png</image>
+  </embed>
 </status_message>
 ~~~
 
@@ -128,6 +147,7 @@ This entity represents a reshare of a status message. It inherits from [Post][po
   <created_at>2016-07-11T23:02:24Z</created_at>
   <provider_display_name>mobile</provider_display_name>
   <text>i am a very interesting status update</text>
+  <public>true</public>
   <photo>
     <guid>0788070029e8013487753131731751e9</guid>
     <author>alice@example.org</author>
@@ -171,7 +191,12 @@ This entity represents a reshare of a status message. It inherits from [Post][po
       <answer>Maybe</answer>
     </poll_answer>
   </poll>
-  <public>true</public>
+  <embed>
+    <url>https://example.org/</url>
+    <title>Example Website</title>
+    <description>This is an example!</description>
+    <image>https://example.org/example.png</image>
+  </embed>
 </status_message>
 ~~~
 
@@ -186,3 +211,4 @@ This entity represents a reshare of a status message. It inherits from [Post][po
 [photo]: {{ site.baseurl }}/entities/photo.html
 [poll]: {{ site.baseurl }}/entities/poll.html
 [event]: {{ site.baseurl }}/entities/event.html
+[embed]: {{ site.baseurl }}/entities/embed.html
