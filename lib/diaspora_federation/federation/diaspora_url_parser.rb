@@ -6,7 +6,7 @@ module DiasporaFederation
 
       # Regex to find diaspora:// URLs
       DIASPORA_URL_REGEX = %r{
-        diaspora://
+        (?:web\+)?diaspora://
         (#{Validation::Rule::DiasporaId::DIASPORA_ID_REGEX})/
         (#{Entity::ENTITY_NAME_REGEX})/
         (#{Validation::Rule::Guid::VALID_CHARS})

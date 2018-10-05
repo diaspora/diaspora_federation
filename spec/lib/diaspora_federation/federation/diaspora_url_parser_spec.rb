@@ -34,6 +34,14 @@ module DiasporaFederation
         Federation::DiasporaUrlParser.fetch_linked_entities(text)
       end
 
+      it "handles a link with web+ prefix" do
+        expect_callback(:fetch_related_entity, "Post", guid).and_return(double)
+
+        text = "This is a link with a `web+` prefix web+diaspora://#{author}/post/#{guid}."
+
+        Federation::DiasporaUrlParser.fetch_linked_entities(text)
+      end
+
       it "handles unknown entities gracefully" do
         expect(DiasporaFederation.callbacks).not_to receive(:trigger)
 
@@ -62,6 +70,23 @@ module DiasporaFederation
         expect {
           Federation::DiasporaUrlParser.fetch_linked_entities(text)
         }.not_to raise_error
+      end
+    end
+
+    describe "::DIASPORA_URL_REGEX" do
+      it "matches a diaspora URL inside normal text" do
+        text = "This is a link to a post diaspora://#{author}/post/#{guid}."
+        expect(text[Federation::DiasporaUrlParser::DIASPORA_URL_REGEX]).to eq("diaspora://#{author}/post/#{guid}")
+      end
+
+      it "matches a diaspora URL inside markdown" do
+        text = "This is a [link to a post with markdown](diaspora://#{author}/post/#{guid})."
+        expect(text[Federation::DiasporaUrlParser::DIASPORA_URL_REGEX]).to eq("diaspora://#{author}/post/#{guid}")
+      end
+
+      it "matches a web+diaspora URL" do
+        text = "This is a link with a `web+` prefix web+diaspora://#{author}/post/#{guid}."
+        expect(text[Federation::DiasporaUrlParser::DIASPORA_URL_REGEX]).to eq("web+diaspora://#{author}/post/#{guid}")
       end
     end
   end
