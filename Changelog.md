@@ -1,3 +1,19 @@
+# 0.2.5
+
+## Features
+
+* Add `full_name` to `Profile` entity [#100](https://github.com/diaspora/diaspora_federation/pull/100)
+* Add `Embed` entity [#101](https://github.com/diaspora/diaspora_federation/pull/101)
+
+## Refactor
+
+* Include `web+` prefix in `diaspora://` URL parsing [#108](https://github.com/diaspora/diaspora_federation/pull/108)
+
+## Bug fixes
+
+* Various bug fixes in the `federation_entities.json` [#102](https://github.com/diaspora/diaspora_federation/pull/102) [#104](https://github.com/diaspora/diaspora_federation/pull/104) [#107](https://github.com/diaspora/diaspora_federation/pull/107)
+* Allow fetching of entities with dot in the GUID [#106](https://github.com/diaspora/diaspora_federation/pull/106)
+
 # 0.2.4
 
 ## Features
