@@ -288,7 +288,7 @@
             "height": {"type": "number"}
           },
           "required": [
-            "author", "guid", "public", "created_at", "remote_photo_path", "remote_photo_name", "width", "height"
+            "author", "guid", "public", "created_at", "remote_photo_path", "remote_photo_name"
           ]
         }
       }
