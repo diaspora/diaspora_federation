@@ -1,3 +1,9 @@
+# 0.2.6
+
+## Bug fixes
+
+* Make `width` and `height` optional for photos in the JSON schema [#110](https://github.com/diaspora/diaspora_federation/pull/110)
+
 # 0.2.5
 
 ## Features
