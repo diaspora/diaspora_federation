@@ -1,5 +1,5 @@
 module DiasporaFederation
-  describe FetchController, type: :controller, rails: 5 do
+  describe FetchController, type: :controller do
     routes { DiasporaFederation::Engine.routes }
 
     let(:guid) { "12345678901234567890" }

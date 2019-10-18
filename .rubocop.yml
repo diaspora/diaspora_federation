@@ -207,8 +207,3 @@ Layout/IndentHeredoc:
   Enabled: false
 Layout/ClosingHeredocIndentation:
   Enabled: false
-
-# for rails 4 and ruby < 2.2.2
-Rails/HttpPositionalArguments:
-  Exclude:
-    - "spec/controllers/diaspora_federation/rails4_spec.rb"

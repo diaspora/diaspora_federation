@@ -8,7 +8,6 @@ rvm:
   - 2.1
 gemfile:
   - Gemfile
-  - test/gemfiles/rails4.Gemfile
   - test/gemfiles/no-rails.Gemfile
 
 matrix:

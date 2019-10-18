@@ -35,7 +35,7 @@ module DiasporaFederation
       end
     end
 
-    describe "GET #webfinger", rails: 5 do
+    describe "GET #webfinger" do
       it "uses the JRD format as default" do
         get :webfinger, params: {resource: alice.diaspora_id}
         expect(response).to be_successful
