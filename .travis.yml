@@ -1,19 +1,11 @@
 language: ruby
 
 rvm:
-  - 2.5.5
-  - 2.4.5
-  - 2.3.8
-  - 2.2.10
-  - 2.1
+  - 2.6.5
+  - 2.5.7
 gemfile:
   - Gemfile
   - test/gemfiles/no-rails.Gemfile
-
-matrix:
-  exclude:
-    - rvm: 2.1
-      gemfile: Gemfile
 
 sudo: false
 cache:

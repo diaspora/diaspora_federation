@@ -8,7 +8,6 @@ namespace :gemfiles do
     original_gemfile.sub!(/(gemspec name:.*)/) { "#{Regexp.last_match[1]}, path: \"../../\"" }
     original_gemfile.sub!(/(gemspec\(name:.*)\)/) { "#{Regexp.last_match[1]}, path: \"../../\")" }
     original_gemfile.sub!(/^group :development do$.*?^end$\n\n/m, "")
-    original_gemfile << "\n gem \"fabrication\", \"< 2.17.0\"\n" # new versions are not compatible with ruby 2.1
 
     no_rails_gemfile = original_gemfile.dup
     no_rails_gemfile.sub!(/(gemspec\(name:.*)/) { "#{Regexp.last_match[1]} unless plugin == \"rails\"" }

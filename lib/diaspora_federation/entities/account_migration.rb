@@ -43,7 +43,7 @@ module DiasporaFederation
       # Returns diaspora* ID of the new person identity.
       # @return [String] diaspora* ID of the new person identity
       def new_identity
-        profile.author if profile
+        profile&.author
       end
 
       # @return [String] string representation of this object

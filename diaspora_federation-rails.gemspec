@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files       = Dir["app/**/*", "config/routes.rb", "config/initializers/*",
                       "lib/diaspora_federation/{engine,rails}.rb", "LICENSE", "README.md", "Changelog.md"]
 
-  s.required_ruby_version = "~> 2.1"
+  s.required_ruby_version = "~> 2.5"
 
   s.add_dependency "actionpack", ">= 5", "< 6"
 

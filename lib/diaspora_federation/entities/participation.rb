@@ -35,7 +35,7 @@ module DiasporaFederation
       # Validates that the parent exists and the parent author is local
       def validate_parent
         parent = DiasporaFederation.callbacks.trigger(:fetch_related_entity, parent_type, parent_guid)
-        raise ParentNotLocal, "obj=#{self}" unless parent && parent.local
+        raise ParentNotLocal, "obj=#{self}" unless parent&.local
       end
 
       # Validate that the parent is local.
