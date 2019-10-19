@@ -14,38 +14,38 @@ module DiasporaFederation
       ).tap {|hash| add_signatures(hash) }
     }
 
-    let(:xml) { <<-XML }
-<like>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <parent_guid>#{parent.guid}</parent_guid>
-  <parent_type>#{parent.entity_type}</parent_type>
-  <positive>#{data[:positive]}</positive>
-  <author_signature>#{data[:author_signature]}</author_signature>
-  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
-</like>
-XML
+    let(:xml) { <<~XML }
+      <like>
+        <author>#{data[:author]}</author>
+        <guid>#{data[:guid]}</guid>
+        <parent_guid>#{parent.guid}</parent_guid>
+        <parent_type>#{parent.entity_type}</parent_type>
+        <positive>#{data[:positive]}</positive>
+        <author_signature>#{data[:author_signature]}</author_signature>
+        <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
+      </like>
+    XML
 
-    let(:json) { <<-JSON }
-{
-  "entity_type": "like",
-  "entity_data": {
-    "author": "#{data[:author]}",
-    "guid": "#{data[:guid]}",
-    "parent_guid": "#{parent.guid}",
-    "author_signature": "#{data[:author_signature]}",
-    "parent_type": "#{parent.entity_type}",
-    "positive": #{data[:positive]}
-  },
-  "property_order": [
-    "author",
-    "guid",
-    "parent_guid",
-    "parent_type",
-    "positive"
-  ]
-}
-JSON
+    let(:json) { <<~JSON }
+      {
+        "entity_type": "like",
+        "entity_data": {
+          "author": "#{data[:author]}",
+          "guid": "#{data[:guid]}",
+          "parent_guid": "#{parent.guid}",
+          "author_signature": "#{data[:author_signature]}",
+          "parent_type": "#{parent.entity_type}",
+          "positive": #{data[:positive]}
+        },
+        "property_order": [
+          "author",
+          "guid",
+          "parent_guid",
+          "parent_type",
+          "positive"
+        ]
+      }
+    JSON
 
     let(:string) { "Like:#{data[:guid]}:Post:#{parent.guid}" }
 
@@ -61,11 +61,11 @@ JSON
 
     context "invalid XML" do
       it "raises a ValidationError if the parent_type is missing" do
-        broken_xml = <<-XML
-<like>
-  <parent_guid>#{parent.guid}</parent_guid>
-</like>
-XML
+        broken_xml = <<~XML
+          <like>
+            <parent_guid>#{parent.guid}</parent_guid>
+          </like>
+        XML
 
         expect {
           DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML(broken_xml).root)
@@ -73,11 +73,11 @@ XML
       end
 
       it "raises a ValidationError if the parent_guid is missing" do
-        broken_xml = <<-XML
-<like>
-  <target_type>#{parent.entity_type}</target_type>
-</like>
-XML
+        broken_xml = <<~XML
+          <like>
+            <target_type>#{parent.entity_type}</target_type>
+          </like>
+        XML
 
         expect {
           DiasporaFederation::Entities::Like.from_xml(Nokogiri::XML(broken_xml).root)

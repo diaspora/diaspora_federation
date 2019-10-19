@@ -4,48 +4,48 @@ module DiasporaFederation
   describe Entities::Profile do
     let(:data) { Fabricate.attributes_for(:profile_entity) }
 
-    let(:xml) { <<-XML }
-<profile>
-  <author>#{data[:author]}</author>
-  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
-  <full_name>#{data[:full_name]}</full_name>
-  <first_name>#{data[:first_name]}</first_name>
-  <image_url>#{data[:image_url]}</image_url>
-  <image_url_medium>#{data[:image_url]}</image_url_medium>
-  <image_url_small>#{data[:image_url]}</image_url_small>
-  <bio>#{data[:bio]}</bio>
-  <birthday>#{data[:birthday]}</birthday>
-  <gender>#{data[:gender]}</gender>
-  <location>#{data[:location]}</location>
-  <searchable>#{data[:searchable]}</searchable>
-  <public>#{data[:public]}</public>
-  <nsfw>#{data[:nsfw]}</nsfw>
-  <tag_string>#{data[:tag_string]}</tag_string>
-</profile>
-XML
+    let(:xml) { <<~XML }
+      <profile>
+        <author>#{data[:author]}</author>
+        <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
+        <full_name>#{data[:full_name]}</full_name>
+        <first_name>#{data[:first_name]}</first_name>
+        <image_url>#{data[:image_url]}</image_url>
+        <image_url_medium>#{data[:image_url]}</image_url_medium>
+        <image_url_small>#{data[:image_url]}</image_url_small>
+        <bio>#{data[:bio]}</bio>
+        <birthday>#{data[:birthday]}</birthday>
+        <gender>#{data[:gender]}</gender>
+        <location>#{data[:location]}</location>
+        <searchable>#{data[:searchable]}</searchable>
+        <public>#{data[:public]}</public>
+        <nsfw>#{data[:nsfw]}</nsfw>
+        <tag_string>#{data[:tag_string]}</tag_string>
+      </profile>
+    XML
 
-    let(:json) { <<-JSON }
-{
-  "entity_type": "profile",
-  "entity_data": {
-    "author": "#{data[:author]}",
-    "edited_at": "#{data[:edited_at].iso8601}",
-    "full_name": "#{data[:full_name]}",
-    "first_name": "#{data[:first_name]}",
-    "image_url": "#{data[:image_url]}",
-    "image_url_medium": "#{data[:image_url]}",
-    "image_url_small": "#{data[:image_url]}",
-    "bio": "#{data[:bio]}",
-    "birthday": "#{data[:birthday]}",
-    "gender": "#{data[:gender]}",
-    "location": "#{data[:location]}",
-    "searchable": #{data[:searchable]},
-    "public": #{data[:public]},
-    "nsfw": #{data[:nsfw]},
-    "tag_string": "#{data[:tag_string]}"
-  }
-}
-JSON
+    let(:json) { <<~JSON }
+      {
+        "entity_type": "profile",
+        "entity_data": {
+          "author": "#{data[:author]}",
+          "edited_at": "#{data[:edited_at].iso8601}",
+          "full_name": "#{data[:full_name]}",
+          "first_name": "#{data[:first_name]}",
+          "image_url": "#{data[:image_url]}",
+          "image_url_medium": "#{data[:image_url]}",
+          "image_url_small": "#{data[:image_url]}",
+          "bio": "#{data[:bio]}",
+          "birthday": "#{data[:birthday]}",
+          "gender": "#{data[:gender]}",
+          "location": "#{data[:location]}",
+          "searchable": #{data[:searchable]},
+          "public": #{data[:public]},
+          "nsfw": #{data[:nsfw]},
+          "tag_string": "#{data[:tag_string]}"
+        }
+      }
+    JSON
 
     let(:string) { "Profile:#{data[:author]}" }
 
@@ -57,11 +57,11 @@ JSON
 
     context "default values" do
       it "uses default values" do
-        minimal_xml = <<-XML
-<profile>
-  <author>#{data[:author]}</author>
-</profile>
-XML
+        minimal_xml = <<~XML
+          <profile>
+            <author>#{data[:author]}</author>
+          </profile>
+        XML
 
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.full_name).to be_nil

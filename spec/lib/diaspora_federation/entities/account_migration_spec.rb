@@ -107,29 +107,29 @@ module DiasporaFederation
         }
       }
 
-      let(:xml) { <<-XML }
-<account_migration>
-  <author>#{data[:author]}</author>
-  <profile>
-    <author>#{data[:profile].author}</author>
-    <full_name>#{data[:profile].full_name}</full_name>
-    <first_name>#{data[:profile].first_name}</first_name>
-    <image_url>#{data[:profile].image_url}</image_url>
-    <image_url_medium>#{data[:profile].image_url}</image_url_medium>
-    <image_url_small>#{data[:profile].image_url}</image_url_small>
-    <bio>#{data[:profile].bio}</bio>
-    <birthday>#{data[:profile].birthday}</birthday>
-    <gender>#{data[:profile].gender}</gender>
-    <location>#{data[:profile].location}</location>
-    <searchable>#{data[:profile].searchable}</searchable>
-    <public>#{data[:profile].public}</public>
-    <nsfw>#{data[:profile].nsfw}</nsfw>
-    <tag_string>#{data[:profile].tag_string}</tag_string>
-  </profile>
-  <signature>#{data[:signature]}</signature>
-  <old_identity>#{data[:old_identity]}</old_identity>
-</account_migration>
-XML
+      let(:xml) { <<~XML }
+        <account_migration>
+          <author>#{data[:author]}</author>
+          <profile>
+            <author>#{data[:profile].author}</author>
+            <full_name>#{data[:profile].full_name}</full_name>
+            <first_name>#{data[:profile].first_name}</first_name>
+            <image_url>#{data[:profile].image_url}</image_url>
+            <image_url_medium>#{data[:profile].image_url}</image_url_medium>
+            <image_url_small>#{data[:profile].image_url}</image_url_small>
+            <bio>#{data[:profile].bio}</bio>
+            <birthday>#{data[:profile].birthday}</birthday>
+            <gender>#{data[:profile].gender}</gender>
+            <location>#{data[:profile].location}</location>
+            <searchable>#{data[:profile].searchable}</searchable>
+            <public>#{data[:profile].public}</public>
+            <nsfw>#{data[:profile].nsfw}</nsfw>
+            <tag_string>#{data[:profile].tag_string}</tag_string>
+          </profile>
+          <signature>#{data[:signature]}</signature>
+          <old_identity>#{data[:old_identity]}</old_identity>
+        </account_migration>
+      XML
 
       it_behaves_like "an account migration entity"
     end
@@ -146,29 +146,29 @@ XML
         }
       }
 
-      let(:xml) { <<-XML }
-<account_migration>
-  <author>#{data[:author]}</author>
-  <profile>
-    <author>#{data[:profile].author}</author>
-    <full_name>#{data[:profile].full_name}</full_name>
-    <first_name>#{data[:profile].first_name}</first_name>
-    <image_url>#{data[:profile].image_url}</image_url>
-    <image_url_medium>#{data[:profile].image_url}</image_url_medium>
-    <image_url_small>#{data[:profile].image_url}</image_url_small>
-    <bio>#{data[:profile].bio}</bio>
-    <birthday>#{data[:profile].birthday}</birthday>
-    <gender>#{data[:profile].gender}</gender>
-    <location>#{data[:profile].location}</location>
-    <searchable>#{data[:profile].searchable}</searchable>
-    <public>#{data[:profile].public}</public>
-    <nsfw>#{data[:profile].nsfw}</nsfw>
-    <tag_string>#{data[:profile].tag_string}</tag_string>
-  </profile>
-  <signature>#{data[:signature]}</signature>
-  <old_identity>#{data[:old_identity]}</old_identity>
-</account_migration>
-XML
+      let(:xml) { <<~XML }
+        <account_migration>
+          <author>#{data[:author]}</author>
+          <profile>
+            <author>#{data[:profile].author}</author>
+            <full_name>#{data[:profile].full_name}</full_name>
+            <first_name>#{data[:profile].first_name}</first_name>
+            <image_url>#{data[:profile].image_url}</image_url>
+            <image_url_medium>#{data[:profile].image_url}</image_url_medium>
+            <image_url_small>#{data[:profile].image_url}</image_url_small>
+            <bio>#{data[:profile].bio}</bio>
+            <birthday>#{data[:profile].birthday}</birthday>
+            <gender>#{data[:profile].gender}</gender>
+            <location>#{data[:profile].location}</location>
+            <searchable>#{data[:profile].searchable}</searchable>
+            <public>#{data[:profile].public}</public>
+            <nsfw>#{data[:profile].nsfw}</nsfw>
+            <tag_string>#{data[:profile].tag_string}</tag_string>
+          </profile>
+          <signature>#{data[:signature]}</signature>
+          <old_identity>#{data[:old_identity]}</old_identity>
+        </account_migration>
+      XML
 
       it_behaves_like "an account migration entity"
     end
@@ -184,28 +184,28 @@ XML
         }
       }
 
-      let(:xml) { <<-XML }
-<account_migration>
-  <author>#{data[:author]}</author>
-  <profile>
-    <author>#{data[:profile].author}</author>
-    <full_name>#{data[:profile].full_name}</full_name>
-    <first_name>#{data[:profile].first_name}</first_name>
-    <image_url>#{data[:profile].image_url}</image_url>
-    <image_url_medium>#{data[:profile].image_url}</image_url_medium>
-    <image_url_small>#{data[:profile].image_url}</image_url_small>
-    <bio>#{data[:profile].bio}</bio>
-    <birthday>#{data[:profile].birthday}</birthday>
-    <gender>#{data[:profile].gender}</gender>
-    <location>#{data[:profile].location}</location>
-    <searchable>#{data[:profile].searchable}</searchable>
-    <public>#{data[:profile].public}</public>
-    <nsfw>#{data[:profile].nsfw}</nsfw>
-    <tag_string>#{data[:profile].tag_string}</tag_string>
-  </profile>
-  <signature>#{data[:signature]}</signature>
-</account_migration>
-XML
+      let(:xml) { <<~XML }
+        <account_migration>
+          <author>#{data[:author]}</author>
+          <profile>
+            <author>#{data[:profile].author}</author>
+            <full_name>#{data[:profile].full_name}</full_name>
+            <first_name>#{data[:profile].first_name}</first_name>
+            <image_url>#{data[:profile].image_url}</image_url>
+            <image_url_medium>#{data[:profile].image_url}</image_url_medium>
+            <image_url_small>#{data[:profile].image_url}</image_url_small>
+            <bio>#{data[:profile].bio}</bio>
+            <birthday>#{data[:profile].birthday}</birthday>
+            <gender>#{data[:profile].gender}</gender>
+            <location>#{data[:profile].location}</location>
+            <searchable>#{data[:profile].searchable}</searchable>
+            <public>#{data[:profile].public}</public>
+            <nsfw>#{data[:profile].nsfw}</nsfw>
+            <tag_string>#{data[:profile].tag_string}</tag_string>
+          </profile>
+          <signature>#{data[:signature]}</signature>
+        </account_migration>
+      XML
 
       it "fails validation on construction" do
         expect {

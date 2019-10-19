@@ -29,16 +29,16 @@ module DiasporaFederation
       )
     }
 
-    let(:xml) { <<-XML }
-<conversation>
-  <author>#{data[:author]}</author>
-  <guid>#{parent.guid}</guid>
-  <subject>#{data[:subject]}</subject>
-  <created_at>#{data[:created_at].utc.iso8601}</created_at>
-  <participants>#{data[:participants]}</participants>
-#{data[:messages].map {|a| indent(a.to_xml.to_s, 2) }.join("\n")}
-</conversation>
-XML
+    let(:xml) { <<~XML }
+      <conversation>
+        <author>#{data[:author]}</author>
+        <guid>#{parent.guid}</guid>
+        <subject>#{data[:subject]}</subject>
+        <created_at>#{data[:created_at].utc.iso8601}</created_at>
+        <participants>#{data[:participants]}</participants>
+      #{data[:messages].map {|a| indent(a.to_xml.to_s, 2) }.join("\n")}
+      </conversation>
+    XML
 
     let(:string) { "Conversation:#{data[:guid]}" }
 
@@ -48,15 +48,15 @@ XML
 
     context "default values" do
       it "allows no nested messages" do
-        minimal_xml = <<-XML
-<conversation>
-  <author>#{data[:author]}</author>
-  <guid>#{parent.guid}</guid>
-  <subject>#{data[:subject]}</subject>
-  <created_at>#{data[:created_at]}</created_at>
-  <participant_handles>#{data[:participants]}</participant_handles>
-</conversation>
-XML
+        minimal_xml = <<~XML
+          <conversation>
+            <author>#{data[:author]}</author>
+            <guid>#{parent.guid}</guid>
+            <subject>#{data[:subject]}</subject>
+            <created_at>#{data[:created_at]}</created_at>
+            <participant_handles>#{data[:participants]}</participant_handles>
+          </conversation>
+        XML
 
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.messages).to eq([])

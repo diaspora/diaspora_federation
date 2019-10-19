@@ -13,35 +13,35 @@ module DiasporaFederation
       ).tap {|hash| add_signatures(hash) }
     }
 
-    let(:xml) { <<-XML }
-<poll_participation>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <parent_guid>#{parent.guid}</parent_guid>
-  <poll_answer_guid>#{data[:poll_answer_guid]}</poll_answer_guid>
-  <author_signature>#{data[:author_signature]}</author_signature>
-  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
-</poll_participation>
-XML
+    let(:xml) { <<~XML }
+      <poll_participation>
+        <author>#{data[:author]}</author>
+        <guid>#{data[:guid]}</guid>
+        <parent_guid>#{parent.guid}</parent_guid>
+        <poll_answer_guid>#{data[:poll_answer_guid]}</poll_answer_guid>
+        <author_signature>#{data[:author_signature]}</author_signature>
+        <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
+      </poll_participation>
+    XML
 
-    let(:json) { <<-JSON }
-{
-  "entity_type": "poll_participation",
-  "entity_data": {
-    "author": "#{data[:author]}",
-    "guid": "#{data[:guid]}",
-    "parent_guid": "#{parent.guid}",
-    "author_signature": "#{data[:author_signature]}",
-    "poll_answer_guid": "#{data[:poll_answer_guid]}"
-  },
-  "property_order": [
-    "author",
-    "guid",
-    "parent_guid",
-    "poll_answer_guid"
-  ]
-}
-JSON
+    let(:json) { <<~JSON }
+      {
+        "entity_type": "poll_participation",
+        "entity_data": {
+          "author": "#{data[:author]}",
+          "guid": "#{data[:guid]}",
+          "parent_guid": "#{parent.guid}",
+          "author_signature": "#{data[:author_signature]}",
+          "poll_answer_guid": "#{data[:poll_answer_guid]}"
+        },
+        "property_order": [
+          "author",
+          "guid",
+          "parent_guid",
+          "poll_answer_guid"
+        ]
+      }
+    JSON
 
     let(:string) { "PollParticipation:#{data[:guid]}:#{parent.guid}" }
 

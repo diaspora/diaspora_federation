@@ -7,24 +7,24 @@ module DiasporaFederation
       Fabricate.attributes_for(:event_entity).merge(author: alice.diaspora_id, location: location)
     }
 
-    let(:xml) { <<-XML }
-<event>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
-  <summary>#{data[:summary]}</summary>
-  <description>#{data[:description]}</description>
-  <start>#{data[:start].utc.iso8601}</start>
-  <end>#{data[:end].utc.iso8601}</end>
-  <all_day>#{data[:all_day]}</all_day>
-  <timezone>#{data[:timezone]}</timezone>
-  <location>
-    <address>#{location.address}</address>
-    <lat>#{location.lat}</lat>
-    <lng>#{location.lng}</lng>
-  </location>
-</event>
-XML
+    let(:xml) { <<~XML }
+      <event>
+        <author>#{data[:author]}</author>
+        <guid>#{data[:guid]}</guid>
+        <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
+        <summary>#{data[:summary]}</summary>
+        <description>#{data[:description]}</description>
+        <start>#{data[:start].utc.iso8601}</start>
+        <end>#{data[:end].utc.iso8601}</end>
+        <all_day>#{data[:all_day]}</all_day>
+        <timezone>#{data[:timezone]}</timezone>
+        <location>
+          <address>#{location.address}</address>
+          <lat>#{location.lat}</lat>
+          <lng>#{location.lng}</lng>
+        </location>
+      </event>
+    XML
 
     let(:string) { "Event:#{data[:guid]}" }
 
@@ -34,14 +34,14 @@ XML
 
     context "default values" do
       it "uses default values" do
-        minimal_xml = <<-XML
-<event>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <summary>#{data[:summary]}</summary>
-  <start>#{data[:start].utc.iso8601}</start>
-</event>
-XML
+        minimal_xml = <<~XML
+          <event>
+            <author>#{data[:author]}</author>
+            <guid>#{data[:guid]}</guid>
+            <summary>#{data[:summary]}</summary>
+            <start>#{data[:start].utc.iso8601}</start>
+          </event>
+        XML
 
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.end).to be_nil

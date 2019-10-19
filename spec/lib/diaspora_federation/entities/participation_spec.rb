@@ -12,26 +12,26 @@ module DiasporaFederation
       )
     }
 
-    let(:xml) { <<-XML }
-<participation>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <parent_guid>#{parent.guid}</parent_guid>
-  <parent_type>#{parent.entity_type}</parent_type>
-</participation>
-XML
+    let(:xml) { <<~XML }
+      <participation>
+        <author>#{data[:author]}</author>
+        <guid>#{data[:guid]}</guid>
+        <parent_guid>#{parent.guid}</parent_guid>
+        <parent_type>#{parent.entity_type}</parent_type>
+      </participation>
+    XML
 
-    let(:json) { <<-JSON }
-{
-  "entity_type": "participation",
-  "entity_data": {
-    "author": "#{data[:author]}",
-    "guid": "#{data[:guid]}",
-    "parent_guid": "#{parent.guid}",
-    "parent_type": "#{parent.entity_type}"
-  }
-}
-JSON
+    let(:json) { <<~JSON }
+      {
+        "entity_type": "participation",
+        "entity_data": {
+          "author": "#{data[:author]}",
+          "guid": "#{data[:guid]}",
+          "parent_guid": "#{parent.guid}",
+          "parent_type": "#{parent.entity_type}"
+        }
+      }
+    JSON
 
     let(:string) { "Participation:#{data[:guid]}:Post:#{parent.guid}" }
 

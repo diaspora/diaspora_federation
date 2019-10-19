@@ -6,14 +6,14 @@ module DiasporaFederation
     let(:target_entity) { Fabricate(:related_entity, author: alice.diaspora_id) }
     let(:data) { {author: alice.diaspora_id, target_guid: target.guid, target_type: target.entity_type} }
 
-    let(:xml) { <<-XML }
-<signed_retraction>
-  <target_guid>#{data[:target_guid]}</target_guid>
-  <target_type>#{data[:target_type]}</target_type>
-  <sender_handle>#{data[:author]}</sender_handle>
-  <target_author_signature/>
-</signed_retraction>
-XML
+    let(:xml) { <<~XML }
+      <signed_retraction>
+        <target_guid>#{data[:target_guid]}</target_guid>
+        <target_type>#{data[:target_type]}</target_type>
+        <sender_handle>#{data[:author]}</sender_handle>
+        <target_author_signature/>
+      </signed_retraction>
+    XML
 
     describe "#initialize" do
       it "raises because it is not supported anymore" do

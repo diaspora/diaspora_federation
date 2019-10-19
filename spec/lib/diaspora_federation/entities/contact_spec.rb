@@ -4,15 +4,15 @@ module DiasporaFederation
   describe Entities::Contact do
     let(:data) { Fabricate.attributes_for(:contact_entity) }
 
-    let(:xml) { <<-XML }
-<contact>
-  <author>#{data[:author]}</author>
-  <recipient>#{data[:recipient]}</recipient>
-  <following>#{data[:following]}</following>
-  <sharing>#{data[:sharing]}</sharing>
-  <blocking>#{data[:blocking]}</blocking>
-</contact>
-XML
+    let(:xml) { <<~XML }
+      <contact>
+        <author>#{data[:author]}</author>
+        <recipient>#{data[:recipient]}</recipient>
+        <following>#{data[:following]}</following>
+        <sharing>#{data[:sharing]}</sharing>
+        <blocking>#{data[:blocking]}</blocking>
+      </contact>
+    XML
 
     let(:string) { "Contact:#{data[:author]}:#{data[:recipient]}" }
 

@@ -199,11 +199,3 @@ Style/DateTime:
   Exclude:
     - "lib/diaspora_federation/discovery/xrd_document.rb"
     - "spec/lib/diaspora_federation/discovery/xrd_document_spec.rb"
-
-### backward compatibility
-
-# only with ruby >= 2.3
-Layout/IndentHeredoc:
-  Enabled: false
-Layout/ClosingHeredocIndentation:
-  Enabled: false

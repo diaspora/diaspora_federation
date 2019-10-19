@@ -204,13 +204,13 @@ module DiasporaFederation
           test2: "qwer",
           test3: true
         )
-        Entities::TestDefaultEntity.from_xml(Nokogiri::XML(<<-XML).root)
-<test_default_entity>
-  <test1>asdf</test1>
-  <test2>qwer</qwer2>
-  <test3>true</qwer3>
-</test_default_entity>
-XML
+        Entities::TestDefaultEntity.from_xml(Nokogiri::XML(<<~XML).root)
+          <test_default_entity>
+            <test1>asdf</test1>
+            <test2>qwer</qwer2>
+            <test3>true</qwer3>
+          </test_default_entity>
+        XML
       end
 
       it "forms .from_hash arguments basing on parse return array" do
@@ -286,38 +286,38 @@ XML
     describe ".from_json" do
       it "parses entity properties from the input JSON data" do
         now = change_time(Time.now.utc)
-        entity_data = <<-JSON
-{
-  "entity_type": "test_complex_entity",
-  "entity_data": {
-    "test1": "abc",
-    "test2": false,
-    "test3": "def",
-    "test4": 123,
-    "test5": "#{now.iso8601}",
-    "test6": {
-      "entity_type": "test_entity",
-      "entity_data": {
-        "test": "nested"
-      }
-    },
-    "multi": [
-      {
-        "entity_type": "other_entity",
-        "entity_data": {
-          "asdf": "01"
-        }
-      },
-      {
-        "entity_type": "other_entity",
-        "entity_data": {
-          "asdf": "02"
-        }
-      }
-    ]
-  }
-}
-JSON
+        entity_data = <<~JSON
+          {
+            "entity_type": "test_complex_entity",
+            "entity_data": {
+              "test1": "abc",
+              "test2": false,
+              "test3": "def",
+              "test4": 123,
+              "test5": "#{now.iso8601}",
+              "test6": {
+                "entity_type": "test_entity",
+                "entity_data": {
+                  "test": "nested"
+                }
+              },
+              "multi": [
+                {
+                  "entity_type": "other_entity",
+                  "entity_data": {
+                    "asdf": "01"
+                  }
+                },
+                {
+                  "entity_type": "other_entity",
+                  "entity_data": {
+                    "asdf": "02"
+                  }
+                }
+              ]
+            }
+          }
+        JSON
 
         entity = Entities::TestComplexEntity.from_json(JSON.parse(entity_data))
         expect(entity).to be_an_instance_of(Entities::TestComplexEntity)
@@ -513,13 +513,13 @@ JSON
       end
 
       it "handles empty xml-element for nested entities" do
-        xml = <<-XML
-<test_nested_entity>
-  <asdf>FDSA</asdf>
-  <test_entity/>
-  <other_entity/>
-</test_nested_entity>
-XML
+        xml = <<~XML
+          <test_nested_entity>
+            <asdf>FDSA</asdf>
+            <test_entity/>
+            <other_entity/>
+          </test_nested_entity>
+        XML
 
         entity = Entities::TestNestedEntity.from_xml(Nokogiri::XML(xml).root)
 

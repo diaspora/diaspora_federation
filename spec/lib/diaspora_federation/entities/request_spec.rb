@@ -4,12 +4,12 @@ module DiasporaFederation
   describe Entities::Request do
     let(:data) { {author: Fabricate.sequence(:diaspora_id), recipient: Fabricate.sequence(:diaspora_id)} }
 
-    let(:xml) { <<-XML }
-<request>
-  <sender_handle>#{data[:author]}</sender_handle>
-  <recipient_handle>#{data[:recipient]}</recipient_handle>
-</request>
-XML
+    let(:xml) { <<~XML }
+      <request>
+        <sender_handle>#{data[:author]}</sender_handle>
+        <recipient_handle>#{data[:recipient]}</recipient_handle>
+      </request>
+    XML
 
     describe "#initialize" do
       it "raises because it is not supported anymore" do

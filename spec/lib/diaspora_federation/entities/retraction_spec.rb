@@ -13,13 +13,13 @@ module DiasporaFederation
       )
     }
 
-    let(:xml) { <<-XML }
-<retraction>
-  <author>#{data[:author]}</author>
-  <target_guid>#{data[:target_guid]}</target_guid>
-  <target_type>#{data[:target_type]}</target_type>
-</retraction>
-XML
+    let(:xml) { <<~XML }
+      <retraction>
+        <author>#{data[:author]}</author>
+        <target_guid>#{data[:target_guid]}</target_guid>
+        <target_type>#{data[:target_type]}</target_type>
+      </retraction>
+    XML
 
     let(:string) { "Retraction:#{data[:target_type]}:#{data[:target_guid]}" }
 

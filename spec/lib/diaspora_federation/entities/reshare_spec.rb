@@ -5,28 +5,28 @@ module DiasporaFederation
     let(:root) { Fabricate(:post, author: bob) }
     let(:data) { Fabricate.attributes_for(:reshare_entity, root_guid: root.guid, root_author: bob.diaspora_id) }
 
-    let(:xml) { <<-XML }
-<reshare>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <created_at>#{data[:created_at].utc.iso8601}</created_at>
-  <root_author>#{data[:root_author]}</root_author>
-  <root_guid>#{data[:root_guid]}</root_guid>
-</reshare>
-XML
+    let(:xml) { <<~XML }
+      <reshare>
+        <author>#{data[:author]}</author>
+        <guid>#{data[:guid]}</guid>
+        <created_at>#{data[:created_at].utc.iso8601}</created_at>
+        <root_author>#{data[:root_author]}</root_author>
+        <root_guid>#{data[:root_guid]}</root_guid>
+      </reshare>
+    XML
 
-    let(:json) { <<-JSON }
-{
-  "entity_type": "reshare",
-  "entity_data": {
-    "author": "#{data[:author]}",
-    "guid": "#{data[:guid]}",
-    "created_at": "#{data[:created_at].utc.iso8601}",
-    "root_author": "#{data[:root_author]}",
-    "root_guid": "#{data[:root_guid]}"
-  }
-}
-JSON
+    let(:json) { <<~JSON }
+      {
+        "entity_type": "reshare",
+        "entity_data": {
+          "author": "#{data[:author]}",
+          "guid": "#{data[:guid]}",
+          "created_at": "#{data[:created_at].utc.iso8601}",
+          "root_author": "#{data[:root_author]}",
+          "root_guid": "#{data[:root_guid]}"
+        }
+      }
+    JSON
 
     let(:string) { "Reshare:#{data[:guid]}:#{data[:root_guid]}" }
 

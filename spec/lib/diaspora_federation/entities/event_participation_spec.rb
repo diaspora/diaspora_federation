@@ -13,17 +13,17 @@ module DiasporaFederation
       ).tap {|hash| add_signatures(hash) }
     }
 
-    let(:xml) { <<-XML }
-<event_participation>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <parent_guid>#{parent.guid}</parent_guid>
-  <status>#{data[:status]}</status>
-  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
-  <author_signature>#{data[:author_signature]}</author_signature>
-  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
-</event_participation>
-XML
+    let(:xml) { <<~XML }
+      <event_participation>
+        <author>#{data[:author]}</author>
+        <guid>#{data[:guid]}</guid>
+        <parent_guid>#{parent.guid}</parent_guid>
+        <status>#{data[:status]}</status>
+        <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
+        <author_signature>#{data[:author_signature]}</author_signature>
+        <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
+      </event_participation>
+    XML
 
     let(:string) { "EventParticipation:#{data[:guid]}:#{parent.guid}" }
 

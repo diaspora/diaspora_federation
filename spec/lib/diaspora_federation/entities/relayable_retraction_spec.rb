@@ -12,15 +12,15 @@ module DiasporaFederation
     }
     let(:data) { {author: alice.diaspora_id, target_guid: target.guid, target_type: target.entity_type} }
 
-    let(:xml) { <<-XML }
-<relayable_retraction>
-  <parent_author_signature/>
-  <target_guid>#{data[:target_guid]}</target_guid>
-  <target_type>#{data[:target_type]}</target_type>
-  <sender_handle>#{data[:author]}</sender_handle>
-  <target_author_signature/>
-</relayable_retraction>
-XML
+    let(:xml) { <<~XML }
+      <relayable_retraction>
+        <parent_author_signature/>
+        <target_guid>#{data[:target_guid]}</target_guid>
+        <target_type>#{data[:target_type]}</target_type>
+        <sender_handle>#{data[:author]}</sender_handle>
+        <target_author_signature/>
+      </relayable_retraction>
+    XML
 
     describe "#initialize" do
       it "raises because it is not supported anymore" do
