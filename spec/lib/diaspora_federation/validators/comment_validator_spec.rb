@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::CommentValidator do
     let(:entity) { :comment_entity }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::EventParticipation do
     let(:parent) { Fabricate(:event, author: bob) }

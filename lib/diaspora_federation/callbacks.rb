@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # Callbacks are used to communicate with the application. They are called to
   # fetch data and after data is received.

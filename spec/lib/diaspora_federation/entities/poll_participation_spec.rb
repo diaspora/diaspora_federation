@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::PollParticipation do
     let(:parent) { Fabricate(:poll, author: bob) }

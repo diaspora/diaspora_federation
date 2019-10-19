@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Event do
     let(:location) { Fabricate(:location_entity) }

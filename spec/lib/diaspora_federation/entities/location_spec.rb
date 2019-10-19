@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Location do
     let(:data) { Fabricate.attributes_for(:location_entity) }

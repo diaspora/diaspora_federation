@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validation
   module Rule
     # Public key validation rule

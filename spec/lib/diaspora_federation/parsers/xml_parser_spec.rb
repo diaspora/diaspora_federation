@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Parsers::XmlParser do
     describe ".parse" do

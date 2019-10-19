@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # This namespace contains parsers which are used to deserialize federation entities
   # objects from supported formats (XML, JSON) to objects of DiasporaFederation::Entity

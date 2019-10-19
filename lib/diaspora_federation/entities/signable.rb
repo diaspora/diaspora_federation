@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     # Signable is a module that encapsulates basic signature generation/verification flow for entities.

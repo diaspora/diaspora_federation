@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::EmbedValidator do
     let(:entity) { :embed_entity }

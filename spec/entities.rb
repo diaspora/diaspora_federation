@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     class TestEntity < DiasporaFederation::Entity
@@ -70,7 +72,7 @@ module DiasporaFederation
     end
 
     class SomeRelayable < DiasporaFederation::Entity
-      PARENT_TYPE = "Parent".freeze
+      PARENT_TYPE = "Parent"
 
       include Entities::Relayable
 
@@ -78,7 +80,7 @@ module DiasporaFederation
     end
 
     class TestRelayableWithBoolean < DiasporaFederation::Entity
-      PARENT_TYPE = "Parent".freeze
+      PARENT_TYPE = "Parent"
 
       include Entities::Relayable
 

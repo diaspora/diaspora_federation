@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Like do
     let(:parent) { Fabricate(:post, author: bob) }

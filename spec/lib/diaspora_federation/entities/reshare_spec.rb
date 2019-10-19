@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Reshare do
     let(:root) { Fabricate(:post, author: bob) }

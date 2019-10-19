@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Salmon::AES do
     let(:data) { "test data string" }

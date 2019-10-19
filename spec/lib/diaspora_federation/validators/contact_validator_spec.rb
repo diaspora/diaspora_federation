@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::ContactValidator do
     let(:entity) { :contact_entity }

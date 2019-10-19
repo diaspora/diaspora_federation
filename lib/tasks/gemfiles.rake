@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :gemfiles do
   desc "Generates no-rails.Gemfile"
   task :generate do

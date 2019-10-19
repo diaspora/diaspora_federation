@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Parsers
     # This is a parser of JSON serialized object. JSON object format is defined by

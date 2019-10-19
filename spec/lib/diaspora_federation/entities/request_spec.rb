@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Request do
     let(:data) { {author: Fabricate.sequence(:diaspora_id), recipient: Fabricate.sequence(:diaspora_id)} }

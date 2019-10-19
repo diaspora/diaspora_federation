@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Person do
     let(:data) { Fabricate.attributes_for(:person_entity) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Relayable do
     let(:author_serialized_key) { <<-KEY }

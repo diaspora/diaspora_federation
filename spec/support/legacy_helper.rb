@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file only exists to generate legacy XMLs to test that we can still parse it.
 
 def generate_legacy_salmon_slap(entity, sender, sender_privkey)

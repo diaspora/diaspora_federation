@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Conversation do
     let(:parent) { Fabricate(:conversation, author: bob) }

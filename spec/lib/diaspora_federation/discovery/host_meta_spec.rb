@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Discovery::HostMeta do
     let(:base_url) { "https://pod.example.tld/" }

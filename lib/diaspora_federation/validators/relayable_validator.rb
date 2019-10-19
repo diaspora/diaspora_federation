@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Validators
     # This is included to validatros which validate entities which include {Entities::Relayable}.

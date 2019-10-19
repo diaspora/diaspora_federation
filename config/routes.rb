@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 DiasporaFederation::Engine.routes.draw do
   controller :receive do
     post "receive/public"      => :public,  :as => "receive_public"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Discovery
     # Raised, if there is an error while discover a new person

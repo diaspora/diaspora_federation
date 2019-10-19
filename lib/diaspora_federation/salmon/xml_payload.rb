@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Salmon
     # +XmlPayload+ provides methods to wrap a XML-serialized {Entity} inside a

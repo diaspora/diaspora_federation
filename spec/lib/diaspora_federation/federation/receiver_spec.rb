@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Federation::Receiver do
     let(:sender_key) { OpenSSL::PKey::RSA.generate(1024) }

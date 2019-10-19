@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Discovery
     # This class implements basic handling of XRD documents as far as it is
@@ -29,13 +31,13 @@ module DiasporaFederation
     # @see http://docs.oasis-open.org/xri/xrd/v1.0/xrd-1.0.html Extensible Resource Descriptor (XRD) Version 1.0
     class XrdDocument
       # xml namespace url
-      XMLNS = "http://docs.oasis-open.org/ns/xri/xrd-1.0".freeze
+      XMLNS = "http://docs.oasis-open.org/ns/xri/xrd-1.0"
 
       # +Link+ element attributes
       LINK_ATTRS = %i[rel type href template].freeze
 
       # format string for datetime (+Expires+ element)
-      DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ".freeze
+      DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
       # The <Expires> element contains a time value which specifies the instant at
       # and after which the document has expired and SHOULD NOT be used.

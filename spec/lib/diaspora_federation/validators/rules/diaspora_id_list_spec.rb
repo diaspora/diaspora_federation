@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Validation::Rule::DiasporaIdList do
   let(:id_str) { Array.new(3) { Fabricate.sequence(:diaspora_id) }.join(";") }
 

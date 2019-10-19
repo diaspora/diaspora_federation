@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Validation::Rule::Guid do
   it "will not accept parameters" do
     validator = Validation::Validator.new({})

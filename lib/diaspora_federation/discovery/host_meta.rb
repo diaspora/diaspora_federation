@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Discovery
     # Generates and parses Host Meta documents.
@@ -25,7 +27,7 @@ module DiasporaFederation
       end
 
       # URL fragment to append to the base URL
-      WEBFINGER_SUFFIX = "/.well-known/webfinger.xml?resource={uri}".freeze
+      WEBFINGER_SUFFIX = "/.well-known/webfinger.xml?resource={uri}"
 
       # Returns the WebFinger URL that was used to build this instance (either from
       # xml or by giving a base URL).

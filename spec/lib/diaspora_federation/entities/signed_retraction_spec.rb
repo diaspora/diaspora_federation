@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::SignedRetraction do
     let(:target) { Fabricate(:post, author: alice) }

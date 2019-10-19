@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Spring.application_root = "./test/dummy"
 
 root_path = Pathname.new(File.expand_path("."))

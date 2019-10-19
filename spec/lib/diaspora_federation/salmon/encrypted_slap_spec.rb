@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Salmon::EncryptedSlap do
     let(:sender) { "user_test@diaspora.example.tld" }

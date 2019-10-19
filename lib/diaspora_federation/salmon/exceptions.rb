@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Salmon
     # Raised, if the element containing the Magic Envelope is missing from the XML

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     # This entity represents a participation in an event, i.e. it is issued when a user responds to en event.
@@ -5,7 +7,7 @@ module DiasporaFederation
     # @see Validators::EventParticipationValidator
     class EventParticipation < Entity
       # The {EventParticipation} parent is an {Event}
-      PARENT_TYPE = "Event".freeze
+      PARENT_TYPE = "Event"
 
       include Relayable
 

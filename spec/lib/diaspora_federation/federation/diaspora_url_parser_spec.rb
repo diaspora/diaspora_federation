@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Federation::DiasporaUrlParser do
     let(:author) { Fabricate.sequence(:diaspora_id) }

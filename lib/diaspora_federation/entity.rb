@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # +Entity+ is the base class for all other objects used to encapsulate data
   # for federation messages in the diaspora* network.
@@ -41,7 +43,7 @@ module DiasporaFederation
     INVALID_XML_REGEX = /[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/
 
     # Regex to validate and find entity names
-    ENTITY_NAME_REGEX = "[a-z]*(?:_[a-z]*)*".freeze
+    ENTITY_NAME_REGEX = "[a-z]*(?:_[a-z]*)*"
 
     # Initializes the Entity with the given attribute hash and freezes the created
     # instance it returns.

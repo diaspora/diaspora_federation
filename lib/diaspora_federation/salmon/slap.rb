@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Salmon
     # +Slap+ provides class methods to create unencrypted Slap XML from payload

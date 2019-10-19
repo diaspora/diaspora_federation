@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "diaspora_federation/test/factories"
 
 Fabricator(:person) do

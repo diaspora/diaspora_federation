@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Discovery::HCard do
     let(:person) { Fabricate(:person) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validation
   module Rule
     # Rule for validating the number of diaspora* IDs in a string.

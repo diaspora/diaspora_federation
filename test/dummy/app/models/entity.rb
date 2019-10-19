@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Entity
   attr_accessor :author, :guid
   attr_reader :entity_type

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Salmon::XmlPayload do
     let(:entity) { Entities::TestEntity.new(test: "asdf") }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples "a MagicEnvelope instance" do
   before do
     allow(DiasporaFederation.callbacks).to receive(:trigger).with(

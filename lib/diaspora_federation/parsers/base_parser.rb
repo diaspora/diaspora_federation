@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Parsers
     # +BaseParser+ is an abstract class which is used for defining parsers for different

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe ReceiveController, type: :controller do
     routes { DiasporaFederation::Engine.routes }
@@ -38,7 +40,7 @@ module DiasporaFederation
         it "returns a 202 if queued correctly" do
           expect_callback(:queue_public_receive, "<me:env/>", false)
 
-          post :public, body: "<me:env/>"
+          post :public, body: +"<me:env/>"
           expect(response.code).to eq("202")
         end
       end
@@ -89,7 +91,7 @@ module DiasporaFederation
           ).and_return(false)
 
           post :private,
-               body:   "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
+               body:   +"{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
                params: {guid: "any-guid"}
           expect(response.code).to eq("404")
         end
@@ -100,7 +102,7 @@ module DiasporaFederation
           ).and_return(true)
 
           post :private,
-               body:   "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
+               body:   +"{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
                params: {guid: "any-guid"}
           expect(response.code).to eq("202")
         end

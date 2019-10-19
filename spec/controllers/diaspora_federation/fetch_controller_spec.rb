@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe FetchController, type: :controller do
     routes { DiasporaFederation::Engine.routes }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Message do
     let(:data) { Fabricate.attributes_for(:message_entity, author: alice.diaspora_id) }

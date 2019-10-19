@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::AccountDeletion do
     let(:data) { Fabricate.attributes_for(:account_deletion_entity) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entity do
     let(:data) { {test1: "asdf", test2: 1234, test3: false, test4: false} }

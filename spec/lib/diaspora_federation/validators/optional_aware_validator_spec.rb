@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::OptionalAwareValidator do
     def entity_stub(additional_data={})

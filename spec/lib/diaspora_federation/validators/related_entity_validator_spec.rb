@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::RelatedEntityValidator do
     let(:entity) { :related_entity }

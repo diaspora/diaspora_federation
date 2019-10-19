@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::PersonValidator do
     let(:entity) { :person_entity }

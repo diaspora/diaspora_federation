@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # default users
 def alice
   @alice ||= Person.find_by(diaspora_id: "alice@localhost:3000")

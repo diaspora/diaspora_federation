@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Validators
     # Abstract validator which only validates optional fields when they are not nil.

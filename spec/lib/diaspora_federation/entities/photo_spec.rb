@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Photo do
     let(:data) { Fabricate.attributes_for(:photo_entity) }

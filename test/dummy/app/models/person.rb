@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Person
   attr_accessor :diaspora_id, :url, :guid, :serialized_public_key, :serialized_private_key
 

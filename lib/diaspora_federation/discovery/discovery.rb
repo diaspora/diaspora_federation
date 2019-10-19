@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Discovery
     # This class contains the logic to fetch all data for the given diaspora* ID.
@@ -49,13 +51,10 @@ module DiasporaFederation
         raise "Failed to fetch #{url}: #{response.status}" unless response.success?
         response.body
       rescue => e # rubocop:disable Style/RescueStandardError
-        unless http_fallback && url.start_with?("https://")
-          raise DiscoveryError, "Failed to fetch #{url} for #{diaspora_id}: #{e.class}: #{e.message}"
-        end
+        raise DiscoveryError, "Failed to fetch #{url} for #{diaspora_id}: #{e.class}: #{e.message}" unless http_fallback
 
         logger.warn "Retry with http: #{url} for #{diaspora_id}: #{e.class}: #{e.message}"
-        url.sub!("https://", "http://")
-        retry
+        get(url.sub("https://", "http://"))
       end
 
       def domain

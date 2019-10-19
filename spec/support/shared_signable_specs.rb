@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples "a signable" do
   let(:private_key) { OpenSSL::PKey::RSA.generate(1024) }
   let(:test_signature) { sign_with_key(private_key, test_string) }

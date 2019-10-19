@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # Provides a simple DSL for specifying {Entity} properties during class
   # definition.

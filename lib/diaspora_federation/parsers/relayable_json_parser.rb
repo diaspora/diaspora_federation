@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Parsers
     # This is a parser of JSON serialized object, that is normally used for parsing data of relayables.

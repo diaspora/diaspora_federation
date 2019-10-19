@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Salmon
     # Represents a Magic Envelope for diaspora* federation messages
@@ -24,19 +26,19 @@ module DiasporaFederation
       include Logging
 
       # Encoding used for the payload data
-      ENCODING = "base64url".freeze
+      ENCODING = "base64url"
 
       # Algorithm used for signing the payload data
-      ALGORITHM = "RSA-SHA256".freeze
+      ALGORITHM = "RSA-SHA256"
 
       # Mime type describing the payload data
-      DATA_TYPE = "application/xml".freeze
+      DATA_TYPE = "application/xml"
 
       # Digest instance used for signing
       DIGEST = OpenSSL::Digest::SHA256.new
 
       # XML namespace url
-      XMLNS = "http://salmon-protocol.org/ns/magic-env".freeze
+      XMLNS = "http://salmon-protocol.org/ns/magic-env"
 
       # The payload entity of the magic envelope
       # @return [Entity] payload entity

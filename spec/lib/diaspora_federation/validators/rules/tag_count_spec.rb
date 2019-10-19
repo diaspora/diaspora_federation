@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Validation::Rule::TagCount do
   it "requires a parameter" do
     validator = Validation::Validator.new({})

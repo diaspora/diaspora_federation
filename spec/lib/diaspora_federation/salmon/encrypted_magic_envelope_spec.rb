@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Salmon::EncryptedMagicEnvelope do
     let(:sender_id) { Fabricate.sequence(:diaspora_id) }

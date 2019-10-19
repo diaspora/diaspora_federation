@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     # This entity represents a participation in poll, i.e. it is issued when a user votes for an answer in a poll.
@@ -5,7 +7,7 @@ module DiasporaFederation
     # @see Validators::PollParticipationValidator
     class PollParticipation < Entity
       # The {PollParticipation} parent is a {Poll}
-      PARENT_TYPE = "Poll".freeze
+      PARENT_TYPE = "Poll"
 
       include Relayable
 

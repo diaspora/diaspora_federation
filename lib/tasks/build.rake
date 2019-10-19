@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "Build gem into the pkg directory"
 task build: :test do
   FileUtils.rm_rf("pkg")

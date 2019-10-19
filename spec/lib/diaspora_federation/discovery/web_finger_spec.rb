@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Discovery::WebFinger do
     let(:person) { Fabricate(:person) }

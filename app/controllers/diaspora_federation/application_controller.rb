@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # Base controller for all DiasporaFederation controllers
   class ApplicationController < ActionController::Base

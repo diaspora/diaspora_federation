@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::StatusMessage do
     let(:photo1) { Fabricate(:photo_entity, author: alice.diaspora_id) }

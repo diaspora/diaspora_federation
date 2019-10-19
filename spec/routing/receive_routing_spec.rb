@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe ReceiveController, type: :routing do
     routes { DiasporaFederation::Engine.routes }
