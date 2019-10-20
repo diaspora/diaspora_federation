@@ -36,6 +36,7 @@ class Person
 
     def find_by(opts)
       return database[:diaspora_id][opts[:diaspora_id]] if opts[:diaspora_id]
+
       database[:guid][opts[:guid]]
     end
 

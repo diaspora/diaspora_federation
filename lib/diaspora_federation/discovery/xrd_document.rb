@@ -82,7 +82,7 @@ module DiasporaFederation
         }.to_xml
       end
 
-      def to_json
+      def to_json(*_args)
         {
           subject:    subject,
           expires:    (expires.strftime(DATETIME_FORMAT) if expires.instance_of?(DateTime)),
@@ -148,6 +148,7 @@ module DiasporaFederation
       def add_aliases_to(xml)
         aliases.each do |a|
           next if !a.instance_of?(String) || a.empty?
+
           xml.Alias(a.to_s)
         end
       end
@@ -173,6 +174,7 @@ module DiasporaFederation
 
         doc = Nokogiri::XML(xrd_doc)
         raise InvalidDocument, "Not an XRD document" if !doc.root || doc.root.name != "XRD"
+
         doc
       end
 

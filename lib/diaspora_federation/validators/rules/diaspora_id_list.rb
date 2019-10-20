@@ -33,6 +33,7 @@ module Validation
         ids = value.split(";")
         return false if params.include?(:maximum) && ids.count > params[:maximum]
         return false if params.include?(:minimum) && ids.count < params[:minimum]
+
         ids.each do |id|
           return false if DiasporaId::DIASPORA_ID.match(id).nil?
         end

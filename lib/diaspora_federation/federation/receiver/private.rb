@@ -9,6 +9,7 @@ module DiasporaFederation
 
         def validate
           raise RecipientRequired if recipient_id.nil?
+
           super
         end
       end

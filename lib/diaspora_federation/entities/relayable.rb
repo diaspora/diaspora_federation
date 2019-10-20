@@ -90,7 +90,7 @@ module DiasporaFederation
         "#{super}#{":#{parent_type}" if respond_to?(:parent_type)}:#{parent_guid}"
       end
 
-      def to_json
+      def to_json(*_args)
         super.merge!(property_order: signature_order).tap {|json_hash|
           missing_properties = json_hash[:property_order] - json_hash[:entity_data].keys
           missing_properties.each {|property|
@@ -115,6 +115,7 @@ module DiasporaFederation
       def sign_with_author
         privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, author)
         raise AuthorPrivateKeyNotFound, "author=#{author} obj=#{self}" if privkey.nil?
+
         sign_with_key(privkey).tap do
           logger.info "event=sign status=complete signature=author_signature author=#{author} obj=#{self}"
         end

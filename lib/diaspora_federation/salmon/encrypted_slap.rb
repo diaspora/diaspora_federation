@@ -69,10 +69,12 @@ module DiasporaFederation
       # @raise [MissingMagicEnvelope] if the +me:env+ element is missing in the XML
       def self.from_xml(slap_xml, privkey)
         raise ArgumentError unless slap_xml.instance_of?(String) && privkey.instance_of?(OpenSSL::PKey::RSA)
+
         doc = Nokogiri::XML(slap_xml)
 
         header_elem = doc.at_xpath("d:diaspora/d:encrypted_header", Slap::NS)
         raise MissingHeader if header_elem.nil?
+
         header = header_data(header_elem.content, privkey)
         sender = header[:author_id]
         cipher_params = {key: Base64.decode64(header[:aes_key]), iv: Base64.decode64(header[:iv])}

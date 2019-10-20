@@ -52,7 +52,7 @@ module DiasporaFederation
       end
 
       # never add {RelatedEntity} to json
-      def to_json
+      def to_json(*_args)
         nil
       end
     end

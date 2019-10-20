@@ -155,6 +155,7 @@ module DiasporaFederation
       # @raise [InvalidEnvelope] if the envelope XML structure is malformed
       private_class_method def self.validate_envelope(env)
         raise InvalidEnvelope unless env.instance_of?(Nokogiri::XML::Element) && env.name == "env"
+
         validate_element(env, "me:data")
         validate_element(env, "me:sig")
       end
@@ -190,6 +191,7 @@ module DiasporaFederation
       private_class_method def self.sender(env)
         key_id = env.at_xpath("me:sig")["key_id"]
         raise InvalidEnvelope, "no key_id" unless key_id # TODO: move to `envelope_valid?`
+
         Base64.urlsafe_decode64(key_id)
       end
 

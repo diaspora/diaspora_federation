@@ -30,7 +30,7 @@ module DiasporaFederation
       def sender_valid?(sender)
         case target_type
         when "Comment", "Like", "PollParticipation"
-          sender == target.author || sender == target.root.author
+          [target.root.author, target.author].include?(sender)
         else
           sender == target.author
         end

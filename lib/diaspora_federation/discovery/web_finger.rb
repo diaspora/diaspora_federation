@@ -112,7 +112,7 @@ module DiasporaFederation
         to_xrd.to_xml
       end
 
-      def to_json
+      def to_json(*_args)
         to_xrd.to_json
       end
 

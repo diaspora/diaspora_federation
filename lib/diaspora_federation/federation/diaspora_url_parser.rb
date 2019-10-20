@@ -12,7 +12,7 @@ module DiasporaFederation
         (#{Validation::Rule::DiasporaId::DIASPORA_ID_REGEX})/
         (#{Entity::ENTITY_NAME_REGEX})/
         (#{Validation::Rule::Guid::VALID_CHARS})
-      }ux
+      }ux.freeze
 
       # Parses all diaspora:// URLs from the text and fetches the entities from
       # the remote server if needed.
@@ -27,6 +27,7 @@ module DiasporaFederation
       private_class_method def self.fetch_entity(author, type, guid)
         class_name = Entity.entity_class(type).to_s.rpartition("::").last
         return if DiasporaFederation.callbacks.trigger(:fetch_related_entity, class_name, guid)
+
         Fetcher.fetch_public(author, type, guid)
       rescue => e # rubocop:disable Style/RescueStandardError
         logger.error "Failed to fetch linked entity #{type}:#{guid}: #{e.class}: #{e.message}"

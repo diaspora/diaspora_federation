@@ -258,6 +258,7 @@ module DiasporaFederation
       configuration_error "http_timeout: please configure a number" unless @http_timeout.is_a?(Integer)
 
       return unless !@http_verbose.is_a?(TrueClass) && !@http_verbose.is_a?(FalseClass)
+
       configuration_error "http_verbose: please configure a boolean"
     end
 

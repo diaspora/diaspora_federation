@@ -16,6 +16,7 @@ module DiasporaFederation
 
       def optional_props
         return [] unless @obj.class.respond_to?(:optional_props)
+
         @obj.class.optional_props
       end
     end
