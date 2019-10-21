@@ -165,11 +165,11 @@ GEM
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
       rspec-mocks (~> 3.8.0)
-    rspec-collection_matchers (1.1.3)
+    rspec-collection_matchers (1.2.0)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.8.2)
       rspec-support (~> 3.8.0)
-    rspec-expectations (3.8.2)
+    rspec-expectations (3.8.6)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-json_expectations (2.1.0)
@@ -253,7 +253,7 @@ DEPENDENCIES
   pry-byebug
   rake
   rspec (~> 3.8.0)
-  rspec-collection_matchers (~> 1.1.2)
+  rspec-collection_matchers (~> 1.2.0)
   rspec-json_expectations (~> 2.1)
   rspec-rails (~> 3.8.0)
   rubocop (= 0.75.1)
