@@ -22,6 +22,7 @@ doc
 # dummmy app
 test/dummy/log/*.log
 test/dummy/log/*.log*
+test/dummy/tmp
 
 rspec-persistence.txt
 
