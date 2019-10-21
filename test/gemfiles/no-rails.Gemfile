@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
 # Declare your gem's dependencies in diaspora_federation.gemspec.
@@ -17,16 +19,16 @@ end
 
 group :test do
   # rspec formatter
-  gem "fuubar", "2.3.2",    require: false
+  gem "fuubar", "2.4.1",    require: false
   gem "nyan-cat-formatter", require: false
 
   # test coverage
-  gem "simplecov",                 "0.16.1",   require: false
+  gem "simplecov",                 "0.17.1",   require: false
   gem "simplecov-rcov",            "0.2.3",    require: false
 
   # test helpers
   gem "json-schema-rspec", "0.0.4"
-  gem "rspec-collection_matchers", "~> 1.1.2"
+  gem "rspec-collection_matchers", "~> 1.2.0"
   gem "rspec-json_expectations",   "~> 2.1"
   gem "webmock",                   "~> 3.0"
 end
@@ -35,7 +37,5 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.8.0"
+  gem "rspec", "~> 3.9.0"
 end
-
- gem "fabrication", "< 2.17.0"
