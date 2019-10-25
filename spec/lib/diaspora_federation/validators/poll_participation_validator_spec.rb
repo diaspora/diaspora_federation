@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::PollParticipationValidator do
     let(:entity) { :poll_participation_entity }

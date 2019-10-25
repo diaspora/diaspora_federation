@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::PollAnswerValidator do
     let(:entity) { :poll_answer_entity }

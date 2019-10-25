@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe DiasporaFederation do
     context "validate_config" do

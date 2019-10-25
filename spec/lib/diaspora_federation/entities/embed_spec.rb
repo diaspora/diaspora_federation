@@ -1,27 +1,29 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Embed do
     let(:data) { Fabricate.attributes_for(:embed_entity) }
 
-    let(:xml) { <<-XML }
-<embed>
-  <url>#{data[:url]}</url>
-  <title>#{data[:title]}</title>
-  <description>#{data[:description]}</description>
-  <image>#{data[:image]}</image>
-</embed>
-XML
+    let(:xml) { <<~XML }
+      <embed>
+        <url>#{data[:url]}</url>
+        <title>#{data[:title]}</title>
+        <description>#{data[:description]}</description>
+        <image>#{data[:image]}</image>
+      </embed>
+    XML
 
-    let(:json) { <<-JSON }
-{
-  "entity_type": "embed",
-  "entity_data": {
-    "url": "#{data[:url]}",
-    "title": "#{data[:title]}",
-    "description": "#{data[:description]}",
-    "image": "#{data[:image]}"
-  }
-}
-JSON
+    let(:json) { <<~JSON }
+      {
+        "entity_type": "embed",
+        "entity_data": {
+          "url": "#{data[:url]}",
+          "title": "#{data[:title]}",
+          "description": "#{data[:description]}",
+          "image": "#{data[:image]}"
+        }
+      }
+    JSON
 
     let(:string) { "Embed:#{data[:url]}" }
 

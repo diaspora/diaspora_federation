@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Salmon::Slap do
     let(:sender) { "test_user@pod.somedomain.tld" }
@@ -24,24 +26,24 @@ module DiasporaFederation
         end
 
         it "verifies the existence of an author_id" do
-          faulty_xml = <<XML
-<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
-  <header/>
-</diaspora>
-XML
+          faulty_xml = <<~XML
+            <diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
+              <header/>
+            </diaspora>
+          XML
           expect {
             Salmon::Slap.from_xml(faulty_xml)
           }.to raise_error Salmon::MissingAuthor
         end
 
         it "verifies the existence of a magic envelope" do
-          faulty_xml = <<-XML
-<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
-  <header>
-    <author_id>#{sender}</author_id>
-  </header>
-</diaspora>
-XML
+          faulty_xml = <<~XML
+            <diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
+              <header>
+                <author_id>#{sender}</author_id>
+              </header>
+            </diaspora>
+          XML
           expect {
             Salmon::Slap.from_xml(faulty_xml)
           }.to raise_error Salmon::MissingMagicEnvelope

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # diaspora* federation rails engine
   class Engine < ::Rails::Engine

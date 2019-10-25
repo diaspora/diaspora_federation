@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::EventParticipationValidator do
     let(:entity) { :event_participation_entity }

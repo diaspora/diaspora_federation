@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Callbacks do
     subject(:callbacks) { Callbacks.new %i[some_event another_event] }

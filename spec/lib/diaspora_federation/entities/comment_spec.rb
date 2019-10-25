@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Comment do
     let(:parent) { Fabricate(:post, author: bob) }
@@ -12,41 +14,41 @@ module DiasporaFederation
         ).tap {|hash| add_signatures(hash) }
     }
 
-    let(:xml) { <<-XML }
-<comment>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <parent_guid>#{parent.guid}</parent_guid>
-  <text>#{data[:text]}</text>
-  <created_at>#{data[:created_at].utc.iso8601}</created_at>
-  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
-  <author_signature>#{data[:author_signature]}</author_signature>
-  <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
-</comment>
-XML
+    let(:xml) { <<~XML }
+      <comment>
+        <author>#{data[:author]}</author>
+        <guid>#{data[:guid]}</guid>
+        <parent_guid>#{parent.guid}</parent_guid>
+        <text>#{data[:text]}</text>
+        <created_at>#{data[:created_at].utc.iso8601}</created_at>
+        <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
+        <author_signature>#{data[:author_signature]}</author_signature>
+        <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
+      </comment>
+    XML
 
-    let(:json) { <<-JSON }
-{
-  "entity_type": "comment",
-  "entity_data": {
-    "author": "#{data[:author]}",
-    "guid": "#{data[:guid]}",
-    "parent_guid": "#{parent.guid}",
-    "author_signature": "#{data[:author_signature]}",
-    "text": "#{data[:text]}",
-    "created_at": "#{data[:created_at].iso8601}",
-    "edited_at": "#{data[:edited_at].iso8601}"
-  },
-  "property_order": [
-    "author",
-    "guid",
-    "parent_guid",
-    "text",
-    "created_at",
-    "edited_at"
-  ]
-}
-JSON
+    let(:json) { <<~JSON }
+      {
+        "entity_type": "comment",
+        "entity_data": {
+          "author": "#{data[:author]}",
+          "guid": "#{data[:guid]}",
+          "parent_guid": "#{parent.guid}",
+          "author_signature": "#{data[:author_signature]}",
+          "text": "#{data[:text]}",
+          "created_at": "#{data[:created_at].iso8601}",
+          "edited_at": "#{data[:edited_at].iso8601}"
+        },
+        "property_order": [
+          "author",
+          "guid",
+          "parent_guid",
+          "text",
+          "created_at",
+          "edited_at"
+        ]
+      }
+    JSON
 
     let(:string) { "Comment:#{data[:guid]}:#{parent.guid}" }
 

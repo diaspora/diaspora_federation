@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Federation
     # Federation logic to send messages to other pods

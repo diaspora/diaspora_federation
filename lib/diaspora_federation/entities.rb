@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # This namespace contains all the entities used to encapsulate data that is
   # passed around in the diaspora* network as part of the federation protocol.

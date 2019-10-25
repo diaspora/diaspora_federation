@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::ConversationValidator do
     let(:entity) { :conversation_entity }

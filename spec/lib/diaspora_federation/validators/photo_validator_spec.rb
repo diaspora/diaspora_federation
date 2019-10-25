@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::PhotoValidator do
     let(:entity) { :photo_entity }

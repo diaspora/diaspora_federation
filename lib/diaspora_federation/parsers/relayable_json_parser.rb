@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Parsers
     # This is a parser of JSON serialized object, that is normally used for parsing data of relayables.
@@ -18,6 +20,7 @@ module DiasporaFederation
       def from_json_sanity_validation(json_hash)
         super
         return unless json_hash["property_order"].nil?
+
         raise DeserializationError, "Required property is missing in JSON object: property_order"
       end
     end

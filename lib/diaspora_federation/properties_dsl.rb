@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # Provides a simple DSL for specifying {Entity} properties during class
   # definition.
@@ -69,6 +71,7 @@ module DiasporaFederation
         if class_prop_aliases.has_key? name
           prop_name = class_prop_aliases[name]
           raise InvalidData, "only use '#{name}' OR '#{prop_name}'" if data.has_key? prop_name
+
           [prop_name, value]
         else
           [name, value]
@@ -86,7 +89,7 @@ module DiasporaFederation
     # @param [String] xml_name name of the property from the received xml
     # @return [Hash] the property data
     def find_property_for_xml_name(xml_name)
-      class_props.keys.find {|name| name.to_s == xml_name || xml_names[name].to_s == xml_name }
+      class_props.keys.find {|name| [name.to_s, xml_names[name].to_s].include?(xml_name) }
     end
 
     private
@@ -100,6 +103,7 @@ module DiasporaFederation
       if type.instance_of?(Symbol)
         if opts.has_key? :xml_name
           raise InvalidName, "invalid xml_name" unless name_valid?(opts[:xml_name])
+
           opts[:xml_name]
         else
           name

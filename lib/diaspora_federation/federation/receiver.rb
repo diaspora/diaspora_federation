@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Federation
     # This module parses and receives entities.
@@ -29,6 +31,7 @@ module DiasporaFederation
       # @param [Boolean] legacy use old slap parser
       def self.receive_private(data, recipient_private_key, recipient_id, legacy=false)
         raise ArgumentError, "no recipient key provided" unless recipient_private_key.instance_of?(OpenSSL::PKey::RSA)
+
         magic_env = if legacy
                       Salmon::EncryptedSlap.from_xml(data, recipient_private_key)
                     else

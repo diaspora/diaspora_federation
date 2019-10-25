@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Salmon
     # This is a simple crypt-wrapper for {MagicEnvelope}.

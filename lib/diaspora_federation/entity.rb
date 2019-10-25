@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # +Entity+ is the base class for all other objects used to encapsulate data
   # for federation messages in the diaspora* network.
@@ -38,10 +40,10 @@ module DiasporaFederation
 
     # Invalid XML characters
     # @see https://www.w3.org/TR/REC-xml/#charsets "Extensible Markup Language (XML) 1.0"
-    INVALID_XML_REGEX = /[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/
+    INVALID_XML_REGEX = /[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/.freeze
 
     # Regex to validate and find entity names
-    ENTITY_NAME_REGEX = "[a-z]*(?:_[a-z]*)*".freeze
+    ENTITY_NAME_REGEX = "[a-z]*(?:_[a-z]*)*"
 
     # Initializes the Entity with the given attribute hash and freezes the created
     # instance it returns.
@@ -149,6 +151,7 @@ module DiasporaFederation
     # @return [Class] entity class
     def self.entity_class(entity_name)
       raise InvalidEntityName, "'#{entity_name}' is invalid" unless entity_name =~ /\A#{ENTITY_NAME_REGEX}\z/
+
       class_name = entity_name.sub(/\A[a-z]/, &:upcase)
       class_name.gsub!(/_([a-z])/) { Regexp.last_match[1].upcase }
 
@@ -169,7 +172,7 @@ module DiasporaFederation
 
     # Renders entity to a hash representation of the entity JSON format
     # @return [Hash] Returns a hash that is equal by structure to the entity in JSON format
-    def to_json
+    def to_json(*_args)
       {
         entity_type: self.class.entity_name,
         entity_data: json_data
@@ -231,12 +234,14 @@ module DiasporaFederation
 
     def nilify(value)
       return nil if value.respond_to?(:empty?) && value.empty? && !value.instance_of?(Array)
+
       value
     end
 
     def instantiate_nested(name, value)
       if value.instance_of?(Array)
         return value unless value.first.instance_of?(Hash)
+
         value.map {|hash| self.class.class_props[name].first.new(hash) }
       elsif value.instance_of?(Hash)
         self.class.class_props[name].new(value)

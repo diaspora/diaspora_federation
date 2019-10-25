@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # This module contains a diaspora*-specific implementation of parts of the
   # {http://www.salmon-protocol.org/ Salmon Protocol}.
   module Salmon
     # XML namespace url
-    XMLNS = "https://joindiaspora.com/protocol".freeze
+    XMLNS = "https://joindiaspora.com/protocol"
   end
 end
 

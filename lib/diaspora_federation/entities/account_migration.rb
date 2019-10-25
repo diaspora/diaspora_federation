@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     # This entity is sent when a person changes their diaspora* ID (e.g. when a user migration
@@ -37,13 +39,14 @@ module DiasporaFederation
       # @return [String] diaspora* ID of the old person identity
       def old_identity
         return @old_identity if author_is_new_id?
+
         author
       end
 
       # Returns diaspora* ID of the new person identity.
       # @return [String] diaspora* ID of the new person identity
       def new_identity
-        profile.author if profile
+        profile&.author
       end
 
       # @return [String] string representation of this object
@@ -85,6 +88,7 @@ module DiasporaFederation
       def sign_with_respective_key
         privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, signer_id)
         raise PrivateKeyNotFound, "signer=#{signer_id} obj=#{self}" if privkey.nil?
+
         sign_with_key(privkey).tap do
           logger.info "event=sign status=complete signature=signature signer=#{signer_id} obj=#{self}"
         end

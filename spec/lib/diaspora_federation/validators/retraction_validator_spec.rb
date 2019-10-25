@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::RetractionValidator do
     let(:entity) { :retraction_entity }

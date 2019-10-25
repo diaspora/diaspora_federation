@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::StatusMessage do
     let(:photo1) { Fabricate(:photo_entity, author: alice.diaspora_id) }
@@ -15,105 +17,105 @@ module DiasporaFederation
       )
     }
 
-    let(:xml) { <<-XML }
-<status_message>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <created_at>#{data[:created_at].utc.iso8601}</created_at>
-  <public>#{data[:public]}</public>
-  <provider_display_name>#{data[:provider_display_name]}</provider_display_name>
-  <text>#{data[:text]}</text>
-  <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
-  <photo>
-    <guid>#{photo1.guid}</guid>
-    <author>#{photo1.author}</author>
-    <public>#{photo1.public}</public>
-    <created_at>#{photo1.created_at.utc.iso8601}</created_at>
-    <edited_at>#{photo1.edited_at.utc.iso8601}</edited_at>
-    <remote_photo_path>#{photo1.remote_photo_path}</remote_photo_path>
-    <remote_photo_name>#{photo1.remote_photo_name}</remote_photo_name>
-    <text>#{photo1.text}</text>
-    <status_message_guid>#{photo1.status_message_guid}</status_message_guid>
-    <height>#{photo1.height}</height>
-    <width>#{photo1.width}</width>
-  </photo>
-  <photo>
-    <guid>#{photo2.guid}</guid>
-    <author>#{photo2.author}</author>
-    <public>#{photo2.public}</public>
-    <created_at>#{photo2.created_at.utc.iso8601}</created_at>
-    <edited_at>#{photo2.edited_at.utc.iso8601}</edited_at>
-    <remote_photo_path>#{photo2.remote_photo_path}</remote_photo_path>
-    <remote_photo_name>#{photo2.remote_photo_name}</remote_photo_name>
-    <text>#{photo2.text}</text>
-    <status_message_guid>#{photo2.status_message_guid}</status_message_guid>
-    <height>#{photo2.height}</height>
-    <width>#{photo2.width}</width>
-  </photo>
-  <location>
-    <address>#{location.address}</address>
-    <lat>#{location.lat}</lat>
-    <lng>#{location.lng}</lng>
-  </location>
-</status_message>
-XML
+    let(:xml) { <<~XML }
+      <status_message>
+        <author>#{data[:author]}</author>
+        <guid>#{data[:guid]}</guid>
+        <created_at>#{data[:created_at].utc.iso8601}</created_at>
+        <public>#{data[:public]}</public>
+        <provider_display_name>#{data[:provider_display_name]}</provider_display_name>
+        <text>#{data[:text]}</text>
+        <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
+        <photo>
+          <guid>#{photo1.guid}</guid>
+          <author>#{photo1.author}</author>
+          <public>#{photo1.public}</public>
+          <created_at>#{photo1.created_at.utc.iso8601}</created_at>
+          <edited_at>#{photo1.edited_at.utc.iso8601}</edited_at>
+          <remote_photo_path>#{photo1.remote_photo_path}</remote_photo_path>
+          <remote_photo_name>#{photo1.remote_photo_name}</remote_photo_name>
+          <text>#{photo1.text}</text>
+          <status_message_guid>#{photo1.status_message_guid}</status_message_guid>
+          <height>#{photo1.height}</height>
+          <width>#{photo1.width}</width>
+        </photo>
+        <photo>
+          <guid>#{photo2.guid}</guid>
+          <author>#{photo2.author}</author>
+          <public>#{photo2.public}</public>
+          <created_at>#{photo2.created_at.utc.iso8601}</created_at>
+          <edited_at>#{photo2.edited_at.utc.iso8601}</edited_at>
+          <remote_photo_path>#{photo2.remote_photo_path}</remote_photo_path>
+          <remote_photo_name>#{photo2.remote_photo_name}</remote_photo_name>
+          <text>#{photo2.text}</text>
+          <status_message_guid>#{photo2.status_message_guid}</status_message_guid>
+          <height>#{photo2.height}</height>
+          <width>#{photo2.width}</width>
+        </photo>
+        <location>
+          <address>#{location.address}</address>
+          <lat>#{location.lat}</lat>
+          <lng>#{location.lng}</lng>
+        </location>
+      </status_message>
+    XML
 
-    let(:json) { <<-JSON }
-{
-  "entity_type": "status_message",
-  "entity_data": {
-    "author": "#{data[:author]}",
-    "guid": "#{data[:guid]}",
-    "created_at": "#{data[:created_at].utc.iso8601}",
-    "public": #{data[:public]},
-    "provider_display_name": "#{data[:provider_display_name]}",
-    "text": "#{data[:text]}",
-    "edited_at": "#{data[:edited_at].iso8601}",
-    "photos": [
+    let(:json) { <<~JSON }
       {
-        "entity_type": "photo",
+        "entity_type": "status_message",
         "entity_data": {
-          "guid": "#{photo1.guid}",
-          "author": "#{photo1.author}",
-          "public": #{photo1.public},
-          "created_at": "#{photo1.created_at.utc.iso8601}",
-          "edited_at": "#{photo1.edited_at.utc.iso8601}",
-          "remote_photo_path": "#{photo1.remote_photo_path}",
-          "remote_photo_name": "#{photo1.remote_photo_name}",
-          "text": "#{photo1.text}",
-          "status_message_guid": "#{photo1.status_message_guid}",
-          "height": #{photo1.height},
-          "width": #{photo1.width}
-        }
-      },
-      {
-        "entity_type": "photo",
-        "entity_data": {
-          "guid": "#{photo2.guid}",
-          "author": "#{photo2.author}",
-          "public": #{photo2.public},
-          "created_at": "#{photo2.created_at.utc.iso8601}",
-          "edited_at": "#{photo2.edited_at.utc.iso8601}",
-          "remote_photo_path": "#{photo2.remote_photo_path}",
-          "remote_photo_name": "#{photo2.remote_photo_name}",
-          "text": "#{photo2.text}",
-          "status_message_guid": "#{photo2.status_message_guid}",
-          "height": #{photo2.height},
-          "width": #{photo2.width}
+          "author": "#{data[:author]}",
+          "guid": "#{data[:guid]}",
+          "created_at": "#{data[:created_at].utc.iso8601}",
+          "public": #{data[:public]},
+          "provider_display_name": "#{data[:provider_display_name]}",
+          "text": "#{data[:text]}",
+          "edited_at": "#{data[:edited_at].iso8601}",
+          "photos": [
+            {
+              "entity_type": "photo",
+              "entity_data": {
+                "guid": "#{photo1.guid}",
+                "author": "#{photo1.author}",
+                "public": #{photo1.public},
+                "created_at": "#{photo1.created_at.utc.iso8601}",
+                "edited_at": "#{photo1.edited_at.utc.iso8601}",
+                "remote_photo_path": "#{photo1.remote_photo_path}",
+                "remote_photo_name": "#{photo1.remote_photo_name}",
+                "text": "#{photo1.text}",
+                "status_message_guid": "#{photo1.status_message_guid}",
+                "height": #{photo1.height},
+                "width": #{photo1.width}
+              }
+            },
+            {
+              "entity_type": "photo",
+              "entity_data": {
+                "guid": "#{photo2.guid}",
+                "author": "#{photo2.author}",
+                "public": #{photo2.public},
+                "created_at": "#{photo2.created_at.utc.iso8601}",
+                "edited_at": "#{photo2.edited_at.utc.iso8601}",
+                "remote_photo_path": "#{photo2.remote_photo_path}",
+                "remote_photo_name": "#{photo2.remote_photo_name}",
+                "text": "#{photo2.text}",
+                "status_message_guid": "#{photo2.status_message_guid}",
+                "height": #{photo2.height},
+                "width": #{photo2.width}
+              }
+            }
+          ],
+          "location": {
+            "entity_type": "location",
+            "entity_data": {
+              "address": "#{location.address}",
+              "lat": "#{location.lat}",
+              "lng": "#{location.lng}"
+            }
+          }
         }
       }
-    ],
-    "location": {
-      "entity_type": "location",
-      "entity_data": {
-        "address": "#{location.address}",
-        "lat": "#{location.lat}",
-        "lng": "#{location.lng}"
-      }
-    }
-  }
-}
-JSON
+    JSON
 
     let(:string) { "StatusMessage:#{data[:guid]}" }
 
@@ -125,14 +127,14 @@ JSON
 
     context "default values" do
       it "uses default values" do
-        minimal_xml = <<-XML
-<status_message>
-  <author>#{data[:author]}</author>
-  <guid>#{data[:guid]}</guid>
-  <created_at>#{data[:created_at]}</created_at>
-  <text>#{data[:text]}</text>
-</status_message>
-XML
+        minimal_xml = <<~XML
+          <status_message>
+            <author>#{data[:author]}</author>
+            <guid>#{data[:guid]}</guid>
+            <created_at>#{data[:created_at]}</created_at>
+            <text>#{data[:text]}</text>
+          </status_message>
+        XML
 
         parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
         expect(parsed_instance.photos).to eq([])

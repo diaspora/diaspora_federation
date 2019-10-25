@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
@@ -17,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.files       = Dir["lib/diaspora_federation/test.rb", "lib/diaspora_federation/test/*"]
 
-  s.required_ruby_version = "~> 2.1"
+  s.required_ruby_version = "~> 2.5"
 
   s.add_dependency "diaspora_federation", DiasporaFederation::VERSION
   s.add_dependency "fabrication", "~> 2.16"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Federation::Receiver::Private do
     let(:recipient) { 42 }

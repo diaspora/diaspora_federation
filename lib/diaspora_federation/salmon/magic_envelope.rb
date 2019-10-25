@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Salmon
     # Represents a Magic Envelope for diaspora* federation messages
@@ -24,19 +26,19 @@ module DiasporaFederation
       include Logging
 
       # Encoding used for the payload data
-      ENCODING = "base64url".freeze
+      ENCODING = "base64url"
 
       # Algorithm used for signing the payload data
-      ALGORITHM = "RSA-SHA256".freeze
+      ALGORITHM = "RSA-SHA256"
 
       # Mime type describing the payload data
-      DATA_TYPE = "application/xml".freeze
+      DATA_TYPE = "application/xml"
 
       # Digest instance used for signing
       DIGEST = OpenSSL::Digest::SHA256.new
 
       # XML namespace url
-      XMLNS = "http://salmon-protocol.org/ns/magic-env".freeze
+      XMLNS = "http://salmon-protocol.org/ns/magic-env"
 
       # The payload entity of the magic envelope
       # @return [Entity] payload entity
@@ -153,6 +155,7 @@ module DiasporaFederation
       # @raise [InvalidEnvelope] if the envelope XML structure is malformed
       private_class_method def self.validate_envelope(env)
         raise InvalidEnvelope unless env.instance_of?(Nokogiri::XML::Element) && env.name == "env"
+
         validate_element(env, "me:data")
         validate_element(env, "me:sig")
       end
@@ -188,6 +191,7 @@ module DiasporaFederation
       private_class_method def self.sender(env)
         key_id = env.at_xpath("me:sig")["key_id"]
         raise InvalidEnvelope, "no key_id" unless key_id # TODO: move to `envelope_valid?`
+
         Base64.urlsafe_decode64(key_id)
       end
 

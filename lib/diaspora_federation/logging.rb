@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   # Logging module for the diaspora* federation
   #

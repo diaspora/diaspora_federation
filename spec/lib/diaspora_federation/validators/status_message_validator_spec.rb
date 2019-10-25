@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::StatusMessageValidator do
     let(:entity) { :status_message_entity }

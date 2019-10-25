@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validation
   module Rule
     # Rule for validating the number of tags in a string.

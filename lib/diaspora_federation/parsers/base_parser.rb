@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Parsers
     # +BaseParser+ is an abstract class which is used for defining parsers for different
@@ -36,6 +38,7 @@ module DiasporaFederation
           text.to_i if text =~ /\A\d+\z/
         when :boolean
           return true if text =~ /\A(true|t|yes|y|1)\z/i
+
           false if text =~ /\A(false|f|no|n|0)\z/i
         else
           text
@@ -44,6 +47,7 @@ module DiasporaFederation
 
       def assert_parsability_of(entity_class)
         return if entity_class == entity_type.entity_name
+
         raise InvalidRootNode, "'#{entity_class}' can't be parsed by #{entity_type.name}"
       end
 

@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Salmon::XmlPayload do
     let(:entity) { Entities::TestEntity.new(test: "asdf") }
-    let(:entity_xml) { <<-XML.strip }
-<XML>
-  <post>
-    <test_entity>
-      <test>asdf</test>
-    </test_entity>
-  </post>
-</XML>
-XML
+    let(:entity_xml) { <<~XML.strip }
+      <XML>
+        <post>
+          <test_entity>
+            <test>asdf</test>
+          </test_entity>
+        </post>
+      </XML>
+    XML
 
     describe ".unpack" do
       context "sanity" do
@@ -41,11 +43,11 @@ XML
         end
 
         it "allows unwrapped entities" do
-          xml = <<-XML
-<test_entity>
-  <test>asdf</test>
-</test_entity>
-XML
+          xml = <<~XML
+            <test_entity>
+              <test>asdf</test>
+            </test_entity>
+          XML
 
           entity = Salmon::XmlPayload.unpack(Nokogiri::XML(xml).root)
 

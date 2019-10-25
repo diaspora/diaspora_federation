@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::RelatedEntity do
     let(:data) { Fabricate.attributes_for(:related_entity) }

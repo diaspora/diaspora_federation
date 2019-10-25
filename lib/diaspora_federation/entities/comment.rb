@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     # This entity represents a comment to some kind of post (e.g. status message).
@@ -5,7 +7,7 @@ module DiasporaFederation
     # @see Validators::CommentValidator
     class Comment < Entity
       # The {Comment} parent is a {Post}
-      PARENT_TYPE = "Post".freeze
+      PARENT_TYPE = "Post"
 
       include Relayable
 

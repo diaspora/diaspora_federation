@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Salmon::EncryptedSlap do
     let(:sender) { "user_test@diaspora.example.tld" }
@@ -25,21 +27,21 @@ module DiasporaFederation
         end
 
         it "verifies the existence of 'encrypted_header'" do
-          faulty_xml = <<XML
-<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
-</diaspora>
-XML
+          faulty_xml = <<~XML
+            <diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
+            </diaspora>
+          XML
           expect {
             Salmon::EncryptedSlap.from_xml(faulty_xml, recipient_key)
           }.to raise_error Salmon::MissingHeader
         end
 
         it "verifies the existence of a magic envelope" do
-          faulty_xml = <<XML
-<diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
-  <encrypted_header/>
-</diaspora>
-XML
+          faulty_xml = <<~XML
+            <diaspora xmlns="https://joindiaspora.com/protocol" xmlns:me="http://salmon-protocol.org/ns/magic-env">
+              <encrypted_header/>
+            </diaspora>
+          XML
           expect(Salmon::EncryptedSlap).to receive(:header_data).and_return(aes_key: "", iv: "", author_id: "")
           expect {
             Salmon::EncryptedSlap.from_xml(faulty_xml, recipient_key)

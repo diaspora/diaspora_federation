@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Parsers
     # This is a parser of XML serialized object.
@@ -77,6 +79,7 @@ module DiasporaFederation
 
       def from_xml_sanity_validation(root_node)
         raise ArgumentError, "only Nokogiri::XML::Element allowed" unless root_node.instance_of?(Nokogiri::XML::Element)
+
         assert_parsability_of(root_node.name)
       end
     end

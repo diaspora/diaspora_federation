@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Parsers::RelayableJsonParser do
     describe ".parse" do
@@ -8,17 +10,17 @@ module DiasporaFederation
                        '{"entity_type": "some_relayable", "entity_data": {}}'
 
       it "returns property order as a second argument" do
-        json = JSON.parse <<-JSON
-{
-  "entity_type": "some_relayable",
-  "property_order": ["property", "guid", "author"],
-  "entity_data": {
-    "author": "id@example.tld",
-    "guid": "im a guid",
-    "property": "value"
-  }
-}
-JSON
+        json = JSON.parse <<~JSON
+          {
+            "entity_type": "some_relayable",
+            "property_order": ["property", "guid", "author"],
+            "entity_data": {
+              "author": "id@example.tld",
+              "guid": "im a guid",
+              "property": "value"
+            }
+          }
+        JSON
         parsed_data = json_parser.parse(json)
         expect(parsed_data[0]).to be_a(Hash)
         expect(parsed_data[0][:guid]).to eq("im a guid")

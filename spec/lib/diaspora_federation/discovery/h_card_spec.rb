@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Discovery::HCard do
     let(:person) { Fabricate(:person) }
@@ -21,90 +23,90 @@ module DiasporaFederation
       }
     }
 
-    let(:html) { <<-HTML }
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta charset="UTF-8" />
-    <title>#{person.full_name}</title>
-  </head>
-  <body>
-    <div id="content">
-      <h1>#{person.full_name}</h1>
-      <div id="content_inner" class="entity_profile vcard author">
-        <h2>User profile</h2>
-        <dl class="entity_uid">
-          <dt>Uid</dt>
-          <dd>
-            <span class="uid">#{person.guid}</span>
-          </dd>
-        </dl>
-        <dl class="entity_nickname">
-          <dt>Nickname</dt>
-          <dd>
-            <span class="nickname">#{person.nickname}</span>
-          </dd>
-        </dl>
-        <dl class="entity_full_name">
-          <dt>Full_name</dt>
-          <dd>
-            <span class="fn">#{person.full_name}</span>
-          </dd>
-        </dl>
-        <dl class="entity_searchable">
-          <dt>Searchable</dt>
-          <dd>
-            <span class="searchable">#{person.searchable}</span>
-          </dd>
-        </dl>
-        <dl class="entity_key">
-          <dt>Key</dt>
-          <dd>
-            <pre class="key">#{person.serialized_public_key}</pre>
-          </dd>
-        </dl>
-        <dl class="entity_first_name">
-          <dt>First_name</dt>
-          <dd>
-            <span class="given_name">#{person.first_name}</span>
-          </dd>
-        </dl>
-        <dl class="entity_family_name">
-          <dt>Family_name</dt>
-          <dd>
-            <span class="family_name">#{person.last_name}</span>
-          </dd>
-        </dl>
-        <dl class="entity_url">
-          <dt>Url</dt>
-          <dd>
-            <a id="pod_location" class="url" rel="me" href="#{person.url}">#{person.url}</a>
-          </dd>
-        </dl>
-        <dl class="entity_photo">
-          <dt>Photo</dt>
-          <dd>
-            <img class="photo avatar" width="300" height="300" src="#{photo_large_url}" />
-          </dd>
-        </dl>
-        <dl class="entity_photo_medium">
-          <dt>Photo_medium</dt>
-          <dd>
-            <img class="photo avatar" width="100" height="100" src="#{photo_medium_url}" />
-          </dd>
-        </dl>
-        <dl class="entity_photo_small">
-          <dt>Photo_small</dt>
-          <dd>
-            <img class="photo avatar" width="50" height="50" src="#{photo_small_url}" />
-          </dd>
-        </dl>
-      </div>
-    </div>
-  </body>
-</html>
-HTML
+    let(:html) { <<~HTML }
+      <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+          <meta charset="UTF-8" />
+          <title>#{person.full_name}</title>
+        </head>
+        <body>
+          <div id="content">
+            <h1>#{person.full_name}</h1>
+            <div id="content_inner" class="entity_profile vcard author">
+              <h2>User profile</h2>
+              <dl class="entity_uid">
+                <dt>Uid</dt>
+                <dd>
+                  <span class="uid">#{person.guid}</span>
+                </dd>
+              </dl>
+              <dl class="entity_nickname">
+                <dt>Nickname</dt>
+                <dd>
+                  <span class="nickname">#{person.nickname}</span>
+                </dd>
+              </dl>
+              <dl class="entity_full_name">
+                <dt>Full_name</dt>
+                <dd>
+                  <span class="fn">#{person.full_name}</span>
+                </dd>
+              </dl>
+              <dl class="entity_searchable">
+                <dt>Searchable</dt>
+                <dd>
+                  <span class="searchable">#{person.searchable}</span>
+                </dd>
+              </dl>
+              <dl class="entity_key">
+                <dt>Key</dt>
+                <dd>
+                  <pre class="key">#{person.serialized_public_key}</pre>
+                </dd>
+              </dl>
+              <dl class="entity_first_name">
+                <dt>First_name</dt>
+                <dd>
+                  <span class="given_name">#{person.first_name}</span>
+                </dd>
+              </dl>
+              <dl class="entity_family_name">
+                <dt>Family_name</dt>
+                <dd>
+                  <span class="family_name">#{person.last_name}</span>
+                </dd>
+              </dl>
+              <dl class="entity_url">
+                <dt>Url</dt>
+                <dd>
+                  <a id="pod_location" class="url" rel="me" href="#{person.url}">#{person.url}</a>
+                </dd>
+              </dl>
+              <dl class="entity_photo">
+                <dt>Photo</dt>
+                <dd>
+                  <img class="photo avatar" width="300" height="300" src="#{photo_large_url}" />
+                </dd>
+              </dl>
+              <dl class="entity_photo_medium">
+                <dt>Photo_medium</dt>
+                <dd>
+                  <img class="photo avatar" width="100" height="100" src="#{photo_medium_url}" />
+                </dd>
+              </dl>
+              <dl class="entity_photo_small">
+                <dt>Photo_small</dt>
+                <dd>
+                  <img class="photo avatar" width="50" height="50" src="#{photo_small_url}" />
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </body>
+      </html>
+    HTML
 
     let(:string) { "HCard:#{data[:guid]}" }
 
@@ -134,78 +136,78 @@ HTML
       end
 
       it "reads minimal hCard" do
-        minimal_html = <<-HTML
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta charset="UTF-8" />
-    <title>#{person.full_name}</title>
-  </head>
-  <body>
-    <div id="content">
-      <h1>#{person.full_name}</h1>
-      <div id="content_inner" class="entity_profile vcard author">
-        <h2>User profile</h2>
-        <dl class="entity_uid">
-          <dt>Uid</dt>
-          <dd>
-            <span class="uid">#{person.guid}</span>
-          </dd>
-        </dl>
-        <dl class="entity_full_name">
-          <dt>Full_name</dt>
-          <dd>
-            <span class="fn">#{person.full_name}</span>
-          </dd>
-        </dl>
-        <dl class="entity_searchable">
-          <dt>Searchable</dt>
-          <dd>
-            <span class="searchable">#{person.searchable}</span>
-          </dd>
-        </dl>
-        <dl class="entity_key">
-          <dt>Key</dt>
-          <dd>
-            <pre class="key">#{person.serialized_public_key}</pre>
-          </dd>
-        </dl>
-        <dl class="entity_first_name">
-          <dt>First_name</dt>
-          <dd>
-            <span class="given_name">#{person.first_name}</span>
-          </dd>
-        </dl>
-        <dl class="entity_family_name">
-          <dt>Family_name</dt>
-          <dd>
-            <span class="family_name">#{person.last_name}</span>
-          </dd>
-        </dl>
-        <dl class="entity_photo">
-          <dt>Photo</dt>
-          <dd>
-            <img class="photo avatar" width="300" height="300" src="#{photo_large_url}" />
-          </dd>
-        </dl>
-        <dl class="entity_photo_medium">
-          <dt>Photo_medium</dt>
-          <dd>
-            <img class="photo avatar" width="100" height="100" src="#{photo_medium_url}" />
-          </dd>
-        </dl>
-        <dl class="entity_photo_small">
-          <dt>Photo_small</dt>
-          <dd>
-            <img class="photo avatar" width="50" height="50" src="#{photo_small_url}" />
-          </dd>
-        </dl>
-      </div>
-    </div>
-  </body>
-</html>
-HTML
+        minimal_html = <<~HTML
+          <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+          <html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+              <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+              <meta charset="UTF-8" />
+              <title>#{person.full_name}</title>
+            </head>
+            <body>
+              <div id="content">
+                <h1>#{person.full_name}</h1>
+                <div id="content_inner" class="entity_profile vcard author">
+                  <h2>User profile</h2>
+                  <dl class="entity_uid">
+                    <dt>Uid</dt>
+                    <dd>
+                      <span class="uid">#{person.guid}</span>
+                    </dd>
+                  </dl>
+                  <dl class="entity_full_name">
+                    <dt>Full_name</dt>
+                    <dd>
+                      <span class="fn">#{person.full_name}</span>
+                    </dd>
+                  </dl>
+                  <dl class="entity_searchable">
+                    <dt>Searchable</dt>
+                    <dd>
+                      <span class="searchable">#{person.searchable}</span>
+                    </dd>
+                  </dl>
+                  <dl class="entity_key">
+                    <dt>Key</dt>
+                    <dd>
+                      <pre class="key">#{person.serialized_public_key}</pre>
+                    </dd>
+                  </dl>
+                  <dl class="entity_first_name">
+                    <dt>First_name</dt>
+                    <dd>
+                      <span class="given_name">#{person.first_name}</span>
+                    </dd>
+                  </dl>
+                  <dl class="entity_family_name">
+                    <dt>Family_name</dt>
+                    <dd>
+                      <span class="family_name">#{person.last_name}</span>
+                    </dd>
+                  </dl>
+                  <dl class="entity_photo">
+                    <dt>Photo</dt>
+                    <dd>
+                      <img class="photo avatar" width="300" height="300" src="#{photo_large_url}" />
+                    </dd>
+                  </dl>
+                  <dl class="entity_photo_medium">
+                    <dt>Photo_medium</dt>
+                    <dd>
+                      <img class="photo avatar" width="100" height="100" src="#{photo_medium_url}" />
+                    </dd>
+                  </dl>
+                  <dl class="entity_photo_small">
+                    <dt>Photo_small</dt>
+                    <dd>
+                      <img class="photo avatar" width="50" height="50" src="#{photo_small_url}" />
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </body>
+          </html>
+        HTML
 
         hcard = Discovery::HCard.from_html(minimal_html)
         expect(hcard.guid).to eq(person.guid)
@@ -259,11 +261,11 @@ HTML
       end
 
       it "fails if the document is incomplete" do
-        invalid_html = <<-HTML
-<div id="content">
-  <span class="fn">#{person.full_name}</span>
-</div>
-HTML
+        invalid_html = <<~HTML
+          <div id="content">
+            <span class="fn">#{person.full_name}</span>
+          </div>
+        HTML
         expect { Discovery::HCard.from_html(invalid_html) }.to raise_error Discovery::InvalidData
       end
 

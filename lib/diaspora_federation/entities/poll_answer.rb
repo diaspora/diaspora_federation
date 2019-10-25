@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     # This entity represents a poll answer and is federated as a part of the Poll entity.

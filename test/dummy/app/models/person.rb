@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Person
   attr_accessor :diaspora_id, :url, :guid, :serialized_public_key, :serialized_private_key
 
@@ -34,6 +36,7 @@ class Person
 
     def find_by(opts)
       return database[:diaspora_id][opts[:diaspora_id]] if opts[:diaspora_id]
+
       database[:guid][opts[:guid]]
     end
 

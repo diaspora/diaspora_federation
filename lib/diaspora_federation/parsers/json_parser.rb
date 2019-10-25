@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Parsers
     # This is a parser of JSON serialized object. JSON object format is defined by
@@ -30,12 +32,14 @@ module DiasporaFederation
 
       def parse_element_from_value(type, value)
         return if value.nil?
+
         if %i[integer boolean timestamp].include?(type) && !value.is_a?(String)
           value
         elsif type.instance_of?(Symbol)
           parse_string(type, value)
         elsif type.instance_of?(Array)
           raise DeserializationError, "Expected array for #{type}" unless value.respond_to?(:map)
+
           value.map {|element|
             type.first.from_json(element)
           }
@@ -49,6 +53,7 @@ module DiasporaFederation
           prop if json_hash[prop].nil?
         }.compact.join(", ")
         raise DeserializationError, "Required properties are missing in JSON object: #{missing}" unless missing.empty?
+
         assert_parsability_of(json_hash["entity_type"])
       end
 

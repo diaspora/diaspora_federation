@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Salmon
     # +Slap+ provides class methods to create unencrypted Slap XML from payload
@@ -33,10 +35,12 @@ module DiasporaFederation
       # @raise [MissingMagicEnvelope] if the +me:env+ element is missing from the XML
       def self.from_xml(slap_xml)
         raise ArgumentError unless slap_xml.instance_of?(String)
+
         doc = Nokogiri::XML(slap_xml)
 
         author_elem = doc.at_xpath("d:diaspora/d:header/d:author_id", Slap::NS)
         raise MissingAuthor if author_elem.nil? || author_elem.content.empty?
+
         sender = author_elem.content
 
         MagicEnvelope.unenvelop(magic_env_from_doc(doc), sender)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe WebfingerController, type: :controller do
     routes { DiasporaFederation::Engine.routes }
@@ -35,7 +37,7 @@ module DiasporaFederation
       end
     end
 
-    describe "GET #webfinger", rails: 5 do
+    describe "GET #webfinger" do
       it "uses the JRD format as default" do
         get :webfinger, params: {resource: alice.diaspora_id}
         expect(response).to be_successful

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     # This entity is sent when an account was deleted on a remote pod.

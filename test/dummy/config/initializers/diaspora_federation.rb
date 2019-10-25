@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "diaspora_federation"
 
 ca_file = if File.file?("/etc/ssl/certs/ca-certificates.crt")

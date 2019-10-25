@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::LikeValidator do
     let(:entity) { :like_entity }

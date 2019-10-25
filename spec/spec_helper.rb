@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 unless ENV["NO_COVERAGE"] == "true"
   require "simplecov"
   require "simplecov-rcov"
@@ -52,9 +54,7 @@ RSpec.configure do |config|
     expect_config.syntax = :expect
   end
 
-  if defined?(::Rails)
-    config.filter_run_excluding rails: (::Rails::VERSION::MAJOR == 5 ? 4 : 5)
-  else
+  unless defined?(::Rails)
     config.exclude_pattern = "**/controllers/**/*_spec.rb, **/routing/**/*_spec.rb"
     config.filter_run_excluding rails: true
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Discovery::Discovery do
     let(:host_meta_xrd) { Discovery::HostMeta.from_base_url("http://localhost:3000/").to_xml }

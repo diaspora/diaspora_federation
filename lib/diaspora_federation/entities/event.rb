@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     # This entity represents an event and it is federated as a part of a status message.

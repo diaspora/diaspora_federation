@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
@@ -22,9 +24,9 @@ Gem::Specification.new do |s|
                         "lib/diaspora_federation/test/*",
                         "lib/tasks/*.rake"]
 
-  s.required_ruby_version = "~> 2.1"
+  s.required_ruby_version = "~> 2.5"
 
-  s.add_dependency "faraday", ">= 0.9.0", "< 0.16.0"
+  s.add_dependency "faraday", ">= 0.9.0", "< 0.18.0"
   s.add_dependency "faraday_middleware", ">= 0.10.0", "< 0.14.0"
   s.add_dependency "nokogiri", "~> 1.6", ">= 1.6.8"
   s.add_dependency "typhoeus", "~> 1.0"

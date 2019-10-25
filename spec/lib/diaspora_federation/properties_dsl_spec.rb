@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe PropertiesDSL do
     subject(:dsl) { Class.new.extend(PropertiesDSL) }

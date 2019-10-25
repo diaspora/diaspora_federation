@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Salmon
     # Class for AES encryption and decryption
     class AES
       # OpenSSL aes cipher definition
-      CIPHER = "AES-256-CBC".freeze
+      CIPHER = "AES-256-CBC"
 
       # Generates a random AES key and initialization vector
       # @return [Hash] { key: "...", iv: "..." }

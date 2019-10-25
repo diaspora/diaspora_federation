@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "diaspora_federation/engine"
 
 require "diaspora_federation"

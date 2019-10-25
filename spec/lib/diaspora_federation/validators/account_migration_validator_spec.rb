@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::AccountMigrationValidator do
     let(:entity) { :account_migration_entity }

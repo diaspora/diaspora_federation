@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "validation"
 require "validation/rule/regular_expression"
 require "validation/rule/length"

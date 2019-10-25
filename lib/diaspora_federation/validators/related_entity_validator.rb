@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Validators
     # This validates a {Entities::RelatedEntity}.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Federation
     module Receiver
@@ -7,6 +9,7 @@ module DiasporaFederation
 
         def validate
           raise RecipientRequired if recipient_id.nil?
+
           super
         end
       end

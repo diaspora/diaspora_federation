@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Parsers::XmlParser do
     describe ".parse" do
@@ -11,11 +13,11 @@ module DiasporaFederation
       end
 
       it "raises an error when the entity class doesn't match the root node" do
-        xml = <<-XML
-<unknown_entity>
-  <test>asdf</test>
-</unknown_entity>
-XML
+        xml = <<~XML
+          <unknown_entity>
+            <test>asdf</test>
+          </unknown_entity>
+        XML
 
         expect {
           xml_parser.parse(Nokogiri::XML(xml).root)
@@ -32,12 +34,12 @@ XML
       end
 
       it "uses xml_name for parsing" do
-        xml = <<-XML.strip
-<test_entity_with_xml_name>
-  <test>asdf</test>
-  <asdf>qwer</asdf>
-</test_entity_with_xml_name>
-XML
+        xml = <<~XML.strip
+          <test_entity_with_xml_name>
+            <test>asdf</test>
+            <asdf>qwer</asdf>
+          </test_entity_with_xml_name>
+        XML
 
         parsed = Parsers::XmlParser.new(Entities::TestEntityWithXmlName).parse(Nokogiri::XML(xml).root)
 
@@ -46,12 +48,12 @@ XML
       end
 
       it "allows name for parsing even when property has a xml_name" do
-        xml = <<-XML.strip
-<test_entity_with_xml_name>
-  <test>asdf</test>
-  <qwer>qwer</qwer>
-</test_entity_with_xml_name>
-XML
+        xml = <<~XML.strip
+          <test_entity_with_xml_name>
+            <test>asdf</test>
+            <qwer>qwer</qwer>
+          </test_entity_with_xml_name>
+        XML
 
         parsed = Parsers::XmlParser.new(Entities::TestEntityWithXmlName).parse(Nokogiri::XML(xml).root)
 
@@ -60,13 +62,13 @@ XML
       end
 
       it "parses the string to the correct type" do
-        xml = <<-XML.strip
-<test_default_entity>
-  <test1>asdf</test1>
-  <test2>qwer</qwer2>
-  <test3>true</qwer3>
-</test_default_entity>
-XML
+        xml = <<~XML.strip
+          <test_default_entity>
+            <test1>asdf</test1>
+            <test2>qwer</qwer2>
+            <test3>true</qwer3>
+          </test_default_entity>
+        XML
 
         parsed = Parsers::XmlParser.new(Entities::TestDefaultEntity).parse(Nokogiri::XML(xml).root)
 
@@ -76,11 +78,11 @@ XML
       end
 
       it "parses boolean fields with false value" do
-        xml = <<-XML.strip
-<test_entity_with_boolean>
-  <test>false</test>
-</test_entity_with_boolean>
-XML
+        xml = <<~XML.strip
+          <test_entity_with_boolean>
+            <test>false</test>
+          </test_entity_with_boolean>
+        XML
 
         parsed = Parsers::XmlParser.new(Entities::TestEntityWithBoolean).parse(Nokogiri::XML(xml).root)
         expect(parsed[0][:test]).to eq(false)
@@ -88,11 +90,11 @@ XML
 
       it "parses boolean fields with a randomly matching pattern as nil" do
         %w[ttFFFtt yesFFDSFSDy noDFDSFFDFn fXf LLyes].each do |weird_value|
-          xml = <<-XML.strip
-<test_entity_with_boolean>
-  <test>#{weird_value}</test>
-</test_entity_with_boolean>
-XML
+          xml = <<~XML.strip
+            <test_entity_with_boolean>
+              <test>#{weird_value}</test>
+            </test_entity_with_boolean>
+          XML
 
           parsed = Parsers::XmlParser.new(Entities::TestEntityWithBoolean).parse(
             Nokogiri::XML(xml).root
@@ -103,11 +105,11 @@ XML
 
       it "parses integer fields with a randomly matching pattern as nil" do
         %w[1,2,3 foobar two].each do |weird_value|
-          xml = <<-XML.strip
-<test_entity_with_integer>
-  <test>#{weird_value}</test>
-</test_entity_with_integer>
-XML
+          xml = <<~XML.strip
+            <test_entity_with_integer>
+              <test>#{weird_value}</test>
+            </test_entity_with_integer>
+          XML
 
           parsed = Parsers::XmlParser.new(Entities::TestEntityWithInteger).parse(
             Nokogiri::XML(xml).root
@@ -118,11 +120,11 @@ XML
 
       it "parses timestamp fields with a randomly matching pattern as nil" do
         %w[foobar yesterday now 1.2.foo].each do |weird_value|
-          xml = <<-XML.strip
-<test_entity_with_timestamp>
-  <test>#{weird_value}</test>
-</test_entity_with_timestamp>
-XML
+          xml = <<~XML.strip
+            <test_entity_with_timestamp>
+              <test>#{weird_value}</test>
+            </test_entity_with_timestamp>
+          XML
 
           parsed = Parsers::XmlParser.new(Entities::TestEntityWithTimestamp).parse(
             Nokogiri::XML(xml).root
@@ -152,14 +154,14 @@ XML
       end
 
       it "doesn't drop extra properties" do
-        xml = <<-XML.strip
-<test_default_entity>
-  <test1>asdf</test1>
-  <test2>qwer</test2>
-  <test3>true</test3>
-  <test_new>new_value</test_new>
-</test_default_entity>
-XML
+        xml = <<~XML.strip
+          <test_default_entity>
+            <test1>asdf</test1>
+            <test2>qwer</test2>
+            <test3>true</test3>
+            <test_new>new_value</test_new>
+          </test_default_entity>
+        XML
 
         parsed = Parsers::XmlParser.new(Entities::TestDefaultEntity).parse(Nokogiri::XML(xml).root)
         expect(parsed[0]["test_new"]).to eq("new_value")

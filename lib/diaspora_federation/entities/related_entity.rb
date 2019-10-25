@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Entities
     # Entity meta informations for a related entity (parent or target of
@@ -50,7 +52,7 @@ module DiasporaFederation
       end
 
       # never add {RelatedEntity} to json
-      def to_json
+      def to_json(*_args)
         nil
       end
     end

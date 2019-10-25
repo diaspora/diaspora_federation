@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Discovery
     # This class implements basic handling of XRD documents as far as it is
@@ -29,13 +31,13 @@ module DiasporaFederation
     # @see http://docs.oasis-open.org/xri/xrd/v1.0/xrd-1.0.html Extensible Resource Descriptor (XRD) Version 1.0
     class XrdDocument
       # xml namespace url
-      XMLNS = "http://docs.oasis-open.org/ns/xri/xrd-1.0".freeze
+      XMLNS = "http://docs.oasis-open.org/ns/xri/xrd-1.0"
 
       # +Link+ element attributes
       LINK_ATTRS = %i[rel type href template].freeze
 
       # format string for datetime (+Expires+ element)
-      DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ".freeze
+      DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
       # The <Expires> element contains a time value which specifies the instant at
       # and after which the document has expired and SHOULD NOT be used.
@@ -80,7 +82,7 @@ module DiasporaFederation
         }.to_xml
       end
 
-      def to_json
+      def to_json(*_args)
         {
           subject:    subject,
           expires:    (expires.strftime(DATETIME_FORMAT) if expires.instance_of?(DateTime)),
@@ -146,6 +148,7 @@ module DiasporaFederation
       def add_aliases_to(xml)
         aliases.each do |a|
           next if !a.instance_of?(String) || a.empty?
+
           xml.Alias(a.to_s)
         end
       end
@@ -171,6 +174,7 @@ module DiasporaFederation
 
         doc = Nokogiri::XML(xrd_doc)
         raise InvalidDocument, "Not an XRD document" if !doc.root || doc.root.name != "XRD"
+
         doc
       end
 

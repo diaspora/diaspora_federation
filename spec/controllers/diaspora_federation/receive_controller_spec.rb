@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe ReceiveController, type: :controller do
     routes { DiasporaFederation::Engine.routes }
@@ -15,21 +17,21 @@ module DiasporaFederation
           expect(response.code).to eq("422")
         end
 
-        it "returns a 202 if queued correctly", rails: 5 do
+        it "returns a 202 if queued correctly" do
           expect_callback(:queue_public_receive, "<diaspora/>", true)
 
           post :public, params: {xml: "<diaspora/>"}
           expect(response.code).to eq("202")
         end
 
-        it "unescapes the xml before sending it to the callback", rails: 5 do
+        it "unescapes the xml before sending it to the callback" do
           expect_callback(:queue_public_receive, "<diaspora/>", true)
 
           post :public, params: {xml: CGI.escape("<diaspora/>")}
         end
       end
 
-      context "magic envelope", rails: 5 do
+      context "magic envelope" do
         before do
           Mime::Type.register("application/magic-envelope+xml", :magic_envelope)
           @request.env["CONTENT_TYPE"] = "application/magic-envelope+xml"
@@ -38,13 +40,13 @@ module DiasporaFederation
         it "returns a 202 if queued correctly" do
           expect_callback(:queue_public_receive, "<me:env/>", false)
 
-          post :public, body: "<me:env/>"
+          post :public, body: +"<me:env/>"
           expect(response.code).to eq("202")
         end
       end
     end
 
-    describe "POST #private", rails: 5 do
+    describe "POST #private" do
       context "legacy salmon slap" do
         it "return a 404 if not queued successfully (unknown user guid)" do
           expect_callback(:queue_private_receive, "any-guid", "<diaspora/>", true).and_return(false)
@@ -89,7 +91,7 @@ module DiasporaFederation
           ).and_return(false)
 
           post :private,
-               body:   "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
+               body:   +"{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
                params: {guid: "any-guid"}
           expect(response.code).to eq("404")
         end
@@ -100,7 +102,7 @@ module DiasporaFederation
           ).and_return(true)
 
           post :private,
-               body:   "{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
+               body:   +"{\"aes_key\": \"key\", \"encrypted_magic_envelope\": \"env\"}",
                params: {guid: "any-guid"}
           expect(response.code).to eq("202")
         end

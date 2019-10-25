@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Federation
     # This module is for fetching entities from other pods.
@@ -10,6 +12,7 @@ module DiasporaFederation
       def self.fetch_public(author, entity_type, guid)
         type = entity_name(entity_type).to_s
         raise "Already fetching ..." if fetching[type].include?(guid)
+
         fetch_from_url(author, type, guid)
       rescue => e # rubocop:disable Style/RescueStandardError
         raise NotFetchable, "Failed to fetch #{entity_type}:#{guid} from #{author}: #{e.class}: #{e.message}"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Discovery
     # The WebFinger document used for diaspora* user discovery is based on an
@@ -69,23 +71,23 @@ module DiasporaFederation
       property :subscribe_url, :string, optional: true
 
       # +hcard_url+ link relation
-      REL_HCARD = "http://microformats.org/profile/hcard".freeze
+      REL_HCARD = "http://microformats.org/profile/hcard"
 
       # +seed_url+ link relation
-      REL_SEED = "http://joindiaspora.com/seed_location".freeze
+      REL_SEED = "http://joindiaspora.com/seed_location"
 
       # +profile_url+ link relation.
       # @note This might just as well be an +Alias+ instead of a +Link+.
-      REL_PROFILE = "http://webfinger.net/rel/profile-page".freeze
+      REL_PROFILE = "http://webfinger.net/rel/profile-page"
 
       # +atom_url+ link relation
-      REL_ATOM = "http://schemas.google.com/g/2010#updates-from".freeze
+      REL_ATOM = "http://schemas.google.com/g/2010#updates-from"
 
       # +salmon_url+ link relation
-      REL_SALMON = "salmon".freeze
+      REL_SALMON = "salmon"
 
       # +subscribe_url+ link relation
-      REL_SUBSCRIBE = "http://ostatus.org/schema/1.0/subscribe".freeze
+      REL_SUBSCRIBE = "http://ostatus.org/schema/1.0/subscribe"
 
       # Additional WebFinger data
       # @return [Hash] additional elements
@@ -110,7 +112,7 @@ module DiasporaFederation
         to_xrd.to_xml
       end
 
-      def to_json
+      def to_json(*_args)
         to_xrd.to_json
       end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Relayable do
     let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
@@ -120,17 +122,17 @@ module DiasporaFederation
     end
 
     describe "#to_xml" do
-      let(:expected_xml) { <<-XML }
-<some_relayable>
-  <author>#{author}</author>
-  <guid>#{guid}</guid>
-  <parent_guid>#{parent_guid}</parent_guid>
-  <property>#{property}</property>
-  <new_property>#{new_property}</new_property>
-  <author_signature>aa</author_signature>
-  <parent_author_signature>bb</parent_author_signature>
-</some_relayable>
-XML
+      let(:expected_xml) { <<~XML }
+        <some_relayable>
+          <author>#{author}</author>
+          <guid>#{guid}</guid>
+          <parent_guid>#{parent_guid}</parent_guid>
+          <property>#{property}</property>
+          <new_property>#{new_property}</new_property>
+          <author_signature>aa</author_signature>
+          <parent_author_signature>bb</parent_author_signature>
+        </some_relayable>
+      XML
 
       it "adds new unknown xml elements to the xml again" do
         signature_order = [:author, :guid, :parent_guid, :property, "new_property"]
@@ -159,17 +161,17 @@ XML
       end
 
       it "adds nil properties to xml when needed for signature_order" do
-        expected_xml = <<-XML
-<some_relayable>
-  <author>#{author}</author>
-  <guid>#{guid}</guid>
-  <parent_guid>#{parent_guid}</parent_guid>
-  <property/>
-  <new_property>#{new_property}</new_property>
-  <author_signature>aa</author_signature>
-  <parent_author_signature>bb</parent_author_signature>
-</some_relayable>
-XML
+        expected_xml = <<~XML
+          <some_relayable>
+            <author>#{author}</author>
+            <guid>#{guid}</guid>
+            <parent_guid>#{parent_guid}</parent_guid>
+            <property/>
+            <new_property>#{new_property}</new_property>
+            <author_signature>aa</author_signature>
+            <parent_author_signature>bb</parent_author_signature>
+          </some_relayable>
+        XML
 
         signature_order = [:author, :guid, :parent_guid, :property, "new_property"]
         xml = Entities::SomeRelayable.new(
@@ -180,15 +182,15 @@ XML
       end
 
       it "does not add nil properties to xml when not needed for signature_order" do
-        expected_xml = <<-XML
-<some_relayable>
-  <author>#{author}</author>
-  <guid>#{guid}</guid>
-  <parent_guid>#{parent_guid}</parent_guid>
-  <author_signature>aa</author_signature>
-  <parent_author_signature>bb</parent_author_signature>
-</some_relayable>
-XML
+        expected_xml = <<~XML
+          <some_relayable>
+            <author>#{author}</author>
+            <guid>#{guid}</guid>
+            <parent_guid>#{parent_guid}</parent_guid>
+            <author_signature>aa</author_signature>
+            <parent_author_signature>bb</parent_author_signature>
+          </some_relayable>
+        XML
 
         xml = Entities::SomeRelayable.new(hash_with_fake_signatures.merge(property: nil)).to_xml
 
@@ -281,16 +283,16 @@ XML
       end
 
       it "adds 'false' booleans" do
-        expected_xml = <<-XML
-<test_relayable_with_boolean>
-  <author>#{author}</author>
-  <guid>#{guid}</guid>
-  <parent_guid>#{parent_guid}</parent_guid>
-  <test>false</test>
-  <author_signature>aa</author_signature>
-  <parent_author_signature>bb</parent_author_signature>
-</test_relayable_with_boolean>
-XML
+        expected_xml = <<~XML
+          <test_relayable_with_boolean>
+            <author>#{author}</author>
+            <guid>#{guid}</guid>
+            <parent_guid>#{parent_guid}</parent_guid>
+            <test>false</test>
+            <author_signature>aa</author_signature>
+            <parent_author_signature>bb</parent_author_signature>
+          </test_relayable_with_boolean>
+        XML
 
         xml = Entities::TestRelayableWithBoolean.new(hash_with_fake_signatures.merge(test: false)).to_xml
 
@@ -306,17 +308,17 @@ XML
         end
 
         let(:new_signature_data) { "#{author};#{guid};#{parent_guid};#{new_property};#{property}" }
-        let(:new_xml) { <<-XML }
-<some_relayable>
-  <diaspora_handle>#{author}</diaspora_handle>
-  <guid>#{guid}</guid>
-  <parent_guid>#{parent_guid}</parent_guid>
-  <new_property>#{new_property}</new_property>
-  <property>#{property}</property>
-  <author_signature>#{sign_with_key(author_pkey, new_signature_data)}</author_signature>
-  <parent_author_signature>#{sign_with_key(parent_pkey, new_signature_data)}</parent_author_signature>
-</some_relayable>
-XML
+        let(:new_xml) { <<~XML }
+          <some_relayable>
+            <diaspora_handle>#{author}</diaspora_handle>
+            <guid>#{guid}</guid>
+            <parent_guid>#{parent_guid}</parent_guid>
+            <new_property>#{new_property}</new_property>
+            <property>#{property}</property>
+            <author_signature>#{sign_with_key(author_pkey, new_signature_data)}</author_signature>
+            <parent_author_signature>#{sign_with_key(parent_pkey, new_signature_data)}</parent_author_signature>
+          </some_relayable>
+        XML
 
         it "doesn't drop unknown properties" do
           entity = Entities::SomeRelayable.from_xml(Nokogiri::XML(new_xml).root)
@@ -350,10 +352,10 @@ XML
 
       context "parse invalid XML" do
         it "raises a ValidationError if the parent_guid is missing" do
-          broken_xml = <<-XML
-<some_relayable>
-</some_relayable>
-XML
+          broken_xml = <<~XML
+            <some_relayable>
+            </some_relayable>
+          XML
 
           expect {
             Entities::SomeRelayable.from_xml(Nokogiri::XML(broken_xml).root)
@@ -361,11 +363,11 @@ XML
         end
 
         it "adds the guid to the error message if available" do
-          broken_xml = <<-XML
-<some_relayable>
-  <guid>#{guid}</guid>
-</some_relayable>
-XML
+          broken_xml = <<~XML
+            <some_relayable>
+              <guid>#{guid}</guid>
+            </some_relayable>
+          XML
 
           expect {
             Entities::SomeRelayable.from_xml(Nokogiri::XML(broken_xml).root)
@@ -373,11 +375,11 @@ XML
         end
 
         it "adds the author to the error message if available" do
-          broken_xml = <<-XML
-<some_relayable>
-  <author>#{author}</author>
-</some_relayable>
-XML
+          broken_xml = <<~XML
+            <some_relayable>
+              <author>#{author}</author>
+            </some_relayable>
+          XML
 
           expect {
             Entities::SomeRelayable.from_xml(Nokogiri::XML(broken_xml).root)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::AccountMigration::Signable do
     let(:entity) { TestAMSignableEntity.new({}) }

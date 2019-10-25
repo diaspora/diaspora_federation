@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "date"
 
 module Validation
@@ -20,7 +22,7 @@ module Validation
         return true if value.nil? || (value.is_a?(String) && value.empty?)
         return true if value.is_a? Date
 
-        if value =~ /[0-9]{4}\-[0-9]{2}\-[0-9]{2}/
+        if value.is_a?(String) && value.match?(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/)
           date_field = value.split("-").map(&:to_i)
           return Date.valid_civil?(date_field[0], date_field[1], date_field[2])
         end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Discovery
     # This class provides the means of generating and parsing account data to and
@@ -260,6 +262,7 @@ module DiasporaFederation
 
         doc = Nokogiri::HTML::Document.parse(html_string)
         raise InvalidData, "hcard html incomplete" unless html_document_complete?(doc)
+
         doc
       end
 

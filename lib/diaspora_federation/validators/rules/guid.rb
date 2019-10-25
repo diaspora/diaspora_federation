@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validation
   module Rule
     # GUID validation rule
@@ -9,7 +11,7 @@ module Validation
     # Special chars aren't allowed at the end.
     class Guid
       # Allowed chars to validate a GUID with a regex
-      VALID_CHARS = "[0-9A-Za-z\\-_@.:]{15,254}[0-9A-Za-z]".freeze
+      VALID_CHARS = "[0-9A-Za-z\\-_@.:]{15,254}[0-9A-Za-z]"
 
       # The error key for this rule
       # @return [Symbol] error key

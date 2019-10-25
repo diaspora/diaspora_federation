@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # set default users as initial database for each test
 RSpec.configure do |config|
   config.before(:suite) do

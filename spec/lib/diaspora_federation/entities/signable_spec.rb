@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Entities::Signable do
-    TEST_STRING_VALUE = "abc123".freeze
+    TEST_STRING_VALUE = "abc123"
 
     class TestSignableEntity < Entity
       include Entities::Signable

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples ".parse parse error" do |reason, json|
   it "raises error when #{reason}" do
     expect {

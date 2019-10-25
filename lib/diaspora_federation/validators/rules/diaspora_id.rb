@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validation
   module Rule
     # diaspora* ID validation rule
@@ -22,7 +24,7 @@ module Validation
       end
 
       # The Regex for validating a full diaspora* ID
-      DIASPORA_ID = /\A#{DIASPORA_ID_REGEX}\z/u
+      DIASPORA_ID = /\A#{DIASPORA_ID_REGEX}\z/u.freeze
 
       # The error key for this rule
       # @return [Symbol] error key

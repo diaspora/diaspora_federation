@@ -1,5 +1,7 @@
+require: rubocop-rails
+
 AllCops:
-  TargetRubyVersion: 2.1
+  TargetRubyVersion: 2.5
   Exclude:
     - "bin/**/*"
     - "test/dummy/bin/**/*"
@@ -199,16 +201,3 @@ Style/DateTime:
   Exclude:
     - "lib/diaspora_federation/discovery/xrd_document.rb"
     - "spec/lib/diaspora_federation/discovery/xrd_document_spec.rb"
-
-### backward compatibility
-
-# only with ruby >= 2.3
-Layout/IndentHeredoc:
-  Enabled: false
-Layout/ClosingHeredocIndentation:
-  Enabled: false
-
-# for rails 4 and ruby < 2.2.2
-Rails/HttpPositionalArguments:
-  Exclude:
-    - "spec/controllers/diaspora_federation/rails4_spec.rb"

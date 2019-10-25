@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def entity_hash_from(hash)
   hash.delete(:parent_author_signature)
   hash.map {|key, value|

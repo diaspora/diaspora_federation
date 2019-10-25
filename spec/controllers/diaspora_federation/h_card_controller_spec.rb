@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
-  describe HCardController, type: :controller, rails: 5 do
+  describe HCardController, type: :controller do
     routes { DiasporaFederation::Engine.routes }
 
     describe "GET #hcard" do

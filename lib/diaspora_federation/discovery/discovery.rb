@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   module Discovery
     # This class contains the logic to fetch all data for the given diaspora* ID.
@@ -35,6 +37,7 @@ module DiasporaFederation
       def validate_diaspora_id
         # Validates if the diaspora* ID matches the diaspora* ID in the webfinger response
         return if diaspora_id == clean_diaspora_id(webfinger.acct_uri)
+
         raise DiscoveryError, "diaspora* ID does not match: Wanted #{diaspora_id} but got" \
                               " #{clean_diaspora_id(webfinger.acct_uri)}"
       end
@@ -47,15 +50,13 @@ module DiasporaFederation
         logger.info "Fetching #{url} for #{diaspora_id}"
         response = HttpClient.get(url)
         raise "Failed to fetch #{url}: #{response.status}" unless response.success?
+
         response.body
       rescue => e # rubocop:disable Style/RescueStandardError
-        unless http_fallback && url.start_with?("https://")
-          raise DiscoveryError, "Failed to fetch #{url} for #{diaspora_id}: #{e.class}: #{e.message}"
-        end
+        raise DiscoveryError, "Failed to fetch #{url} for #{diaspora_id}: #{e.class}: #{e.message}" unless http_fallback
 
         logger.warn "Retry with http: #{url} for #{diaspora_id}: #{e.class}: #{e.message}"
-        url.sub!("https://", "http://")
-        retry
+        get(url.sub("https://", "http://"))
       end
 
       def domain
@@ -74,6 +75,7 @@ module DiasporaFederation
 
       def webfinger
         return @webfinger if @webfinger
+
         webfinger_url = "https://#{domain}/.well-known/webfinger?resource=#{acct_parameter}"
 
         # This tries the WebFinger URL with https first, then falls back to http if webfinger_http_fallback is enabled.

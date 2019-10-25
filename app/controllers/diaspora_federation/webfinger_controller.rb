@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "diaspora_federation/application_controller"
 
 module DiasporaFederation

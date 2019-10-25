@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Federation::Sender::HydraWrapper do
     let(:sender_id) { Fabricate.sequence(:diaspora_id) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiasporaFederation
   describe Validators::HCardValidator do
     let(:entity) { :h_card }
