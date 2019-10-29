@@ -215,7 +215,8 @@ module DiasporaFederation
 
       it "fails validation on parsing" do
         expect {
-          DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(xml).root)
+          parsed_xml = Nokogiri::XML(xml).root
+          Entity.entity_class(parsed_xml.name).from_xml(parsed_xml)
         }.to raise_error Entity::ValidationError
       end
     end

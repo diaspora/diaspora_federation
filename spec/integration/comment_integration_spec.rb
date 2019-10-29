@@ -65,20 +65,6 @@ module DiasporaFederation
       )
     }
 
-    let(:legacy_format_comment_xml_alice) { <<~XML }
-      <XML>
-        <post>
-          <comment>
-            <guid>e21589b0b41101333b870f77ba60fa73</guid>
-            <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
-            <author_signature>XU5X1uqTh8SY6JMG9uhEVR5Rg7FURV6lpRwl/HYOu6DJ3Hd9tpA2aSFFibUxxsMgJXKNrrc5SykrrEdTiQoEei+j0QqZf3B5R7r84qgK7M46KazwIpqRPwVl2MdA/0DdQyYJLA/oavNj1nwll9vtR87M7e/C94qG6P+iQTMBQzo=</author_signature>
-            <parent_author_signature/>
-            <text>this is a very informative comment</text>
-            <diaspora_handle>alice@pod-a.org</diaspora_handle>
-          </comment>
-        </post>
-      </XML>
-    XML
     let(:new_format_comment_xml_alice) { <<~XML }
       <comment>
         <author>alice@pod-a.org</author>
@@ -101,20 +87,6 @@ module DiasporaFederation
       </comment>
     XML
 
-    let(:legacy_format_comment_xml_bob) { <<~XML }
-      <XML>
-        <post>
-          <comment>
-            <guid>e21589b0b41101333b870f77ba60fa73</guid>
-            <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
-            <text>this is a very informative comment</text>
-            <diaspora_handle>alice@pod-a.org</diaspora_handle>
-            <author_signature>XU5X1uqTh8SY6JMG9uhEVR5Rg7FURV6lpRwl/HYOu6DJ3Hd9tpA2aSFFibUxxsMgJXKNrrc5SykrrEdTiQoEei+j0QqZf3B5R7r84qgK7M46KazwIpqRPwVl2MdA/0DdQyYJLA/oavNj1nwll9vtR87M7e/C94qG6P+iQTMBQzo=</author_signature>
-            <parent_author_signature>QqWSdwpb+/dcJUxuKKVe7aiz1NivXzlIdWZ71xyrxnhFxFYd+7EIittyTcp1cVehjg96pwDbn++P/rWyCffqenWu025DHvUfSmQkC93Z0dX6r3OIUlZqwEggtOdbunybiE++F3BVsGt5wC4YbAESB5ZFuhFVhBXh1X+EaZ/qoKo=</parent_author_signature>
-          </comment>
-        </post>
-      </XML>
-    XML
     let(:legacy_order_new_format_comment_xml_bob) { <<~XML }
       <comment>
         <guid>e21589b0b41101333b870f77ba60fa73</guid>
@@ -125,20 +97,6 @@ module DiasporaFederation
         <parent_author_signature>QqWSdwpb+/dcJUxuKKVe7aiz1NivXzlIdWZ71xyrxnhFxFYd+7EIittyTcp1cVehjg96pwDbn++P/rWyCffqenWu025DHvUfSmQkC93Z0dX6r3OIUlZqwEggtOdbunybiE++F3BVsGt5wC4YbAESB5ZFuhFVhBXh1X+EaZ/qoKo=</parent_author_signature>
       </comment>
     XML
-    let(:new_order_legacy_format_comment_xml_bob) { <<~XML }
-      <XML>
-        <post>
-          <comment>
-            <diaspora_handle>alice@pod-a.org</diaspora_handle>
-            <guid>e21589b0b41101333b870f77ba60fa73</guid>
-            <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
-            <text>this is a very informative comment</text>
-            <author_signature>SQbLeqsEpFmSl74G1fFJXKQcsq6jp5B2ZjmfEOF/LbBccYP2oZEyEqOq18K3Fa71OYTp6Nddb38hCmHWWHvnGUltGfxKBnQ0WHafJUi40VM4VmeRoU8cac6m+1hslwe5SNmK6oh47EV3mRCXlgGGjLIrw7iEwjKL2g9x1gkNp2s=</author_signature>
-            <parent_author_signature>hWsagsczmZD6d36d6MFdTt3hKAdnRtupSIU6464G2kkMJ+WlExxMgbF6kWR+jVCBTeKipWCYK3Arnj0YkuIZM9d14bJGVMTsW/ZzNfJ69bXZhsyawI8dPnZnLVydo+hU/XmGJBEuh2TOj9Emq6/HCYiWzPTF5qhYAtyJ1oxJ4Yk=</parent_author_signature>
-          </comment>
-        </post>
-      </XML>
-    XML
     let(:new_format_comment_xml_bob) { <<~XML }
       <comment>
         <author>alice@pod-a.org</author>
@@ -148,21 +106,6 @@ module DiasporaFederation
         <author_signature>SQbLeqsEpFmSl74G1fFJXKQcsq6jp5B2ZjmfEOF/LbBccYP2oZEyEqOq18K3Fa71OYTp6Nddb38hCmHWWHvnGUltGfxKBnQ0WHafJUi40VM4VmeRoU8cac6m+1hslwe5SNmK6oh47EV3mRCXlgGGjLIrw7iEwjKL2g9x1gkNp2s=</author_signature>
         <parent_author_signature>hWsagsczmZD6d36d6MFdTt3hKAdnRtupSIU6464G2kkMJ+WlExxMgbF6kWR+jVCBTeKipWCYK3Arnj0YkuIZM9d14bJGVMTsW/ZzNfJ69bXZhsyawI8dPnZnLVydo+hU/XmGJBEuh2TOj9Emq6/HCYiWzPTF5qhYAtyJ1oxJ4Yk=</parent_author_signature>
       </comment>
-    XML
-    let(:legacy_format_new_data_comment_xml_bob) { <<~XML }
-      <XML>
-        <post>
-          <comment>
-            <diaspora_handle>alice@pod-a.org</diaspora_handle>
-            <guid>e21589b0b41101333b870f77ba60fa73</guid>
-            <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
-            <text>this is a very informative comment</text>
-            <new_data>foobar</new_data>
-            <author_signature>SFYXSvCX/DhTFiOUALp2Nf1kfNkGKXrnoBPikAyhaIogGydVBm+8tIlu1U/vsnpyKO3yfC3JReJ00/UBd4J16VO1IxStntq8NUqbSv4me5A/6kdK9Xg6eYbXrqQGm8fUQ5Xuh2UzeB71p7SVySXX3OZHVe0dvHCxH/lsfSDpEjc=</author_signature>
-            <parent_author_signature>NxXuEUVeXwUMR77osIbaNlp2oB3bpl8rBEFgQoO6cnoN5ewDbiGADK0x6EhcmJptjwhGVcZiNJNpq7k3/pjJtKaH++3ToCAtcuZoIKwPDsneLnjPhVjE2GXM1TiZKwoHrq41qSp/8Vl5UPbtC6sPiOzIvPKaILXUG8XCiVWuB0M=</parent_author_signature>
-          </comment>
-        </post>
-      </XML>
     XML
     let(:new_data_comment_xml_bob) { <<~XML }
       <comment>
@@ -191,7 +134,7 @@ module DiasporaFederation
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
 
         xml = Nokogiri::XML(new_data_comment_xml_alice).root
-        Salmon::XmlPayload.unpack(xml).to_xml
+        Entity.entity_class(xml.name).from_xml(xml).to_xml
       end
     end
 
@@ -202,21 +145,15 @@ module DiasporaFederation
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
       end
 
-      it "relays legacy order" do
-        xml = Nokogiri::XML(legacy_format_comment_xml_alice).root
-        entity = Salmon::XmlPayload.unpack(xml)
-        expect(entity.to_xml.to_xml).to eq(legacy_order_new_format_comment_xml_bob.strip)
-      end
-
       it "relays new order" do
         xml = Nokogiri::XML(new_format_comment_xml_alice).root
-        entity = Salmon::XmlPayload.unpack(xml)
+        entity = Entity.entity_class(xml.name).from_xml(xml)
         expect(entity.to_xml.to_xml).to eq(new_format_comment_xml_bob.strip)
       end
 
       it "relays new data" do
         xml = Nokogiri::XML(new_data_comment_xml_alice).root
-        entity = Salmon::XmlPayload.unpack(xml)
+        entity = Entity.entity_class(xml.name).from_xml(xml)
         expect(entity.to_xml.to_xml).to eq(new_data_comment_xml_bob.strip)
       end
     end
@@ -229,25 +166,9 @@ module DiasporaFederation
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
       end
 
-      it "parses legacy format" do
-        xml = Nokogiri::XML(legacy_format_comment_xml_bob).root
-        entity = Salmon::XmlPayload.unpack(xml)
-
-        expect(entity.author).to eq(author)
-        expect(entity.text).to eq(text)
-      end
-
       it "parses legacy order with new xml format" do
         xml = Nokogiri::XML(legacy_order_new_format_comment_xml_bob).root
-        entity = Salmon::XmlPayload.unpack(xml)
-
-        expect(entity.author).to eq(author)
-        expect(entity.text).to eq(text)
-      end
-
-      it "parses new order with legacy xml format" do
-        xml = Nokogiri::XML(new_order_legacy_format_comment_xml_bob).root
-        entity = Salmon::XmlPayload.unpack(xml)
+        entity = Entity.entity_class(xml.name).from_xml(xml)
 
         expect(entity.author).to eq(author)
         expect(entity.text).to eq(text)
@@ -255,24 +176,15 @@ module DiasporaFederation
 
       it "parses new xml format" do
         xml = Nokogiri::XML(new_format_comment_xml_bob).root
-        entity = Salmon::XmlPayload.unpack(xml)
+        entity = Entity.entity_class(xml.name).from_xml(xml)
 
         expect(entity.author).to eq(author)
         expect(entity.text).to eq(text)
-      end
-
-      it "parses new data with legacy xml format" do
-        xml = Nokogiri::XML(legacy_format_new_data_comment_xml_bob).root
-        entity = Salmon::XmlPayload.unpack(xml)
-
-        expect(entity.author).to eq(author)
-        expect(entity.text).to eq(text)
-        expect(entity.additional_data["new_data"]).to eq(new_data)
       end
 
       it "parses new data with new xml format" do
         xml = Nokogiri::XML(new_data_comment_xml_bob).root
-        entity = Salmon::XmlPayload.unpack(xml)
+        entity = Entity.entity_class(xml.name).from_xml(xml)
 
         expect(entity.author).to eq(author)
         expect(entity.text).to eq(text)

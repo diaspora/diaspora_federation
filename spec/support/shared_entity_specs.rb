@@ -67,7 +67,7 @@ shared_examples "an XML Entity" do |ignored_props=[]|
   context "parsing" do
     it "reads its own output" do
       packed_xml = instance.to_xml
-      parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(packed_xml)
+      parsed_instance = DiasporaFederation::Entity.entity_class(packed_xml.name).from_xml(packed_xml)
 
       check_entity(instance, parsed_instance, ignored_props)
     end

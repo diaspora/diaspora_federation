@@ -13,6 +13,5 @@ require "base64"
 
 require "diaspora_federation/salmon/aes"
 require "diaspora_federation/salmon/exceptions"
-require "diaspora_federation/salmon/xml_payload"
 require "diaspora_federation/salmon/magic_envelope"
 require "diaspora_federation/salmon/encrypted_magic_envelope"
