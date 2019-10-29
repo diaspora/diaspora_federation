@@ -49,5 +49,3 @@ require "diaspora_federation/entities/retraction"
 
 # deprecated
 require "diaspora_federation/entities/request"
-require "diaspora_federation/entities/signed_retraction"
-require "diaspora_federation/entities/relayable_retraction"
