@@ -46,6 +46,3 @@ require "diaspora_federation/entities/message"
 require "diaspora_federation/entities/conversation"
 
 require "diaspora_federation/entities/retraction"
-
-# deprecated
-require "diaspora_federation/entities/request"
