@@ -23,21 +23,6 @@ module DiasporaFederation
         described_class.receive_public(data)
       end
 
-      it "parses the entity with legacy slap receiver" do
-        expect_callback(:fetch_public_key, post.author).and_return(sender_key)
-
-        data = generate_legacy_salmon_slap(post, post.author, sender_key)
-
-        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), post.author, nil) do |_, entity|
-          expect(entity.guid).to eq(post.guid)
-          expect(entity.author).to eq(post.author)
-          expect(entity.text).to eq(post.text)
-          expect(entity.public).to eq("true")
-        end
-
-        described_class.receive_public(data, true)
-      end
-
       it "redirects exceptions from the receiver" do
         expect {
           described_class.receive_public("<xml/>")
@@ -62,21 +47,6 @@ module DiasporaFederation
         end
 
         described_class.receive_private(data, recipient_key, 1234)
-      end
-
-      it "parses the entity with legacy slap receiver" do
-        expect_callback(:fetch_public_key, post.author).and_return(sender_key)
-
-        data = generate_legacy_encrypted_salmon_slap(post, post.author, sender_key, recipient_key)
-
-        expect_callback(:receive_entity, kind_of(Entities::StatusMessage), post.author, 1234) do |_, entity|
-          expect(entity.guid).to eq(post.guid)
-          expect(entity.author).to eq(post.author)
-          expect(entity.text).to eq(post.text)
-          expect(entity.public).to eq("false")
-        end
-
-        described_class.receive_private(data, recipient_key, 1234, true)
       end
 
       it "raises when recipient private key is not available" do
