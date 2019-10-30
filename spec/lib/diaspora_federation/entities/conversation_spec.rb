@@ -54,7 +54,7 @@ module DiasporaFederation
             <guid>#{parent.guid}</guid>
             <subject>#{data[:subject]}</subject>
             <created_at>#{data[:created_at]}</created_at>
-            <participant_handles>#{data[:participants]}</participant_handles>
+            <participants>#{data[:participants]}</participants>
           </conversation>
         XML
 

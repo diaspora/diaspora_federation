@@ -310,7 +310,7 @@ module DiasporaFederation
         let(:new_signature_data) { "#{author};#{guid};#{parent_guid};#{new_property};#{property}" }
         let(:new_xml) { <<~XML }
           <some_relayable>
-            <diaspora_handle>#{author}</diaspora_handle>
+            <author>#{author}</author>
             <guid>#{guid}</guid>
             <parent_guid>#{parent_guid}</parent_guid>
             <new_property>#{new_property}</new_property>

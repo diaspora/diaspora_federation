@@ -13,7 +13,7 @@ module DiasporaFederation
       #   Can be "Post" or "Comment" (Comments are currently not implemented in the
       #   diaspora* frontend).
       #   @return [String] parent type
-      property :parent_type, :string, xml_name: :target_type
+      property :parent_type, :string
 
       # @!attribute [r] positive
       #   If +true+ set a like, if +false+, set a dislike (dislikes are currently not

@@ -75,7 +75,7 @@ module DiasporaFederation
       it "raises a ValidationError if the parent_guid is missing" do
         broken_xml = <<~XML
           <like>
-            <target_type>#{parent.entity_type}</target_type>
+            <parent_type>#{parent.entity_type}</parent_type>
           </like>
         XML
 

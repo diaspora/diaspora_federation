@@ -21,7 +21,7 @@ module DiasporaFederation
       #   alias for author
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :author, :string, alias: :diaspora_id, xml_name: :diaspora_handle
+      property :author, :string, alias: :diaspora_id
 
       # @!attribute [r] url
       #   @see Discovery::WebFinger#seed_url

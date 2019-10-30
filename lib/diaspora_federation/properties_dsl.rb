@@ -8,7 +8,6 @@ module DiasporaFederation
   #   property :prop
   #   property :optional, default: false
   #   property :dynamic_default, default: -> { Time.now }
-  #   property :another_prop, xml_name: :another_name
   #   property :original_prop, alias: :alias_prop
   #   entity :nested, NestedEntity
   #   entity :multiple, [OtherEntity]
@@ -24,7 +23,6 @@ module DiasporaFederation
     # @param [Hash] opts further options
     # @option opts [Object, #call] :default a default value, making the
     #   property optional
-    # @option opts [Symbol] :xml_name another name used for xml generation
     def property(name, type, opts={})
       raise InvalidType unless property_type_valid?(type)
 
@@ -79,41 +77,7 @@ module DiasporaFederation
       }.to_h
     end
 
-    # @return [Symbol] alias for the xml-generation/parsing
-    # @deprecated
-    def xml_names
-      @xml_names ||= {}
-    end
-
-    # Finds a property by +xml_name+ or +name+
-    # @param [String] xml_name name of the property from the received xml
-    # @return [Hash] the property data
-    def find_property_for_xml_name(xml_name)
-      class_props.keys.find {|name| [name.to_s, xml_names[name].to_s].include?(xml_name) }
-    end
-
     private
-
-    # @deprecated
-    def determine_xml_name(name, type, opts={})
-      if !type.instance_of?(Symbol) && opts.has_key?(:xml_name)
-        raise ArgumentError, "xml_name is not supported for nested entities"
-      end
-
-      if type.instance_of?(Symbol)
-        if opts.has_key? :xml_name
-          raise InvalidName, "invalid xml_name" unless name_valid?(opts[:xml_name])
-
-          opts[:xml_name]
-        else
-          name
-        end
-      elsif type.instance_of?(Array)
-        type.first.entity_name.to_sym
-      elsif type.ancestors.include?(Entity)
-        type.entity_name.to_sym
-      end
-    end
 
     def define_property(name, type, opts={})
       raise InvalidName unless name_valid?(name)
@@ -121,7 +85,6 @@ module DiasporaFederation
       class_props[name] = type
       optional_props << name if opts[:optional]
       default_props[name] = opts[:default] if opts.has_key? :default
-      xml_names[name] = determine_xml_name(name, type, opts)
 
       instance_eval { attr_reader name }
 

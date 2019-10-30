@@ -33,34 +33,6 @@ module DiasporaFederation
         end
       end
 
-      it "uses xml_name for parsing" do
-        xml = <<~XML.strip
-          <test_entity_with_xml_name>
-            <test>asdf</test>
-            <asdf>qwer</asdf>
-          </test_entity_with_xml_name>
-        XML
-
-        parsed = Parsers::XmlParser.new(Entities::TestEntityWithXmlName).parse(Nokogiri::XML(xml).root)
-
-        expect(parsed[0][:test]).to eq("asdf")
-        expect(parsed[0][:qwer]).to eq("qwer")
-      end
-
-      it "allows name for parsing even when property has a xml_name" do
-        xml = <<~XML.strip
-          <test_entity_with_xml_name>
-            <test>asdf</test>
-            <qwer>qwer</qwer>
-          </test_entity_with_xml_name>
-        XML
-
-        parsed = Parsers::XmlParser.new(Entities::TestEntityWithXmlName).parse(Nokogiri::XML(xml).root)
-
-        expect(parsed[0][:test]).to eq("asdf")
-        expect(parsed[0][:qwer]).to eq("qwer")
-      end
-
       it "parses the string to the correct type" do
         xml = <<~XML.strip
           <test_default_entity>

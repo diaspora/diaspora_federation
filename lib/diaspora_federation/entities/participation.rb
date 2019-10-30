@@ -10,7 +10,7 @@ module DiasporaFederation
       #   The diaspora* ID of the author
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :author, :string, xml_name: :diaspora_handle
+      property :author, :string
 
       # @!attribute [r] guid
       #   A random string of at least 16 chars
@@ -27,7 +27,7 @@ module DiasporaFederation
       #   A string describing a type of the target to subscribe on
       #   Currently only "Post" is supported.
       #   @return [String] parent type
-      property :parent_type, :string, xml_name: :target_type
+      property :parent_type, :string
 
       # @return [String] string representation of this object
       def to_s

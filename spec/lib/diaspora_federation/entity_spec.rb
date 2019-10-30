@@ -528,14 +528,5 @@ module DiasporaFederation
         expect(entity.multi).to be_empty
       end
     end
-
-    context "xml_name" do
-      let(:hash) { {test: "test", qwer: "qwer"} }
-
-      it "should not use the xml_name for the #to_h" do
-        entity = Entities::TestEntityWithXmlName.new(hash)
-        expect(entity.to_h).to eq(hash)
-      end
-    end
   end
 end

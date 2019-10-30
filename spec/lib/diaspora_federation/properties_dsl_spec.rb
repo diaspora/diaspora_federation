@@ -10,7 +10,6 @@ module DiasporaFederation
         properties = dsl.class_props
         expect(properties).to have(1).item
         expect(properties[:test]).to eq(:string)
-        expect(dsl.xml_names[:test]).to eq(:test)
       end
 
       it "will not accept other types for names" do
@@ -45,22 +44,6 @@ module DiasporaFederation
         expect(properties).to have(3).items
         expect(properties.keys).to include(:test, :asdf, :zzzz)
         properties.each_value {|type| expect(type).to eq(:string) }
-      end
-
-      it "can add an xml name to simple properties with a symbol" do
-        dsl.property :test, :string, xml_name: :xml_test
-        properties = dsl.class_props
-        expect(properties).to have(1).item
-        expect(properties[:test]).to eq(:string)
-        expect(dsl.xml_names[:test]).to eq(:xml_test)
-      end
-
-      it "will not accept other types for xml names" do
-        ["test", 1234, true, {}].each do |val|
-          expect {
-            dsl.property :test, :string, xml_name: val
-          }.to raise_error PropertiesDSL::InvalidName, "invalid xml_name"
-        end
       end
     end
 
@@ -98,12 +81,6 @@ module DiasporaFederation
             dsl.entity :fail, [val]
           }.to raise_error PropertiesDSL::InvalidType
         end
-      end
-
-      it "can not add an xml name to a nested entity" do
-        expect {
-          dsl.entity :other, Entities::TestEntity, xml_name: :other_name
-        }.to raise_error ArgumentError, "xml_name is not supported for nested entities"
       end
     end
 
@@ -172,23 +149,6 @@ module DiasporaFederation
         data = dsl.resolv_aliases(test: "foo")
         expect(data[:test]).to eq("foo")
         expect(data).not_to have_key(:test_alias)
-      end
-    end
-
-    describe ".find_property_for_xml_name" do
-      it "finds property by xml_name" do
-        dsl.property :test, :string, xml_name: :xml_test
-        expect(dsl.find_property_for_xml_name("xml_test")).to eq(:test)
-      end
-
-      it "finds property by name" do
-        dsl.property :test, :string, xml_name: :xml_test
-        expect(dsl.find_property_for_xml_name("test")).to eq(:test)
-      end
-
-      it "returns nil if property is not defined" do
-        dsl.property :test, :string, xml_name: :xml_test
-        expect(dsl.find_property_for_xml_name("unknown")).to be_nil
       end
     end
   end
