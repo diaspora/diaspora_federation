@@ -23,7 +23,6 @@ module DiasporaFederation
         <created_at>#{data[:created_at].utc.iso8601}</created_at>
         <edited_at>#{data[:edited_at].utc.iso8601}</edited_at>
         <author_signature>#{data[:author_signature]}</author_signature>
-        <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
       </comment>
     XML
 

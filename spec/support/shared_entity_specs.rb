@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 def entity_hash_from(hash)
-  hash.delete(:parent_author_signature)
   hash.map {|key, value|
     if [String, TrueClass, FalseClass, Integer, NilClass].any? {|c| value.is_a? c }
       [key, value]
@@ -101,24 +100,19 @@ shared_examples "an XML Entity" do |ignored_props=[]|
 end
 
 shared_examples "a relayable Entity" do
-  let(:instance) { described_class.new(data.merge(author_signature: nil, parent_author_signature: nil)) }
+  let(:instance) { described_class.new(data.merge(author_signature: nil)) }
 
   context "signatures generation" do
     def verify_signature(pubkey, signature, signed_string)
       pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
     end
 
-    it "computes correct signatures for the entity" do
-      order = described_class.class_props.keys - %i[author_signature parent_author_signature parent]
+    it "computes correct author_signature for the entity" do
+      order = described_class.class_props.keys - %i[author_signature parent]
       signed_string = order.map {|name| data[name].is_a?(Time) ? data[name].iso8601 : data[name] }.join(";")
 
-      xml = instance.to_xml
-
-      author_signature = xml.at_xpath("author_signature").text
-      parent_author_signature = xml.at_xpath("parent_author_signature").text
-
+      author_signature = instance.to_xml.at_xpath("author_signature").text
       expect(verify_signature(alice.public_key, author_signature, signed_string)).to be_truthy
-      expect(verify_signature(bob.public_key, parent_author_signature, signed_string)).to be_truthy
     end
   end
 end
@@ -182,7 +176,6 @@ shared_examples "a relayable JSON entity" do
   it "matches JSON schema with empty string signatures" do
     json = described_class.new(data).to_json
     json[:entity_data][:author_signature] = ""
-    json[:entity_data][:parent_author_signature] = ""
     expect(json.to_json).to match_json_schema(:entity_schema)
   end
 end

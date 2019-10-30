@@ -18,7 +18,6 @@ end
 def add_signatures(hash, klass=described_class)
   properties = klass.new(hash).send(:xml_elements)
   hash[:author_signature] = properties[:author_signature]
-  hash[:parent_author_signature] = properties[:parent_author_signature]
 end
 
 def sign_with_key(privkey, signature_data)

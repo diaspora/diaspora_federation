@@ -27,31 +27,6 @@ module DiasporaFederation
     # g6zpg1zxGahpmxwqFQIDAQAB
     # -----END PUBLIC KEY-----
 
-    let(:parent_serialized_key) { <<~KEY }
-      -----BEGIN RSA PRIVATE KEY-----
-      MIICXgIBAAKBgQDrOvW1UArKoUOg54XWXcTD3jU0zKG3Pm9IeaEzfQtApogQ3+M/
-      F9nz0i3q8UhTDEPBQ3hMbqJ/4qfY+wFulxMR58DbqxFx9QcNZISUd0CPx/fJOYMx
-      R7bygTbiCet4FAiyMjxOX3Oei/DedUNps1RAP1bu+80iibze/Kk9BgMm0QIDAQAB
-      AoGAMHvikRCCaOl8SvnteBWzrLtsNAnJez9/KG0JcNdhLl4kxXWgHS0JW1wC4t4A
-      jj2E6ZzCet6C1+Ebv3lc/jJdV3pCK3wgX0YAt/oBW5kcuvpLHLSWusWHnHkYU+qO
-      4SdC3bRhdLV9o3u/oCWzmdeKTdqIyNd2yAbb3W1TsD4EsQECQQD6w+vWVKhWbVOj
-      Ky3ZkLCxPcWNUt+7OIzDA1OLKhdhe44hIoRMfDT6iLK3sJTSjgOv0OFTfsdOqh5y
-      ZqYp/CTpAkEA8CQFKkAYt4qG1lKMPsU/Tme0/Z24VozDRnyw7r663f0De+25kXGY
-      PSBiOHYcAE6poYQEtR/leLTSaG3YZm7hqQJBAOLAWLg1Uwbb0v4/pDUQlgWfQsy4
-      /KAx0W7hyiCTzhKTBAFIUfNLeSh2hYx+ewQt8H2B1s6GXDjwsZlm4qgiXUkCQQC9
-      B12ZeIL8V2r0Yl5LOvEuQqxRx0lHt94vKhAMns5x16xabTLZrlVsKIWodDBufX1B
-      yq359XWooo3N7kmduEKhAkEAppzKLuVtX1XPL4VZBex/M2ewngjkSg964BvxIBwv
-      bFzeSqlMpnbEoOJ9hhx6CsP6Y7V19DRRXi0XgwcAjHLz8g==
-      -----END RSA PRIVATE KEY-----
-    KEY
-    let(:parent_key) { OpenSSL::PKey::RSA.new(parent_serialized_key) }
-    # -----BEGIN PUBLIC KEY-----
-    # MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDrOvW1UArKoUOg54XWXcTD3jU0
-    # zKG3Pm9IeaEzfQtApogQ3+M/F9nz0i3q8UhTDEPBQ3hMbqJ/4qfY+wFulxMR58Db
-    # qxFx9QcNZISUd0CPx/fJOYMxR7bygTbiCet4FAiyMjxOX3Oei/DedUNps1RAP1bu
-    # +80iibze/Kk9BgMm0QIDAQAB
-    # -----END PUBLIC KEY-----
-
     let(:author) { "alice@pod-a.org" }
     let(:guid) { "e21589b0b41101333b870f77ba60fa73" }
     let(:parent_guid) { "9e269ae0b41201333b8c0f77ba60fa73" }
@@ -104,7 +79,6 @@ module DiasporaFederation
         <parent_guid>9e269ae0b41201333b8c0f77ba60fa73</parent_guid>
         <text>this is a very informative comment</text>
         <author_signature>SQbLeqsEpFmSl74G1fFJXKQcsq6jp5B2ZjmfEOF/LbBccYP2oZEyEqOq18K3Fa71OYTp6Nddb38hCmHWWHvnGUltGfxKBnQ0WHafJUi40VM4VmeRoU8cac6m+1hslwe5SNmK6oh47EV3mRCXlgGGjLIrw7iEwjKL2g9x1gkNp2s=</author_signature>
-        <parent_author_signature>hWsagsczmZD6d36d6MFdTt3hKAdnRtupSIU6464G2kkMJ+WlExxMgbF6kWR+jVCBTeKipWCYK3Arnj0YkuIZM9d14bJGVMTsW/ZzNfJ69bXZhsyawI8dPnZnLVydo+hU/XmGJBEuh2TOj9Emq6/HCYiWzPTF5qhYAtyJ1oxJ4Yk=</parent_author_signature>
       </comment>
     XML
     let(:new_data_comment_xml_bob) { <<~XML }
@@ -115,7 +89,6 @@ module DiasporaFederation
         <text>this is a very informative comment</text>
         <new_data>foobar</new_data>
         <author_signature>SFYXSvCX/DhTFiOUALp2Nf1kfNkGKXrnoBPikAyhaIogGydVBm+8tIlu1U/vsnpyKO3yfC3JReJ00/UBd4J16VO1IxStntq8NUqbSv4me5A/6kdK9Xg6eYbXrqQGm8fUQ5Xuh2UzeB71p7SVySXX3OZHVe0dvHCxH/lsfSDpEjc=</author_signature>
-        <parent_author_signature>NxXuEUVeXwUMR77osIbaNlp2oB3bpl8rBEFgQoO6cnoN5ewDbiGADK0x6EhcmJptjwhGVcZiNJNpq7k3/pjJtKaH++3ToCAtcuZoIKwPDsneLnjPhVjE2GXM1TiZKwoHrq41qSp/8Vl5UPbtC6sPiOzIvPKaILXUG8XCiVWuB0M=</parent_author_signature>
       </comment>
     XML
 
@@ -123,14 +96,12 @@ module DiasporaFederation
     context "test-data creation" do
       it "creates comment xml" do
         expect_callback(:fetch_private_key, author).and_return(author_key)
-        expect_callback(:fetch_private_key, parent.author).and_return(nil)
 
         comment.to_xml
       end
 
       it "creates relayed comment xml" do
         expect_callback(:fetch_public_key, author).and_return(author_key.public_key)
-        expect_callback(:fetch_private_key, parent.author).and_return(parent_key)
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
 
         xml = Nokogiri::XML(new_data_comment_xml_alice).root
@@ -141,7 +112,6 @@ module DiasporaFederation
     context "relaying on bobs pod" do
       before do
         expect_callback(:fetch_public_key, author).and_return(author_key.public_key)
-        expect_callback(:fetch_private_key, parent.author).and_return(parent_key)
         expect_callback(:fetch_related_entity, "Post", parent_guid).and_return(parent)
       end
 
