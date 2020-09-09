@@ -28,11 +28,6 @@ group :development do
   gem "guard-rspec",   require: false
   gem "guard-rubocop", require: false
 
-  # preloading environment
-  gem "spring"
-  gem "spring-commands-rspec"
-  gem "spring-watcher-listen"
-
   # debugging
   gem "pry"
   gem "pry-byebug"

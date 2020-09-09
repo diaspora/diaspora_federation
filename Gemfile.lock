@@ -210,12 +210,6 @@ GEM
     simplecov-html (0.10.2)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
-    spring (2.1.0)
-    spring-commands-rspec (1.0.4)
-      spring (>= 0.9.1)
-    spring-watcher-listen (2.0.1)
-      listen (>= 2.7, < 4.0)
-      spring (>= 1.2, < 3.0)
     systemu (2.6.5)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
@@ -262,9 +256,6 @@ DEPENDENCIES
   rubocop-rails (= 2.3.2)
   simplecov (= 0.17.1)
   simplecov-rcov (= 0.2.3)
-  spring
-  spring-commands-rspec
-  spring-watcher-listen
   webmock (~> 3.0)
   yard
 
