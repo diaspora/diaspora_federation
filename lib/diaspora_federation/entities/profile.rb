@@ -14,7 +14,7 @@ module DiasporaFederation
       #   Alias for author
       #   @see Profile#author
       #   @return [String] diaspora* ID
-      property :author, :string, alias: :diaspora_id, xml_name: :diaspora_handle
+      property :author, :string, alias: :diaspora_id
 
       # @!attribute [r] edited_at
       #   The timestamp when the profile was edited

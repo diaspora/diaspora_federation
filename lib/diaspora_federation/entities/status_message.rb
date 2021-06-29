@@ -11,7 +11,7 @@ module DiasporaFederation
       # @!attribute [r] text
       #   Text of the status message composed by the user
       #   @return [String] text of the status message
-      property :text, :string, xml_name: :raw_message
+      property :text, :string
 
       # @!attribute [r] edited_at
       #   The timestamp when the status message was edited

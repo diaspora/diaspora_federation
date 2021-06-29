@@ -17,7 +17,6 @@ module DiasporaFederation
   #     property :prop
   #     property :optional, default: false
   #     property :dynamic_default, default: -> { Time.now }
-  #     property :another_prop, xml_name: :another_name
   #     entity :nested, NestedEntity
   #     entity :multiple, [OtherEntity]
   #   end

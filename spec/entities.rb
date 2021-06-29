@@ -28,11 +28,6 @@ module DiasporaFederation
       entity :multi, [OtherEntity]
     end
 
-    class TestEntityWithXmlName < DiasporaFederation::Entity
-      property :test, :string
-      property :qwer, :string, xml_name: :asdf
-    end
-
     class TestEntityWithRelatedEntity < DiasporaFederation::Entity
       property :test, :string
       entity :parent, RelatedEntity

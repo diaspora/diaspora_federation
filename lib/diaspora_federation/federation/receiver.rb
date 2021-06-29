@@ -8,14 +8,9 @@ module DiasporaFederation
 
       # Receive a public message
       # @param [String] data message to receive
-      # @param [Boolean] legacy use old slap parser
-      def self.receive_public(data, legacy=false)
-        magic_env = if legacy
-                      Salmon::Slap.from_xml(data)
-                    else
-                      magic_env_xml = Nokogiri::XML(data).root
-                      Salmon::MagicEnvelope.unenvelop(magic_env_xml)
-                    end
+      def self.receive_public(data)
+        magic_env_xml = Nokogiri::XML(data).root
+        magic_env = Salmon::MagicEnvelope.unenvelop(magic_env_xml)
         Public.new(magic_env).receive
       rescue => e # rubocop:disable Style/RescueStandardError
         logger.error "failed to receive public message: #{e.class}: #{e.message}"
@@ -28,16 +23,11 @@ module DiasporaFederation
       # @param [OpenSSL::PKey::RSA] recipient_private_key recipient private key to decrypt the message
       # @param [Object] recipient_id the identifier to persist the entity for the correct user,
       #   see +receive_entity+ callback
-      # @param [Boolean] legacy use old slap parser
-      def self.receive_private(data, recipient_private_key, recipient_id, legacy=false)
+      def self.receive_private(data, recipient_private_key, recipient_id)
         raise ArgumentError, "no recipient key provided" unless recipient_private_key.instance_of?(OpenSSL::PKey::RSA)
 
-        magic_env = if legacy
-                      Salmon::EncryptedSlap.from_xml(data, recipient_private_key)
-                    else
-                      magic_env_xml = Salmon::EncryptedMagicEnvelope.decrypt(data, recipient_private_key)
-                      Salmon::MagicEnvelope.unenvelop(magic_env_xml)
-                    end
+        magic_env_xml = Salmon::EncryptedMagicEnvelope.decrypt(data, recipient_private_key)
+        magic_env = Salmon::MagicEnvelope.unenvelop(magic_env_xml)
         Private.new(magic_env, recipient_id).receive
       rescue => e # rubocop:disable Style/RescueStandardError
         logger.error "failed to receive private message for #{recipient_id}: #{e.class}: #{e.message}"

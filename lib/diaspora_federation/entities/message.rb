@@ -10,7 +10,7 @@ module DiasporaFederation
       #   The diaspora* ID of the author
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :author, :string, xml_name: :diaspora_handle
+      property :author, :string
 
       # @!attribute [r] guid
       #   A random string of at least 16 chars

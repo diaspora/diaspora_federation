@@ -22,7 +22,6 @@ module DiasporaFederation
         <parent_type>#{parent.entity_type}</parent_type>
         <positive>#{data[:positive]}</positive>
         <author_signature>#{data[:author_signature]}</author_signature>
-        <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
       </like>
     XML
 
@@ -75,7 +74,7 @@ module DiasporaFederation
       it "raises a ValidationError if the parent_guid is missing" do
         broken_xml = <<~XML
           <like>
-            <target_type>#{parent.entity_type}</target_type>
+            <parent_type>#{parent.entity_type}</parent_type>
           </like>
         XML
 

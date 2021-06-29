@@ -35,12 +35,6 @@ module DiasporaFederation
       #   a target pod.
       #   @return [String] author signature
       #
-      # @!attribute [r] parent_author_signature
-      #   Contains a signature of the entity using the private key of the author of a parent post.
-      #   @deprecated This signature isn't required anymore, because we can check the signature from
-      #     the parent author in the MagicEnvelope.
-      #   @return [String] parent author signature
-      #
       # @!attribute [r] parent
       #   Meta information about the parent object
       #   @return [RelatedEntity] parent entity
@@ -48,11 +42,10 @@ module DiasporaFederation
       # @param [Entity] klass the entity in which it is included
       def self.included(klass)
         klass.class_eval do
-          property :author, :string, xml_name: :diaspora_handle
+          property :author, :string
           property :guid, :string
           property :parent_guid, :string
           property :author_signature, :string, default: nil
-          property :parent_author_signature, :string, default: nil
           entity :parent, Entities::RelatedEntity
         end
 
@@ -67,7 +60,7 @@ module DiasporaFederation
       # @see DiasporaFederation::Entity#initialize
       def initialize(data, signature_order=nil, additional_data={})
         self.signature_order = signature_order if signature_order
-        @additional_data = additional_data
+        self.additional_data = additional_data
 
         super(data)
       end
@@ -104,7 +97,7 @@ module DiasporaFederation
       def signature_order
         @signature_order || self.class.class_props.keys.reject {|key|
           self.class.optional_props.include?(key) && public_send(key).nil?
-        } - %i[author_signature parent_author_signature parent]
+        } - %i[author_signature parent]
       end
 
       private
@@ -121,17 +114,6 @@ module DiasporaFederation
         end
       end
 
-      # Sign with parent author key, if the parent author is local (if the private key is found)
-      # @return [String] A Base64 encoded signature of #signature_data with key
-      def sign_with_parent_author_if_available
-        privkey = DiasporaFederation.callbacks.trigger(:fetch_private_key, parent.root.author)
-        return unless privkey
-
-        sign_with_key(privkey).tap do
-          logger.info "event=sign status=complete signature=parent_author_signature obj=#{self}"
-        end
-      end
-
       # Update the signatures with the keys of the author and the parent
       # if the signatures are not there yet and if the keys are available.
       #
@@ -139,7 +121,6 @@ module DiasporaFederation
       def enriched_properties
         super.merge(additional_data).tap do |hash|
           hash[:author_signature] = author_signature || sign_with_author
-          hash.delete(:parent_author_signature)
         end
       end
 
@@ -147,10 +128,8 @@ module DiasporaFederation
       #
       # @return [Hash] sorted xml elements
       def xml_elements
-        data = super.tap do |hash|
-          hash[:parent_author_signature] = parent_author_signature || sign_with_parent_author_if_available.to_s
-        end
-        order = signature_order + %i[author_signature parent_author_signature]
+        data = super
+        order = signature_order + %i[author_signature]
         order.map {|element| [element, data[element].to_s] }.to_h
       end
 
@@ -158,6 +137,10 @@ module DiasporaFederation
         prop_names = self.class.class_props.keys.map(&:to_s)
         @signature_order = order.reject {|name| name =~ /signature/ }
                                 .map {|name| prop_names.include?(name) ? name.to_sym : name }
+      end
+
+      def additional_data=(additional_data)
+        @additional_data = additional_data.reject {|name, _| name =~ /signature/ }
       end
 
       # @return [String] signature data string

@@ -15,14 +15,12 @@ module DiasporaFederation
         from_xml_sanity_validation(root_node)
 
         hash = root_node.element_children.map {|child|
-          xml_name = child.name
-          property = entity_type.find_property_for_xml_name(xml_name)
+          property, type = find_property_for(child.name)
           if property
-            type = class_properties[property]
-            value = parse_element_from_node(xml_name, type, root_node)
+            value = parse_element_from_node(child.name, type, root_node)
             [property, value]
           else
-            [xml_name, child.text]
+            [child.name, child.text]
           end
         }.to_h
 
@@ -30,6 +28,18 @@ module DiasporaFederation
       end
 
       private
+
+      def find_property_for(xml_name)
+        class_properties.find {|name, type|
+          if type.instance_of?(Symbol)
+            name.to_s == xml_name
+          elsif type.instance_of?(Array)
+            type.first.entity_name == xml_name
+          elsif type.ancestors.include?(Entity)
+            type.entity_name == xml_name
+          end
+        }
+      end
 
       # @param [String] name property name to parse
       # @param [Class, Symbol] type target type to parse
@@ -53,7 +63,6 @@ module DiasporaFederation
       # @return [String] data
       def parse_string_from_node(name, type, root_node)
         node = root_node.xpath(name.to_s)
-        node = root_node.xpath(xml_names[name].to_s) if node.empty?
         parse_string(type, node.first.text) if node.any?
       end
 

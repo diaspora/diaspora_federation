@@ -10,7 +10,7 @@ module DiasporaFederation
       #   The diaspora* ID of the person who reshares the post
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :author, :string, xml_name: :diaspora_handle
+      property :author, :string
 
       # @!attribute [r] guid
       #   A random string of at least 16 chars
@@ -27,7 +27,7 @@ module DiasporaFederation
       #   The diaspora* ID of the person who posted the original post
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :root_author, :string, optional: true, xml_name: :root_diaspora_id
+      property :root_author, :string, optional: true
 
       # @!attribute [r] root_guid
       #   Guid of the original post

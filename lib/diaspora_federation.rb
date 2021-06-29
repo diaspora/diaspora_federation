@@ -184,13 +184,11 @@ module DiasporaFederation
     # queue_public_receive
     #   Queue a public salmon xml to process in background
     #   @param [String] data salmon slap xml or magic envelope xml
-    #   @param [Boolean] legacy true if it is a legacy salmon slap, false if it is a magic envelope xml
     #
     # queue_private_receive
     #   Queue a private salmon xml to process in background
     #   @param [String] guid guid of the receiver person
     #   @param [String] data salmon slap xml or encrypted magic envelope json
-    #   @param [Boolean] legacy true if it is a legacy salmon slap, false if it is a encrypted magic envelope json
     #   @return [Boolean] true if successful, false if the user was not found
     #
     # receive_entity

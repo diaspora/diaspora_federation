@@ -20,7 +20,6 @@ module DiasporaFederation
         <parent_guid>#{parent.guid}</parent_guid>
         <poll_answer_guid>#{data[:poll_answer_guid]}</poll_answer_guid>
         <author_signature>#{data[:author_signature]}</author_signature>
-        <parent_author_signature>#{data[:parent_author_signature]}</parent_author_signature>
       </poll_participation>
     XML
 

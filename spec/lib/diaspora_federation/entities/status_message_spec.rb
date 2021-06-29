@@ -136,7 +136,8 @@ module DiasporaFederation
           </status_message>
         XML
 
-        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
+        parsed_xml = Nokogiri::XML(minimal_xml).root
+        parsed_instance = Entity.entity_class(parsed_xml.name).from_xml(parsed_xml)
         expect(parsed_instance.photos).to eq([])
         expect(parsed_instance.location).to be_nil
         expect(parsed_instance.poll).to be_nil

@@ -62,7 +62,8 @@ module DiasporaFederation
           </photo>
         XML
 
-        parsed_instance = DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(minimal_xml).root)
+        parsed_xml = Nokogiri::XML(minimal_xml).root
+        parsed_instance = Entity.entity_class(parsed_xml.name).from_xml(parsed_xml)
         expect(parsed_instance.public).to be_falsey
         expect(parsed_instance.text).to be_nil
       end

@@ -3,7 +3,6 @@
 module DiasporaFederation
   describe Entities::Relayable do
     let(:author_pkey) { OpenSSL::PKey::RSA.generate(1024) }
-    let(:parent_pkey) { OpenSSL::PKey::RSA.generate(1024) }
 
     let(:guid) { Fabricate.sequence(:guid) }
     let(:parent_guid) { Fabricate.sequence(:guid) }
@@ -13,24 +12,32 @@ module DiasporaFederation
     let(:local_parent) { Fabricate(:related_entity, author: bob.diaspora_id) }
     let(:remote_parent) { Fabricate(:related_entity, author: bob.diaspora_id, local: false) }
     let(:hash) { {guid: guid, author: author, parent_guid: parent_guid, parent: local_parent, property: property} }
-    let(:hash_with_fake_signatures) { hash.merge!(author_signature: "aa", parent_author_signature: "bb") }
+    let(:hash_with_fake_signatures) { hash.merge!(author_signature: "aa") }
 
     let(:signature_order) { %i[author guid parent_guid property] }
     let(:signature_data) { "#{author};#{guid};#{parent_guid};#{property}" }
 
     describe "#initialize" do
       it "filters signatures from order" do
-        signature_order = [:author, :guid, :parent_guid, :property, "new_property", :author_signature]
+        signature_order =
+          [:author, :guid, :parent_guid, :property, "new_property", :author_signature, "parent_author_signature"]
 
         expect(Entities::SomeRelayable.new(hash, signature_order).signature_order)
           .to eq([:author, :guid, :parent_guid, :property, "new_property"])
       end
+
+      it "filters signatures from additional_data" do
+        signature_order = [:author, :guid, :parent_guid, :property, "new_property"]
+        additional_data = {"new_property" => "foobar", "parent_author_signature" => "bb"}
+
+        expect(Entities::SomeRelayable.new(hash, signature_order, additional_data).additional_data)
+          .to eq("new_property" => "foobar")
+      end
     end
 
     describe "#verify_signature" do
-      it "doesn't raise anything if correct signatures were passed" do
+      it "doesn't raise anything if correct author_signature was passed" do
         hash[:author_signature] = sign_with_key(author_pkey, signature_data)
-        hash[:parent_author_signature] = sign_with_key(parent_pkey, signature_data)
         hash[:parent] = remote_parent
 
         expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
@@ -38,12 +45,11 @@ module DiasporaFederation
         expect { Entities::SomeRelayable.new(hash, signature_order).verify_signature }.not_to raise_error
       end
 
-      it "doesn't raise anything if correct signatures with new property were passed" do
+      it "doesn't raise anything if correct author_signature with new property was passed" do
         signature_order = [:author, :guid, :parent_guid, :property, "new_property"]
         signature_data_with_new_property = "#{author};#{guid};#{parent_guid};#{property};#{new_property}"
 
         hash[:author_signature] = sign_with_key(author_pkey, signature_data_with_new_property)
-        hash[:parent_author_signature] = sign_with_key(parent_pkey, signature_data_with_new_property)
         hash[:parent] = remote_parent
 
         expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
@@ -99,26 +105,6 @@ module DiasporaFederation
           Entities::SomeRelayable.new(hash, signature_order).verify_signature
         }.to raise_error Entities::Relayable::SignatureVerificationFailed
       end
-
-      it "doesn't raise when no parent author signature was passed" do
-        hash[:author_signature] = sign_with_key(author_pkey, signature_data)
-        hash[:parent_author_signature] = nil
-        hash[:parent] = remote_parent
-
-        expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-
-        expect { Entities::SomeRelayable.new(hash, signature_order).verify_signature }.not_to raise_error
-      end
-
-      it "doesn't raise when no parent author signature was passed and we're on upstream federation" do
-        hash[:author_signature] = sign_with_key(author_pkey, signature_data)
-        hash[:parent_author_signature] = nil
-        hash[:parent] = local_parent
-
-        expect_callback(:fetch_public_key, author).and_return(author_pkey.public_key)
-
-        expect { Entities::SomeRelayable.new(hash, signature_order).verify_signature }.not_to raise_error
-      end
     end
 
     describe "#to_xml" do
@@ -130,7 +116,6 @@ module DiasporaFederation
           <property>#{property}</property>
           <new_property>#{new_property}</new_property>
           <author_signature>aa</author_signature>
-          <parent_author_signature>bb</parent_author_signature>
         </some_relayable>
       XML
 
@@ -169,7 +154,6 @@ module DiasporaFederation
             <property/>
             <new_property>#{new_property}</new_property>
             <author_signature>aa</author_signature>
-            <parent_author_signature>bb</parent_author_signature>
           </some_relayable>
         XML
 
@@ -188,7 +172,6 @@ module DiasporaFederation
             <guid>#{guid}</guid>
             <parent_guid>#{parent_guid}</parent_guid>
             <author_signature>aa</author_signature>
-            <parent_author_signature>bb</parent_author_signature>
           </some_relayable>
         XML
 
@@ -197,22 +180,16 @@ module DiasporaFederation
         expect(xml.to_s.strip).to eq(expected_xml.strip)
       end
 
-      it "computes correct signatures for the entity" do
+      it "computes correct author_signature for the entity" do
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
-        expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
 
         xml = Entities::SomeRelayable.new(hash).to_xml
 
-        author_signature = xml.at_xpath("author_signature").text
-        parent_author_signature = xml.at_xpath("parent_author_signature").text
-
-        expect(verify_signature(author_pkey, author_signature, signature_data)).to be_truthy
-        expect(verify_signature(parent_pkey, parent_author_signature, signature_data)).to be_truthy
+        expect(verify_signature(author_pkey, xml.at_xpath("author_signature").text, signature_data)).to be_truthy
       end
 
-      it "computes correct signatures for the entity with invalid XML characters" do
+      it "computes correct author_signature for the entity with invalid XML characters" do
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
-        expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
 
         invalid_property = "asdfasdf asdf💩asdf\nasdf"
         signature_data_with_fixed_property = "#{author};#{guid};#{parent_guid};asdf�asdf asdf💩asdf\nasdf"
@@ -220,31 +197,22 @@ module DiasporaFederation
         xml = Entities::SomeRelayable.new(hash.merge(property: invalid_property)).to_xml
 
         author_signature = xml.at_xpath("author_signature").text
-        parent_author_signature = xml.at_xpath("parent_author_signature").text
-
         expect(verify_signature(author_pkey, author_signature, signature_data_with_fixed_property)).to be_truthy
-        expect(verify_signature(parent_pkey, parent_author_signature, signature_data_with_fixed_property)).to be_truthy
       end
 
-      it "computes correct signatures for the entity when the parent is a relayable itself" do
+      it "computes correct author_signature for the entity when the parent is a relayable itself" do
         intermediate_author = Fabricate.sequence(:diaspora_id)
         parent = Fabricate(:related_entity, author: intermediate_author, local: true, parent: local_parent)
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
-        expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
         expect(DiasporaFederation.callbacks).not_to receive(:trigger).with(:fetch_private_key, intermediate_author)
 
         xml = Entities::SomeRelayable.new(hash.merge(parent: parent)).to_xml
 
-        author_signature = xml.at_xpath("author_signature").text
-        parent_author_signature = xml.at_xpath("parent_author_signature").text
-
-        expect(verify_signature(author_pkey, author_signature, signature_data)).to be_truthy
-        expect(verify_signature(parent_pkey, parent_author_signature, signature_data)).to be_truthy
+        expect(verify_signature(author_pkey, xml.at_xpath("author_signature").text, signature_data)).to be_truthy
       end
 
-      it "computes correct signatures for the entity with new unknown xml elements" do
+      it "computes correct author_signature for the entity with new unknown xml elements" do
         expect_callback(:fetch_private_key, author).and_return(author_pkey)
-        expect_callback(:fetch_private_key, local_parent.author).and_return(parent_pkey)
 
         signature_order = [:author, :guid, :parent_guid, "new_property", :property]
         signature_data_with_new_property = "#{author};#{guid};#{parent_guid};#{new_property};#{property}"
@@ -252,17 +220,13 @@ module DiasporaFederation
         xml = Entities::SomeRelayable.new(hash, signature_order, "new_property" => new_property).to_xml
 
         author_signature = xml.at_xpath("author_signature").text
-        parent_author_signature = xml.at_xpath("parent_author_signature").text
-
         expect(verify_signature(author_pkey, author_signature, signature_data_with_new_property)).to be_truthy
-        expect(verify_signature(parent_pkey, parent_author_signature, signature_data_with_new_property)).to be_truthy
       end
 
-      it "doesn't change signatures if they are already set" do
+      it "doesn't change author_signature if it is already set" do
         xml = Entities::SomeRelayable.new(hash_with_fake_signatures).to_xml
 
         expect(xml.at_xpath("author_signature").text).to eq("aa")
-        expect(xml.at_xpath("parent_author_signature").text).to eq("bb")
       end
 
       it "raises when author_signature not set and key isn't supplied" do
@@ -273,15 +237,6 @@ module DiasporaFederation
         }.to raise_error Entities::Relayable::AuthorPrivateKeyNotFound
       end
 
-      it "doesn't set parent_author_signature if key isn't supplied" do
-        expect_callback(:fetch_private_key, author).and_return(author_pkey)
-        expect_callback(:fetch_private_key, local_parent.author).and_return(nil)
-
-        xml = Entities::SomeRelayable.new(hash).to_xml
-
-        expect(xml.at_xpath("parent_author_signature").text).to eq("")
-      end
-
       it "adds 'false' booleans" do
         expected_xml = <<~XML
           <test_relayable_with_boolean>
@@ -290,7 +245,6 @@ module DiasporaFederation
             <parent_guid>#{parent_guid}</parent_guid>
             <test>false</test>
             <author_signature>aa</author_signature>
-            <parent_author_signature>bb</parent_author_signature>
           </test_relayable_with_boolean>
         XML
 
@@ -310,13 +264,12 @@ module DiasporaFederation
         let(:new_signature_data) { "#{author};#{guid};#{parent_guid};#{new_property};#{property}" }
         let(:new_xml) { <<~XML }
           <some_relayable>
-            <diaspora_handle>#{author}</diaspora_handle>
+            <author>#{author}</author>
             <guid>#{guid}</guid>
             <parent_guid>#{parent_guid}</parent_guid>
             <new_property>#{new_property}</new_property>
             <property>#{property}</property>
             <author_signature>#{sign_with_key(author_pkey, new_signature_data)}</author_signature>
-            <parent_author_signature>#{sign_with_key(parent_pkey, new_signature_data)}</parent_author_signature>
           </some_relayable>
         XML
 
@@ -338,7 +291,6 @@ module DiasporaFederation
 
         it "creates Entity with empty 'additional_data' if the xml has only known properties" do
           hash[:author_signature] = sign_with_key(author_pkey, signature_data)
-          hash[:parent_author_signature] = sign_with_key(parent_pkey, signature_data)
 
           xml = Entities::SomeRelayable.new(hash).to_xml
 
@@ -450,13 +402,6 @@ module DiasporaFederation
           Entities::SomeRelayable.new(hash).to_json
         }.to raise_error Entities::Relayable::AuthorPrivateKeyNotFound
       end
-
-      it "doesn't contain the parent_author_signature" do
-        expect_callback(:fetch_private_key, author).and_return(author_pkey)
-
-        json = Entities::SomeRelayable.new(hash).to_json
-        expect(json[:entity_data]).not_to include(:parent_author_signature)
-      end
     end
 
     describe ".from_hash" do
@@ -471,16 +416,14 @@ module DiasporaFederation
         context "when properties are sorted and there is an unknown property" do
           let(:new_signature_data) { "#{author};#{guid};#{parent_guid};#{new_property};#{property}" }
           let(:author_signature) { sign_with_key(author_pkey, new_signature_data) }
-          let(:parent_author_signature) { sign_with_key(parent_pkey, new_signature_data) }
           let(:entity_data) {
             {
-              :guid                    => guid,
-              :author                  => author,
-              :property                => property,
-              :parent_guid             => parent_guid,
-              "new_property"           => new_property,
-              :author_signature        => author_signature,
-              :parent_author_signature => parent_author_signature
+              :guid             => guid,
+              :author           => author,
+              :property         => property,
+              :parent_guid      => parent_guid,
+              "new_property"    => new_property,
+              :author_signature => author_signature
             }
           }
           let(:property_order) { %w[author guid parent_guid new_property property] }
@@ -493,7 +436,6 @@ module DiasporaFederation
             expect(entity.parent_guid).to eq(parent_guid)
             expect(entity.property).to eq(property)
             expect(entity.author_signature).to eq(author_signature)
-            expect(entity.parent_author_signature).to eq(parent_author_signature)
           end
 
           it "makes unknown properties available via #additional_data" do
@@ -509,13 +451,12 @@ module DiasporaFederation
           it "calls a constructor of the entity of the appropriate type" do
             expect(Entities::SomeRelayable).to receive(:new).with(
               {
-                author:                  author,
-                guid:                    guid,
-                parent_guid:             parent_guid,
-                property:                property,
-                author_signature:        author_signature,
-                parent_author_signature: parent_author_signature,
-                parent:                  remote_parent
+                author:           author,
+                guid:             guid,
+                parent_guid:      parent_guid,
+                property:         property,
+                author_signature: author_signature,
+                parent:           remote_parent
               }.merge("new_property" => new_property),
               %w[author guid parent_guid new_property property],
               "new_property" => new_property
@@ -528,12 +469,11 @@ module DiasporaFederation
           property_order = %w[author guid parent_guid property]
 
           entity_data = {
-            guid:                    guid,
-            author:                  author,
-            property:                property,
-            parent_guid:             parent_guid,
-            author_signature:        sign_with_key(author_pkey, signature_data),
-            parent_author_signature: sign_with_key(parent_pkey, signature_data)
+            guid:             guid,
+            author:           author,
+            property:         property,
+            parent_guid:      parent_guid,
+            author_signature: sign_with_key(author_pkey, signature_data)
           }
 
           entity = Entities::SomeRelayable.from_hash(entity_data, property_order)
@@ -547,12 +487,11 @@ module DiasporaFederation
         it "calls signatures verification on relayable unpack" do
           property_order = %w[guid author property parent_guid]
           entity_data = {
-            guid:                    guid,
-            author:                  author,
-            property:                property,
-            parent_guid:             parent_guid,
-            author_signature:        "aa",
-            parent_author_signature: "bb"
+            guid:             guid,
+            author:           author,
+            property:         property,
+            parent_guid:      parent_guid,
+            author_signature: "aa"
           }
 
           expect_callback(:fetch_related_entity, "Parent", parent_guid).and_return(remote_parent)

@@ -10,7 +10,7 @@ module DiasporaFederation
       #   The diaspora* ID of the person initiated the conversation
       #   @see Person#author
       #   @return [String] diaspora* ID
-      property :author, :string, xml_name: :diaspora_handle
+      property :author, :string
 
       # @!attribute [r] guid
       #   A random string of at least 16 chars
@@ -29,7 +29,7 @@ module DiasporaFederation
       # @!attribute [r] participants
       #   The diaspora* IDs of the persons participating the conversation separated by ";"
       #   @return [String] participants diaspora* IDs
-      property :participants, :string, xml_name: :participant_handles
+      property :participants, :string
 
       # @!attribute [r] messages
       #   @return [[Entities::Message]] Messages of this conversation
