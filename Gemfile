@@ -24,16 +24,15 @@ group :development do
   gem "rubocop",        "0.75.1", require: false
   gem "rubocop-rails",  "2.3.2",  require: false
 
-  # automatic test runs
-  gem "guard-rspec",   require: false
-  gem "guard-rubocop", require: false
-
   # debugging
   gem "pry"
   gem "pry-byebug"
 
   # documentation
   gem "yard", require: false
+
+  # rails needs this for development
+  gem "listen"
 end
 
 group :test do
