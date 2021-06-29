@@ -19,8 +19,8 @@ end
 
 group :development do
   # code style
-  gem "pronto",         "0.10.0",  require: false
-  gem "pronto-rubocop", "0.10.0",  require: false
+  gem "pronto",         "0.11.0",  require: false
+  gem "pronto-rubocop", "0.11.1",  require: false
   gem "rubocop",        "0.75.1", require: false
   gem "rubocop-rails",  "2.3.2",  require: false
 
