@@ -25,10 +25,9 @@ module DiasporaFederation
 
     let(:html) { <<~HTML }
       <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-      <html xmlns="http://www.w3.org/1999/xhtml">
+      <html>
         <head>
-          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-          <meta charset="UTF-8" />
+          <meta charset="UTF-8"></meta>
           <title>#{person.full_name}</title>
         </head>
         <body>
@@ -87,19 +86,19 @@ module DiasporaFederation
               <dl class="entity_photo">
                 <dt>Photo</dt>
                 <dd>
-                  <img class="photo avatar" width="300" height="300" src="#{photo_large_url}" />
+                  <img class="photo avatar" width="300" height="300" src="#{photo_large_url}"></img>
                 </dd>
               </dl>
               <dl class="entity_photo_medium">
                 <dt>Photo_medium</dt>
                 <dd>
-                  <img class="photo avatar" width="100" height="100" src="#{photo_medium_url}" />
+                  <img class="photo avatar" width="100" height="100" src="#{photo_medium_url}"></img>
                 </dd>
               </dl>
               <dl class="entity_photo_small">
                 <dt>Photo_small</dt>
                 <dd>
-                  <img class="photo avatar" width="50" height="50" src="#{photo_small_url}" />
+                  <img class="photo avatar" width="50" height="50" src="#{photo_small_url}"></img>
                 </dd>
               </dl>
             </div>
