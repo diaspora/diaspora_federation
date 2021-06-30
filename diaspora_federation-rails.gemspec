@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = "~> 2.5"
 
-  s.add_dependency "actionpack", ">= 5", "< 7"
+  s.add_dependency "actionpack", ">= 5.2", "< 7"
 
   s.add_dependency "diaspora_federation", DiasporaFederation::VERSION
 end
