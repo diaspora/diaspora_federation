@@ -7,7 +7,7 @@ module DiasporaFederation
       include Logging
 
       # Digest instance used for signing
-      DIGEST = OpenSSL::Digest::SHA256.new
+      DIGEST = OpenSSL::Digest.new("SHA256")
 
       # Sign the data with the key
       #

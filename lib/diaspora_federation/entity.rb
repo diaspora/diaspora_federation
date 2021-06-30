@@ -321,7 +321,7 @@ module DiasporaFederation
     # Generates a hash with entity properties which is put to the "entity_data"
     # field of a JSON serialized object.
     # @return [Hash] object properties in JSON format
-    def json_data
+    def json_data # rubocop:disable Metrics/PerceivedComplexity
       enriched_properties.map {|key, value|
         type = self.class.class_props[key]
         next if optional_nil_value?(key, value)
@@ -330,7 +330,7 @@ module DiasporaFederation
           entity_data = value.to_json
           [key, entity_data] unless entity_data.nil?
         elsif type.instance_of?(Array)
-          entity_data = value.nil? ? nil : value.map(&:to_json)
+          entity_data = value&.map(&:to_json)
           [key, entity_data] unless entity_data.nil?
         else
           [key, value]

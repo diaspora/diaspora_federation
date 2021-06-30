@@ -19,14 +19,13 @@ module Validation
       def valid_value?(value)
         return false if value.nil?
 
-        if value.is_a?(String)
+        case value
+        when String
           true if value =~ /\A(true|false|t|f|yes|no|y|n|1|0)\z/i
-        elsif value.is_a?(Integer)
+        when Integer
           true if [1, 0].include?(value)
-        elsif [true, false].include?(value)
-          true
         else
-          false
+          [true, false].include?(value)
         end
       end
 

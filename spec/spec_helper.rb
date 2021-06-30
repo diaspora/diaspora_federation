@@ -19,7 +19,7 @@ dummy_app_path = File.join(File.dirname(__FILE__), "..", "test", "dummy")
 begin
   require "rails" # try to load rails
 rescue LoadError
-  Dir["#{File.join(dummy_app_path, 'app', 'models')}/*.rb"].each {|f| require f }
+  Dir["#{File.join(dummy_app_path, 'app', 'models')}/*.rb"].sort.each {|f| require f }
   require File.join(dummy_app_path, "config", "initializers", "diaspora_federation")
 else
   ENV["RAILS_ENV"] ||= "test"
@@ -42,7 +42,7 @@ require "entities"
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each {|f| require f }
 
 RSpec.configure do |config|
   config.include JSON::SchemaMatchers

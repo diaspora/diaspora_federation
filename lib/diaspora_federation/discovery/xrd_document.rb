@@ -89,7 +89,7 @@ module DiasporaFederation
           aliases:    (aliases if aliases.any?),
           properties: (properties if properties.any?),
           links:      (links if links.any?)
-        }.reject {|_, v| v.nil? }
+        }.compact
       end
 
       # Parse the XRD document from the given string and create a hash containing
@@ -132,7 +132,7 @@ module DiasporaFederation
           aliases:    json_hash["aliases"],
           properties: json_hash["properties"],
           links:      symbolize_keys_for_links(json_hash["links"])
-        }.reject {|_, v| v.nil? }
+        }.compact
       rescue JSON::JSONError => e
         raise InvalidDocument,
               "Not a JRD document: #{e.class}: #{e.message[0..255].encode(Encoding.default_external, undef: :replace)}"
@@ -140,8 +140,10 @@ module DiasporaFederation
 
       private
 
+      # rubocop:disable Layout/EmptyLinesAroundAttributeAccessor Style/AccessorGrouping
       attr_reader :expires
       attr_reader :subject
+      # rubocop:enable Layout/EmptyLinesAroundAttributeAccessor Style/AccessorGrouping
 
       NS = {xrd: XMLNS}.freeze
 

@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 def entity_hash_from(hash)
-  hash.map {|key, value|
+  hash.transform_values {|value|
     if [String, TrueClass, FalseClass, Integer, NilClass].any? {|c| value.is_a? c }
-      [key, value]
+      value
     elsif value.is_a? Time
-      [key, value.iso8601]
+      value.iso8601
     elsif value.instance_of?(Array)
-      [key, value.map(&:to_h)]
+      value.map(&:to_h)
     else
-      [key, value.to_h]
+      value.to_h
     end
-  }.to_h
+  }
 end
 
 shared_examples "an Entity subclass" do
@@ -104,7 +104,7 @@ shared_examples "a relayable Entity" do
 
   context "signatures generation" do
     def verify_signature(pubkey, signature, signed_string)
-      pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
+      pubkey.verify(OpenSSL::Digest.new("SHA256"), Base64.decode64(signature), signed_string)
     end
 
     it "computes correct author_signature for the entity" do
@@ -135,7 +135,7 @@ shared_examples "a JSON Entity" do
       entity_data.delete(:parent)
       nested_elements, simple_props = entity_data.partition {|_key, value| value.is_a?(Array) || value.is_a?(Hash) }
 
-      expect(to_json_output).to include_json(entity_data: simple_props.reject {|_key, value| value.nil? }.to_h)
+      expect(to_json_output).to include_json(entity_data: simple_props.to_h.compact)
 
       nested_elements.each {|key, value|
         type = described_class.class_props[key]

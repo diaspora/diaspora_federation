@@ -35,7 +35,7 @@ module DiasporaFederation
       DATA_TYPE = "application/xml"
 
       # Digest instance used for signing
-      DIGEST = OpenSSL::Digest::SHA256.new
+      DIGEST = OpenSSL::Digest.new("SHA256")
 
       # XML namespace url
       XMLNS = "http://salmon-protocol.org/ns/magic-env"
@@ -137,10 +137,8 @@ module DiasporaFederation
       # @yield [xml] Invokes the block with the
       #   {http://www.rubydoc.info/gems/nokogiri/Nokogiri/XML/Builder Nokogiri::XML::Builder}
       # @return [Nokogiri::XML::Element] XML root node
-      def build_xml
-        Nokogiri::XML::Builder.new(encoding: "UTF-8") {|xml|
-          yield xml
-        }.doc
+      def build_xml(&block)
+        Nokogiri::XML::Builder.new(encoding: "UTF-8", &block).doc
       end
 
       # Creates the signature for all fields according to specification

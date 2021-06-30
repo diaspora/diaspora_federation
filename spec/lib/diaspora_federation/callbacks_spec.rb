@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Lint/EmptyBlock
 module DiasporaFederation
   describe Callbacks do
     subject(:callbacks) { Callbacks.new %i[some_event another_event] }
@@ -74,3 +75,4 @@ module DiasporaFederation
     end
   end
 end
+# rubocop:enable Lint/EmptyBlock

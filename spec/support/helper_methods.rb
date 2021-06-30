@@ -21,11 +21,11 @@ def add_signatures(hash, klass=described_class)
 end
 
 def sign_with_key(privkey, signature_data)
-  Base64.strict_encode64(privkey.sign(OpenSSL::Digest::SHA256.new, signature_data))
+  Base64.strict_encode64(privkey.sign(OpenSSL::Digest.new("SHA256"), signature_data))
 end
 
 def verify_signature(pubkey, signature, signed_string)
-  pubkey.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), signed_string)
+  pubkey.verify(OpenSSL::Digest.new("SHA256"), Base64.decode64(signature), signed_string)
 end
 
 # time helper
