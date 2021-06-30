@@ -19,11 +19,11 @@ end
 
 group :test do
   # rspec formatter
-  gem "fuubar", "2.4.1",    require: false
+  gem "fuubar", "2.5.1",    require: false
   gem "nyan-cat-formatter", require: false
 
   # test coverage
-  gem "simplecov",                 "0.17.1",   require: false
+  gem "simplecov",                 "0.21.2",   require: false
   gem "simplecov-rcov",            "0.2.3",    require: false
 
   # test helpers
@@ -37,5 +37,5 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.9.0"
+  gem "rspec", "~> 3.10.0"
 end
