@@ -56,6 +56,7 @@ DiasporaFederation.configure do |config|
     end
 
     on :save_person_after_webfinger do
+      # ignore
     end
 
     on :fetch_private_key do |diaspora_id|
@@ -80,9 +81,11 @@ DiasporaFederation.configure do |config|
     end
 
     on :queue_public_receive do
+      # ignore
     end
 
     on :queue_private_receive do
+      # ignore
       true
     end
 
@@ -100,6 +103,7 @@ DiasporaFederation.configure do |config|
     end
 
     on :update_pod do
+      # ignore
     end
   end
 end

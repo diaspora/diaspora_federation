@@ -21,7 +21,7 @@ module DiasporaFederation
       # @param [String] iv AES initialization vector
       # @return [String] base64 encoded ciphertext
       # @raise [ArgumentError] if any of the arguments is missing or not the correct type
-      def self.encrypt(data, key, iv) # rubocop:disable Naming/UncommunicativeMethodParamName
+      def self.encrypt(data, key, iv) # rubocop:disable Naming/MethodParameterName
         raise ArgumentError unless data.instance_of?(String) &&
                                    key.instance_of?(String) &&
                                    iv.instance_of?(String)
@@ -43,7 +43,7 @@ module DiasporaFederation
       # @param [String] iv AES initialization vector
       # @return [String] decrypted plain message
       # @raise [ArgumentError] if any of the arguments is missing or not the correct type
-      def self.decrypt(ciphertext, key, iv) # rubocop:disable Naming/UncommunicativeMethodParamName
+      def self.decrypt(ciphertext, key, iv) # rubocop:disable Naming/MethodParameterName
         raise ArgumentError unless ciphertext.instance_of?(String) &&
                                    key.instance_of?(String) &&
                                    iv.instance_of?(String)

@@ -19,14 +19,10 @@ end
 
 group :development do
   # code style
-  gem "pronto",         "0.10.0",  require: false
-  gem "pronto-rubocop", "0.10.0",  require: false
-  gem "rubocop",        "0.75.1", require: false
-  gem "rubocop-rails",  "2.3.2",  require: false
-
-  # automatic test runs
-  gem "guard-rspec",   require: false
-  gem "guard-rubocop", require: false
+  gem "pronto",         "0.11.0",  require: false
+  gem "pronto-rubocop", "0.11.1",  require: false
+  gem "rubocop",        "1.18.0",  require: false
+  gem "rubocop-rails",  "2.11.1",  require: false
 
   # debugging
   gem "pry"
@@ -34,15 +30,18 @@ group :development do
 
   # documentation
   gem "yard", require: false
+
+  # rails needs this for development
+  gem "listen"
 end
 
 group :test do
   # rspec formatter
-  gem "fuubar", "2.4.1",    require: false
+  gem "fuubar", "2.5.1",    require: false
   gem "nyan-cat-formatter", require: false
 
   # test coverage
-  gem "simplecov",                 "0.17.1",   require: false
+  gem "simplecov",                 "0.21.2",   require: false
   gem "simplecov-rcov",            "0.2.3",    require: false
 
   # test helpers
@@ -56,6 +55,6 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.9.0"
-  gem "rspec-rails", "~> 3.9.0"
+  gem "rspec", "~> 3.10.0"
+  gem "rspec-rails", "~> 5.0.1"
 end

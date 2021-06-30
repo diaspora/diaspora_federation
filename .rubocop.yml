@@ -2,6 +2,7 @@ require: rubocop-rails
 
 AllCops:
   TargetRubyVersion: 2.5
+  NewCops: enable
   Exclude:
     - "bin/**/*"
     - "test/dummy/bin/**/*"
@@ -46,7 +47,7 @@ Style/SymbolArray:
   Enabled: true
 
 # Most readable form.
-Layout/AlignHash:
+Layout/HashAlignment:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
 
@@ -95,7 +96,7 @@ Style/SignalException:
 # Suppressing exceptions can be perfectly fine, and be it to avoid to
 # explicitly type nil into the rescue since that's what you want to return,
 # or suppressing LoadError for optional dependencies
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: false
 
 Layout/SpaceInsideBlockBraces:
@@ -182,6 +183,19 @@ Rails/Present:
   Exclude:
     - "lib/**/*"
 
+# we don't have rails everywhere, so just disable these
+Rails/NegateInclude:
+  Enabled: false
+Rails/RakeEnvironment:
+  Enabled: false
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - "spec/**/*"
+
+Naming/InclusiveLanguage:
+  Enabled: false
+
 Style/SingleLineMethods:
   Exclude:
     - "test/dummy/app/models/*"
@@ -195,6 +209,10 @@ Style/NumericPredicate:
 Style/AccessModifierDeclarations:
   Exclude:
     - "lib/diaspora_federation/test/factories.rb"
+
+Style/HashAsLastArrayItem:
+  Exclude:
+    - "lib/diaspora_federation/validators/*"
 
 # disable this for now, needs to be rechecked later
 Style/DateTime:

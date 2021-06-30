@@ -17,7 +17,7 @@ namespace :gemfiles do
     no_rails_path = "test/gemfiles/no-rails.Gemfile"
     File.write(no_rails_path, no_rails_gemfile)
 
-    Bundler.with_clean_env do
+    Bundler.with_unbundled_env do
       system("BUNDLE_GEMFILE=#{no_rails_path} bundle install")
     end
   end

@@ -17,15 +17,15 @@ module DiasporaFederation
     #
     # Use the logging-gem if available, else use a default logger.
     def logger
-      @logger ||= begin
+      @logger ||= if defined?(::Logging::Logger)
                     # Use logging-gem if available
-                    return ::Logging::Logger[self] if defined?(::Logging::Logger)
-
+                    ::Logging::Logger[self]
+                  elsif defined?(::Rails)
                     # Use rails logger if running in rails and no logging-gem is available
-                    return ::Rails.logger if defined?(::Rails)
-
+                    ::Rails.logger
+                  else
                     # fallback logger
-                    @logger = Logger.new(STDOUT)
+                    @logger = Logger.new($stdout)
                     @logger.level = Logger::INFO
                     @logger
                   end

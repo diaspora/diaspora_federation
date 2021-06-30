@@ -57,9 +57,9 @@ module DiasporaFederation
     # resolved on each call
     # @return [Hash] default values
     def default_values
-      optional_props.map {|name| [name, nil] }.to_h.merge(default_props).map {|name, prop|
-        [name, prop.respond_to?(:call) ? prop.call : prop]
-      }.to_h
+      optional_props.map {|name| [name, nil] }.to_h.merge(default_props).transform_values {|prop|
+        prop.respond_to?(:call) ? prop.call : prop
+      }
     end
 
     # @param [Hash] data entity data

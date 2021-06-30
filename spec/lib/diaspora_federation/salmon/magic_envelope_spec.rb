@@ -86,7 +86,7 @@ module DiasporaFederation
         subj = sig_subj(env_xml)
         sig = Base64.urlsafe_decode64(env_xml.at_xpath("me:env/me:sig").content)
 
-        expect(privkey.public_key.verify(OpenSSL::Digest::SHA256.new, sig, subj)).to be_truthy
+        expect(privkey.public_key.verify(OpenSSL::Digest.new("SHA256"), sig, subj)).to be_truthy
       end
     end
 
