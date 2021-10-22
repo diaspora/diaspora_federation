@@ -120,7 +120,7 @@ module DiasporaFederation
       # @return [Hash] properties with updated signatures
       def enriched_properties
         super.merge(additional_data).tap do |hash|
-          hash[:author_signature] = author_signature || sign_with_author
+          hash[:author_signature] = author_signature || sign_with_author unless author == parent.root.author
         end
       end
 
@@ -129,7 +129,8 @@ module DiasporaFederation
       # @return [Hash] sorted xml elements
       def xml_elements
         data = super
-        order = signature_order + %i[author_signature]
+        order = signature_order
+        order += %i[author_signature] unless author == parent.root.author
         order.map {|element| [element, data[element].to_s] }.to_h
       end
 

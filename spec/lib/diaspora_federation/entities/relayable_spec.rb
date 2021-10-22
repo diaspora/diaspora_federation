@@ -237,6 +237,21 @@ module DiasporaFederation
         }.to raise_error Entities::Relayable::AuthorPrivateKeyNotFound
       end
 
+      it "does not add author_signature when author is also the root author" do
+        expected_xml = <<~XML
+          <some_relayable>
+            <author>#{author}</author>
+            <guid>#{guid}</guid>
+            <parent_guid>#{parent_guid}</parent_guid>
+            <property>#{property}</property>
+          </some_relayable>
+        XML
+
+        xml = Entities::SomeRelayable.new(hash.merge(parent: Fabricate(:related_entity, author: author))).to_xml
+
+        expect(xml.to_s.strip).to eq(expected_xml.strip)
+      end
+
       it "adds 'false' booleans" do
         expected_xml = <<~XML
           <test_relayable_with_boolean>
