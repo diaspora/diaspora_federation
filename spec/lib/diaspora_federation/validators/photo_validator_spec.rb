@@ -24,11 +24,17 @@ module DiasporaFederation
       let(:property) { :public }
     end
 
-    %i[remote_photo_name remote_photo_path].each do |prop|
-      describe "##{prop}" do
-        it_behaves_like "a property that mustn't be empty" do
-          let(:property) { prop }
-        end
+    describe "#remote_photo_path" do
+      let(:property) { :remote_photo_path }
+
+      it_behaves_like "a property that mustn't be empty"
+
+      it_behaves_like "a url path validator"
+    end
+
+    describe "#remote_photo_name" do
+      it_behaves_like "a property that mustn't be empty" do
+        let(:property) { :remote_photo_name }
       end
     end
 
