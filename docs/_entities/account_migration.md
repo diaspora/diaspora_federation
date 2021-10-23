@@ -9,7 +9,7 @@ This entity is sent when a person changes their diaspora* ID (e.g. when a user m
 | Property    | Type                         | Description                                                                          |
 | ----------- | ---------------------------- | ------------------------------------------------------------------------------------ |
 | `author`    | [diaspora\* ID][diaspora-id] | The diaspora\* ID of the sender of the entity. The entity may be sent by either old user identity or new user identity. |
-| `person`    | [Profile][profile]           | New profile of a person. |
+| `profile`   | [Profile][profile]           | New profile of a person.                                                             |
 | `signature` | [Signature][signature]       | Signature that validates original and target diaspora* IDs with the private key of the second identity, other than the entity author. So if the author is the old identity then this signature is made with the new identity key, and vice versa. |
 
 ## Optional Properties
