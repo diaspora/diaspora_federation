@@ -23,5 +23,16 @@ module DiasporaFederation
         let(:property) { :old_identity }
       end
     end
+
+    describe "#remote_photo_path" do
+      let(:property) { :remote_photo_path }
+
+      it_behaves_like "a property with a value validation/restriction" do
+        let(:wrong_values) { [] }
+        let(:correct_values) { [nil] }
+      end
+
+      it_behaves_like "a url path validator"
+    end
   end
 end

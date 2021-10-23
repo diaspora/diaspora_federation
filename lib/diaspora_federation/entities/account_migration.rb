@@ -35,6 +35,11 @@ module DiasporaFederation
       #   @return [String] old identity
       property :old_identity, :string, default: nil
 
+      # @!attribute [r] remote_photo_path
+      #   The url to the path of the photos on the new pod. Can be empty if photos weren't migrated.
+      #   @return [String] remote photo path
+      property :remote_photo_path, :string, optional: true
+
       # Returns diaspora* ID of the old person identity.
       # @return [String] diaspora* ID of the old person identity
       def old_identity
