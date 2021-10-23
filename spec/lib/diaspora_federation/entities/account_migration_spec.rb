@@ -10,6 +10,7 @@ module DiasporaFederation
         properties = described_class.new(hash).send(:enriched_properties)
         hash[:signature] = properties[:signature]
         hash[:profile] = Entities::Profile.new(hash[:profile].to_h.tap {|profile| profile[:edited_at] = nil })
+        hash[:remote_photo_path] = "http://localhost:3000/uploads/images/"
       }
     }
     let(:signature_data) { "AccountMigration:#{old_diaspora_id}:#{new_diaspora_id}" }
@@ -126,6 +127,7 @@ module DiasporaFederation
   </profile>
   <signature>#{data[:signature]}</signature>
   <old_identity>#{data[:old_identity]}</old_identity>
+  <remote_photo_path>#{data[:remote_photo_path]}</remote_photo_path>
 </account_migration>
 XML
 
@@ -165,6 +167,7 @@ XML
   </profile>
   <signature>#{data[:signature]}</signature>
   <old_identity>#{data[:old_identity]}</old_identity>
+  <remote_photo_path>#{data[:remote_photo_path]}</remote_photo_path>
 </account_migration>
 XML
 
@@ -215,6 +218,32 @@ XML
         expect {
           DiasporaFederation::Salmon::XmlPayload.unpack(Nokogiri::XML(xml).root)
         }.to raise_error Entity::ValidationError
+      end
+    end
+
+    context "optional values" do
+      let(:hash) {
+        {
+          author:  old_diaspora_id,
+          profile: Entities::Profile.new(author: new_diaspora_id)
+        }
+      }
+
+      it "uses default values when parsing" do
+        minimal_xml = <<-XML
+<account_migration>
+  <author>#{data[:author]}</author>
+  <profile>
+    <author>#{data[:profile].author}</author>
+  </profile>
+  <signature>#{data[:signature]}</signature>
+</account_migration>
+XML
+
+        parsed_xml = Nokogiri::XML(minimal_xml).root
+        parsed_instance = Entity.entity_class(parsed_xml.name).from_xml(parsed_xml)
+        expect(parsed_instance.old_identity).to eq(data[:author])
+        expect(parsed_instance.remote_photo_path).to be_nil
       end
     end
   end

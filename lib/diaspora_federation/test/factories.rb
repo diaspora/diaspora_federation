@@ -43,6 +43,7 @@ module DiasporaFederation
         author { Fabricate.sequence(:diaspora_id) }
         profile {|attrs| Fabricate(:profile_entity, author: attrs[:author]) }
         old_identity { Fabricate.sequence(:diaspora_id) }
+        remote_photo_path "https://diaspora.example.tld/uploads/images/"
       end
 
       Fabricator(:person_entity, class_name: DiasporaFederation::Entities::Person) do
