@@ -12,7 +12,7 @@ module DiasporaFederation
       def parse(root_node)
         from_xml_sanity_validation(root_node)
 
-        hash = root_node.element_children.map {|child|
+        hash = root_node.element_children.uniq(&:name).map {|child|
           xml_name = child.name
           property = entity_type.find_property_for_xml_name(xml_name)
           if property

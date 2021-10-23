@@ -149,6 +149,14 @@ XML
           expect(parsed[0][:multi].first.to_h).to eq(child_entity2.to_h)
           expect(parsed[0][:asdf]).to eq("QWERT")
         end
+
+        it "parses array entities only once" do
+          expect(Entities::OtherEntity).to receive(:from_xml).twice.and_call_original
+
+          parsed = Parsers::XmlParser.new(Entities::TestNestedEntity).parse(nested_payload)
+
+          expect(parsed[0][:multi]).to have(2).items
+        end
       end
 
       it "doesn't drop extra properties" do
