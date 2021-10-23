@@ -6,11 +6,11 @@ module DiasporaFederation
     let(:new_diaspora_id) { new_user.diaspora_id }
 
     let(:data) {
-      hash.tap {|hash|
+      hash.dup.tap {|data|
         properties = described_class.new(hash).send(:enriched_properties)
-        hash[:signature] = properties[:signature]
-        hash[:profile] = Entities::Profile.new(hash[:profile].to_h.tap {|profile| profile[:edited_at] = nil })
-        hash[:remote_photo_path] = "http://localhost:3000/uploads/images/"
+        data[:signature] = properties[:signature]
+        data[:profile] = Entities::Profile.new(hash[:profile].to_h.tap {|profile| profile[:edited_at] = nil })
+        data[:remote_photo_path] = "http://localhost:3000/uploads/images/"
       }
     }
     let(:signature_data) { "AccountMigration:#{old_diaspora_id}:#{new_diaspora_id}" }
@@ -244,6 +244,25 @@ XML
         parsed_instance = Entity.entity_class(parsed_xml.name).from_xml(parsed_xml)
         expect(parsed_instance.old_identity).to eq(data[:author])
         expect(parsed_instance.remote_photo_path).to be_nil
+      end
+
+      it "adds old_identity when author is the old identity" do
+        expected_xml = <<-XML
+<account_migration>
+  <author>#{data[:author]}</author>
+  <profile>
+    <author>#{data[:profile].author}</author>
+    <searchable>true</searchable>
+    <public>false</public>
+    <nsfw>false</nsfw>
+  </profile>
+  <signature>#{data[:signature]}</signature>
+  <old_identity>#{data[:author]}</old_identity>
+</account_migration>
+XML
+
+        entity = Entities::AccountMigration.new(hash)
+        expect(entity.to_xml.to_s.strip).to eq(expected_xml.strip)
       end
     end
   end
