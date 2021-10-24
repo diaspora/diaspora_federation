@@ -1,3 +1,13 @@
+# 0.2.7
+
+## Features
+
+* Add `remote_photo_path` to `AccountMigration` entity [#119](https://github.com/diaspora/diaspora_federation/pull/119)
+
+## Bug fixes
+
+* Only parse each nested element name once from the XML [#118](https://github.com/diaspora/diaspora_federation/pull/118)
+
 # 0.2.6
 
 ## Bug fixes

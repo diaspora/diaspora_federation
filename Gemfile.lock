@@ -1,18 +1,18 @@
 PATH
   remote: .
   specs:
-    diaspora_federation (0.2.6)
+    diaspora_federation (0.2.7)
       faraday (~> 1.0)
       faraday_middleware (~> 1.0)
       nokogiri (~> 1.6, >= 1.6.8)
       typhoeus (~> 1.0)
       valid (~> 1.0)
-    diaspora_federation-json_schema (0.2.6)
-    diaspora_federation-rails (0.2.6)
+    diaspora_federation-json_schema (0.2.7)
+    diaspora_federation-rails (0.2.7)
       actionpack (>= 5.2, < 7)
-      diaspora_federation (= 0.2.6)
-    diaspora_federation-test (0.2.6)
-      diaspora_federation (= 0.2.6)
+      diaspora_federation (= 0.2.7)
+    diaspora_federation-test (0.2.7)
+      diaspora_federation (= 0.2.7)
       fabrication (~> 2.16)
       uuid (~> 2.3, >= 2.3.8)
 

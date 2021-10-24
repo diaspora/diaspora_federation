@@ -12,7 +12,7 @@ module DiasporaFederation
 
       rule :public, :boolean
 
-      rule :remote_photo_path, :not_empty
+      rule :remote_photo_path, [:not_empty, URI: [:path]]
 
       rule :remote_photo_name, :not_empty
 
