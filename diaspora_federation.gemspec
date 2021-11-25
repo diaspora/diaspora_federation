@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
                         "lib/diaspora_federation/test/*",
                         "lib/tasks/*.rake"]
 
-  s.required_ruby_version = ">= 2.5"
+  s.required_ruby_version = ">= 2.6"
 
   s.add_dependency "faraday", "~> 1.0"
   s.add_dependency "faraday_middleware", "~> 1.0"
