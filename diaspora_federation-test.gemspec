@@ -16,8 +16,11 @@ Gem::Specification.new do |s|
   s.description = "This gem provides some supplimentary code (factory definitions), that"\
                   "helps to build tests for users of the diaspora_federation gem."
   s.license     = "AGPL-3.0"
+  s.metadata    = {
+    "rubygems_mfa_required" => "true"
+  }
 
-  s.files       = Dir["lib/diaspora_federation/test.rb", "lib/diaspora_federation/test/*"]
+  s.files = Dir["lib/diaspora_federation/test.rb", "lib/diaspora_federation/test/*"]
 
   s.required_ruby_version = ">= 2.6"
 
