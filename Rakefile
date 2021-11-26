@@ -29,5 +29,6 @@ end
 
 Bundler::GemHelper.install_tasks name: "diaspora_federation"
 
+desc "Run all tests"
 task test: :spec
 task default: :test
