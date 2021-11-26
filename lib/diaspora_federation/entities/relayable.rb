@@ -95,9 +95,9 @@ module DiasporaFederation
       # The order for signing
       # @return [Array]
       def signature_order
-        @signature_order || self.class.class_props.keys.reject {|key|
+        @signature_order || (self.class.class_props.keys.reject {|key|
           self.class.optional_props.include?(key) && public_send(key).nil?
-        } - %i[author_signature parent]
+        } - %i[author_signature parent])
       end
 
       private
@@ -136,7 +136,7 @@ module DiasporaFederation
 
       def signature_order=(order)
         prop_names = self.class.class_props.keys.map(&:to_s)
-        @signature_order = order.reject {|name| name =~ /signature/ }
+        @signature_order = order.grep_v(/signature/)
                                 .map {|name| prop_names.include?(name) ? name.to_sym : name }
       end
 

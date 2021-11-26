@@ -12,9 +12,13 @@ describe Validation::Rule::Birthday do
     expect(described_class.new.error_key).to eq(:birthday)
   end
 
-  context "validation" do
+  context "when validating" do
+    before do
+      stub_const("BirthdayHolder", Struct.new(:birthday))
+    end
+
     it "validates a date object" do
-      validator = Validation::Validator.new(OpenStruct.new(birthday: Date.new))
+      validator = Validation::Validator.new(BirthdayHolder.new(Date.new))
       validator.rule(:birthday, :birthday)
 
       expect(validator).to be_valid
@@ -22,7 +26,7 @@ describe Validation::Rule::Birthday do
     end
 
     it "validates a string" do
-      validator = Validation::Validator.new(OpenStruct.new(birthday: "2015-07-19"))
+      validator = Validation::Validator.new(BirthdayHolder.new("2015-07-19"))
       validator.rule(:birthday, :birthday)
 
       expect(validator).to be_valid
@@ -31,7 +35,7 @@ describe Validation::Rule::Birthday do
 
     it "allows nil and empty" do
       [nil, ""].each do |val|
-        validator = Validation::Validator.new(OpenStruct.new(birthday: val))
+        validator = Validation::Validator.new(BirthdayHolder.new(val))
         validator.rule(:birthday, :birthday)
 
         expect(validator).to be_valid
@@ -40,7 +44,7 @@ describe Validation::Rule::Birthday do
     end
 
     it "fails for invalid date string" do
-      validator = Validation::Validator.new(OpenStruct.new(birthday: "i'm no date"))
+      validator = Validation::Validator.new(BirthdayHolder.new("i'm no date"))
       validator.rule(:birthday, :birthday)
 
       expect(validator).not_to be_valid

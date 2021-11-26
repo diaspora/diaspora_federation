@@ -61,7 +61,7 @@ module DiasporaFederation
         expect(entity.test1).to be_nil
       end
 
-      context "validation" do
+      context "when validating" do
         let(:invalid_data) { {test1: "as;df", test2: nil, test3: "no boolean"} }
 
         it "validates the entity and raise an error with failed properties if not valid" do

@@ -12,9 +12,13 @@ describe Validation::Rule::Guid do
     expect(described_class.new.error_key).to eq(:guid)
   end
 
-  context "validation" do
+  context "when validating" do
+    before do
+      stub_const("GuidHolder", Struct.new(:guid))
+    end
+
     it "validates a string at least 16 chars long, consisting of [0-9a-f] (diaspora)" do
-      validator = Validation::Validator.new(OpenStruct.new(guid: "abcdef0123456789"))
+      validator = Validation::Validator.new(GuidHolder.new("abcdef0123456789"))
       validator.rule(:guid, :guid)
 
       expect(validator).to be_valid
@@ -22,9 +26,7 @@ describe Validation::Rule::Guid do
     end
 
     it "validates a long string with random characters and [-_@.:] (redmatrix)" do
-      validator = Validation::Validator.new(
-        OpenStruct.new(guid: "1234567890ABCDefgh_ijkl-mnopqrSTUVwxyz@example.com:3000")
-      )
+      validator = Validation::Validator.new(GuidHolder.new("1234567890ABCDefgh_ijkl-mnopqrSTUVwxyz@example.com:3000"))
       validator.rule(:guid, :guid)
 
       expect(validator).to be_valid
@@ -32,7 +34,7 @@ describe Validation::Rule::Guid do
     end
 
     it "fails if the string is too short" do
-      validator = Validation::Validator.new(OpenStruct.new(guid: "012345"))
+      validator = Validation::Validator.new(GuidHolder.new("012345"))
       validator.rule(:guid, :guid)
 
       expect(validator).not_to be_valid
@@ -40,7 +42,7 @@ describe Validation::Rule::Guid do
     end
 
     it "fails if the string is too long" do
-      validator = Validation::Validator.new(OpenStruct.new(guid: "a" * 256))
+      validator = Validation::Validator.new(GuidHolder.new("a" * 256))
       validator.rule(:guid, :guid)
 
       expect(validator).not_to be_valid
@@ -48,7 +50,7 @@ describe Validation::Rule::Guid do
     end
 
     it "fails if the string contains special chars at the end" do
-      validator = Validation::Validator.new(OpenStruct.new(guid: "abcdef0123456789."))
+      validator = Validation::Validator.new(GuidHolder.new("abcdef0123456789."))
       validator.rule(:guid, :guid)
 
       expect(validator).not_to be_valid
@@ -56,7 +58,7 @@ describe Validation::Rule::Guid do
     end
 
     it "fails if the string contains invalid chars" do
-      validator = Validation::Validator.new(OpenStruct.new(guid: "ghijklmnopqrstuvwxyz++"))
+      validator = Validation::Validator.new(GuidHolder.new("ghijklmnopqrstuvwxyz++"))
       validator.rule(:guid, :guid)
 
       expect(validator).not_to be_valid
@@ -65,7 +67,7 @@ describe Validation::Rule::Guid do
 
     it "fails if the string is empty" do
       [nil, ""].each do |val|
-        validator = Validation::Validator.new(OpenStruct.new(guid: val))
+        validator = Validation::Validator.new(GuidHolder.new(val))
         validator.rule(:guid, :guid)
 
         expect(validator).not_to be_valid

@@ -215,7 +215,7 @@ module DiasporaFederation
     end
 
     def setable_property?(type, val)
-      setable_string?(type, val) || type == :timestamp && val.is_a?(Time)
+      setable_string?(type, val) || (type == :timestamp && val.is_a?(Time))
     end
 
     def setable_string?(type, val)
