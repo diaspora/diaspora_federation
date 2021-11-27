@@ -3,10 +3,7 @@
 module DiasporaFederation
   module Discovery
     # The WebFinger document used for diaspora* user discovery is based on an
-    # {http://tools.ietf.org/html/draft-jones-appsawg-webfinger older draft of the specification}.
-    #
-    # In the meantime an actual RFC draft has been in development, which should
-    # serve as a base for all future changes of this implementation.
+    # {https://datatracker.ietf.org/doc/html/rfc7033 RFC 7033}.
     #
     # @example Creating a WebFinger document from a person hash
     #   wf = WebFinger.new(
@@ -17,22 +14,20 @@ module DiasporaFederation
     #     atom_url:    "https://server.example/public/user.atom",
     #     salmon_url:  "https://server.example/receive/users/0123456789abcdef"
     #   )
-    #   xml_string = wf.to_xml
+    #   json_string = wf.to_json
     #
-    # @example Creating a WebFinger instance from an xml document
-    #   wf = WebFinger.from_xml(xml_string)
+    # @example Creating a WebFinger instance from an JSON document
+    #   wf = WebFinger.from_json(json_string)
     #   ...
     #   hcard_url = wf.hcard_url
     #   ...
     #
-    # @see http://tools.ietf.org/html/draft-jones-appsawg-webfinger "WebFinger" -
-    #   current draft
     # @see http://www.iana.org/assignments/link-relations/link-relations.xhtml
     #   official list of IANA link relations
     class WebFinger < Entity
       # @!attribute [r] acct_uri
-      #   The Subject element should contain the webfinger address that was asked
-      #   for. If it does not, then this webfinger profile MUST be ignored.
+      #   The Subject element should contain the WebFinger address that was asked
+      #   for. If it does not, then this WebFinger profile MUST be ignored.
       #   @return [String]
       property :acct_uri, :string
 
@@ -67,7 +62,7 @@ module DiasporaFederation
       property :salmon_url, :string, optional: true
 
       # @!attribute [r] subscribe_url
-      #   This url is used to find another user on the home-pod of the user in the webfinger.
+      #   This url is used to find another user on the home-pod of the user in the WebFinger.
       property :subscribe_url, :string, optional: true
 
       # +hcard_url+ link relation
@@ -106,29 +101,29 @@ module DiasporaFederation
         super(data)
       end
 
-      # Creates the XML string from the current WebFinger instance
-      # @return [String] XML string
+      # @!visibility private
+      # Generating WebFinger to XML is not supported anymore, use {#to_json} instead.
       def to_xml
-        to_xrd.to_xml
+        raise "Generating WebFinger to XML is not supported anymore, use 'to_json' instead."
       end
 
+      # Creates the JSON string from the current WebFinger instance
+      # @return [String] JSON string
       def to_json(*_args)
         to_xrd.to_json
       end
 
-      # Creates a WebFinger instance from the given XML string
-      # @param [String] webfinger_xml WebFinger XML string
-      # @return [WebFinger] WebFinger instance
-      # @raise [InvalidData] if the given XML string is invalid or incomplete
-      def self.from_xml(webfinger_xml)
-        from_hash(parse_xml_and_validate(webfinger_xml))
+      # @!visibility private
+      # Parsing WebFinger as XML is not supported anymore, use {from_json} instead.
+      def self.from_xml(_webfinger_xml)
+        raise "Parsing WebFinger as XML is not supported anymore, use 'from_json' instead."
       end
 
       # Creates a WebFinger instance from the given JSON string
       # @param [String] webfinger_json WebFinger JSON string
       # @return [WebFinger] WebFinger instance
       def self.from_json(webfinger_json)
-        from_hash(XrdDocument.json_data(webfinger_json))
+        from_hash(parse_json_and_validate(webfinger_json))
       end
 
       # Creates a WebFinger instance from the given data
@@ -157,15 +152,15 @@ module DiasporaFederation
 
       private
 
-      # Parses the XML string to a Hash and does some rudimentary checking on
+      # Parses the JSON string to a Hash and does some rudimentary checking on
       # the data Hash.
-      # @param [String] webfinger_xml WebFinger XML string
-      # @return [Hash] data XML data
-      # @raise [InvalidData] if the given XML string is invalid or incomplete
-      private_class_method def self.parse_xml_and_validate(webfinger_xml)
-        XrdDocument.xml_data(webfinger_xml).tap do |data|
+      # @param [String] webfinger_json WebFinger JSON string
+      # @return [Hash] data JSON data
+      # @raise [InvalidData] if the given JSON string is invalid or incomplete
+      private_class_method def self.parse_json_and_validate(webfinger_json)
+        XrdDocument.json_data(webfinger_json).tap do |data|
           valid = data.key?(:subject) && data.key?(:links)
-          raise InvalidData, "webfinger xml is incomplete" unless valid
+          raise InvalidData, "Webfinger JSON is incomplete" unless valid
         end
       end
 

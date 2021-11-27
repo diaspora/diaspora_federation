@@ -10,7 +10,6 @@ end
 
 require "diaspora_federation/discovery/exceptions"
 require "diaspora_federation/discovery/xrd_document"
-require "diaspora_federation/discovery/host_meta"
 require "diaspora_federation/discovery/web_finger"
 require "diaspora_federation/discovery/h_card"
 require "diaspora_federation/discovery/discovery"
