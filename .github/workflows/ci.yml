@@ -16,7 +16,6 @@ jobs:
         ruby:
           - 3.0
           - 2.7
-          - 2.6
         gemfile:
           - Gemfile
           - test/gemfiles/no-rails.Gemfile
