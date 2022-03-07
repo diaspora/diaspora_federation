@@ -59,7 +59,7 @@ GEM
     macaddr (1.7.2)
       systemu (~> 2.6.5)
     multipart-post (2.1.1)
-    nokogiri (1.12.5-x86_64-linux)
+    nokogiri (1.13.3)
       racc (~> 1.4)
     nyan-cat-formatter (0.12.0)
       rspec (>= 2.99, >= 2.14.2, < 4)
@@ -123,4 +123,4 @@ DEPENDENCIES
   webmock (~> 3.0)
 
 BUNDLED WITH
-   2.2.32
+   2.3.7
