@@ -97,7 +97,7 @@ module DiasporaFederation
     #
     # @return [Nokogiri::XML::Element] root element containing properties as child elements
     def to_xml
-      doc = Nokogiri::XML::DocumentFragment.new(Nokogiri::XML::Document.new)
+      doc = Nokogiri::XML::Document.new
       Nokogiri::XML::Element.new(self.class.entity_name, doc).tap do |root_element|
         xml_elements.each do |name, value|
           add_property_to_xml(doc, root_element, name, value)
