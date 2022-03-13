@@ -1,3 +1,19 @@
+# 0.3.0
+
+## Breaking changes
+
+* Drop support for rails 5.1 and older [4b4375c](https://github.com/diaspora/diaspora_federation/commit/4b4375cf787e09537f53aff92b054a0386681747) [ecfe0ea](https://github.com/diaspora/diaspora_federation/commit/ecfe0ea850d203e8144adab744c4b43263200902)
+* Drop support for ruby 2.6 and older [68df3cf](https://github.com/diaspora/diaspora_federation/commit/68df3cf555efafc72942cfec2c8fb3e8852ddec1) [#121](https://github.com/diaspora/diaspora_federation/pull/121)
+* Drop support for faraday 0.x [#116](https://github.com/diaspora/diaspora_federation/pull/116)
+* Remove support to receive old federation protocol [#114](https://github.com/diaspora/diaspora_federation/pull/114)
+* Remove support for old non-RFC WebFinger [#122](https://github.com/diaspora/diaspora_federation/pull/122)
+
+## Features
+
+* Add rails 6 support [afee784](https://github.com/diaspora/diaspora_federation/commit/afee78476b1715ba32e2b97d7cbf2584d57718dd)
+* Add faraday 1.x support [#116](https://github.com/diaspora/diaspora_federation/pull/116)
+* Add support for up to ruby 3.1 [#121](https://github.com/diaspora/diaspora_federation/pull/121)
+
 # 0.2.7
 
 ## Features
