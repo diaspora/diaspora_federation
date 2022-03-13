@@ -42,7 +42,7 @@ module DiasporaFederation
     end
 
     it "doesn't fail when the entity doesn't have optional props" do
-      entity = OpenStruct.new(test1: nil)
+      entity = Struct.new(:test1).new(nil)
       validator = Validators::TestUnknownEntityValidator.new(entity)
       expect(validator).not_to be_valid
       expect(validator.errors).to include(:test1)

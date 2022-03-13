@@ -12,34 +12,38 @@ describe Validation::Rule::NotNil do
     expect(described_class.new.error_key).to eq(:not_nil)
   end
 
-  context "validation" do
+  context "when validating" do
+    before do
+      stub_const("ValueHolder", Struct.new(:value))
+    end
+
     it "validates a string" do
-      validator = Validation::Validator.new(OpenStruct.new(not_nil: "abcd"))
-      validator.rule(:not_nil, :not_nil)
+      validator = Validation::Validator.new(ValueHolder.new("abcd"))
+      validator.rule(:value, :not_nil)
 
       expect(validator).to be_valid
       expect(validator.errors).to be_empty
     end
 
     it "validates a object" do
-      validator = Validation::Validator.new(OpenStruct.new(not_nil: Object.new))
-      validator.rule(:not_nil, :not_nil)
+      validator = Validation::Validator.new(ValueHolder.new(Object.new))
+      validator.rule(:value, :not_nil)
 
       expect(validator).to be_valid
       expect(validator.errors).to be_empty
     end
 
     it "fails if it is nil" do
-      validator = Validation::Validator.new(OpenStruct.new(not_nil: nil))
-      validator.rule(:not_nil, :not_nil)
+      validator = Validation::Validator.new(ValueHolder.new(nil))
+      validator.rule(:value, :not_nil)
 
       expect(validator).not_to be_valid
-      expect(validator.errors).to include(:not_nil)
+      expect(validator.errors).to include(:value)
     end
 
     it "allows an empty string" do
-      validator = Validation::Validator.new(OpenStruct.new(not_nil: ""))
-      validator.rule(:not_nil, :not_nil)
+      validator = Validation::Validator.new(ValueHolder.new(""))
+      validator.rule(:value, :not_nil)
 
       expect(validator).to be_valid
       expect(validator.errors).to be_empty

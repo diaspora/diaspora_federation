@@ -4,7 +4,7 @@ describe Validation::Rule::Boolean do
   it "will not accept parameters" do
     validator = Validation::Validator.new({})
     expect {
-      validator.rule(:number, numeric: {param: true})
+      validator.rule(:boolean, boolean: {param: true})
     }.to raise_error ArgumentError
   end
 
@@ -12,11 +12,15 @@ describe Validation::Rule::Boolean do
     expect(described_class.new.error_key).to eq(:boolean)
   end
 
-  context "validation" do
+  context "when validating" do
+    before do
+      stub_const("BooleanHolder", Struct.new(:boolean))
+    end
+
     context "strings" do
       it "validates boolean-esque strings" do
         %w[true false yes no t f y n 1 0].each do |str|
-          validator = Validation::Validator.new(OpenStruct.new(boolean: str))
+          validator = Validation::Validator.new(BooleanHolder.new(str))
           validator.rule(:boolean, :boolean)
 
           expect(validator).to be_valid
@@ -25,7 +29,7 @@ describe Validation::Rule::Boolean do
       end
 
       it "fails for non-boolean-esque strings" do
-        validator = Validation::Validator.new(OpenStruct.new(boolean: "asdf"))
+        validator = Validation::Validator.new(BooleanHolder.new("asdf"))
         validator.rule(:boolean, :boolean)
 
         expect(validator).not_to be_valid
@@ -36,7 +40,7 @@ describe Validation::Rule::Boolean do
     context "numbers" do
       it "validates 0 and 1 to boolean" do
         [0, 1].each do |num|
-          validator = Validation::Validator.new(OpenStruct.new(boolean: num))
+          validator = Validation::Validator.new(BooleanHolder.new(num))
           validator.rule(:boolean, :boolean)
 
           expect(validator).to be_valid
@@ -45,7 +49,7 @@ describe Validation::Rule::Boolean do
       end
 
       it "fails for all other numbers" do
-        validator = Validation::Validator.new(OpenStruct.new(boolean: 1234))
+        validator = Validation::Validator.new(BooleanHolder.new(1234))
         validator.rule(:boolean, :boolean)
 
         expect(validator).not_to be_valid
@@ -56,7 +60,7 @@ describe Validation::Rule::Boolean do
     context "boolean types" do
       it "validates true and false" do
         [true, false].each do |bln|
-          validator = Validation::Validator.new(OpenStruct.new(boolean: bln))
+          validator = Validation::Validator.new(BooleanHolder.new(bln))
           validator.rule(:boolean, :boolean)
 
           expect(validator).to be_valid
@@ -67,7 +71,7 @@ describe Validation::Rule::Boolean do
 
     it "fails if nil or empty" do
       [nil, ""].each do |val|
-        validator = Validation::Validator.new(OpenStruct.new(boolean: val))
+        validator = Validation::Validator.new(BooleanHolder.new(val))
         validator.rule(:boolean, :boolean)
 
         expect(validator).not_to be_valid

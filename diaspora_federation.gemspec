@@ -17,14 +17,17 @@ Gem::Specification.new do |s|
                   "de-/encryption of Entities in the protocols used for communication " \
                   "among the various installations of Diaspora*"
   s.license     = "AGPL-3.0"
+  s.metadata    = {
+    "rubygems_mfa_required" => "true"
+  }
 
-  s.files       = Dir["lib/**/*", "LICENSE", "README.md", "Changelog.md"] -
-                    Dir["lib/diaspora_federation/{engine,rails,schemas,test}.rb",
-                        "lib/diaspora_federation/schemas/*",
-                        "lib/diaspora_federation/test/*",
-                        "lib/tasks/*.rake"]
+  s.files = Dir["lib/**/*", "LICENSE", "README.md", "Changelog.md"] -
+    Dir["lib/diaspora_federation/{engine,rails,schemas,test}.rb",
+        "lib/diaspora_federation/schemas/*",
+        "lib/diaspora_federation/test/*",
+        "lib/tasks/*.rake"]
 
-  s.required_ruby_version = ">= 2.5"
+  s.required_ruby_version = ">= 2.7"
 
   s.add_dependency "faraday", "~> 1.0"
   s.add_dependency "faraday_middleware", "~> 1.0"

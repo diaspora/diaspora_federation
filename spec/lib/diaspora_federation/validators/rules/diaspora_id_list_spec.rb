@@ -39,9 +39,13 @@ describe Validation::Rule::DiasporaIdList do
     expect(described_class.new(maximum: 5).error_key).to eq(:diaspora_id_list)
   end
 
-  context "validation" do
+  context "when validating" do
+    before do
+      stub_const("DiasporaIdsHolder", Struct.new(:ids))
+    end
+
     it "validates less ids" do
-      validator = Validation::Validator.new(OpenStruct.new(ids: id_str))
+      validator = Validation::Validator.new(DiasporaIdsHolder.new(id_str))
       validator.rule(:ids, diaspora_id_list: {maximum: 5})
 
       expect(validator).to be_valid
@@ -50,7 +54,7 @@ describe Validation::Rule::DiasporaIdList do
 
     it "fails for less but non ids" do
       bad_str = "user@example.com;i am a weird diaspora* ID @@@ ### 12345;shouldnt be reached by a rule"
-      validator = Validation::Validator.new(OpenStruct.new(ids: bad_str))
+      validator = Validation::Validator.new(DiasporaIdsHolder.new(bad_str))
       validator.rule(:ids, diaspora_id_list: {maximum: 5})
 
       expect(validator).not_to be_valid
@@ -58,7 +62,7 @@ describe Validation::Rule::DiasporaIdList do
     end
 
     it "validates exactly as many ids" do
-      validator = Validation::Validator.new(OpenStruct.new(ids: id_str))
+      validator = Validation::Validator.new(DiasporaIdsHolder.new(id_str))
       validator.rule(:ids, diaspora_id_list: {minimum: 3, maximum: 3})
 
       expect(validator).to be_valid
@@ -66,7 +70,7 @@ describe Validation::Rule::DiasporaIdList do
     end
 
     it "validates without params" do
-      validator = Validation::Validator.new(OpenStruct.new(ids: id_str))
+      validator = Validation::Validator.new(DiasporaIdsHolder.new(id_str))
       validator.rule(:ids, :diaspora_id_list)
 
       expect(validator).to be_valid
@@ -74,7 +78,7 @@ describe Validation::Rule::DiasporaIdList do
     end
 
     it "fails for too many ids" do
-      validator = Validation::Validator.new(OpenStruct.new(ids: id_str))
+      validator = Validation::Validator.new(DiasporaIdsHolder.new(id_str))
       validator.rule(:ids, diaspora_id_list: {maximum: 2})
 
       expect(validator).not_to be_valid
@@ -82,7 +86,7 @@ describe Validation::Rule::DiasporaIdList do
     end
 
     it "fails for too less ids" do
-      validator = Validation::Validator.new(OpenStruct.new(ids: id_str))
+      validator = Validation::Validator.new(DiasporaIdsHolder.new(id_str))
       validator.rule(:ids, diaspora_id_list: {minimum: 4})
 
       expect(validator).not_to be_valid

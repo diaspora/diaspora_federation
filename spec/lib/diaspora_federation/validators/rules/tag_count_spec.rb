@@ -21,11 +21,15 @@ describe Validation::Rule::TagCount do
     expect(described_class.new(maximum: 5).error_key).to eq(:tag_count)
   end
 
-  context "validation" do
+  context "when validating" do
     let(:tag_str) { "#i #love #tags" }
 
+    before do
+      stub_const("TagsHolder", Struct.new(:tags))
+    end
+
     it "validates less tags" do
-      validator = Validation::Validator.new(OpenStruct.new(tags: tag_str))
+      validator = Validation::Validator.new(TagsHolder.new(tag_str))
       validator.rule(:tags, tag_count: {maximum: 5})
 
       expect(validator).to be_valid
@@ -33,7 +37,7 @@ describe Validation::Rule::TagCount do
     end
 
     it "validates exactly as many tags" do
-      validator = Validation::Validator.new(OpenStruct.new(tags: tag_str))
+      validator = Validation::Validator.new(TagsHolder.new(tag_str))
       validator.rule(:tags, tag_count: {maximum: 3})
 
       expect(validator).to be_valid
@@ -41,7 +45,7 @@ describe Validation::Rule::TagCount do
     end
 
     it "fails for too many tags" do
-      validator = Validation::Validator.new(OpenStruct.new(tags: tag_str))
+      validator = Validation::Validator.new(TagsHolder.new(tag_str))
       validator.rule(:tags, tag_count: {maximum: 1})
 
       expect(validator).not_to be_valid
@@ -50,7 +54,7 @@ describe Validation::Rule::TagCount do
 
     it "allows nil and empty" do
       [nil, ""].each do |val|
-        validator = Validation::Validator.new(OpenStruct.new(tags: val))
+        validator = Validation::Validator.new(TagsHolder.new(val))
         validator.rule(:tags, tag_count: {maximum: 5})
 
         expect(validator).to be_valid

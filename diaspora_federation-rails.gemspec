@@ -15,11 +15,14 @@ Gem::Specification.new do |s|
   s.summary     = "diaspora* federation rails engine"
   s.description = "A rails engine that adds the diaspora* federation protocol to a rails app"
   s.license     = "AGPL-3.0"
+  s.metadata    = {
+    "rubygems_mfa_required" => "true"
+  }
 
-  s.files       = Dir["app/**/*", "config/routes.rb", "config/initializers/*",
-                      "lib/diaspora_federation/{engine,rails}.rb", "LICENSE", "README.md", "Changelog.md"]
+  s.files = Dir["app/**/*", "config/routes.rb", "config/initializers/*",
+                "lib/diaspora_federation/{engine,rails}.rb", "LICENSE", "README.md", "Changelog.md"]
 
-  s.required_ruby_version = ">= 2.5"
+  s.required_ruby_version = ">= 2.7"
 
   s.add_dependency "actionpack", ">= 5.2", "< 7"
 
