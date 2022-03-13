@@ -5,13 +5,9 @@ module DiasporaFederation
     # This class implements basic handling of XRD documents as far as it is
     # necessary in the context of the protocols used with diaspora* federation.
     #
-    # @note {http://tools.ietf.org/html/rfc6415 RFC 6415} recommends that servers
-    #   should also offer the JRD format in addition to the XRD representation.
-    #   Implementing +XrdDocument#to_json+ and +XrdDocument.json_data+ should
-    #   be almost trivial due to the simplicity of the format and the way the data
-    #   is stored internally already. See
-    #   {http://tools.ietf.org/html/rfc6415#appendix-A RFC 6415, Appendix A}
-    #   for a description of the JSON format.
+    # It also implements handling of the JRD format, see
+    # {https://datatracker.ietf.org/doc/html/rfc6415#appendix-A RFC 6415, Appendix A}
+    # for a description of the JSON format.
     #
     # @example Creating a XrdDocument
     #   doc = XrdDocument.new
@@ -210,7 +206,7 @@ module DiasporaFederation
 
       # symbolize link keys from JSON hash, but only convert known keys
       private_class_method def self.symbolize_keys_for_links(links)
-        links.map do |link|
+        links&.map do |link|
           {}.tap do |hash|
             LINK_ATTRS.each do |attr|
               hash[attr] = link[attr.to_s] if link.key?(attr.to_s)

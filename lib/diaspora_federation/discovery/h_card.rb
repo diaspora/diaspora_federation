@@ -56,14 +56,6 @@ module DiasporaFederation
       #   @return [String] display name of the user
       property :full_name, :string
 
-      # @!attribute [r] url
-      #   @deprecated should be changed to the profile url. The pod url is in
-      #     the WebFinger (see {WebFinger#seed_url}, will affect older diaspora*
-      #     installations).
-      #
-      #   @return [String] link to the pod
-      property :url, :string, optional: true
-
       # @!attribute [r] public_key
       #   When a user is created on the pod, the pod MUST generate a pgp keypair
       #   for them. This key is used for signing messages. The format is a
@@ -144,10 +136,6 @@ module DiasporaFederation
         add_simple_property(content, :first_name, "given_name", @first_name)
         add_simple_property(content, :family_name, "family_name", @last_name)
         #######################################
-
-        add_property(content, :url) do |html|
-          html.a(@url.to_s, id: "pod_location", class: "url", rel: "me", href: @url.to_s)
-        end
 
         add_photos(content)
 

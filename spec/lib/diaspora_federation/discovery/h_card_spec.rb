@@ -12,7 +12,6 @@ module DiasporaFederation
         guid:             person.guid,
         nickname:         person.nickname,
         full_name:        person.full_name,
-        url:              person.url,
         photo_large_url:  photo_large_url,
         photo_medium_url: photo_medium_url,
         photo_small_url:  photo_small_url,
@@ -77,12 +76,6 @@ module DiasporaFederation
                   <span class="family_name">#{person.last_name}</span>
                 </dd>
               </dl>
-              <dl class="entity_url">
-                <dt>Url</dt>
-                <dd>
-                  <a id="pod_location" class="url" rel="me" href="#{person.url}">#{person.url}</a>
-                </dd>
-              </dl>
               <dl class="entity_photo">
                 <dt>Photo</dt>
                 <dd>
@@ -111,14 +104,14 @@ module DiasporaFederation
 
     it_behaves_like "an Entity subclass"
 
-    context "generation" do
+    context "when generating" do
       it "creates an instance from a data hash" do
         hcard = Discovery::HCard.new(data)
         expect(hcard.to_html).to eq(html)
       end
     end
 
-    context "parsing" do
+    context "when parsing" do
       it "reads its own output" do
         hcard = Discovery::HCard.from_html(html)
         expect(hcard.guid).to eq(person.guid)
@@ -220,7 +213,6 @@ module DiasporaFederation
         expect(hcard.last_name).to eq(person.last_name)
 
         expect(hcard.nickname).to be_nil
-        expect(hcard.url).to be_nil
       end
 
       it "is frozen after parsing" do
