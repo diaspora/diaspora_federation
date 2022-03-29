@@ -24,6 +24,12 @@ module DiasporaFederation
       #   The timestamp when the comment was edited
       #   @return [Time] edited time
       property :edited_at, :timestamp, optional: true
+
+      # @!attribute [r] guid
+      #   A random string of at least 16 chars pointing to a parent comment.
+      #   @see Validation::Rule::Guid
+      #   @return [String] parent comment guid
+      property :thread_parent_guid, :string, optional: true
     end
   end
 end
