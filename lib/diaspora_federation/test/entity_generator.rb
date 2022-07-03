@@ -9,7 +9,7 @@ module DiasporaFederation
       end
 
       def build_instance
-        self._instance = _klass.new(_attributes)
+        self._instance = resolved_class.new(_attributes)
       end
 
       def to_hash(attributes=[], _callbacks=[])

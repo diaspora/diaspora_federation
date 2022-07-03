@@ -25,6 +25,6 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 2.7"
 
   s.add_dependency "diaspora_federation", DiasporaFederation::VERSION
-  s.add_dependency "fabrication", "~> 2.16"
+  s.add_dependency "fabrication", "~> 2.29"
   s.add_dependency "uuid", "~> 2.3", ">= 2.3.8"
 end
