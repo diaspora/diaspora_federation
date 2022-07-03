@@ -33,7 +33,8 @@ module DiasporaFederation
         stub_request(:get, "http://www.example.com")
           .to_return(status: 302, headers: {"Location" => "http://www.example.com"})
 
-        expect { HttpClient.get("http://www.example.com") }.to raise_error FaradayMiddleware::RedirectLimitReached
+        expect { HttpClient.get("http://www.example.com") }
+          .to raise_error Faraday::FollowRedirects::RedirectLimitReached
       end
 
       it "uses the gem name as User-Agent" do
