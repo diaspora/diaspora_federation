@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.email       = ["benjamin@coding4.coffee"]
   s.homepage    = "https://github.com/diaspora/diaspora_federation"
   s.summary     = "diaspora* federation test utils"
-  s.description = "This gem provides some supplimentary code (factory definitions), that"\
+  s.description = "This gem provides some supplimentary code (factory definitions), that" \
                   "helps to build tests for users of the diaspora_federation gem."
   s.license     = "AGPL-3.0"
   s.metadata    = {

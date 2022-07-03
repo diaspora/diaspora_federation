@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.email       = ["benjamin@coding4.coffee", "senya@riseup.net"]
   s.homepage    = "https://github.com/diaspora/diaspora_federation"
   s.summary     = "diaspora* federation json schemas"
-  s.description = "This gem provides JSON schemas (currently one schema) for "\
+  s.description = "This gem provides JSON schemas (currently one schema) for " \
                   "validating JSON serialized federation objects."
   s.license     = "AGPL-3.0"
   s.metadata    = {

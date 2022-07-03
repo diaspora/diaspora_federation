@@ -136,10 +136,7 @@ module DiasporaFederation
 
       private
 
-      # rubocop:disable Layout/EmptyLinesAroundAttributeAccessor Style/AccessorGrouping
-      attr_reader :expires
-      attr_reader :subject
-      # rubocop:enable Layout/EmptyLinesAroundAttributeAccessor Style/AccessorGrouping
+      attr_reader :expires, :subject
 
       NS = {xrd: XMLNS}.freeze
 
