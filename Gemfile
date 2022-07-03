@@ -43,7 +43,7 @@ group :test do
 
   # test coverage
   gem "simplecov",                 "0.21.2",   require: false
-  gem "simplecov-rcov",            "0.2.3",    require: false
+  gem "simplecov-rcov",            "0.3.1",    require: false
 
   # test helpers
   gem "json-schema-rspec", "0.0.4"
