@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "json-schema"
+
 def entity_hash_from(hash)
   hash.transform_values {|value|
     if [String, TrueClass, FalseClass, Integer, NilClass].any? {|c| value.is_a? c }
@@ -121,7 +123,8 @@ shared_examples "a JSON Entity" do
   describe "#to_json" do
     it "#to_json output matches JSON schema" do
       json = described_class.new(data).to_json
-      expect(json.to_json).to match_json_schema(:entity_schema)
+      errors = JSON::Validator.fully_validate("lib/diaspora_federation/schemas/federation_entities.json", json.to_json)
+      expect(errors).to be_empty
     end
 
     let(:to_json_output) { described_class.new(data).to_json.to_json }
@@ -176,6 +179,7 @@ shared_examples "a relayable JSON entity" do
   it "matches JSON schema with empty string signatures" do
     json = described_class.new(data).to_json
     json[:entity_data][:author_signature] = ""
-    expect(json.to_json).to match_json_schema(:entity_schema)
+    errors = JSON::Validator.fully_validate("lib/diaspora_federation/schemas/federation_entities.json", json.to_json)
+    expect(errors).to be_empty
   end
 end

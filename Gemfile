@@ -46,7 +46,7 @@ group :test do
   gem "simplecov-rcov",            "0.3.1",    require: false
 
   # test helpers
-  gem "json-schema-rspec", "0.0.4"
+  gem "json-schema",               "~> 3.0"
   gem "rspec-collection_matchers", "~> 1.2.0"
   gem "rspec-json_expectations",   "~> 2.1"
   gem "webmock",                   "~> 3.0"
