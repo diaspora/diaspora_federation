@@ -14,6 +14,9 @@ Gem::Specification.new do |s|
   s.description = "This gem provides JSON schemas (currently one schema) for "\
                   "validating JSON serialized federation objects."
   s.license     = "AGPL-3.0"
+  s.metadata    = {
+    "rubygems_mfa_required" => "true"
+  }
 
   s.files       = Dir["lib/diaspora_federation/schemas.rb", "lib/diaspora_federation/schemas/*.json"]
 end

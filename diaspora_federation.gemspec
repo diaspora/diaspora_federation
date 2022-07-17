@@ -15,6 +15,9 @@ Gem::Specification.new do |s|
                   "de-/encryption of Entities in the protocols used for communication " \
                   "among the various installations of Diaspora*"
   s.license     = "AGPL-3.0"
+  s.metadata    = {
+    "rubygems_mfa_required" => "true"
+  }
 
   s.files       = Dir["lib/**/*", "LICENSE", "README.md", "Changelog.md"] -
                     Dir["lib/diaspora_federation/{engine,rails,schemas,test}.rb",
