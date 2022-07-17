@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 0.3.0
 
 ## Breaking changes
@@ -13,6 +14,10 @@
 * Add rails 6 support [afee784](https://github.com/diaspora/diaspora_federation/commit/afee78476b1715ba32e2b97d7cbf2584d57718dd)
 * Add faraday 1.x support [#116](https://github.com/diaspora/diaspora_federation/pull/116)
 * Add support for up to ruby 3.1 [#121](https://github.com/diaspora/diaspora_federation/pull/121)
+
+# 0.2.8
+
+* Re-release which allows rails 6 to be used
 
 # 0.2.7
 
