@@ -1,3 +1,7 @@
+# 0.2.8
+
+* Re-release which allows rails 6 to be used
+
 # 0.2.7
 
 ## Features
