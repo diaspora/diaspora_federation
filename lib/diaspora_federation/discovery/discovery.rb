@@ -38,8 +38,8 @@ module DiasporaFederation
         # Validates if the diaspora* ID matches the diaspora* ID in the webfinger response
         return if diaspora_id == clean_diaspora_id(webfinger.acct_uri)
 
-        raise DiscoveryError, "diaspora* ID does not match: Wanted #{diaspora_id} but got" \
-                              " #{clean_diaspora_id(webfinger.acct_uri)}"
+        raise DiscoveryError, "diaspora* ID does not match: Wanted #{diaspora_id} but got " \
+                              "#{clean_diaspora_id(webfinger.acct_uri)}"
       end
 
       def clean_diaspora_id(diaspora_id)

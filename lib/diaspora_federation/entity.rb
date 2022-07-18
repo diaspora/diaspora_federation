@@ -77,7 +77,7 @@ module DiasporaFederation
     # Nested entities are also converted to a Hash.
     # @return [Hash] entity data (mostly equal to the hash used for initialization).
     def to_h
-      enriched_properties.map {|key, value|
+      enriched_properties.to_h {|key, value|
         type = self.class.class_props[key]
 
         if type.instance_of?(Symbol) || value.nil?
@@ -87,7 +87,7 @@ module DiasporaFederation
         elsif type.instance_of?(Array)
           [key, value.map(&:to_h)]
         end
-      }.to_h
+      }
     end
 
     # Returns the XML representation for this entity constructed out of
@@ -273,7 +273,7 @@ module DiasporaFederation
     end
 
     def normalized_properties
-      properties.map {|name, value| [name, normalize_property(name, value)] }.to_h
+      properties.to_h {|name, value| [name, normalize_property(name, value)] }
     end
 
     def normalize_property(name, value)

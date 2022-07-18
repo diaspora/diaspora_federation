@@ -26,7 +26,7 @@ module DiasporaFederation
       def self.private(sender_id, obj_str, targets)
         hydra = HydraWrapper.new(sender_id, obj_str)
         targets.each {|url, json| hydra.insert_enc_magic_env_request(url, json) }
-        hydra.send.map {|url| [url, targets[url]] }.to_h
+        hydra.send.to_h {|url| [url, targets[url]] }
       end
     end
   end

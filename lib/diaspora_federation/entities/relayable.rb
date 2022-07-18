@@ -131,7 +131,7 @@ module DiasporaFederation
         data = super
         order = signature_order
         order += %i[author_signature] unless author == parent.root.author
-        order.map {|element| [element, data[element].to_s] }.to_h
+        order.to_h {|element| [element, data[element].to_s] }
       end
 
       def signature_order=(order)

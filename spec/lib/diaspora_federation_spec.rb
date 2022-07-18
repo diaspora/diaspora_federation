@@ -43,7 +43,7 @@ module DiasporaFederation
 
         after do
           DiasporaFederation.certificate_authorities = @certificate_authorities
-          ::Rails.env = ENV["RAILS_ENV"] || "test"
+          ::Rails.env = ENV.fetch("RAILS_ENV", "test")
         end
       end
 

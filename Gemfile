@@ -20,9 +20,9 @@ end
 group :development do
   # code style
   gem "pronto",         "0.11.0",  require: false
-  gem "pronto-rubocop", "0.11.1",  require: false
-  gem "rubocop",        "1.23.0",  require: false
-  gem "rubocop-rails",  "2.12.4",  require: false
+  gem "pronto-rubocop", "0.11.2",  require: false
+  gem "rubocop",        "1.31.2",  require: false
+  gem "rubocop-rails",  "2.15.2",  require: false
   gem "rubocop-rake",   "0.6.0",   require: false
 
   # debugging
@@ -43,10 +43,10 @@ group :test do
 
   # test coverage
   gem "simplecov",                 "0.21.2",   require: false
-  gem "simplecov-rcov",            "0.2.3",    require: false
+  gem "simplecov-rcov",            "0.3.1",    require: false
 
   # test helpers
-  gem "json-schema-rspec", "0.0.4"
+  gem "json-schema",               "~> 3.0"
   gem "rspec-collection_matchers", "~> 1.2.0"
   gem "rspec-json_expectations",   "~> 2.1"
   gem "webmock",                   "~> 3.0"
@@ -56,6 +56,6 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.10.0"
-  gem "rspec-rails", "~> 5.0.1"
+  gem "rspec", "~> 3.11.0"
+  gem "rspec-rails", "~> 5.1.2"
 end
