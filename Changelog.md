@@ -1,3 +1,8 @@
+# 1.0.0
+
+* Add rails 7 support [#126](https://github.com/diaspora/diaspora_federation/pull/126)
+* Add faraday 2 support [#126](https://github.com/diaspora/diaspora_federation/pull/126)
+
 # 0.3.0
 
 ## Breaking changes
