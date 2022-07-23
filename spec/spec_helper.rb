@@ -50,7 +50,11 @@ RSpec.configure do |config|
     expect_config.syntax = :expect
   end
 
-  unless defined?(::Rails)
+  if defined?(::Rails)
+    config.before(:each, type: :controller) do
+      ActionController::Base.allow_forgery_protection = true
+    end
+  else
     config.exclude_pattern = "**/controllers/**/*_spec.rb, **/routing/**/*_spec.rb"
     config.filter_run_excluding rails: true
   end

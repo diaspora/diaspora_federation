@@ -5,6 +5,8 @@ require_dependency "diaspora_federation/application_controller"
 module DiasporaFederation
   # This controller processes receiving messages.
   class ReceiveController < ApplicationController
+    skip_forgery_protection
+
     # Receives public messages
     #
     # POST /receive/public
