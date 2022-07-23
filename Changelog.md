@@ -1,3 +1,7 @@
+# 1.0.1
+
+* Disable rails forgery protection for the federation controller by default [#127](https://github.com/diaspora/diaspora_federation/pull/127)
+
 # 1.0.0
 
 * Add rails 7 support [#126](https://github.com/diaspora/diaspora_federation/pull/126)
