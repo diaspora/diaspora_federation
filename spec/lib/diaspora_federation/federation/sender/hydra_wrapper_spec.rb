@@ -6,8 +6,8 @@ module DiasporaFederation
     let(:obj_str) { "status_message@guid" }
     let(:xml) { "<xml>post</xml>" }
     let(:json) { "{\"aes_key\": \"...\", \"encrypted_magic_envelope\": \"...\"}" }
-    let(:url) { "http://example.org/receive/public" }
-    let(:url2) { "http://example.com/receive/public" }
+    let(:url) { "https://example.org/receive/public" }
+    let(:url2) { "https://example.com/receive/public" }
 
     let(:hydra) { Typhoeus::Hydra.new }
     let(:hydra_wrapper) { Federation::Sender::HydraWrapper.new(sender_id, obj_str) }
@@ -61,20 +61,18 @@ module DiasporaFederation
     describe "#send" do
       let(:response) {
         Typhoeus::Response.new(
-          code:          202,
-          body:          "",
-          time:          0.2,
-          effective_url: url.sub("http://", "https://"),
-          return_code:   :ok
+          code:        202,
+          body:        "",
+          time:        0.2,
+          return_code: :ok
         )
       }
       let(:error_response) {
         Typhoeus::Response.new(
-          code:          0,
-          body:          "",
-          time:          0.2,
-          effective_url: url2,
-          return_code:   :couldnt_resolve_host
+          code:        0,
+          body:        "",
+          time:        0.2,
+          return_code: :couldnt_resolve_host
         )
       }
 
@@ -96,40 +94,29 @@ module DiasporaFederation
       end
 
       it "calls the update_pod callback for all responses with effective_url and status" do
-        expect_callback(:update_pod, "https://example.org/", 202)
-        expect_callback(:update_pod, "http://example.com/", :couldnt_resolve_host)
+        expect_callback(:update_pod, url, 202)
+        expect_callback(:update_pod, url2, :couldnt_resolve_host)
 
         hydra_wrapper.send
       end
 
       it "calls the update_pod callback with http status code when there was no error" do
-        expect_callback(:update_pod, "https://example.org/", 202)
-        expect_callback(:update_pod, "http://example.net/", 404)
+        not_found_url = "https://example.net/receive/not_found"
+
+        expect_callback(:update_pod, url, 202)
+        expect_callback(:update_pod, not_found_url, 404)
         allow(DiasporaFederation.callbacks).to receive(:trigger)
 
         not_found = Typhoeus::Response.new(
-          code:          404,
-          body:          "",
-          time:          0.2,
-          effective_url: "http://example.net/",
-          return_code:   :ok
+          code:        404,
+          body:        "",
+          time:        0.2,
+          return_code: :ok
         )
-        Typhoeus.stub("http://example.net/receive/not_found").and_return(not_found)
-        hydra_wrapper.insert_magic_env_request("http://example.net/receive/not_found", xml)
+        Typhoeus.stub(not_found_url).and_return(not_found)
+        hydra_wrapper.insert_magic_env_request(not_found_url, xml)
 
         hydra_wrapper.send
-      end
-
-      it "fails if redirected to other hostname" do
-        expect_callback(:update_pod, "https://example.org/", 202)
-        expect_callback(:update_pod, "http://example.com/", :couldnt_resolve_host)
-        expect_callback(:update_pod, "http://example.net/", :redirected_to_other_hostname)
-
-        url3 = "http://example.net/receive/public"
-        Typhoeus.stub(url3).and_return(response)
-        hydra_wrapper.insert_magic_env_request(url3, xml)
-
-        expect(hydra_wrapper.send).to eq([url2, url3])
       end
     end
   end

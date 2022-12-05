@@ -15,8 +15,7 @@ module DiasporaFederation
         # @return [Hash] hydra opts
         def self.hydra_opts
           @hydra_opts ||= {
-            followlocation: true,
-            maxredirs:      DiasporaFederation.http_redirect_limit,
+            followlocation: false,
             timeout:        DiasporaFederation.http_timeout,
             method:         :post,
             verbose:        DiasporaFederation.http_verbose,
@@ -90,28 +89,16 @@ module DiasporaFederation
         # @param [Typhoeus::Request] request
         def prepare_request(request)
           request.on_complete do |response|
-            success = validate_response_and_update_pod(request, response)
-            log_line = "success=#{success} sender=#{@sender_id} obj=#{@obj_str} url=#{response.effective_url} " \
+            DiasporaFederation.callbacks.trigger(:update_pod, request.url, status_from_response(response))
+            log_line = "success=#{response.success?} sender=#{@sender_id} obj=#{@obj_str} url=#{request.url} " \
                        "message=#{response.return_code} code=#{response.response_code} time=#{response.total_time}"
-            if success
+            if response.success?
               logger.info(log_line)
             else
               logger.warn(log_line)
 
               @urls_to_retry << request.url
             end
-          end
-        end
-
-        def validate_response_and_update_pod(request, response)
-          url = URI.parse(request.url)
-          effective_url = URI.parse(response.effective_url)
-          same_host = url.host == effective_url.host
-
-          (response.success? && same_host).tap do |success|
-            pod_url = (success ? effective_url : url).tap {|uri| uri.path = "/" }.to_s
-            status = same_host ? status_from_response(response) : :redirected_to_other_hostname
-            DiasporaFederation.callbacks.trigger(:update_pod, pod_url, status)
           end
         end
 
