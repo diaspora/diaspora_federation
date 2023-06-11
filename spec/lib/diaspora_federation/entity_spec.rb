@@ -200,9 +200,11 @@ module DiasporaFederation
 
       it "calls .from_hash with the hash representation of provided XML" do
         expect(Entities::TestDefaultEntity).to receive(:from_hash).with(
-          test1: "asdf",
-          test2: "qwer",
-          test3: true
+          {
+            test1: "asdf",
+            test2: "qwer",
+            test3: true
+          }
         )
         Entities::TestDefaultEntity.from_xml(Nokogiri::XML(<<~XML).root)
           <test_default_entity>
@@ -340,7 +342,7 @@ module DiasporaFederation
         }
         expect(Entities::TestEntity).to receive(:json_parser_class).and_call_original
         expect_any_instance_of(Parsers::JsonParser).to receive(:parse).with(json).and_call_original
-        expect(Entities::TestEntity).to receive(:from_hash).with(test: "value")
+        expect(Entities::TestEntity).to receive(:from_hash).with({test: "value"})
         Entities::TestEntity.from_json(json)
       end
 
@@ -388,7 +390,7 @@ module DiasporaFederation
 
       it "calls a constructor of the entity of the appropriate type" do
         entity_data = {test1: "abc", test2: "123"}
-        expect(Entities::TestDefaultEntity).to receive(:new).with(test1: "abc", test2: "123")
+        expect(Entities::TestDefaultEntity).to receive(:new).with({test1: "abc", test2: "123"})
         Entities::TestDefaultEntity.from_hash(entity_data)
       end
 

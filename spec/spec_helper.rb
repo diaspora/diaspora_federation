@@ -50,7 +50,7 @@ RSpec.configure do |config|
     expect_config.syntax = :expect
   end
 
-  if defined?(::Rails)
+  if defined?(Rails)
     config.before(:each, type: :controller) do
       ActionController::Base.allow_forgery_protection = true
     end

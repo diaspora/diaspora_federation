@@ -9,7 +9,9 @@ gemspec name: "diaspora_federation"
 
 Dir["diaspora_federation-*.gemspec"].each do |gemspec|
   plugin = gemspec.scan(/diaspora_federation-(.*)\.gemspec/).flatten.first
-  gemspec(name: "diaspora_federation-#{plugin}", development_group: plugin)
+  unless ENV["RAILS_VERSION"] == "none" && plugin == "rails"
+    gemspec(name: "diaspora_federation-#{plugin}", development_group: plugin)
+  end
 end
 
 # Declare any dependencies that are still in development here instead of in
@@ -19,10 +21,10 @@ end
 
 group :development do
   # code style
-  gem "pronto",         "0.11.0",  require: false
-  gem "pronto-rubocop", "0.11.2",  require: false
-  gem "rubocop",        "1.32.0",  require: false
-  gem "rubocop-rails",  "2.15.2",  require: false
+  gem "pronto",         "0.11.1",  require: false
+  gem "pronto-rubocop", "0.11.5",  require: false
+  gem "rubocop",        "1.52.0",  require: false
+  gem "rubocop-rails",  "2.19.1",  require: false
   gem "rubocop-rake",   "0.6.0",   require: false
 
   # debugging
@@ -42,11 +44,11 @@ group :test do
   gem "nyan-cat-formatter", require: false
 
   # test coverage
-  gem "simplecov",                 "0.21.2",   require: false
+  gem "simplecov",                 "0.22.0",   require: false
   gem "simplecov-rcov",            "0.3.1",    require: false
 
   # test helpers
-  gem "json-schema",               "~> 3.0"
+  gem "json-schema",               "~> 4.0"
   gem "rspec-collection_matchers", "~> 1.2.0"
   gem "rspec-json_expectations",   "~> 2.1"
   gem "webmock",                   "~> 3.0"
@@ -56,6 +58,14 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.11.0"
-  gem "rspec-rails", "~> 5.1.2"
+  gem "rspec", "~> 3.12.0"
+
+  unless ENV["RAILS_VERSION"] == "none"
+    gem "rspec-rails", "~> 5.1.2"
+
+    # The default rails version needs to be kept up to date also in:
+    # - test/dummy/config/application.rb (config.load_defaults)
+    # - .github/workflows/ci.yml ('Delete Gemfile.lock' step)
+    gem "actionpack", "~> #{ENV['RAILS_VERSION'] || '7.0'}.0"
+  end
 end

@@ -19,26 +19,26 @@ Fabricator(:user, class_name: Person) do
 end
 
 Fabricator(:post, class_name: Entity) do
-  on_init { init_with("Post") }
+  initialize_with { resolved_class.new("Post") }
   author { Fabricate(:person) }
 end
 
 Fabricator(:comment, class_name: Entity) do
-  on_init { init_with("Comment") }
+  initialize_with { resolved_class.new("Comment") }
   author { Fabricate(:person) }
 end
 
 Fabricator(:poll, class_name: Entity) do
-  on_init { init_with("Poll") }
+  initialize_with { resolved_class.new("Poll") }
   author { Fabricate(:person) }
 end
 
 Fabricator(:event, class_name: Entity) do
-  on_init { init_with("Event") }
+  initialize_with { resolved_class.new("Event") }
   author { Fabricate(:person) }
 end
 
 Fabricator(:conversation, class_name: Entity) do
-  on_init { init_with("Conversation") }
+  initialize_with { resolved_class.new("Conversation") }
   author { Fabricate(:person) }
 end

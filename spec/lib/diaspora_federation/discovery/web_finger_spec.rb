@@ -344,7 +344,7 @@ module DiasporaFederation
               },
               {
                 "rel": "self",
-                "type": "application/ld+json; profile=\\\"https://www.w3.org/ns/activitystreams\\\"",
+                "type": "application/ld+json; profile=\\"https://www.w3.org/ns/activitystreams\\"",
                 "href": "#{person.url}channel/#{person.nickname}"
               },
               {

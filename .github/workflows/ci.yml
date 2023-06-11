@@ -9,25 +9,39 @@ on:
 
 jobs:
   test:
+    name: 'Ruby: ${{ matrix.ruby }}, Rails: ${{ matrix.rails }}'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         ruby:
+          - "3.2"
           - "3.1"
           - "3.0"
           - "2.7"
-        gemfile:
-          - Gemfile
-          - test/gemfiles/no-rails.Gemfile
+        rails:
+          - "7.0"
+          - "6.1"
+          - "6.0"
+          - "5.2"
+          - "none"
+        exclude:
+          - ruby: "3.2"
+            rails: "5.2"
+          - ruby: "3.1"
+            rails: "5.2"
+          - ruby: "3.0"
+            rails: "5.2"
     env:
-      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+      RAILS_VERSION: ${{ matrix.rails }}
       BUNDLE_WITHOUT: development
-      BUNDLE_FROZEN: true
       BUNDLE_DISABLE_SHARED_GEMS: true
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Delete Gemfile.lock
+        run: rm Gemfile.lock
+        if: matrix.rails != '7.0' # Gemfile.lock is only generated for latest rails version
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
