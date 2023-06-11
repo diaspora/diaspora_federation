@@ -73,7 +73,7 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     json (2.6.3)
-    json-schema (3.0.0)
+    json-schema (4.0.0)
       addressable (>= 2.8)
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -226,7 +226,7 @@ DEPENDENCIES
   diaspora_federation-rails!
   diaspora_federation-test!
   fuubar (= 2.5.1)
-  json-schema (~> 3.0)
+  json-schema (~> 4.0)
   listen
   nyan-cat-formatter
   pronto (= 0.11.1)
