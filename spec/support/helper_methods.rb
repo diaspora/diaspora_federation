@@ -34,7 +34,7 @@ def change_time(time, options={})
   new_min   = options.fetch(:min, options[:hour] ? 0 : time.min)
   new_sec   = options.fetch(:sec, options[:hour] || options[:min] ? 0 : time.sec)
 
-  ::Time.utc(time.year, time.month, time.day, new_hour, new_min, new_sec)
+  Time.utc(time.year, time.month, time.day, new_hour, new_min, new_sec)
 end
 
 # indent helper

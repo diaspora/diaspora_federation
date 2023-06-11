@@ -191,6 +191,10 @@ Rails/NegateInclude:
 Rails/RakeEnvironment:
   Enabled: false
 
+# only available on rails >= 6.0
+Rails/IndexWith:
+  Enabled: false
+
 Lint/ConstantDefinitionInBlock:
   Exclude:
     - "spec/**/*"
