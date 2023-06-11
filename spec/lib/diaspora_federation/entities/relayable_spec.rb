@@ -474,7 +474,7 @@ module DiasporaFederation
                 parent:           remote_parent
               }.merge("new_property" => new_property),
               %w[author guid parent_guid new_property property],
-              "new_property" => new_property
+              {"new_property" => new_property}
             ).and_call_original
             Entities::SomeRelayable.from_hash(entity_data, property_order)
           end
