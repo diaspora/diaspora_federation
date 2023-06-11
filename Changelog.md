@@ -1,3 +1,7 @@
+# 1.1.0
+
+* Don't follow redirects when federating messages [#128](https://github.com/diaspora/diaspora_federation/pull/128)
+
 # 1.0.1
 
 * Disable rails forgery protection for the federation controller by default [#127](https://github.com/diaspora/diaspora_federation/pull/127)
