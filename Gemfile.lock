@@ -221,6 +221,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  actionpack (~> 7.0.0)
   diaspora_federation!
   diaspora_federation-json_schema!
   diaspora_federation-rails!

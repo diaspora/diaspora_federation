@@ -9,7 +9,9 @@ gemspec name: "diaspora_federation"
 
 Dir["diaspora_federation-*.gemspec"].each do |gemspec|
   plugin = gemspec.scan(/diaspora_federation-(.*)\.gemspec/).flatten.first
-  gemspec(name: "diaspora_federation-#{plugin}", development_group: plugin)
+  unless ENV["RAILS_VERSION"] == "none" && plugin == "rails"
+    gemspec(name: "diaspora_federation-#{plugin}", development_group: plugin)
+  end
 end
 
 # Declare any dependencies that are still in development here instead of in
@@ -57,5 +59,13 @@ group :development, :test do
 
   # unit tests
   gem "rspec", "~> 3.12.0"
-  gem "rspec-rails", "~> 5.1.2"
+
+  unless ENV["RAILS_VERSION"] == "none"
+    gem "rspec-rails", "~> 5.1.2"
+
+    # The default rails version needs to be kept up to date also in:
+    # - test/dummy/config/application.rb (config.load_defaults)
+    # - .github/workflows/ci.yml ('Delete Gemfile.lock' step)
+    gem "actionpack", "~> #{ENV['RAILS_VERSION'] || '7.0'}.0"
+  end
 end
