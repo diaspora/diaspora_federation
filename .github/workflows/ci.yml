@@ -35,7 +35,7 @@ jobs:
       BUNDLE_DISABLE_SHARED_GEMS: true
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Delete Gemfile.lock
         run: rm Gemfile.lock
         if: matrix.rails != '7.0' # Gemfile.lock is only generated for latest rails version
