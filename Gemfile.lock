@@ -210,7 +210,7 @@ GEM
     uuid (2.3.9)
       macaddr (~> 1.0)
     valid (1.2.0)
-    webmock (3.14.0)
+    webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
