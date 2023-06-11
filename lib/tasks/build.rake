@@ -26,5 +26,7 @@ end
 
 desc "Tags version, pushes to remote, and pushes gem"
 task release: :build do
-  sh "ls pkg/diaspora_federation-*-*.gem | xargs -n 1 gem push"
+  Dir["pkg/diaspora_federation-*-*.gem"].each do |gem|
+    sh "gem push #{gem}"
+  end
 end
