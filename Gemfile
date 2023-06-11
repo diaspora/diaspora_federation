@@ -42,7 +42,7 @@ group :test do
   gem "nyan-cat-formatter", require: false
 
   # test coverage
-  gem "simplecov",                 "0.21.2",   require: false
+  gem "simplecov",                 "0.22.0",   require: false
   gem "simplecov-rcov",            "0.3.1",    require: false
 
   # test helpers
