@@ -21,18 +21,19 @@ end
 
 group :development do
   # code style
-  gem "pronto",         "0.11.1",  require: false
-  gem "pronto-rubocop", "0.11.5",  require: false
-  gem "rubocop",        "1.52.0",  require: false
-  gem "rubocop-rails",  "2.19.1",  require: false
-  gem "rubocop-rake",   "0.6.0",   require: false
+  gem "pronto",         "0.11.5",  require: false
+  gem "pronto-rubocop", "0.11.6",  require: false
+  gem "rubocop",        "1.86.0",  require: false
+  gem "rubocop-rails",  "2.34.3",  require: false
+  gem "rubocop-rake",   "0.7.1",   require: false
 
   # debugging
   gem "pry"
   gem "pry-byebug"
 
   # documentation
-  gem "yard", require: false
+  gem "rdoc",  require: false
+  gem "yard",  require: false
 
   # rails needs this for development
   gem "listen"
@@ -45,10 +46,10 @@ group :test do
 
   # test coverage
   gem "simplecov",                 "0.22.0",   require: false
-  gem "simplecov-rcov",            "0.3.1",    require: false
+  gem "simplecov-rcov",            "0.3.7",    require: false
 
   # test helpers
-  gem "json-schema",               "~> 4.0"
+  gem "json-schema",               "~> 6.0"
   gem "rspec-collection_matchers", "~> 1.2.0"
   gem "rspec-json_expectations",   "~> 2.1"
   gem "webmock",                   "~> 3.0"
@@ -58,14 +59,19 @@ group :development, :test do
   gem "rake"
 
   # unit tests
-  gem "rspec", "~> 3.12.0"
+  gem "rspec", "~> 3.13.0"
 
   unless ENV["RAILS_VERSION"] == "none"
-    gem "rspec-rails", "~> 5.1.2"
+    # rspec-rails 7.x requires Rails >= 7.0; use 6.x for Rails 6.1
+    if ENV["RAILS_VERSION"]&.start_with?("6.")
+      gem "rspec-rails", "~> 6.1"
+    else
+      gem "rspec-rails", "~> 7.1"
+    end
 
     # The default rails version needs to be kept up to date also in:
     # - test/dummy/config/application.rb (config.load_defaults)
     # - .github/workflows/ci.yml ('Delete Gemfile.lock' step)
-    gem "actionpack", "~> #{ENV['RAILS_VERSION'] || '7.0'}.0"
+    gem "actionpack", "~> #{ENV['RAILS_VERSION'] || '8.1'}.0"
   end
 end
