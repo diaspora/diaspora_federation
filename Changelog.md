@@ -1,3 +1,15 @@
+# 1.2.0
+
+## Breaking changes
+
+* Drop support for ruby 2.7
+* Drop support for rails 5.2 and 6.0
+
+## Features
+
+* Add support for ruby 3.3, 3.4 and 4.0
+* Add support for rails 7.1, 7.2, 8.0 and 8.1
+
 # 1.1.0
 
 * Don't follow redirects when federating messages [#128](https://github.com/diaspora/diaspora_federation/pull/128)
